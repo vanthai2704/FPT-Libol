@@ -3,35 +3,67 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - FPT Libol</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <style>
+        .navbar{
+            padding: 0 !important;
+        }
+        a.nav-link {
+            color: white !important;
+            padding: 1rem !important;
+        }
+        .navbar-dark .navbar-brand {
+            padding-left: 1rem;
+        }
+        .navbar-dark .navbar-nav .show > .nav-link, .navbar-dark .navbar-nav .active > .nav-link, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .nav-link.active {
+            background-color: #d8491f !important;
+        }
+        a.nav-link:hover {
+            background-color: #d8491f;
+        }
+        
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-            </div>
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="background-color:#f05123 !important">
+                <a class="navbar-brand" href="#">FPT Libol</a>
+                <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item  active">
+                            <a class="nav-link" href="#">Quản lý</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Bạn đọc</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Biên mục</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Mượn trả</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Bổ sung</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Thiết đặt</a>
+                        </li>
+                    </ul>
+                    <a class="nav-link" href="#">Đăng xuất</a>
+                </div>
+            </nav>
+
+
         </div>
     </div>
-    <div class="container body-content">
+    <div class="body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
         </footer>
     </div>
 
