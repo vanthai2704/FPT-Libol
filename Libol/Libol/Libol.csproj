@@ -157,6 +157,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BaoCaoController.cs" />
     <Compile Include="Controllers\CIR_PATRONController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -2084,6 +2085,7 @@
     <Content Include="Views\CIR_PATRON\Edit.cshtml" />
     <Content Include="Views\CIR_PATRON\Index.cshtml" />
     <Content Include="Views\CIR_PATRON\PatronProfile.cshtml" />
+    <Content Include="Views\BaoCao\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
