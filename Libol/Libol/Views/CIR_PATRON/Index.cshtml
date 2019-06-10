@@ -1,0 +1,190 @@
+﻿@model IEnumerable<Libol.Models.CIR_PATRON>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ValidDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExpiredDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastIssuedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MiddleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sex)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DOB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkPlace)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Telephone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mobile)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Portrait)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Note)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Debt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastModifiedDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InterestedSubjectBBK)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InterestedSubjectDDC)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IDCard)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CIR_DIC_EDUCATION.EducationLevel)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CIR_DIC_ETHNIC.Ethnic)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CIR_DIC_OCCUPATION.Occupation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CIR_PATRON_GROUP.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CIR_PATRON_UNIVERSITY.Grade)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ValidDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExpiredDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastIssuedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MiddleName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sex)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DOB)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkPlace)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Telephone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mobile)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Portrait)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Note)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Debt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastModifiedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InterestedSubjectBBK)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InterestedSubjectDDC)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IDCard)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CIR_DIC_EDUCATION.EducationLevel)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CIR_DIC_ETHNIC.Ethnic)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CIR_DIC_OCCUPATION.Occupation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CIR_PATRON_GROUP.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CIR_PATRON_UNIVERSITY.Grade)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
