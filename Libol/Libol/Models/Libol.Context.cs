@@ -15,10 +15,10 @@ namespace Libol.Models
     using System.Data.Entity.Core.Objects;
     using System.Linq;
     
-    public partial class FLibContext : DbContext
+    public partial class LibolEntities : DbContext
     {
-        public FLibContext()
-            : base("name=FLibContext")
+        public LibolEntities()
+            : base("name=LibolEntities")
         {
         }
     
