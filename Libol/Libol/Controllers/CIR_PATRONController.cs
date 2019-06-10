@@ -12,7 +12,7 @@ namespace Libol.Controllers
 {
     public class CIR_PATRONController : Controller
     {
-        private FLibDB db = new FLibDB();
+        private LibolEntities db = new LibolEntities();
 
         // GET: CIR_PATRON
         public ActionResult Index()

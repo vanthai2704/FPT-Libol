@@ -157,6 +157,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CIR_PATRONController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -2077,6 +2078,12 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\CIR_PATRON\Create.cshtml" />
+    <Content Include="Views\CIR_PATRON\Delete.cshtml" />
+    <Content Include="Views\CIR_PATRON\Details.cshtml" />
+    <Content Include="Views\CIR_PATRON\Edit.cshtml" />
+    <Content Include="Views\CIR_PATRON\Index.cshtml" />
+    <Content Include="Views\CIR_PATRON\PatronProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

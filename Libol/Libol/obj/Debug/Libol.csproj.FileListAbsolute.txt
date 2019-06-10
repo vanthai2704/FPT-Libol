@@ -184,3 +184,7 @@ C:\CapstoneProject\FPT-Libol\Libol\Libol\obj\Debug\Libol.csproj.CoreCompileInput
 C:\CapstoneProject\FPT-Libol\Libol\Libol\obj\Debug\Libol.csproj.CopyComplete
 C:\CapstoneProject\FPT-Libol\Libol\Libol\obj\Debug\Libol.dll
 C:\CapstoneProject\FPT-Libol\Libol\Libol\obj\Debug\Libol.pdb
+F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EntityFramework.dll
+F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EntityFramework.SqlServer.dll
+F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EntityFramework.xml
+F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EntityFramework.SqlServer.xml
