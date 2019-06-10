@@ -17744,7 +17744,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <End Role="HOLDING_LOCATION" Type="Self.HOLDING_LOCATION" Multiplicity="*" />
           <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="FLibContext" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="LibolEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ACQ_ACQUIRE_SOURCE" EntityType="Self.ACQ_ACQUIRE_SOURCE" />
           <EntitySet Name="ACQ_BUDGET" EntityType="Self.ACQ_BUDGET" />
           <EntitySet Name="ACQ_BUDGET_ACCUMULATE" EntityType="Self.ACQ_BUDGET_ACCUMULATE" />
@@ -29578,7 +29578,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="LibolModelStoreContainer" CdmEntityContainer="FLibContext">
+        <EntityContainerMapping StorageEntityContainer="LibolModelStoreContainer" CdmEntityContainer="LibolEntities">
           <EntitySetMapping Name="ACQ_ACQUIRE_SOURCE">
             <EntityTypeMapping TypeName="LibolModel.ACQ_ACQUIRE_SOURCE">
               <MappingFragment StoreEntitySet="ACQ_ACQUIRE_SOURCE">
