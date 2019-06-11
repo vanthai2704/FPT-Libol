@@ -23,42 +23,60 @@
         a.nav-link:hover {
             background-color: #d8491f;
         }
-        
     </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="background-color:#f05123 !important">
-                <a class="navbar-brand" href="#">FPT Libol</a>
+                <a class="navbar-brand" href="/Home">FPT Libol</a>
                 <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Quản lý</a>
+                        <li class="nav-item dropdown" onclick="highlight(this)">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown00" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quản lý</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown00">
+                                <a class="dropdown-item" href="#">Quản lý</a>
+                            </div>
                         </li>
-                        <li class="nav-item dropdown" onclick="dodajAktywne(this)">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bạn Đọc</a>
+                        <li class="nav-item dropdown" onclick="highlight(this)">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bạn đọc</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item" href="#">@Html.ActionLink("Hồ sơ", "PatronProfile", "CIR_PATRON") </a>
+                                <a class="dropdown-item" href="/CIR_PATRON/PatronProfile">Hồ sơ</a>
                                 <a class="dropdown-item" href="#">Thẻ</a>
                                 <a class="dropdown-item" href="#">Xử lý lô</a>
                                 <a class="dropdown-item" href="#">Thống kê</a>
                             </div>
                         </li>
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Biên mục</a>
+                        <li class="nav-item dropdown" onclick="highlight(this)">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Biên mục</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown02">
+                                <a class="dropdown-item" href="#">Chỉ mục</a>
+                                <a class="dropdown-item" href="#">Danh mục</a>
+                                <a class="dropdown-item" href="#">Đơn đặt</a>
+                            </div>
                         </li>
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Mượn trả</a>
+                        <li class="nav-item dropdown" onclick="highlight(this)">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown03">
+                                <a class="dropdown-item" href="#">Ghi mượn</a>
+                                <a class="dropdown-item" href="#">Ghi trả</a>
+                            </div>
                         </li>
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Bổ sung</a>
+                        <li class="nav-item dropdown" onclick="highlight(this)">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bổ sung</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                <a class="dropdown-item" href="#">Bổ sung</a>
+                                <a class="dropdown-item" href="#">Kho</a>
+                                <a class="dropdown-item" href="#">Thống kê</a>
+                                <a class="dropdown-item" href="/PrintBarcode">In mã vạch</a>
+                                <a class="dropdown-item" href="/PrintLabel">In nhãn</a>
+                            </div>
                         </li>
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Thiết đặt</a>
+                        <li class="nav-item" onclick="highlight(this)">
+                            <a class="nav-link" href="#">Thiết đặt</a>
                         </li>
                     </ul>
-                    <a class="nav-link"  href="#">Đăng xuất</a>
+                    <a class="nav-link" href="#">Đăng xuất</a>
                 </div>
             </nav>
 
@@ -67,22 +85,21 @@
     </div>
     <div class="body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
-        </footer>
+        <div style="position: absolute;bottom: 0;width: 98%;">
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
+            </footer>
+        </div>
+        
     </div>
 
     <script>
-        function dodajAktywne(elem) {
-            // get all 'a' elements
+        function highlight(elem) {
             var a = document.getElementsByTagName('li');
-            // loop through all 'a' elements
-            for (i = 0; i < a.length; i++) {
-                // Remove the class 'active' if it exists
+            for (i = 0; i <= a.length; i++) {
                 a[i].classList.remove('active')
             }
-            // add 'active' classs to the element that was clicked
             elem.classList.add('active');
         }
     </script>
