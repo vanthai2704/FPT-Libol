@@ -161,6 +161,8 @@
     <Compile Include="Controllers\CIR_PATRONController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\PrintBarcodeController.cs" />
+    <Compile Include="Controllers\PrintLabelController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2095,6 +2097,8 @@
     <Content Include="Views\Catalogue\AddNewCatalogue.cshtml" />
     <Content Include="Views\Catalogue\SearchCodeNumber.cshtml" />
     <Content Include="Views\Catalogue\UpdateCatalogue.cshtml" />
+    <Content Include="Views\PrintBarcode\Index.cshtml" />
+    <Content Include="Views\PrintLabel\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
