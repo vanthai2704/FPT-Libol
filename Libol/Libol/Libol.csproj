@@ -160,6 +160,7 @@
     <Compile Include="Controllers\CIR_PATRONController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\TesrController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2087,6 +2088,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Tesr\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
