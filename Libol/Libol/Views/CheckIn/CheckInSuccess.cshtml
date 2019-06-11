@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewBag.Title = "CheckInSuccess";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+
+    <style>
+
+        body {
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        #sidebar-wrapper {
+            min-height: 100vh;
+            margin-left: -15px !important;
+            -webkit-transition: margin .25s ease-out;
+            -moz-transition: margin .25s ease-out;
+            -o-transition: margin .25s ease-out;
+            transition: margin .25s ease-out;
+        }
+
+            #sidebar-wrapper .sidebar-heading {
+                padding: 0.875rem 1.25rem;
+                font-size: 1.2rem;
+            }
+
+            #sidebar-wrapper .list-group {
+                width: 20rem;
+                padding-left: 5px;
+            }
+
+
+        @@media (min-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: 0;
+            }
+
+            #page-content-wrapper {
+                min-width: 0;
+                width: 100%;
+            }
+
+            #wrapper.toggled #sidebar-wrapper {
+                margin-left: -15rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <h4 style="margin:1rem;">Ghi mượn </h4>
+            <div class="list-group list-group-flush">
+                <div class="col">
+                    <h5>Tùy chọn</h5>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Không tính vào hạn ngạch</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 5px;">
+                        <div class="col">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Hạn trả mở</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 5px;">
+                        <div class="col-4">
+                            <div class="form-group"><label class="col-form-label">Ngày mượn:</label></div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group"><input class="form-control" type="date" value="06/11/2019" /></div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-bottom: 5px;">
+                        <div class="col-4">
+                            <div class="form-group"><label class="col-form-label">Hạn trả:</label></div>
+                        </div>
+                        <div class="col-8">
+                            <div class="form-group"><input class="form-control" type="date" value="06/11/2019" /></div>
+                        </div>
+                    </div>
+                    <div class="form-row" style="margin-top: 0px;">
+                        <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
+                        <div class="col"><input class="form-control" type="text" /></div>
+                        <div class="col-4"><label class="col-form-label"><a href="#">Xem</a> | <a href="#">Thêm</a></label></div>
+                    </div>
+                    <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
+                        <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
+                        <div class="col"><input class="form-control" type="text" /></div>
+                        <div class="col-4"><label class="col-form-label"><a href="#">Xem</a> | <a href="#">Thêm</a></label></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col"><button class="btn btn-primary" type="button">Ghi mượn</button></div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col">
+            <h4 style="margin-top:1rem;">Ghi mượn ấn phẩm</h4>
+            <h5 style="padding-bottom:10px;">Thông tin bạn đọc</h5>
+            <div class="form-row" style="padding-bottom:10px;">
+                <div class="col-7">
+                    <div class="form-row">
+                        <div class="col-2" style="padding-top:5px;">
+                            <img src="~/Content/Images/NoImage.png" />
+                        </div>
+                        <div class="col">
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="form-row">
+                                        <div class="col"><label>Tên số thẻ: <strong>Nguyễn Văn Đức (SE04287)</strong></label><a href="#" style="margin-left: 15px;">Thông tin chi tiết</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col"><label class="col-form-label">Ngày sinh: <strong>02/12/1995</strong></label></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col"><label class="col-form-label">Giá trị thẻ: <strong>07/10/2014 - 07-10-2019</strong></label></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col"><label class="col-form-label">Nhóm: <strong>Sinh viên FU Hà Nội</strong></label></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h5 style="padding-bottom:10px;">Danh sách ấn phẩm vừa ghi mượn</h5>
+        </div>
+    </div>
+</body>
+
