@@ -47,14 +47,10 @@
                                 <a class="dropdown-item" href="#">Thống kê</a>
                             </div>
                         </li>
-                        <li class="nav-item dropdown" onclick="highlight(this)">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Biên mục</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown02">
-                                <a class="dropdown-item" href="#">Chỉ mục</a>
-                                <a class="dropdown-item" href="#">Danh mục</a>
-                                <a class="dropdown-item" href="#">Đơn đặt</a>
-                            </div>
+                        <li class="nav-item" onclick="highlight(this)">
+                            <a class="nav-link" href="/Catalogue/MainTab">Biên mục</a>
                         </li>
+                        
                         <li class="nav-item dropdown" onclick="highlight(this)">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown03">
@@ -85,7 +81,7 @@
     </div>
     <div class="body-content">
         @RenderBody()
-        <div style="position: absolute;bottom: 0;width: 98%;">
+        <div style="bottom: 0;width: 98%;">
             <hr />
             <footer>
                 <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
