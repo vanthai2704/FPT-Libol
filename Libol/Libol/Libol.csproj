@@ -165,6 +165,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PrintBarcodeController.cs" />
     <Compile Include="Controllers\PrintLabelController.cs" />
+    <Compile Include="Controllers\ShelfController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2110,6 +2111,7 @@
     <Content Include="Views\CheckOut\CheckOutByDKCB.cshtml" />
     <Content Include="Views\CheckIn\CheckInSuccess.cshtml" />
     <Content Include="Views\CheckOut\FindByCardNumber.cshtml" />
+    <Content Include="Views\Shelf\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

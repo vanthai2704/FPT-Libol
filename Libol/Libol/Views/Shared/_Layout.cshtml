@@ -13,6 +13,18 @@
             padding: 0 !important;
         }
 
+        #footer {
+            position: fixed;
+            left: 0;
+            line-height: 20px;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: #f05123;
+            color: white;
+            
+        }
+      
         a.nav-link {
             color: white !important;
             padding: 1rem !important;
@@ -61,7 +73,7 @@
                         <li class="nav-item dropdown" onclick="highlight(this)">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown03">
-                                <a class="dropdown-item" href="/CheckIn">Ghi mượn</a>
+                                <a class="dropdown-item">@Html.ActionLink("Ghi mượn", "Index","CheckIn")</a>
                                 <a class="dropdown-item" href="/CheckOut">Ghi trả</a>
                                 <a class="dropdown-item" href="/CheckIn/Giahan">Gia hạn</a>
                             </div>
@@ -89,12 +101,10 @@
     </div>
     <div class="body-content">
         @RenderBody()
-        <div style="bottom: 0;width: 98%;">
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
-            </footer>
-        </div>
+     
+        <footer id="footer">
+            <p style="padding-top: 20px">&copy; @DateTime.Now.Year - FPT Libol Group</p>
+        </footer>
         
     </div>
 
