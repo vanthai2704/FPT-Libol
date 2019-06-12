@@ -13,6 +13,10 @@
             box-sizing: border-box;
         }
 
+        label {
+            text-align: right;
+        }
+
         #sidebar-wrapper {
             min-height: 100vh;
             margin-left: -15px !important;
@@ -31,6 +35,10 @@
                 width: 20rem;
                 padding-left: 5px;
             }
+        .columnleft {
+            float: right;
+        }
+    
 
 
         @@media (min-width: 768px) {
@@ -153,7 +161,7 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>Chọn</th>
+                        <th> <input type="checkbox" /></th>
                         <th>Nhan đề</th>
                         <th>ĐKCB</th>
                         <th>Ngày mượn</th>
@@ -211,50 +219,58 @@
                 <!-- Modal body -->
                 <div class="modal-body">
                     <h5>
-                        Thông tin cơ bản</h4>
-                        <div class="col" style="padding-left:50px; padding-bottom:10px;">
-                            <div class="form-row">
-                                <div class="col"><label class="col-form-label">Nhan đề: <strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col"><label class="col-form-label">ĐKCB: <strong>GT/KHXH002154</strong></label></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col"><label class="col-form-label">Ngày mượn: <strong>13/05/2019</strong></label></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col"><label class="col-form-label">Ngày trả: <strong>05/06/2019</strong></label></div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col"><label class="col-form-label">Phí mượn/ phạt: <strong>0</strong></label></div>
-                            </div>
-                        </div>
-                        <h5>
-                            Nghề nghiệp</h4>
-                            <div class="col" style="padding-left:50px; padding-bottom:10px;">
-                                <div class="form-row">
-                                    <div class="col"><label class="col-form-label">Nhan đề: <strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col"><label class="col-form-label">ĐKCB: <strong>GT/KHXH002154</strong></label></div>
-                                </div>
-                            </div>
-                            <h5>
-                                Thông tin liên lạc</h4>
-                                <div class="col" style="padding-left:50px; padding-bottom:10px;">
-                                    <div class="form-row">
-                                        <div class="col"><label class="col-form-label">ĐKCB: <strong>GT/KHXH002154</strong></label></div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col"><label class="col-form-label">Ngày mượn: <strong>13/05/2019</strong></label></div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col"><label class="col-form-label">Ngày trả: <strong>05/06/2019</strong></label></div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="col"><label class="col-form-label">Phí mượn/ phạt: <strong>0</strong></label></div>
-                                    </div>
-                                </div>
+                        Thông tin cơ bản
+                    </h5>
+                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                        <table>
+                            <tr>
+                                <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
+                                <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
+                                <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft"><label class="col-form-label">Ngày mượn: </label></td>
+                                <td><label class="col-form-label"><strong>13/05/2019</strong></label></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h5>
+                        Nghề nghiệp
+                    </h5>
+                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                        <table>
+                            <tr>
+                                <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
+                                <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
+                                <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft"><label class="col-form-label">Ngày mượn: </label></td>
+                                <td><label class="col-form-label"><strong>13/05/2019</strong></label></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h5>
+                        Thông tin liên lạc
+                    </h5>
+                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                        <table>
+                            <tr>
+                                <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
+                                <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
+                                <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- Modal footer -->
