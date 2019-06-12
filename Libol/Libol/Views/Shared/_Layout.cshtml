@@ -69,11 +69,11 @@
                         <li class="nav-item" onclick="highlight(this)">
                             <a class="nav-link" href="/Catalogue/MainTab">Biên mục</a>
                         </li>
-                        
+
                         <li class="nav-item dropdown" onclick="highlight(this)">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown03">
-                                <a class="dropdown-item">@Html.ActionLink("Ghi mượn", "Index","CheckIn")</a>
+                                <a class="dropdown-item" href="/CheckIn">Ghi mượn</a>
                                 <a class="dropdown-item" href="/CheckOut">Ghi trả</a>
                                 <a class="dropdown-item" href="/CheckIn/Giahan">Gia hạn</a>
                             </div>
@@ -99,27 +99,28 @@
 
         </div>
     </div>
-    <div class="body-content">
+    <div class="body-content" style="min-height: 610px">
         @RenderBody()
-     
-        <footer id="footer">
-            <p style="padding-top: 20px">&copy; @DateTime.Now.Year - FPT Libol Group</p>
+    </div>
+    <div style="bottom: 0;">
+        <hr />
+        <footer style="margin-left: 15px;">
+            <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
         </footer>
-        
     </div>
 
-    <script>
-        function highlight(elem) {
-            var a = document.getElementsByTagName('li');
-            for (i = 0; i <= a.length; i++) {
-                a[i].classList.remove('active')
+        <script>
+            function highlight(elem) {
+                var a = document.getElementsByTagName('li');
+                for (i = 0; i <= a.length; i++) {
+                    a[i].classList.remove('active')
+                }
+                elem.classList.add('active');
             }
-            elem.classList.add('active');
-        }
-    </script>
+        </script>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
 </body>
 </html>
