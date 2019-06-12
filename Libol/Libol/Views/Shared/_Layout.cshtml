@@ -14,11 +14,17 @@
         }
 
         #footer {
-            position: absolute;
-            height: 70px;
-            right: 0;
-            left: 20px;
+            position: fixed;
+            left: 0;
+            line-height: 20px;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: #f05123;
+            color: white;
+            
         }
+      
         a.nav-link {
             color: white !important;
             padding: 1rem !important;
@@ -95,14 +101,10 @@
     </div>
     <div class="body-content">
         @RenderBody()
-        <div style="bottom: 0;width: 98%;">
-            <hr />
-            <footer id="footer">
-            <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
+     
+        <footer id="footer">
+            <p style="padding-top: 20px">&copy; @DateTime.Now.Year - FPT Libol Group</p>
         </footer>
-            
-          
-        </div>
         
     </div>
 
