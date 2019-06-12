@@ -25,5 +25,11 @@ namespace Libol.Controllers
         {
             return View();
         }
+
+        // GET: FindByCardNumber
+        public ActionResult FindByCardNumber()
+        {
+            return View();
+        }
     }
 }

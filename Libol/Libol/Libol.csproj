@@ -2109,6 +2109,7 @@
     <Content Include="Views\CheckOut\CheckOutByCard.cshtml" />
     <Content Include="Views\CheckOut\CheckOutByDKCB.cshtml" />
     <Content Include="Views\CheckIn\CheckInSuccess.cshtml" />
+    <Content Include="Views\CheckOut\FindByCardNumber.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

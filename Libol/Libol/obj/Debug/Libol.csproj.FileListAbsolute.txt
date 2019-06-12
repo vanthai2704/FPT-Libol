@@ -373,7 +373,6 @@ C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\bin\Microsoft.AI.Depen
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\bin\Microsoft.AI.Web.xml
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.csprojAssemblyReference.cache
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.csproj.CoreCompileInputs.cache
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.csproj.CopyComplete
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.dll

@@ -84,12 +84,12 @@
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
                         <div class="col"><form action="/CheckOut/CheckOutByCard"><input class="form-control" type="text" /></form></div>
-                        <div class="col-4"><label class="col-form-label"><a href="#">Xem</a> | <a href="#">Thêm</a></label></div>
+                        <div class="col-4"><label class="col-form-label"><a href="/CheckOut/FindByCardNumber">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
                         <div class="col"><form action="/CheckOut/CheckOutByDKCB"><input class="form-control" type="text" /></form></div>
-                        <div class="col-4"><label class="col-form-label"><a href="#">Xem</a> | <a href="#">Thêm</a></label></div>
+                        <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
                         <div class="col"><button class="btn btn-primary" type="button">Ghi trả</button></div>
@@ -114,7 +114,7 @@
                             <div class="form-row">
                                 <div class="col">
                                     <div class="form-row">
-                                        <div class="col"><label>Tên số thẻ: <strong>Nguyễn Văn Đức (SE04287)</strong></label><a href="#" style="margin-left: 15px;">Thông tin chi tiết</a></div>
+                                        <div class="col"><label>Tên số thẻ: <strong>Nguyễn Văn Đức (SE04287)</strong></label><a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal">Thông tin chi tiết</a></div>
                                     </div>
                                 </div>
                             </div>
@@ -138,6 +138,74 @@
             </div>
             <div class="form-row">
                 <div class="col"><button class="btn btn-primary" type="button">Ghi trả</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Thông tin chi tiết của bạn đọc</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <h5>
+                        Thông tin cơ bản</h4>
+                        <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                            <div class="form-row">
+                                <div class="col"><label class="col-form-label">Nhan đề: <strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col"><label class="col-form-label">ĐKCB: <strong>GT/KHXH002154</strong></label></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col"><label class="col-form-label">Ngày mượn: <strong>13/05/2019</strong></label></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col"><label class="col-form-label">Ngày trả: <strong>05/06/2019</strong></label></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col"><label class="col-form-label">Phí mượn/ phạt: <strong>0</strong></label></div>
+                            </div>
+                        </div>
+                        <h5>
+                            Nghề nghiệp</h4>
+                            <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                                <div class="form-row">
+                                    <div class="col"><label class="col-form-label">Nhan đề: <strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col"><label class="col-form-label">ĐKCB: <strong>GT/KHXH002154</strong></label></div>
+                                </div>
+                            </div>
+                            <h5>
+                                Thông tin liên lạc</h4>
+                                <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                                    <div class="form-row">
+                                        <div class="col"><label class="col-form-label">ĐKCB: <strong>GT/KHXH002154</strong></label></div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col"><label class="col-form-label">Ngày mượn: <strong>13/05/2019</strong></label></div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col"><label class="col-form-label">Ngày trả: <strong>05/06/2019</strong></label></div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col"><label class="col-form-label">Phí mượn/ phạt: <strong>0</strong></label></div>
+                                    </div>
+                                </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Sửa</button>
+                </div>
+
             </div>
         </div>
     </div>

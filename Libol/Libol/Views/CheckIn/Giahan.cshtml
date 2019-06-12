@@ -4,5 +4,50 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Giahan</h2>
+<h4 style="margin : 1rem">Gia hạn</h4>
+<form>
+    <div class="form-row">
+        <div class="col-1">
+            <label>Mã số: </label>
+        </div>
+        <div class="col-2">
+            <input class="form-control" type="text" />
+        </div>
+        <div class="col-1">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="optradio" checked>ĐKCB
+                </label>
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="optradio">Số thẻ
+                </label>
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="optradio">Mã tài liệu
+                </label>
+            </div>
+        </div>
+        <div class="col-1">
+            <button class="btn btn-primary" type="button">Lọc</button>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-2">
+            <label>Ngày ra hạn cụ thể: </label>
+        </div>
+        <div class="col-2">
+            <input class="form-control" type="text" />
+        </div>
+        <div class="col-1">
+            <a href="#">Link</a>
+        </div>
+    </div>
+</form>
 
