@@ -162,8 +162,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CatalogueController.cs" />
-    <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
+    <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CIR_PATRONController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -2056,6 +2056,8 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -2108,16 +2110,16 @@
     <Content Include="Views\Catalogue\UpdateCatalogue.cshtml" />
     <Content Include="Views\PrintBarcode\Index.cshtml" />
     <Content Include="Views\PrintLabel\Index.cshtml" />
-    <Content Include="Views\CheckIn\Index.cshtml" />
     <Content Include="Views\CheckOut\Index.cshtml" />
-    <Content Include="Views\CheckIn\CheckInSearch.cshtml" />
-    <Content Include="Views\CheckIn\Giahan.cshtml" />
-    <Content Include="Views\CheckOut\CheckOutByCard.cshtml" />
-    <Content Include="Views\CheckOut\CheckOutByDKCB.cshtml" />
-    <Content Include="Views\CheckIn\CheckInSuccess.cshtml" />
-    <Content Include="Views\CheckOut\FindByCardNumber.cshtml" />
+    <Content Include="Views\CheckIn\Index.cshtml" />
+    <Content Include="Views\CheckOut\Giahan.cshtml" />
+    <Content Include="Views\CheckIn\FindByCardNumber.cshtml" />
     <Content Include="Views\Shelf\Index.cshtml" />
     <Content Include="Views\Login\Logout.cshtml" />
+    <Content Include="Views\CheckOut\_showPatronInfo.cshtml" />
+    <Content Include="Views\CheckIn\_checkinByCardNumber.cshtml" />
+    <Content Include="Views\CheckIn\_checkinByDKCB.cshtml" />
+    <Content Include="Views\CheckOut\_checkoutSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

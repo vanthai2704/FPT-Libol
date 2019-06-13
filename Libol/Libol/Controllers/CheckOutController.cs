@@ -6,30 +6,30 @@ using System.Web.Mvc;
 
 namespace Libol.Controllers
 {
-    public class CheckOutController : Controller
+    public class CheckOutController : BaseController
     {
         // GET: CheckOut
         public ActionResult Index()
         {
             return View();
         }
-
-        // GET: CheckOutByCard
-        public ActionResult CheckOutByCard()
+        
+        // GET: Giahan
+        public ActionResult Giahan()
         {
             return View();
         }
 
-        // GET: CheckOutByDKCB
-        public ActionResult CheckOutByDKCB()
+        // GET: CheckOutSuccess
+        public PartialViewResult CheckOutSuccess()
         {
-            return View();
+            return PartialView("_checkoutSuccess");
         }
 
-        // GET: FindByCardNumber
-        public ActionResult FindByCardNumber()
+        [HttpGet]
+        public PartialViewResult CheckOutCardInfo()
         {
-            return View();
+            return PartialView("_showPatronInfo");
         }
     }
 }
