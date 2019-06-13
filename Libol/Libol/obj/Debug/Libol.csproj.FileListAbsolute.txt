@@ -377,3 +377,4 @@ C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.csproj
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.csproj.CopyComplete
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.dll
 C:\Users\Hong Nhat\Desktop\CP_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.pdb
+C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\XCrypt.dll

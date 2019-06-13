@@ -21324,5 +21324,7 @@ namespace Libol.Models
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TESTCAI");
         }
+
+        public System.Data.Entity.DbSet<Libol.Models.SP_SYS_USER_LOGIN_Result> SP_SYS_USER_LOGIN_Result { get; set; }
     }
 }
