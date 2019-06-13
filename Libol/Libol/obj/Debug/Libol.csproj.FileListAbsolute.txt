@@ -335,10 +335,8 @@ C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\roslyn\vbc.rsp
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\roslyn\VBCSCompiler.exe
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\roslyn\VBCSCompiler.exe.config
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\Antlr3.Runtime.dll
-C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\ASPSnippets.GoogleAPI.dll
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EntityFramework.dll
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EntityFramework.SqlServer.dll
-C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\Google.Apis.Core.dll
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\Microsoft.AI.Agent.Intercept.dll
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\Microsoft.AI.DependencyCollector.dll
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\Microsoft.AI.PerfCounterCollector.dll
@@ -364,8 +362,6 @@ C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\WebGrease.dll
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\XCrypt.dll
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EntityFramework.xml
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EntityFramework.SqlServer.xml
-C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\Google.Apis.Core.pdb
-C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\Google.Apis.Core.xml
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\System.Net.Http.Formatting.xml
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\System.Web.Http.xml
 C:\CapstoneProject\FPT-Libol\Libol\Libol\bin\System.Web.Helpers.xml

@@ -108,32 +108,53 @@
             <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
         </footer>
     </div>
+    <input value="@HttpContext.Current.Session["SignInWithGoogle"].ToString()" type="hidden" id="SignInWithGoogle"/>
 
-        <script>
-            function highlight(elem) {
-                var a = document.getElementsByTagName('li');
-                for (i = 0; i <= a.length; i++) {
-                    a[i].classList.remove('active')
-                }
-                elem.classList.add('active');
+    <script>
+        function highlight(elem) {
+            var a = document.getElementsByTagName('li');
+            for (i = 0; i <= a.length; i++) {
+                a[i].classList.remove('active')
             }
-            function onLoad() {
-                gapi.load('auth2', function () {
-                    gapi.auth2.init();
-                });
-            }
-            function logout() {
-                window.location.href = "/Login/Logout";
+            elem.classList.add('active');
+        }
+
+        function onLoad() {
+            gapi.load('auth2', function () {
+                gapi.auth2.init();
+            });
+        }
+
+        function logout() {
+            var SignInWithGoogle = document.getElementById("SignInWithGoogle").value; 
+            if (SignInWithGoogle == "True") {
+                gapi.auth2.init();
                 var auth2 = gapi.auth2.getAuthInstance();
                 auth2.signOut().then(function () {
-                    console.log('User signed out.');
+                    //console.log('User signed out.');
                 });
-                
             }
-        </script>
+            
 
-        @Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")
-        @RenderSection("scripts", required: false)
+            $.ajax({
+                url: "/Login/Logout",
+                data: null,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    window.location.href = "/Home";
+                },
+                error: function (errormessage) {
+                    
+                }
+            });
+            
+        }
+    </script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
 </body>
 </html>

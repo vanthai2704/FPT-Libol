@@ -5,8 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using XCrypt;
 using Libol.Models;
-using ASPSnippets.GoogleAPI;
-using System.Web.UI;
 
 namespace Libol.Controllers
 {
@@ -16,7 +14,7 @@ namespace Libol.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            if(Session["UserID"] != null)
+            if (Session["UserID"] != null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -24,49 +22,49 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string username, string password, bool signInGoogle)
+        public ActionResult Index(string username, string password)
         {
-            if (!signInGoogle)
+            string passEncrypt = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(password, "pl");
+            List<SP_SYS_USER_LOGIN_Result> checkUser = db.SP_SYS_USER_LOGIN(username, passEncrypt).ToList();
+            if (checkUser != null && checkUser.Count > 0)
             {
-                string passEncrypt = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(password, "pl");
-                List<SP_SYS_USER_LOGIN_Result> checkUser = db.SP_SYS_USER_LOGIN(username, passEncrypt).ToList();
-                if (checkUser != null && checkUser.Count > 0)
-                {
-                    Session["UserID"] = checkUser[0].ID;
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ViewData["Notification"] = "Tên đăng nhập/mật khẩu không đúng!";
-                    return View();
-                }
+                Session["UserID"] = checkUser[0].ID;
+                Session["SignInWithGoogle"] = false;
+                return RedirectToAction("Index", "Home");
             }
             else
             {
-                SYS_USER_GOOGLE_ACCOUNT acc = db.SYS_USER_GOOGLE_ACCOUNT.Find(username);
-                if (acc != null)
-                {
-                    Session["UserID"] = acc.ID;
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ViewData["Notification"] = "Email không hợp lệ!";
-                    return View();
-                }
-                
-                
+                ViewData["Notification"] = "Tên đăng nhập/mật khẩu không đúng!";
+                Session["SignInWithGoogle"] = false;
+                return View();
             }
-
-           
-
-
+            
         }
-        public ActionResult Logout()
+
+        [HttpPost]
+        public JsonResult SignInWithGoogle(string email)
+        {
+            SYS_USER_GOOGLE_ACCOUNT acc = db.SYS_USER_GOOGLE_ACCOUNT.Find(email);
+            if (acc != null)
+            {
+                Session["UserID"] = acc.ID;
+                Session["SignInWithGoogle"] = true;
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                
+                return Json("EmailNotExist", JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+
+        [HttpPost]
+        public JsonResult Logout()
         {
             Session["UserID"] = null;
-            
-            return View();
+            Session["SignInWithGoogle"] = null;
+            return Json("", JsonRequestBehavior.AllowGet);
         }
     }
 }

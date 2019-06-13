@@ -68,24 +68,31 @@
     <script>
         function onSignIn(googleUser) {
             var profile = googleUser.getBasicProfile();
-            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + profile.getName());
-            console.log('Image URL: ' + profile.getImageUrl());
-            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            //console.log('ID: ' + profile.getId());
+            //console.log('Name: ' + profile.getName());
+            //console.log('Image URL: ' + profile.getImageUrl());
+            //console.log('Email: ' + profile.getEmail());
             var empObj = {
-                username: profile.getEmail(),
-                password: "",
-                signInGoogle: true
-
+                email: profile.getEmail(),
             };
-            window.location.href = "/Home";
+            
             $.ajax({
-                url: "/Login/Index",
+                url: "/Login/SignInWithGoogle",
                 data: JSON.stringify(empObj),
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (result) {
+                    
+                    if (result == "EmailNotExist") {
+                        document.getElementById("Notification").innerHTML = "Email không hợp lệ!";
+                        var auth2 = gapi.auth2.getAuthInstance();
+                        auth2.signOut().then(function () {
+                            //console.log('User signed out.');
+                        });
+                    } else {
+                        window.location.href = "/Home";
+                    }
                     
                 },
                 error: function (errormessage) {
@@ -93,6 +100,7 @@
                 }
             });
         }
+
 
     </script>
 </head>
@@ -110,8 +118,7 @@
                     <input type="checkbox" value="remember-me"> Nhớ tài khoản
                 </label>
             </div>
-            <h1 style="color: red;" class="h6 mb-3 font-weight-normal">@ViewData["Notification"]</h1>
-            <input type="hidden" name="signInGoogle" value=false>
+            <h1 style="color: red;" class="h6 mb-3 font-weight-normal" id="Notification">@ViewData["Notification"]</h1>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Đăng nhập</button>
             <div style="margin-top: 1rem;" class="g-signin2" data-onsuccess="onSignIn" data-width="266" data-height="45" ></div>
             
