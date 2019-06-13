@@ -62,12 +62,45 @@
                 border-top-right-radius: 0;
             }
     </style>
+    @Scripts.Render("~/bundles/jquery")
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="971697194004-a3705bandc8uaqv5r0b64adm3ggcqu91.apps.googleusercontent.com">
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            var empObj = {
+                username: profile.getEmail(),
+                password: "",
+                signInGoogle: true
+
+            };
+            window.location.href = "/Home";
+            $.ajax({
+                url: "/Login/Index",
+                data: JSON.stringify(empObj),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    
+                },
+                error: function (errormessage) {
+                    
+                }
+            });
+        }
+
+    </script>
 </head>
 <body>
     <div style="margin: auto">
+
         @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { @class = "form-signin" }))
         {
-
             <img class="mb-4" src="~/Content/Images/Logo.png" alt="" width="232" height="63">
             <h1 class="h3 mb-3 font-weight-normal">Vui lòng đăng nhập</h1>
             <input name="username" class="form-control" placeholder="Tên đăng nhập" required autofocus>
@@ -78,10 +111,13 @@
                 </label>
             </div>
             <h1 style="color: red;" class="h6 mb-3 font-weight-normal">@ViewData["Notification"]</h1>
+            <input type="hidden" name="signInGoogle" value=false>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Đăng nhập</button>
-            <a href="#"><img style="width:266px;height:64px;margin-top:10px;" src="~/Content/Images/btn_google_signin_light_normal_web@2x.png" /></a>
-
+            <div style="margin-top: 1rem;" class="g-signin2" data-onsuccess="onSignIn" data-width="266" data-height="45" ></div>
+            
         }
+
     </div>
+    
 </body>
 </html>

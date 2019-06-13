@@ -243,6 +243,7 @@ namespace Libol.Models
         public virtual DbSet<ITEM_UDC> ITEM_UDC { get; set; }
         public virtual DbSet<MARC_AUTHORITY_WS_DETAIL> MARC_AUTHORITY_WS_DETAIL { get; set; }
         public virtual DbSet<MARC_BIB_WS_DETAIL> MARC_BIB_WS_DETAIL { get; set; }
+        public virtual DbSet<SYS_USER_GOOGLE_ACCOUNT> SYS_USER_GOOGLE_ACCOUNT { get; set; }
     
         public virtual ObjectResult<CAT_DIC_LIST_SEL_Result> CAT_DIC_LIST_SEL()
         {
@@ -21324,7 +21325,5 @@ namespace Libol.Models
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TESTCAI");
         }
-
-        public System.Data.Entity.DbSet<Libol.Models.SP_SYS_USER_LOGIN_Result> SP_SYS_USER_LOGIN_Result { get; set; }
     }
 }

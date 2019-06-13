@@ -6,8 +6,9 @@
     <title>@ViewBag.Title - FPT Libol</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <meta name="google-signin-client_id" content="971697194004-a3705bandc8uaqv5r0b64adm3ggcqu91.apps.googleusercontent.com">
 
-    
     <style>
         .navbar {
             padding: 0 !important;
@@ -22,9 +23,8 @@
             text-align: center;
             background-color: #f05123;
             color: white;
-            
         }
-      
+
         a.nav-link {
             color: white !important;
             padding: 1rem !important;
@@ -92,7 +92,7 @@
                             <a class="nav-link" href="#">Thiết đặt</a>
                         </li>
                     </ul>
-                    <a class="nav-link" href="/Login/Logout">Đăng xuất</a>
+                    <a class="nav-link" href="#" onclick="logout();">Đăng xuất</a>
                 </div>
             </nav>
 
@@ -116,6 +116,19 @@
                     a[i].classList.remove('active')
                 }
                 elem.classList.add('active');
+            }
+            function onLoad() {
+                gapi.load('auth2', function () {
+                    gapi.auth2.init();
+                });
+            }
+            function logout() {
+                window.location.href = "/Login/Logout";
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut().then(function () {
+                    console.log('User signed out.');
+                });
+                
             }
         </script>
 

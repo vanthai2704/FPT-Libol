@@ -22,6 +22,7 @@ namespace Libol.Models
             this.HOLDING_LOCATION1 = new HashSet<HOLDING_LOCATION>();
             this.SYS_REFERENCE = new HashSet<SYS_REFERENCE>();
             this.HOLDING_LOCATION2 = new HashSet<HOLDING_LOCATION>();
+            this.SYS_USER_GOOGLE_ACCOUNT = new HashSet<SYS_USER_GOOGLE_ACCOUNT>();
         }
     
         public int ID { get; set; }
@@ -52,5 +53,7 @@ namespace Libol.Models
         public virtual ICollection<SYS_REFERENCE> SYS_REFERENCE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HOLDING_LOCATION> HOLDING_LOCATION2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SYS_USER_GOOGLE_ACCOUNT> SYS_USER_GOOGLE_ACCOUNT { get; set; }
     }
 }

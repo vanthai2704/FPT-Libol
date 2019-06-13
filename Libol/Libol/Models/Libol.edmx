@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LibolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LibolModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ACQ_ACQUIRE_SOURCE">
           <Key>
             <PropertyRef Name="ID" />
@@ -527,16 +527,6 @@ warning 6002: The table/view 'Libol.dbo.CAT_DIC_NUMBER' does not have a primary 
           <Property Name="ParentID" Type="int" />
           <Property Name="DicItemID" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.CAT_DIC_SUBJBROWSE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="CAT_DIC_SUBJBROWSE">
-          <Property Name="F0" Type="nvarchar" MaxLength="5" />
-          <Property Name="F1" Type="nvarchar" MaxLength="5" />
-          <Property Name="F2" Type="nvarchar" MaxLength="5" />
-          <Property Name="F3" Type="nvarchar" MaxLength="5" />
-          <Property Name="F4" Type="nvarchar" MaxLength="5" />
-          <Property Name="F5" Type="nvarchar" MaxLength="5" />
-        </EntityType>-->
         <EntityType Name="CAT_DIC_THESIS_LEVEL">
           <Key>
             <PropertyRef Name="ID" />
@@ -725,12 +715,6 @@ warning 6002: The table/view 'Libol.dbo.CAT_QUEUE' does not have a primary key d
           <Property Name="ITEMID" Type="int" Nullable="false" />
           <Property Name="REVIEWED" Type="tinyint" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.CIR_CALENDAR' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="CIR_CALENDAR">
-          <Property Name="OffDay" Type="datetime" />
-          <Property Name="LocationID" Type="int" />
-        </EntityType>-->
         <EntityType Name="CIR_DIC_COLLEGE">
           <Key>
             <PropertyRef Name="ID" />
@@ -2309,11 +2293,6 @@ warning 6002: The table/view 'Libol.dbo.ITEM_UDC' does not have a primary key de
           <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="tmpValue" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.lenta' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="lenta">
-          <Property Name="Title" Type="nvarchar" MaxLength="4000" />
-        </EntityType>-->
         <EntityType Name="MARC_AUTHORITY_BLOCK">
           <Key>
             <PropertyRef Name="ID" />
@@ -2670,12 +2649,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Subject" Type="nvarchar" MaxLength="200" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SYS_DOWNLOAD_FILE">
-          <Property Name="FileName" Type="varchar" MaxLength="20" />
-          <Property Name="CreatedDate" Type="datetime" />
-        </EntityType>-->
         <EntityType Name="SYS_EVENT_GROUP">
           <Key>
             <PropertyRef Name="ID" />
@@ -2794,6 +2767,13 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="LocationID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
+          <Key>
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="Email" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID" Type="int" />
+        </EntityType>
         <EntityType Name="SYS_USER_LOCATION">
           <Key>
             <PropertyRef Name="USERID" />
@@ -2905,6 +2885,18 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
             </Principal>
             <Dependent Role="ITEM">
               <PropertyRef Name="MediumID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__SYS_USER_GOO__ID__600DFEBC">
+          <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="0..1" />
+          <End Role="SYS_USER_GOOGLE_ACCOUNT" Type="Self.SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SYS_USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
+              <PropertyRef Name="ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3304,9 +3296,6 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <!--Errors Found During Generation:
-error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, but cannot be found.
-        <Association Name="FK_CIR_CALENDAR_HOLDING_LOCATION" />-->
         <Association Name="FK_CIR_FINE_ACQ_CURRENCY">
           <End Role="ACQ_CURRENCY" Type="Self.ACQ_CURRENCY" Multiplicity="1" />
           <End Role="CIR_FINE" Type="Self.CIR_FINE" Multiplicity="*" />
@@ -11574,6 +11563,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <EntitySet Name="SYS_TEMPLATE" EntityType="Self.SYS_TEMPLATE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYS_USER" EntityType="Self.SYS_USER" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYS_USER_CIR_LOCATION" EntityType="Self.SYS_USER_CIR_LOCATION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="Self.SYS_USER_GOOGLE_ACCOUNT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYS_USER_LOCATION" EntityType="Self.SYS_USER_LOCATION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYS_USER_REFERENCE" EntityType="Self.SYS_USER_REFERENCE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYS_USER_RIGHT" EntityType="Self.SYS_USER_RIGHT" Schema="dbo" store:Type="Tables" />
@@ -11861,6 +11851,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <AssociationSet Name="CDMED_ITE_FK" Association="Self.CDMED_ITE_FK">
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK__SYS_USER_GOO__ID__600DFEBC" Association="Self.FK__SYS_USER_GOO__ID__600DFEBC">
+            <End Role="SYS_USER" EntitySet="SYS_USER" />
+            <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
           </AssociationSet>
           <AssociationSet Name="FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET" Association="Self.FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET">
             <End Role="ACQ_BUDGET" EntitySet="ACQ_BUDGET" />
@@ -12591,8 +12585,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <End Role="SER_ARTICLE" EntitySet="SER_ARTICLE" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LibolModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -15199,6 +15192,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <NavigationProperty Name="HOLDING_LOCATION1" Relationship="Self.SYS_USER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
           <NavigationProperty Name="SYS_REFERENCE" Relationship="Self.SYS_USER_REFERENCE" FromRole="SYS_USER" ToRole="SYS_REFERENCE" />
           <NavigationProperty Name="HOLDING_LOCATION2" Relationship="Self.SYS_USER_SER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
+          <NavigationProperty Name="SYS_USER_GOOGLE_ACCOUNT" Relationship="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" FromRole="SYS_USER" ToRole="SYS_USER_GOOGLE_ACCOUNT" />
         </EntityType>
         <EntityType Name="SYS_USER_RIGHT">
           <Key>
@@ -18690,7 +18684,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="dt_adduserobject" />
           <FunctionImport Name="dt_adduserobject_vcs">
-            <Parameter Name="vchProperty" Mode="In" Type="String" />
+          <Parameter Name="vchProperty" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="dt_checkinobject">
             <Parameter Name="chObjectType" Mode="In" Type="String" />
@@ -18747,10 +18741,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="property" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="dt_dropuserobjectbyid">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="dt_generateansiname">
-            <Parameter Name="name" Mode="InOut" Type="String" />
+          <Parameter Name="name" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="dt_getobjwithprop" ReturnType="Collection(Int32)">
             <Parameter Name="property" Mode="In" Type="String" />
@@ -18825,20 +18819,20 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="vchPassword" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="ExcuteSQL">
-            <Parameter Name="strSQL" Mode="In" Type="String" />
+          <Parameter Name="strSQL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_ADD_COLLEGE">
-            <Parameter Name="College" Mode="In" Type="String" />
+          <Parameter Name="College" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_ADD_EDUCATION">
-            <Parameter Name="EDUCATION" Mode="In" Type="String" />
+          <Parameter Name="EDUCATION" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_ADD_FACUTY">
             <Parameter Name="facuty" Mode="In" Type="String" />
             <Parameter Name="CollegeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_ADD_OCCUPATION">
-            <Parameter Name="Occupation" Mode="In" Type="String" />
+          <Parameter Name="Occupation" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_ADD_PATRON">
             <Parameter Name="strPatronCode" Mode="In" Type="String" />
@@ -18868,29 +18862,29 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strGrade" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_ADD_PROVINCE">
-            <Parameter Name="Province" Mode="In" Type="String" />
+          <Parameter Name="Province" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_CHECK_PATRON_CODE" ReturnType="Collection(Int32)">
-            <Parameter Name="Code" Mode="In" Type="String" />
+          <Parameter Name="Code" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_COLLEGE" ReturnType="Collection(LibolModel.FPT_EDU_COLLEGE_Result)" />
           <FunctionImport Name="FPT_EDU_COUNTINUSE_BOOK" ReturnType="Collection(Int32)">
-            <Parameter Name="ItemId" Mode="In" Type="Double" />
+          <Parameter Name="ItemId" Mode="In" Type="Double" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_DEL_COLLEGE">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_DEL_EDUCATION">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_DEL_FACUTY">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_DEL_OCCUPATION">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_DEL_PROVINCE">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_EDIT_COLLEGE">
             <Parameter Name="ID" Mode="In" Type="Int32" />
@@ -18920,15 +18914,15 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <FunctionImport Name="FPT_EDU_GET_ALL_COLLEGE" ReturnType="Collection(LibolModel.FPT_EDU_GET_ALL_COLLEGE_Result)" />
           <FunctionImport Name="FPT_EDU_GET_ALL_FACULTY" ReturnType="Collection(LibolModel.FPT_EDU_GET_ALL_FACULTY_Result)" />
           <FunctionImport Name="FPT_EDU_GET_ALL_FACULTY_BY_ID" ReturnType="Collection(LibolModel.FPT_EDU_GET_ALL_FACULTY_BY_ID_Result)">
-            <Parameter Name="intCollectID" Mode="In" Type="String" />
+          <Parameter Name="intCollectID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_GET_ALL_PROVINCE" ReturnType="Collection(LibolModel.FPT_EDU_GET_ALL_PROVINCE_Result)" />
           <FunctionImport Name="FPT_EDU_GET_ALLHOLDING_BYID">
-            <Parameter Name="strHolding" Mode="In" Type="String" />
+          <Parameter Name="strHolding" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_GET_EDUCATION" ReturnType="Collection(LibolModel.FPT_EDU_GET_EDUCATION_Result)" />
           <FunctionImport Name="FPT_EDU_GET_HOLDING_LOCATION" ReturnType="Collection(Int32)">
-            <Parameter Name="CopyNumber" Mode="In" Type="String" />
+          <Parameter Name="CopyNumber" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_GET_PARTRON" />
           <FunctionImport Name="FPT_EDU_GET_PARTRON_GROUP" ReturnType="Collection(LibolModel.FPT_EDU_GET_PARTRON_GROUP_Result)" />
@@ -18946,7 +18940,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_GET_PATRON_ONLOAN_INCOMMING" ReturnType="Collection(LibolModel.FPT_EDU_GET_PATRON_ONLOAN_INCOMMING_Result)" />
           <FunctionImport Name="FPT_EDU_GET_PATRON_ONLOAN_INCOMMING_BY_USERID" ReturnType="Collection(LibolModel.FPT_EDU_GET_PATRON_ONLOAN_INCOMMING_BY_USERID_Result)">
-            <Parameter Name="UserId" Mode="In" Type="Int32" />
+          <Parameter Name="UserId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_GET_PATRON_ONLOAN_INCOMMING_FOR_EMAILSCAN" ReturnType="Collection(LibolModel.FPT_EDU_GET_PATRON_ONLOAN_INCOMMING_FOR_EMAILSCAN_Result)" />
           <FunctionImport Name="FPT_EDU_GET_PATRON_ONLOANINFOR">
@@ -18962,16 +18956,16 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_GET_VALUEFROMID_BOOK" ReturnType="Collection(LibolModel.FPT_EDU_GET_VALUEFROMID_BOOK_Result)">
-            <Parameter Name="IDin" Mode="In" Type="String" />
+          <Parameter Name="IDin" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_GETALL_HOLDING_REMOVE" ReturnType="Collection(String)" />
           <FunctionImport Name="FPT_EDU_GETALL_OCCUPATION" ReturnType="Collection(LibolModel.FPT_EDU_GETALL_OCCUPATION_Result)" />
           <FunctionImport Name="FPT_EDU_GETFACULTYBYID" ReturnType="Collection(LibolModel.FPT_EDU_GETFACULTYBYID_Result)">
-            <Parameter Name="CollegeID" Mode="In" Type="Int32" />
+          <Parameter Name="CollegeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_GETWAREHOUSE_BOOK" ReturnType="Collection(LibolModel.FPT_EDU_GETWAREHOUSE_BOOK_Result)" />
           <FunctionImport Name="FPT_EDU_LOAD_LIQUIDBOOK_BY_LIQUID_CODE">
-            <Parameter Name="strLiquidCode" Mode="In" Type="String" />
+          <Parameter Name="strLiquidCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_PATRON_LOAN_HISTORY">
             <Parameter Name="strPatronCode" Mode="In" Type="String" />
@@ -19013,7 +19007,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intTime" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_SP_CIR_OVERDUELIST_GETINFOR_BYWARSEHOUSE">
-            <Parameter Name="WarseHouse" Mode="In" Type="String" />
+          <Parameter Name="WarseHouse" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_SP_CIR_OVERDUELIST_GETINFOR_EMAIL_SCAN">
             <Parameter Name="strPatronIDs" Mode="In" Type="String" />
@@ -19046,7 +19040,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strFixedDueDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_EDU_SP_RENEW_ITEM_BY_ALL_ID">
-            <Parameter Name="strFixedID" Mode="In" Type="String" />
+          <Parameter Name="strFixedID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_SP_GET_STAT_BOOK">
             <Parameter Name="strIDs" Mode="In" Type="String" />
@@ -19090,17 +19084,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="ILL_GET_OUT_RESPONSE_INFOR" ReturnType="Collection(LibolModel.ILL_GET_OUT_RESPONSE_INFOR_Result)">
-            <Parameter Name="lngID" Mode="In" Type="Int32" />
+          <Parameter Name="lngID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SEARCH_CODE_TITLE_SEL">
             <Parameter Name="strIDs" Mode="In" Type="String" />
             <Parameter Name="smintCHECKJAVASCRIPT" Mode="In" Type="Int16" />
           </FunctionImport>
           <FunctionImport Name="SearchAllTables">
-            <Parameter Name="SearchStr" Mode="In" Type="String" />
+          <Parameter Name="SearchStr" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SONDP">
-            <Parameter Name="strACQIDs" Mode="In" Type="String" />
+          <Parameter Name="strACQIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ABC">
             <Parameter Name="intReasonID" Mode="In" Type="Int32" />
@@ -19137,11 +19131,11 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="dblFixedRate" Mode="In" Type="Single" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_CREDIT_SEL" ReturnType="Collection(LibolModel.SP_ACQ_BUDGET_CREDIT_SEL_Result)">
-            <Parameter Name="intPoID" Mode="In" Type="Int32" />
+          <Parameter Name="intPoID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_CURRENCY_SEL" ReturnType="Collection(LibolModel.SP_ACQ_BUDGET_CURRENCY_SEL_Result)" />
           <FunctionImport Name="SP_ACQ_BUDGET_DEBIT_DEL">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_DEBIT_INS">
             <Parameter Name="intPoID" Mode="In" Type="Int32" />
@@ -19175,7 +19169,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strExchangeRates" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_DEL">
-            <Parameter Name="intBudID" Mode="In" Type="Int32" />
+          <Parameter Name="intBudID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_INS">
             <Parameter Name="strBudgetName" Mode="In" Type="String" />
@@ -19187,7 +19181,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRetVal" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_LIQUIDATE" ReturnType="Collection(LibolModel.SP_ACQ_BUDGET_LIQUIDATE_Result)">
-            <Parameter Name="intPOID" Mode="In" Type="Int32" />
+          <Parameter Name="intPOID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_NAME_SEL" ReturnType="Collection(LibolModel.SP_ACQ_BUDGET_NAME_SEL_Result)" />
           <FunctionImport Name="SP_ACQ_BUDGET_PO_UPD">
@@ -19195,13 +19189,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="dblAmount" Mode="In" Type="Decimal" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_SEL" ReturnType="Collection(LibolModel.SP_ACQ_BUDGET_SEL_Result)">
-            <Parameter Name="intBudID" Mode="In" Type="Int32" />
+          <Parameter Name="intBudID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_SEL_STATUS" ReturnType="Collection(LibolModel.SP_ACQ_BUDGET_SEL_STATUS_Result)">
-            <Parameter Name="intStatus" Mode="In" Type="Boolean" />
+          <Parameter Name="intStatus" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_SUM_SEL" ReturnType="Collection(LibolModel.SP_ACQ_BUDGET_SUM_SEL_Result)">
-            <Parameter Name="intBudgetID" Mode="In" Type="Int32" />
+          <Parameter Name="intBudgetID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_TRANSACTION_LOG">
             <Parameter Name="intBudgetID" Mode="In" Type="Int32" />
@@ -19209,7 +19203,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strMonth" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_TRANSACTION_SEL" ReturnType="Collection(LibolModel.SP_ACQ_BUDGET_TRANSACTION_SEL_Result)">
-            <Parameter Name="intTransactionID" Mode="In" Type="Int32" />
+          <Parameter Name="intTransactionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_TRANSFER">
             <Parameter Name="intIDSrc" Mode="In" Type="Int32" />
@@ -19218,7 +19212,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="dbMonDes" Mode="In" Type="Double" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_UNIT_SEL" ReturnType="Collection(String)">
-            <Parameter Name="intBudgetID" Mode="In" Type="Int32" />
+          <Parameter Name="intBudgetID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_BUDGET_UPD">
             <Parameter Name="intBudID" Mode="In" Type="Int32" />
@@ -19241,16 +19235,16 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intSessionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_CHECK_EXITS_COPYNUMBER_HOLDING" ReturnType="Collection(String)">
-            <Parameter Name="intSessionID" Mode="In" Type="Int32" />
+          <Parameter Name="intSessionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_CLEAR_INIT_INVENTORY">
-            <Parameter Name="intSessionID" Mode="In" Type="Int32" />
+          <Parameter Name="intSessionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_CLOSE_INVENTORY">
-            <Parameter Name="intInventoryID" Mode="In" Type="Int32" />
+          <Parameter Name="intInventoryID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_CONTRACT_SEARCH">
-            <Parameter Name="strSelectStatement" Mode="In" Type="String" />
+          <Parameter Name="strSelectStatement" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_CREATE_CONTRACT">
             <Parameter Name="strReceiptNo" Mode="In" Type="String" />
@@ -19310,7 +19304,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRetVal" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_CURRENCY_SEL" ReturnType="Collection(LibolModel.SP_ACQ_CURRENCY_SEL_Result)">
-            <Parameter Name="strCurrencyCode" Mode="In" Type="String" />
+          <Parameter Name="strCurrencyCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_CURRENCY_UPD">
             <Parameter Name="strCurrencyCode" Mode="In" Type="String" />
@@ -19331,7 +19325,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="relExChangeRate" Mode="In" Type="Single" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_DEL_DEBIT_AMOUNT">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_DELETE_CONTRACT">
             <Parameter Name="intID" Mode="In" Type="Int32" />
@@ -19381,10 +19375,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="dblExchangeRate" Mode="In" Type="Single" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_ACQ_PO" ReturnType="Collection(LibolModel.SP_ACQ_GET_ACQ_PO_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_ACQITEM_BY_PO">
-            <Parameter Name="strPOIDs" Mode="In" Type="String" />
+          <Parameter Name="strPOIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_ACQYEAR" ReturnType="Collection(Int32)" />
           <FunctionImport Name="SP_ACQ_GET_BUDGET_INFOR" ReturnType="Collection(LibolModel.SP_ACQ_GET_BUDGET_INFOR_Result)">
@@ -19393,10 +19387,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intDisplay" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_CAT_DIC_LIST" ReturnType="Collection(LibolModel.SP_ACQ_GET_CAT_DIC_LIST_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_CHECKINGRECEIVED" ReturnType="Collection(LibolModel.SP_ACQ_GET_CHECKINGRECEIVED_Result)">
-            <Parameter Name="intPOID" Mode="In" Type="Int32" />
+          <Parameter Name="intPOID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_CLIAIMITEMS">
             <Parameter Name="intPOID" Mode="In" Type="Int32" />
@@ -19410,7 +19404,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="iLibID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_CONTACTDETAIL" ReturnType="Collection(LibolModel.SP_ACQ_GET_CONTACTDETAIL_Result)">
-            <Parameter Name="intVendorID" Mode="In" Type="Int32" />
+          <Parameter Name="intVendorID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_CONTRACT" ReturnType="Collection(LibolModel.SP_ACQ_GET_CONTRACT_Result)">
             <Parameter Name="intACQPOID" Mode="In" Type="Int32" />
@@ -19421,7 +19415,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intPoID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_FINACIAL" ReturnType="Collection(LibolModel.SP_ACQ_GET_FINACIAL_Result)">
-            <Parameter Name="intContractID" Mode="In" Type="Int32" />
+          <Parameter Name="intContractID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_ITEM_FALSE_PATHS">
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
@@ -19440,10 +19434,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strDirection" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_ITEMS_OF_CONTRACT" ReturnType="Collection(LibolModel.SP_ACQ_GET_ITEMS_OF_CONTRACT_Result)">
-            <Parameter Name="intContractID" Mode="In" Type="Int32" />
+          <Parameter Name="intContractID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_ITEMS_TOCLAIM" ReturnType="Collection(LibolModel.SP_ACQ_GET_ITEMS_TOCLAIM_Result)">
-            <Parameter Name="intPOID" Mode="In" Type="Int32" />
+          <Parameter Name="intPOID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_ORDER_ITEMS" ReturnType="Collection(LibolModel.SP_ACQ_GET_ORDER_ITEMS_Result)">
             <Parameter Name="intRequestID" Mode="In" Type="Int32" />
@@ -19455,7 +19449,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strHaveFields" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_POID_BY_POS">
-            <Parameter Name="intPOS" Mode="In" Type="Int32" />
+          <Parameter Name="intPOS" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_SEPLOC_ITEMS" ReturnType="Collection(LibolModel.SP_ACQ_GET_SEPLOC_ITEMS_Result)">
             <Parameter Name="intTop" Mode="In" Type="Int32" />
@@ -19468,7 +19462,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_STATUS" ReturnType="Collection(LibolModel.SP_ACQ_GET_STATUS_Result)" />
           <FunctionImport Name="SP_ACQ_GET_STATUS_OF_CONTRACT" ReturnType="Collection(LibolModel.SP_ACQ_GET_STATUS_OF_CONTRACT_Result)">
-            <Parameter Name="intContractID" Mode="In" Type="Int32" />
+          <Parameter Name="intContractID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_SUMMARY_HOLDING" ReturnType="Collection(Int32)">
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
@@ -19478,11 +19472,11 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_TOTAL_CONTRACTS" ReturnType="Collection(Int32)" />
           <FunctionImport Name="SP_ACQ_GET_VENDOR" ReturnType="Collection(LibolModel.SP_ACQ_GET_VENDOR_Result)">
-            <Parameter Name="intVendorID" Mode="In" Type="Int32" />
+          <Parameter Name="intVendorID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_GET_WAITING_PO" ReturnType="Collection(LibolModel.SP_ACQ_GET_WAITING_PO_Result)" />
           <FunctionImport Name="SP_ACQ_GETMAXID_HINT">
-            <Parameter Name="intInventoryTime" Mode="InOut" Type="Int32" />
+          <Parameter Name="intInventoryTime" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_HINTVENTORY_DEL">
             <Parameter Name="intInventoryID" Mode="In" Type="Int32" />
@@ -19496,7 +19490,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strShelf" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_HOL_LOC_GETMINMAX_HOLDINGID">
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_HOLDING_INV_REMOVED">
             <Parameter Name="intInventoryID" Mode="In" Type="Int32" />
@@ -19535,7 +19529,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_INVENTORY_SUCESS" />
           <FunctionImport Name="SP_ACQ_ITEM_BY_PO_SEL">
-            <Parameter Name="strPOIDs" Mode="In" Type="String" />
+          <Parameter Name="strPOIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_ITEM_BY_TITLE_SEL">
             <Parameter Name="strTitle" Mode="In" Type="String" />
@@ -19551,7 +19545,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_ITEM_SEL" ReturnType="Collection(LibolModel.SP_ACQ_ITEM_SEL_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_ITEM_UPD">
             <Parameter Name="strItemIDs" Mode="In" Type="String" />
@@ -19587,13 +19581,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLevel1" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_BY_VENDOR_SEL" ReturnType="Collection(LibolModel.SP_ACQ_PO_BY_VENDOR_SEL_Result)">
-            <Parameter Name="intVendorID" Mode="In" Type="Int32" />
+          <Parameter Name="intVendorID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_DEL">
-            <Parameter Name="intPoID" Mode="In" Type="Int32" />
+          <Parameter Name="intPoID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_DEL_BOOKORDER">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_GET_ACQITEMS">
             <Parameter Name="intAccepted" Mode="In" Type="Int32" />
@@ -19624,17 +19618,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSQL" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_ITEM_DETAIL" ReturnType="Collection(LibolModel.SP_ACQ_PO_ITEM_DETAIL_Result)">
-            <Parameter Name="intPOID" Mode="In" Type="Int32" />
+          <Parameter Name="intPOID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_ITEM_INS">
             <Parameter Name="intPoID" Mode="In" Type="Int32" />
             <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_ITEM_SEL" ReturnType="Collection(LibolModel.SP_ACQ_PO_ITEM_SEL_Result)">
-            <Parameter Name="intPoID" Mode="In" Type="Int32" />
+          <Parameter Name="intPoID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_ITEM_SEL_BYPOID" ReturnType="Collection(LibolModel.SP_ACQ_PO_ITEM_SEL_BYPOID_Result)">
-            <Parameter Name="intPOID" Mode="In" Type="Int32" />
+          <Parameter Name="intPOID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_SEL" ReturnType="Collection(Int32)">
             <Parameter Name="intPoID" Mode="In" Type="Int32" />
@@ -19642,7 +19636,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_SEL_BOOKORDER" ReturnType="Collection(LibolModel.SP_ACQ_PO_SEL_BOOKORDER_Result)" />
           <FunctionImport Name="SP_ACQ_PO_SELECT" ReturnType="Collection(LibolModel.SP_ACQ_PO_SELECT_Result)">
-            <Parameter Name="intPoID" Mode="In" Type="Int32" />
+          <Parameter Name="intPoID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_STATUS_INS">
             <Parameter Name="intPoID" Mode="In" Type="Int32" />
@@ -19652,7 +19646,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSQL" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_STATUS_SEL" ReturnType="Collection(LibolModel.SP_ACQ_PO_STATUS_SEL_Result)">
-            <Parameter Name="intPoID" Mode="In" Type="Int32" />
+          <Parameter Name="intPoID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_PO_UPD_BOOKORDER">
             <Parameter Name="strIDs" Mode="In" Type="String" />
@@ -19660,7 +19654,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_RECEIPT_NO_SEL" ReturnType="Collection(LibolModel.SP_ACQ_RECEIPT_NO_SEL_Result)" />
           <FunctionImport Name="SP_ACQ_REM_ITEMS_OF_CONTRACT">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_RUN_INVENTORY">
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
@@ -19673,7 +19667,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intSessionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_SEL_FORMPRINT">
-            <Parameter Name="strSQL" Mode="In" Type="String" />
+          <Parameter Name="strSQL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_SEL_PUBLISHER" ReturnType="Collection(String)" />
           <FunctionImport Name="SP_ACQ_SET_ITEMID_FOR_ACQITEM">
@@ -19694,7 +19688,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intDirection" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_SHELF_SCHEMA_SELECT">
-            <Parameter Name="intLocID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_SHELF_SCHEMA_UPDATE">
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
@@ -19730,27 +19724,27 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strYear" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATITEMTYPE" ReturnType="Collection(LibolModel.SP_ACQ_STATITEMTYPE_Result)">
-            <Parameter Name="strTypeSelect" Mode="In" Type="String" />
+          <Parameter Name="strTypeSelect" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATLANGUAGE" ReturnType="Collection(LibolModel.SP_ACQ_STATLANGUAGE_Result)">
-            <Parameter Name="strTypeSelect" Mode="In" Type="String" />
+          <Parameter Name="strTypeSelect" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATLOCATION" ReturnType="Collection(LibolModel.SP_ACQ_STATLOCATION_Result)">
             <Parameter Name="strTypeSelect" Mode="In" Type="String" />
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATMEDIUM" ReturnType="Collection(LibolModel.SP_ACQ_STATMEDIUM_Result)">
-            <Parameter Name="strTypeSelect" Mode="In" Type="String" />
+          <Parameter Name="strTypeSelect" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATMONTH">
             <Parameter Name="strTypeSelect" Mode="In" Type="String" />
             <Parameter Name="strYear" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATNATIONPUB" ReturnType="Collection(LibolModel.SP_ACQ_STATNATIONPUB_Result)">
-            <Parameter Name="strTypeSelect" Mode="In" Type="String" />
+          <Parameter Name="strTypeSelect" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATPUBLISHER" ReturnType="Collection(LibolModel.SP_ACQ_STATPUBLISHER_Result)">
-            <Parameter Name="strTypeSelect" Mode="In" Type="String" />
+          <Parameter Name="strTypeSelect" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATSOURCE" ReturnType="Collection(LibolModel.SP_ACQ_STATSOURCE_Result)">
             <Parameter Name="strTypeSelect" Mode="In" Type="String" />
@@ -19758,14 +19752,14 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strToDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATTOP20" ReturnType="Collection(LibolModel.SP_ACQ_STATTOP20_Result)">
-            <Parameter Name="strTypeSelect" Mode="In" Type="String" />
+          <Parameter Name="strTypeSelect" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STATUS_SEL" ReturnType="Collection(LibolModel.SP_ACQ_STATUS_SEL_Result)" />
           <FunctionImport Name="SP_ACQ_STATYEAR" ReturnType="Collection(LibolModel.SP_ACQ_STATYEAR_Result)">
-            <Parameter Name="strTypeSelect" Mode="In" Type="String" />
+          <Parameter Name="strTypeSelect" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STO_SCHEMA_DELETE">
-            <Parameter Name="intLocID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STO_SCHEMA_INSERT">
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
@@ -19778,7 +19772,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="dbImgHeightMetter" Mode="In" Type="Single" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STO_SCHEMA_SELECT">
-            <Parameter Name="intLocID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_STO_SCHEMA_UPDATE">
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
@@ -19850,7 +19844,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRetVal" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_VENDOR_DEL">
-            <Parameter Name="intVendorID" Mode="In" Type="Int32" />
+          <Parameter Name="intVendorID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_VENDOR_INS">
             <Parameter Name="strName" Mode="In" Type="String" />
@@ -19877,7 +19871,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRetval" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_VENDOR_SEL" ReturnType="Collection(LibolModel.SP_ACQ_VENDOR_SEL_Result)">
-            <Parameter Name="intVendorID" Mode="In" Type="Int32" />
+          <Parameter Name="intVendorID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQ_VENDOR_UPD">
             <Parameter Name="intVendorID" Mode="In" Type="Int32" />
@@ -19988,7 +19982,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOutValue" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ACQUISITION_STATISTIC">
-            <Parameter Name="strSQL" Mode="In" Type="String" />
+          <Parameter Name="strSQL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ADD_ISSUE">
             <Parameter Name="lngItemID" Mode="In" Type="Int32" />
@@ -20012,7 +20006,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOutValue" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ADMIN_ADD_LANGUAGE">
-            <Parameter Name="strOptions" Mode="In" Type="String" />
+          <Parameter Name="strOptions" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ADMIN_ADD_USER">
             <Parameter Name="intIsLdap" Mode="In" Type="Int32" />
@@ -20050,11 +20044,11 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strToDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ADMIN_DELETE_USER">
-            <Parameter Name="strUIDs" Mode="In" Type="String" />
+          <Parameter Name="strUIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ADMIN_GET_EVENTGROUPS" ReturnType="Collection(LibolModel.SP_ADMIN_GET_EVENTGROUPS_Result)" />
           <FunctionImport Name="SP_ADMIN_GET_EVENTS" ReturnType="Collection(LibolModel.SP_ADMIN_GET_EVENTS_Result)">
-            <Parameter Name="intEventGroupID" Mode="In" Type="Int32" />
+          <Parameter Name="intEventGroupID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ADMIN_GET_LOCATION_INFOR">
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
@@ -20063,7 +20057,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSerLocs" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ADMIN_GET_NEW_USER_ID">
-            <Parameter Name="intNewUID" Mode="InOut" Type="Int32" />
+          <Parameter Name="intNewUID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ADMIN_GET_PARAMETERS" ReturnType="Collection(LibolModel.SP_ADMIN_GET_PARAMETERS_Result)" />
           <FunctionImport Name="SP_ADMIN_GET_RIGHTS" ReturnType="Collection(LibolModel.SP_ADMIN_GET_RIGHTS_Result)">
@@ -20169,7 +20163,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strAccessEntry" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_BIBLIOGRAPHIC_DEL">
-            <Parameter Name="intBibliographicID" Mode="In" Type="Int32" />
+          <Parameter Name="intBibliographicID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_BIBLIOGRAPHIC_INS">
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
@@ -20210,7 +20204,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <FunctionImport Name="SP_CAT_DIC_COUNTRY_SELECT" ReturnType="Collection(LibolModel.SP_CAT_DIC_COUNTRY_SELECT_Result)" />
           <FunctionImport Name="SP_CAT_DIC_DIRLEVEL_SEL" ReturnType="Collection(LibolModel.SP_CAT_DIC_DIRLEVEL_SEL_Result)" />
           <FunctionImport Name="SP_CAT_DIC_ITEM_TYPE_INDEX_SEL" ReturnType="Collection(LibolModel.SP_CAT_DIC_ITEM_TYPE_INDEX_SEL_Result)">
-            <Parameter Name="strAccessEntry" Mode="In" Type="String" />
+          <Parameter Name="strAccessEntry" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_ITEM_TYPE_INS">
             <Parameter Name="strTypeCode" Mode="In" Type="String" />
@@ -20223,7 +20217,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_ITEM_TYPE_SEL">
-            <Parameter Name="strTypeID" Mode="In" Type="String" />
+          <Parameter Name="strTypeID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_ITEM_TYPE_UPD">
             <Parameter Name="strTypeCode" Mode="In" Type="String" />
@@ -20244,7 +20238,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intIsDic" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_MEDIUM_INDEX_SEL" ReturnType="Collection(LibolModel.SP_CAT_DIC_MEDIUM_INDEX_SEL_Result)">
-            <Parameter Name="strAccessEntry" Mode="In" Type="String" />
+          <Parameter Name="strAccessEntry" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_MEDIUM_INS">
             <Parameter Name="strCode" Mode="In" Type="String" />
@@ -20256,7 +20250,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_MEDIUM_SEL">
-            <Parameter Name="strMediumID" Mode="In" Type="String" />
+          <Parameter Name="strMediumID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_MEDIUM_UPD">
             <Parameter Name="strCode" Mode="In" Type="String" />
@@ -20265,11 +20259,11 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_PUBLISHER_SEL" ReturnType="Collection(LibolModel.SP_CAT_DIC_PUBLISHER_SEL_Result)">
-            <Parameter Name="strPublisher" Mode="In" Type="String" />
+          <Parameter Name="strPublisher" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_DIC_RECORDTYPE_SEL" ReturnType="Collection(LibolModel.SP_CAT_DIC_RECORDTYPE_SEL_Result)" />
           <FunctionImport Name="SP_CAT_EDATA_PARAMETER_DEL">
-            <Parameter Name="strFieldCode" Mode="In" Type="String" />
+          <Parameter Name="strFieldCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_EDATA_PARAMETER_INS">
             <Parameter Name="strPhysicalPath" Mode="In" Type="String" />
@@ -20283,7 +20277,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSQL" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_EDATA_PARAMETER_SEL" ReturnType="Collection(LibolModel.SP_CAT_EDATA_PARAMETER_SEL_Result)">
-            <Parameter Name="strFieldCode" Mode="In" Type="String" />
+          <Parameter Name="strFieldCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CAT_EDATA_PARAMETER_UPD">
             <Parameter Name="strFieldCode" Mode="In" Type="String" />
@@ -20311,7 +20305,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSessionID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_BOOKCODE_RES_DEL">
-            <Parameter Name="strCode" Mode="In" Type="String" />
+          <Parameter Name="strCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_BOOKCODE_RES_GET">
             <Parameter Name="intIsUnion" Mode="In" Type="Int32" />
@@ -20369,7 +20363,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strTextBoxFields" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_DEL_CLASSIFICATION">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_DELETE_ITEMS">
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
@@ -20380,13 +20374,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strAccessEntry" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_DROP_DICTIONARY">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_FIELDCODE_SEL" ReturnType="Collection(LibolModel.SP_CATA_FIELDCODE_SEL_Result)">
-            <Parameter Name="strFielsCode" Mode="In" Type="String" />
+          <Parameter Name="strFielsCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_GET_AUTHORITY" ReturnType="Collection(LibolModel.SP_CATA_GET_AUTHORITY_Result)">
-            <Parameter Name="lngAuthorityID" Mode="In" Type="Int32" />
+          <Parameter Name="lngAuthorityID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_GET_AUTHORITY_DETAILINFOR">
             <Parameter Name="strTerm" Mode="In" Type="String" />
@@ -20414,7 +20408,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_CATA_GET_AUTHORITYSOURCE" ReturnType="Collection(LibolModel.SP_CATA_GET_AUTHORITYSOURCE_Result)" />
           <FunctionImport Name="SP_CATA_GET_BLOCKFIELDS" ReturnType="Collection(LibolModel.SP_CATA_GET_BLOCKFIELDS_Result)">
-            <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+          <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_GET_CATALOGUE_FIELDS">
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
@@ -20424,7 +20418,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intGroupBy" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_GET_CLASSIFICATION" ReturnType="Collection(LibolModel.SP_CATA_GET_CLASSIFICATION_Result)">
-            <Parameter Name="strType" Mode="In" Type="String" />
+          <Parameter Name="strType" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_GET_CLASSIFICATION_DATA" ReturnType="Collection(LibolModel.SP_CATA_GET_CLASSIFICATION_DATA_Result)">
             <Parameter Name="strAccessEntry" Mode="In" Type="String" />
@@ -20572,10 +20566,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intCount" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_MARC_AUTHORITY_FIELD_SEL">
-            <Parameter Name="strPattern" Mode="In" Type="String" />
+          <Parameter Name="strPattern" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_MARC_AUTHORITY_FIELD_SELECT">
-            <Parameter Name="strFieldCode" Mode="In" Type="String" />
+          <Parameter Name="strFieldCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_MERGE_DIC_INDEX">
             <Parameter Name="strIDNew" Mode="In" Type="String" />
@@ -20593,10 +20587,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intDesFormID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_QUEUE_DEL">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_QUEUE_DURATION_SEL" ReturnType="Collection(LibolModel.SP_CATA_QUEUE_DURATION_SEL_Result)">
-            <Parameter Name="intReviewed" Mode="In" Type="Int32" />
+          <Parameter Name="intReviewed" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_QUICK_VIEW" ReturnType="Collection(LibolModel.SP_CATA_QUICK_VIEW_Result)" />
           <FunctionImport Name="SP_CATA_REMOVEALL_ENTRIES">
@@ -20612,7 +20606,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRET" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_SEARCH_HOLDING_DEL">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATA_SEARCH_MARC_FIELDS">
             <Parameter Name="strPattern" Mode="In" Type="String" />
@@ -20687,7 +20681,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intField912Value" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CATALOG_MARCBF_GET" ReturnType="Collection(LibolModel.SP_CATALOG_MARCBF_GET_Result)">
-            <Parameter Name="strFieldCode" Mode="In" Type="String" />
+          <Parameter Name="strFieldCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CATALOGUE_STAT_OVERVIEW" ReturnType="Collection(LibolModel.SP_CATALOGUE_STAT_OVERVIEW_Result)" />
           <FunctionImport Name="SP_CHECK_COPYNUMBER" ReturnType="Collection(String)">
@@ -20702,7 +20696,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOutValue" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CHECK_HOLD_REQUEST" ReturnType="Collection(LibolModel.SP_CHECK_HOLD_REQUEST_Result)">
-            <Parameter Name="lngTransactionID" Mode="In" Type="Int32" />
+          <Parameter Name="lngTransactionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CHECK_RENEWDATE" ReturnType="Collection(LibolModel.SP_CHECK_RENEWDATE_Result)">
             <Parameter Name="intPatronID" Mode="In" Type="Int32" />
@@ -20742,7 +20736,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOutPut" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_CARD_FORM_DELETE">
-            <Parameter Name="intId" Mode="In" Type="Int32" />
+          <Parameter Name="intId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_CARD_FORM_INSERT">
             <Parameter Name="strTemplateName" Mode="In" Type="String" />
@@ -20760,7 +20754,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strDueDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_COLLEGE_DELETE">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_COLLEGE_IMPORT">
             <Parameter Name="strCollege" Mode="In" Type="String" />
@@ -20776,27 +20770,27 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intEducationID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_ETHNIC_DELETE">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_ETHNIC_IMPORT">
             <Parameter Name="strEthnic" Mode="In" Type="String" />
             <Parameter Name="intEthnicID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_FACULTY_DELETE">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_FACULTY_SELECTCOLID" ReturnType="Collection(LibolModel.SP_CIR_DIC_FACULTY_SELECTCOLID_Result)">
-            <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
+          <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_OCCUPATION_DELETE">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_OCCUPATION_IMPORT">
             <Parameter Name="strOccupation" Mode="In" Type="String" />
             <Parameter Name="intOccupationID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_PROVINCE_DELETE">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_DIC_PROVINCE_IMPORT">
             <Parameter Name="strProvince" Mode="In" Type="String" />
@@ -20807,10 +20801,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intProvinceID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_FACULTY_SELECT_BYCID" ReturnType="Collection(LibolModel.SP_CIR_FACULTY_SELECT_BYCID_Result)">
-            <Parameter Name="intVal" Mode="In" Type="Int32" />
+          <Parameter Name="intVal" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_FINE_DEL">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_FINE_INS">
             <Parameter Name="intType" Mode="In" Type="Int32" />
@@ -20872,7 +20866,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRET" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_HOLDING_SEL" ReturnType="Collection(LibolModel.SP_CIR_HOLDING_SEL_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_HOLDING_UPDATE">
             <Parameter Name="strCardNo" Mode="In" Type="String" />
@@ -20882,7 +20876,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRET" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_LOAN_HISTORY_SEL">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_LOAN_TYPE_SEL">
             <Parameter Name="strID" Mode="In" Type="String" />
@@ -20894,7 +20888,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="whereCondition" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_OVERDUELIST_SEL">
-            <Parameter Name="strPatronIDs" Mode="In" Type="String" />
+          <Parameter Name="strPatronIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_OVERDUELIST_SEL_AUTHORITY">
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
@@ -20914,10 +20908,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strPatronIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_BARCODE">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_BLOCK_DELETE">
-            <Parameter Name="strIDSource" Mode="In" Type="String" />
+          <Parameter Name="strIDSource" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_BLOCK_INSERT">
             <Parameter Name="strCodePatron" Mode="In" Type="String" />
@@ -20947,10 +20941,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intPatronGroupID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_OA_DELETE">
-            <Parameter Name="intPatronID" Mode="In" Type="Int32" />
+          <Parameter Name="intPatronID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_OA_SELECT" ReturnType="Collection(LibolModel.SP_CIR_PATRON_OA_SELECT_Result)">
-            <Parameter Name="strPatronIDs" Mode="In" Type="String" />
+          <Parameter Name="strPatronIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_SELECT_QUEUE" ReturnType="Collection(LibolModel.SP_CIR_PATRON_SELECT_QUEUE_Result)" />
           <FunctionImport Name="SP_CIR_PATRON_STARTAGE" ReturnType="Collection(Int32)">
@@ -20959,20 +20953,20 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_STARTGRP" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STARTGRP_Result)" />
           <FunctionImport Name="SP_CIR_PATRON_STATCLASS" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STATCLASS_Result)">
-            <Parameter Name="intFacultyID" Mode="In" Type="Int32" />
+          <Parameter Name="intFacultyID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_STATCOLLEGE" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STATCOLLEGE_Result)" />
           <FunctionImport Name="SP_CIR_PATRON_STATCREATEDDATE" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STATCREATEDDATE_Result)">
-            <Parameter Name="intCreatedDate" Mode="In" Type="Int32" />
+          <Parameter Name="intCreatedDate" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_STATEXPIREDDATE" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STATEXPIREDDATE_Result)">
-            <Parameter Name="intExpiredDate" Mode="In" Type="Int32" />
+          <Parameter Name="intExpiredDate" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_STATFACULTY" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STATFACULTY_Result)">
-            <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
+          <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_STATGRADE" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STATGRADE_Result)">
-            <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
+          <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_STATISTIC" ReturnType="Collection(Int32)">
             <Parameter Name="strTypeStatistic" Mode="In" Type="String" />
@@ -20981,22 +20975,22 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strOccupationID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_STATISTIC_TOP20" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STATISTIC_TOP20_Result)">
-            <Parameter Name="strTypeStatistic" Mode="In" Type="String" />
+          <Parameter Name="strTypeStatistic" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_STATOCCUPATION" ReturnType="Collection(LibolModel.SP_CIR_PATRON_STATOCCUPATION_Result)">
-            <Parameter Name="strOccupationIDs" Mode="In" Type="String" />
+          <Parameter Name="strOccupationIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_UNI_DELETE">
-            <Parameter Name="intPatronID" Mode="In" Type="Int32" />
+          <Parameter Name="intPatronID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_UNI_SELECT" ReturnType="Collection(LibolModel.SP_CIR_PATRON_UNI_SELECT_Result)">
-            <Parameter Name="strPatronIDs" Mode="In" Type="String" />
+          <Parameter Name="strPatronIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PATRON_UPDATE_QUEUE">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PHOTO_PRICE_DEL">
-            <Parameter Name="strTypeIDs" Mode="In" Type="String" />
+          <Parameter Name="strTypeIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PHOTO_PRICE_INS">
             <Parameter Name="strTypeName" Mode="In" Type="String" />
@@ -21004,7 +20998,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRetVal" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PHOTO_PRICE_SEL">
-            <Parameter Name="strTypeIDs" Mode="In" Type="String" />
+          <Parameter Name="strTypeIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_PHOTO_PRICE_UPD">
             <Parameter Name="intTypeID" Mode="In" Type="Int32" />
@@ -21068,7 +21062,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strNewDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_RESERVATION_DEL">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CIR_STAT_QUICKVIEW">
             <Parameter Name="intOption" Mode="In" Type="Int32" />
@@ -21120,7 +21114,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strPatronIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIRCULATION_THONGKE" ReturnType="Collection(LibolModel.SP_CIRCULATION_THONGKE_Result)">
-            <Parameter Name="intType" Mode="In" Type="String" />
+          <Parameter Name="intType" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CIRCULATION_TIME_STATISTIC">
             <Parameter Name="strStatisticType" Mode="In" Type="String" />
@@ -21144,7 +21138,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strTimeOutDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CONTENT_IN_FIELD200S" ReturnType="Collection(String)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_COPYNUMBER_INS">
             <Parameter Name="strItemCode" Mode="In" Type="String" />
@@ -21210,7 +21204,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strName" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CREATE_QUEUE">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CREATE_ROUTING">
             <Parameter Name="lngItemID" Mode="In" Type="Int32" />
@@ -21220,7 +21214,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intCopies" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_CREATE_SUBJECT">
-            <Parameter Name="strSubject" Mode="In" Type="String" />
+          <Parameter Name="strSubject" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CREATE_SYS_TEMPLATE">
             <Parameter Name="strTitle" Mode="In" Type="String" />
@@ -21279,29 +21273,29 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strViewCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_DELETE_ARTICLE">
-            <Parameter Name="strID" Mode="In" Type="String" />
+          <Parameter Name="strID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_DELETE_EDELIV_ACCTRAN">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_DELETE_EDELIV_CUSTOMER">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_DELETE_EDELIV_REQUEST">
-            <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_DELETE_EDELIV_REQUESTMODE">
-            <Parameter Name="intModeID" Mode="In" Type="Int32" />
+          <Parameter Name="intModeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_DELETE_SCHEDULE">
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
             <Parameter Name="strOffYear" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_DELETE_SYS_TEMPLATE">
-            <Parameter Name="intTemplateID" Mode="In" Type="Int32" />
+          <Parameter Name="intTemplateID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_DICINFOR_SEL">
-            <Parameter Name="strSQL" Mode="In" Type="String" />
+          <Parameter Name="strSQL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_dropdiagram">
             <Parameter Name="diagramname" Mode="In" Type="String" />
@@ -21316,7 +21310,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strDescription" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_COLLECTION_DELETE">
-            <Parameter Name="intCollectionID" Mode="In" Type="Int32" />
+          <Parameter Name="intCollectionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_COLLECTION_GET" ReturnType="Collection(LibolModel.SP_EDATA_COLLECTION_GET_Result)" />
           <FunctionImport Name="SP_EDATA_COLLECTION_UPDATE">
@@ -21346,13 +21340,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSQL" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_DELETE_METADATA">
-            <Parameter Name="lngobjID" Mode="In" Type="Int32" />
+          <Parameter Name="lngobjID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_DETACH">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_FILE_GET">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GENERAL_DELETE">
             <Parameter Name="intMode" Mode="In" Type="Int32" />
@@ -21366,14 +21360,14 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="str956Content" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_DATAFILE" ReturnType="Collection(LibolModel.SP_EDATA_GET_DATAFILE_Result)">
-            <Parameter Name="intStartID" Mode="In" Type="Int32" />
+          <Parameter Name="intStartID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_DISPLAY_TYPE" ReturnType="Collection(String)">
             <Parameter Name="intType" Mode="In" Type="Int32" />
             <Parameter Name="intFree" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_DUB_TITLE" ReturnType="Collection(String)">
-            <Parameter Name="lngID" Mode="In" Type="Int32" />
+          <Parameter Name="lngID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_EDATAFILE" ReturnType="Collection(LibolModel.SP_EDATA_GET_EDATAFILE_Result)">
             <Parameter Name="strUserName" Mode="In" Type="String" />
@@ -21392,10 +21386,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="lngTotalRec" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_ITEM" ReturnType="Collection(LibolModel.SP_EDATA_GET_ITEM_Result)">
-            <Parameter Name="strItemCode" Mode="In" Type="String" />
+          <Parameter Name="strItemCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_ITEM_DETAILINFOR">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_MAXID_BY_TOPNUM">
             <Parameter Name="intListType" Mode="In" Type="Int32" />
@@ -21405,7 +21399,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intFree" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_METADATA" ReturnType="Collection(LibolModel.SP_EDATA_GET_METADATA_Result)">
-            <Parameter Name="lngobjID" Mode="In" Type="Int32" />
+          <Parameter Name="lngobjID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_GET_METADATA_DEFIN" ReturnType="Collection(LibolModel.SP_EDATA_GET_METADATA_DEFIN_Result)" />
           <FunctionImport Name="SP_EDATA_INSERT_FILE">
@@ -21455,7 +21449,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intPageCount" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_ITEM_GET" ReturnType="Collection(LibolModel.SP_EDATA_ITEM_GET_Result)">
-            <Parameter Name="strItemCode" Mode="In" Type="String" />
+          <Parameter Name="strItemCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EDATA_METADATA_INSERT">
             <Parameter Name="strFieldInput" Mode="In" Type="String" />
@@ -21531,18 +21525,18 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intStatusID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_FIELD200S_SEL">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_FORMID_OF_ITEM_SEL">
-            <Parameter Name="intBookType" Mode="In" Type="Int32" />
+          <Parameter Name="intBookType" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ACQITEM_INFOR" ReturnType="Collection(LibolModel.SP_GET_ACQITEM_INFOR_Result)">
-            <Parameter Name="intACQITEMID" Mode="In" Type="Int32" />
+          <Parameter Name="intACQITEMID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ACQSOURCES" ReturnType="Collection(LibolModel.SP_GET_ACQSOURCES_Result)" />
           <FunctionImport Name="SP_GET_ACQSTATUS" ReturnType="Collection(LibolModel.SP_GET_ACQSTATUS_Result)" />
           <FunctionImport Name="SP_GET_ARTICLE" ReturnType="Collection(LibolModel.SP_GET_ARTICLE_Result)">
-            <Parameter Name="intIssueID" Mode="In" Type="Int32" />
+          <Parameter Name="intIssueID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_BINDING_RULE">
             <Parameter Name="lngItemID" Mode="In" Type="Int32" />
@@ -21550,7 +21544,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intBindingRule" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_BUDGETS" ReturnType="Collection(LibolModel.SP_GET_BUDGETS_Result)">
-            <Parameter Name="intBudgetID" Mode="In" Type="Int32" />
+          <Parameter Name="intBudgetID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_CATEGORY" ReturnType="Collection(LibolModel.SP_GET_CATEGORY_Result)" />
           <FunctionImport Name="SP_GET_CNs_FALSE_PATH" ReturnType="Collection(String)">
@@ -21559,7 +21553,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_CONTRACT_STATUS" ReturnType="Collection(LibolModel.SP_GET_CONTRACT_STATUS_Result)">
-            <Parameter Name="intPoID" Mode="In" Type="Int32" />
+          <Parameter Name="intPoID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_COPIES_OF_BIND" ReturnType="Collection(LibolModel.SP_GET_COPIES_OF_BIND_Result)">
             <Parameter Name="lngItemID" Mode="In" Type="Int32" />
@@ -21574,17 +21568,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_COPYNUMBER">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_COPYNUMBERBYVOLUME">
             <Parameter Name="intIssue" Mode="In" Type="Int32" />
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_COPYNUMBERITEMPO">
-            <Parameter Name="intCopyNumberID" Mode="In" Type="Int32" />
+          <Parameter Name="intCopyNumberID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_COPYNUMREM">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_COUNT_HOLDING_ID" ReturnType="Collection(Int32)">
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
@@ -21594,7 +21588,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_GET_COUNTRIES" ReturnType="Collection(LibolModel.SP_GET_COUNTRIES_Result)" />
           <FunctionImport Name="SP_GET_CURRENCY" ReturnType="Collection(LibolModel.SP_GET_CURRENCY_Result)">
-            <Parameter Name="strCurrencyCode" Mode="In" Type="String" />
+          <Parameter Name="strCurrencyCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_CURRENT_CHECKIN_INFOR">
             <Parameter Name="strTransactionIDs" Mode="In" Type="String" />
@@ -21616,7 +21610,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="mnyRemain" Mode="InOut" Type="Decimal" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_ANNUALSTAT" ReturnType="Collection(LibolModel.SP_GET_EDELIV_ANNUALSTAT_Result)">
-            <Parameter Name="intType" Mode="In" Type="Int32" />
+          <Parameter Name="intType" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_CHECKDEBT" ReturnType="Collection(LibolModel.SP_GET_EDELIV_CHECKDEBT_Result)">
             <Parameter Name="strCustomerCode" Mode="In" Type="String" />
@@ -21624,10 +21618,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOutPut" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_CUSTOMER" ReturnType="Collection(LibolModel.SP_GET_EDELIV_CUSTOMER_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_CUSTOMER_BY_CODE" ReturnType="Collection(LibolModel.SP_GET_EDELIV_CUSTOMER_BY_CODE_Result)">
-            <Parameter Name="strCustomerCode" Mode="In" Type="String" />
+          <Parameter Name="strCustomerCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_DAYSTAT" ReturnType="Collection(LibolModel.SP_GET_EDELIV_DAYSTAT_Result)">
             <Parameter Name="intType" Mode="In" Type="Int32" />
@@ -21641,16 +21635,16 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strTemp" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_REQMONTH" ReturnType="Collection(LibolModel.SP_GET_EDELIV_REQMONTH_Result)">
-            <Parameter Name="intYear" Mode="In" Type="Int32" />
+          <Parameter Name="intYear" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_REQUEST_PROCESS" ReturnType="Collection(LibolModel.SP_GET_EDELIV_REQUEST_PROCESS_Result)">
-            <Parameter Name="intNumOfReqProcessing" Mode="InOut" Type="Int32" />
+          <Parameter Name="intNumOfReqProcessing" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_REQUESTINFFOR" ReturnType="Collection(LibolModel.SP_GET_EDELIV_REQUESTINFFOR_Result)">
-            <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_REQUESTMODE" ReturnType="Collection(LibolModel.SP_GET_EDELIV_REQUESTMODE_Result)">
-            <Parameter Name="intModeID" Mode="In" Type="Int32" />
+          <Parameter Name="intModeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_REQUESTS" ReturnType="Collection(LibolModel.SP_GET_EDELIV_REQUESTS_Result)">
             <Parameter Name="intStatusID" Mode="In" Type="Int32" />
@@ -21658,7 +21652,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_REQYEAR" ReturnType="Collection(Int32)" />
           <FunctionImport Name="SP_GET_EDELIV_TOP20STAT">
-            <Parameter Name="intPropertyID" Mode="In" Type="Int32" />
+          <Parameter Name="intPropertyID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_EDELIV_TOPCUSSTAT">
             <Parameter Name="strTimeFrom" Mode="In" Type="String" />
@@ -21684,10 +21678,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_GET_EXPIRED_SER_ITEM" ReturnType="Collection(Int32)" />
           <FunctionImport Name="SP_GET_FIELD200s">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_FIELDS245">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_FILE_LOCATIONS" ReturnType="Collection(String)" />
           <FunctionImport Name="SP_GET_FILTER_EREQUESTS">
@@ -21724,14 +21718,14 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intDocType" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_FINE_FEES">
-            <Parameter Name="strTransactionIDs" Mode="In" Type="String" />
+          <Parameter Name="strTransactionIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_FORMID">
             <Parameter Name="intTyeID" Mode="In" Type="Int32" />
             <Parameter Name="intFormID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_FREE_ITEM_NUM" ReturnType="Collection(Int32)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_GEN_CALSSIFICATION" ReturnType="Collection(LibolModel.SP_GET_GEN_CALSSIFICATION_Result)" />
           <FunctionImport Name="SP_GET_GEN_EXPIRED" ReturnType="Collection(LibolModel.SP_GET_GEN_EXPIRED_Result)" />
@@ -21784,7 +21778,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intCountOnly" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_HOLDING_INFO" ReturnType="Collection(LibolModel.SP_GET_HOLDING_INFO_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_HOLDING_INFOR" ReturnType="Collection(LibolModel.SP_GET_HOLDING_INFOR_Result)">
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
@@ -21830,7 +21824,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strItemCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_HOLDING_REMOVED_ONIDs" ReturnType="Collection(LibolModel.SP_GET_HOLDING_REMOVED_ONIDs_Result)">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_HOLDING_SUMMARY_INFOR" ReturnType="Collection(Int32)">
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
@@ -21844,7 +21838,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="bitAlert" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ILL_IN_REQUEST_PROCESS" ReturnType="Collection(LibolModel.SP_GET_ILL_IN_REQUEST_PROCESS_Result)">
-            <Parameter Name="intNumOfReqProcessing" Mode="InOut" Type="Int32" />
+          <Parameter Name="intNumOfReqProcessing" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ILL_IN_REQUESTS" ReturnType="Collection(LibolModel.SP_GET_ILL_IN_REQUESTS_Result)">
             <Parameter Name="intStatusID" Mode="In" Type="Int32" />
@@ -21856,7 +21850,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="bitAlert" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ILL_OUT_REQUEST_PROCESS" ReturnType="Collection(LibolModel.SP_GET_ILL_OUT_REQUEST_PROCESS_Result)">
-            <Parameter Name="intNumOfReqProcessing" Mode="InOut" Type="Int32" />
+          <Parameter Name="intNumOfReqProcessing" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ILL_OUT_REQUESTS" ReturnType="Collection(LibolModel.SP_GET_ILL_OUT_REQUESTS_Result)">
             <Parameter Name="intStatusID" Mode="In" Type="Int32" />
@@ -21876,7 +21870,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="lngCurrentPos" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ISSUE_INFOR" ReturnType="Collection(LibolModel.SP_GET_ISSUE_INFOR_Result)">
-            <Parameter Name="lngIssueID" Mode="In" Type="Int32" />
+          <Parameter Name="lngIssueID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ISSUEINYEARS">
             <Parameter Name="strIDs" Mode="In" Type="String" />
@@ -21888,16 +21882,16 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ITEM_INFOR" ReturnType="Collection(LibolModel.SP_GET_ITEM_INFOR_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ITEM_REVIEWER">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ITEMCODE_BYPO" ReturnType="Collection(String)">
-            <Parameter Name="strPOCode" Mode="In" Type="String" />
+          <Parameter Name="strPOCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ITEMID_BYCODE" ReturnType="Collection(Int32)">
-            <Parameter Name="strItemCode" Mode="In" Type="String" />
+          <Parameter Name="strItemCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ITEMS" ReturnType="Collection(LibolModel.SP_GET_ITEMS_Result)">
             <Parameter Name="strCode" Mode="In" Type="String" />
@@ -21906,15 +21900,15 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <FunctionImport Name="SP_GET_ITEMTYPES" ReturnType="Collection(LibolModel.SP_GET_ITEMTYPES_Result)" />
           <FunctionImport Name="SP_GET_LANGUAGES" ReturnType="Collection(LibolModel.SP_GET_LANGUAGES_Result)" />
           <FunctionImport Name="SP_GET_LAST_ISSUE_INFOR" ReturnType="Collection(LibolModel.SP_GET_LAST_ISSUE_INFOR_Result)">
-            <Parameter Name="lngItemID" Mode="In" Type="Int32" />
+          <Parameter Name="lngItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_LIBRARY" ReturnType="Collection(LibolModel.SP_GET_LIBRARY_Result)" />
           <FunctionImport Name="SP_GET_LIST_POS" ReturnType="Collection(LibolModel.SP_GET_LIST_POS_Result)" />
           <FunctionImport Name="SP_GET_LOANNING_INFOR" ReturnType="Collection(LibolModel.SP_GET_LOANNING_INFOR_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_LOCATIONITEMPO">
-            <Parameter Name="intIssue" Mode="In" Type="Int32" />
+          <Parameter Name="intIssue" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_LOCKEDPATRONS">
             <Parameter Name="strPatronCode" Mode="In" Type="String" />
@@ -21928,13 +21922,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intResult" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_OAI_URL" ReturnType="Collection(LibolModel.SP_GET_OAI_URL_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_COPYNUMBERS" ReturnType="Collection(LibolModel.SP_GET_PATRON_COPYNUMBERS_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_FORGOTPASSWORD" ReturnType="Collection(LibolModel.SP_GET_PATRON_FORGOTPASSWORD_Result)">
-            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+          <Parameter Name="strPatronCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_GROUP" ReturnType="Collection(LibolModel.SP_GET_PATRON_GROUP_Result)" />
           <FunctionImport Name="SP_GET_PATRON_INFOR" ReturnType="Collection(LibolModel.SP_GET_PATRON_INFOR_Result)">
@@ -21949,7 +21943,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intMode" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_LOAN_INFOR" ReturnType="Collection(LibolModel.SP_GET_PATRON_LOAN_INFOR_Result)">
-            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+          <Parameter Name="strPatronCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_MAX">
             <Parameter Name="strFromDate" Mode="In" Type="String" />
@@ -21959,13 +21953,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_NAME_REQUEST" ReturnType="Collection(LibolModel.SP_GET_PATRON_NAME_REQUEST_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_NOTE" ReturnType="Collection(String)">
-            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+          <Parameter Name="strPatronCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_ONLOAN_COPIES" ReturnType="Collection(LibolModel.SP_GET_PATRON_ONLOAN_COPIES_Result)">
-            <Parameter Name="lngPatronID" Mode="In" Type="Int32" />
+          <Parameter Name="lngPatronID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PATRON_TOTAL">
             <Parameter Name="intMonth" Mode="In" Type="Int32" />
@@ -21975,13 +21969,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_GET_PO_STATUS" ReturnType="Collection(LibolModel.SP_GET_PO_STATUS_Result)" />
           <FunctionImport Name="SP_GET_POIDFROMACQITEM" ReturnType="Collection(Int32)">
-            <Parameter Name="intACQITEMID" Mode="In" Type="Int32" />
+          <Parameter Name="intACQITEMID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PORTRAIT_PATRON_DEL">
-            <Parameter Name="strPatronIDs" Mode="In" Type="String" />
+          <Parameter Name="strPatronIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_PUBLISHERS" ReturnType="Collection(LibolModel.SP_GET_PUBLISHERS_Result)">
-            <Parameter Name="strPubName" Mode="In" Type="Int32" />
+          <Parameter Name="strPubName" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_RECEIVED_COPIES" ReturnType="Collection(LibolModel.SP_GET_RECEIVED_COPIES_Result)">
             <Parameter Name="lngIssueID" Mode="In" Type="Int32" />
@@ -22011,7 +22005,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRemainCopies" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ROUTING_INFOR" ReturnType="Collection(LibolModel.SP_GET_ROUTING_INFOR_Result)">
-            <Parameter Name="lngItemID" Mode="In" Type="Int32" />
+          <Parameter Name="lngItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_SER_CATEGORIES" ReturnType="Collection(LibolModel.SP_GET_SER_CATEGORIES_Result)" />
           <FunctionImport Name="SP_GET_SHELF" ReturnType="Collection(String)">
@@ -22025,17 +22019,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strLocationID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_SYS_TEMP_FILE" ReturnType="Collection(String)">
-            <Parameter Name="intModuleID" Mode="In" Type="Int32" />
+          <Parameter Name="intModuleID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_SYS_TEMPLATE">
             <Parameter Name="intTemplateID" Mode="In" Type="Int32" />
             <Parameter Name="intTemplateType" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_SYS_VIEW" ReturnType="Collection(LibolModel.SP_GET_SYS_VIEW_Result)">
-            <Parameter Name="strUserName" Mode="In" Type="String" />
+          <Parameter Name="strUserName" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_TITLES">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_TOTAL_ISSUE">
             <Parameter Name="intTotalID" Mode="InOut" Type="Int32" />
@@ -22048,16 +22042,16 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intType" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_UNRECEIVEDISSUES_TO_CLAIM">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_USER_RIGHT" ReturnType="Collection(LibolModel.SP_GET_USER_RIGHT_Result)">
-            <Parameter Name="intUSERID" Mode="In" Type="Int32" />
+          <Parameter Name="intUSERID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_VENDOR_TO_CLAIM" ReturnType="Collection(LibolModel.SP_GET_VENDOR_TO_CLAIM_Result)">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_VENDORS" ReturnType="Collection(LibolModel.SP_GET_VENDORS_Result)">
-            <Parameter Name="intVendorID" Mode="In" Type="Int32" />
+          <Parameter Name="intVendorID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_VOLUMEBYLIBRARYS" ReturnType="Collection(LibolModel.SP_GET_VOLUMEBYLIBRARYS_Result)">
             <Parameter Name="lngItemID" Mode="In" Type="Int32" />
@@ -22071,17 +22065,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_YEARITEMPO" ReturnType="Collection(Int32)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GET_ZSERVER_LIST" ReturnType="Collection(LibolModel.SP_GET_ZSERVER_LIST_Result)" />
           <FunctionImport Name="SP_GETCATDICLIST" ReturnType="Collection(LibolModel.SP_GETCATDICLIST_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GETCATDICLIST2FIELD" ReturnType="Collection(LibolModel.SP_GETCATDICLIST2FIELD_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GETCOPYNUMBERINFOR" ReturnType="Collection(LibolModel.SP_GETCOPYNUMBERINFOR_Result)">
-            <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+          <Parameter Name="strCopyNumber" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GETFIELDSTOVIEW">
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
@@ -22096,7 +22090,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intFormID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GETLOANTYPES" ReturnType="Collection(LibolModel.SP_GETLOANTYPES_Result)">
-            <Parameter Name="intLoanTypeID" Mode="In" Type="Int32" />
+          <Parameter Name="intLoanTypeID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GETLOCBYCOPYNUMBER">
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
@@ -22109,17 +22103,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GETPATRONLOCATIONS" ReturnType="Collection(LibolModel.SP_GETPATRONLOCATIONS_Result)">
-            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+          <Parameter Name="strPatronCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GETREFERENCE_BYFIELCODE" ReturnType="Collection(LibolModel.SP_GETREFERENCE_BYFIELCODE_Result)">
-            <Parameter Name="strFieldCode" Mode="In" Type="String" />
+          <Parameter Name="strFieldCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GETSCHEDULE" ReturnType="Collection(LibolModel.SP_GETSCHEDULE_Result)">
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
             <Parameter Name="strOffDay" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_GETTOTAL_HOLDINGCOPIES" ReturnType="Collection(LibolModel.SP_GETTOTAL_HOLDINGCOPIES_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_GETUSER_ROUTING_LOCATIONS" ReturnType="Collection(LibolModel.SP_GETUSER_ROUTING_LOCATIONS_Result)">
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
@@ -22139,13 +22133,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="blnType" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="SP_HELP_CAT_DIC_SELECT_BYPARENTID" ReturnType="Collection(LibolModel.SP_HELP_CAT_DIC_SELECT_BYPARENTID_Result)">
-            <Parameter Name="intParentID" Mode="In" Type="Int32" />
+          <Parameter Name="intParentID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HELP_CAT_FILE_SELECT_BYDICID" ReturnType="Collection(LibolModel.SP_HELP_CAT_FILE_SELECT_BYDICID_Result)">
-            <Parameter Name="intCatDicID" Mode="In" Type="Int32" />
+          <Parameter Name="intCatDicID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HELP_CAT_FILE_SELECT_BYURL" ReturnType="Collection(LibolModel.SP_HELP_CAT_FILE_SELECT_BYURL_Result)">
-            <Parameter Name="strFileURL" Mode="In" Type="String" />
+          <Parameter Name="strFileURL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HELP_DIC_DEL" ReturnType="Collection(LibolModel.SP_HELP_DIC_DEL_Result)">
             <Parameter Name="intDicID" Mode="In" Type="Int32" />
@@ -22162,7 +22156,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intDicID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HELP_DIC_ITEM_SELECT_BYID" ReturnType="Collection(LibolModel.SP_HELP_DIC_ITEM_SELECT_BYID_Result)">
-            <Parameter Name="intCatDicID" Mode="In" Type="Int32" />
+          <Parameter Name="intCatDicID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HELP_DIC_UPD" ReturnType="Collection(Int32)">
             <Parameter Name="intDicID" Mode="In" Type="Int32" />
@@ -22174,7 +22168,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strLinkID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HELP_ITEM_LINK_SELECT_BYDICID" ReturnType="Collection(LibolModel.SP_HELP_ITEM_LINK_SELECT_BYDICID_Result)">
-            <Parameter Name="intCatDicID" Mode="In" Type="Int32" />
+          <Parameter Name="intCatDicID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HELP_SEARCH">
             <Parameter Name="strHelpTitle" Mode="In" Type="String" />
@@ -22213,7 +22207,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSql" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_DELETE_PROC">
-            <Parameter Name="strCopyIDs" Mode="In" Type="String" />
+          <Parameter Name="strCopyIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_GET_COPYNUMBER">
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
@@ -22225,7 +22219,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intDesc" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_INFO_SEL" ReturnType="Collection(LibolModel.SP_HOLDING_INFO_SEL_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_INQUEUE_SEL" ReturnType="Collection(LibolModel.SP_HOLDING_INQUEUE_SEL_Result)">
             <Parameter Name="intIsRecv" Mode="In" Type="Int32" />
@@ -22258,7 +22252,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strReceiptedDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_INV_SEL" ReturnType="Collection(LibolModel.SP_HOLDING_INV_SEL_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_INV_UPD">
             <Parameter Name="intRemovedReasonID" Mode="In" Type="Int32" />
@@ -22308,10 +22302,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSql" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LIB_SEL" ReturnType="Collection(LibolModel.SP_HOLDING_LIB_SEL_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LIBLOC_SEL" ReturnType="Collection(LibolModel.SP_HOLDING_LIBLOC_SEL_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LIBRARY_INS">
             <Parameter Name="strAddress" Mode="In" Type="String" />
@@ -22325,7 +22319,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intDesLibID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LIBRARY_SEL_REGSPEC" ReturnType="Collection(LibolModel.SP_HOLDING_LIBRARY_SEL_REGSPEC_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LIBRARY_SELECT">
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
@@ -22343,7 +22337,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRetVal" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LOC_ON_LIBRARY">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LOC_PRO_SEL">
             <Parameter Name="intFilter" Mode="In" Type="Int32" />
@@ -22357,7 +22351,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LOC_SHELF_SCHEMA" ReturnType="Collection(LibolModel.SP_HOLDING_LOC_SHELF_SCHEMA_Result)">
-            <Parameter Name="intLocID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LOCATION_CLOSE">
             <Parameter Name="strLocationIDs" Mode="In" Type="String" />
@@ -22401,10 +22395,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strShelf" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LOCATION_SCHEMA" ReturnType="Collection(LibolModel.SP_HOLDING_LOCATION_SCHEMA_Result)">
-            <Parameter Name="intLocID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LOCATION_SCHEMA_DELETE">
-            <Parameter Name="intLocID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_LOCATION_SCHEMA_INSERT">
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
@@ -22493,7 +22487,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSQL" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_REMOVE_REASON_SEL" ReturnType="Collection(LibolModel.SP_HOLDING_REMOVE_REASON_SEL_Result)">
-            <Parameter Name="intReasonID" Mode="In" Type="Int32" />
+          <Parameter Name="intReasonID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_REMOVED_INS">
             <Parameter Name="intID" Mode="In" Type="Int32" />
@@ -22534,7 +22528,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSQL" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_REMOVED_SEL_RELEASE">
-            <Parameter Name="strItemID" Mode="In" Type="String" />
+          <Parameter Name="strItemID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_SEARCH">
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
@@ -22552,7 +22546,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strSql" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_SHELF_SCHEMA" ReturnType="Collection(LibolModel.SP_HOLDING_SHELF_SCHEMA_Result)">
-            <Parameter Name="intLocID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_SHELF_SCHEMA_DELETE">
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
@@ -22569,7 +22563,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intRetVal" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_SHELF_SCHEMA_SELECT" ReturnType="Collection(LibolModel.SP_HOLDING_SHELF_SCHEMA_SELECT_Result)">
-            <Parameter Name="intLocID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_HOLDING_SHELF_SCHEMA_UPDATE">
             <Parameter Name="intLocID" Mode="In" Type="Int32" />
@@ -22623,7 +22617,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strGroupName" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_IDX_DEL">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_IDX_DETAIL_DEL">
             <Parameter Name="intIDIdx" Mode="In" Type="Int32" />
@@ -22791,7 +22785,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOut" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_DEL_INREQUEST">
-            <Parameter Name="intILLID" Mode="In" Type="Int32" />
+          <Parameter Name="intILLID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_DELETE_COPYPAYPHYTYPE">
             <Parameter Name="strSelectMode" Mode="In" Type="String" />
@@ -22827,7 +22821,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intValue" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_DELETE_Z3950_DBS">
-            <Parameter Name="intDBID" Mode="In" Type="Int32" />
+          <Parameter Name="intDBID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_DELETE_ZSERVER_LIST">
             <Parameter Name="intServerID" Mode="In" Type="Int32" />
@@ -22838,16 +22832,16 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_COPYRIGHT">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_COUNTRY" ReturnType="Collection(LibolModel.SP_ILL_GET_COUNTRY_Result)">
-            <Parameter Name="intCountryID" Mode="In" Type="Int32" />
+          <Parameter Name="intCountryID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_INSERREPORT" ReturnType="Collection(LibolModel.SP_ILL_GET_INSERREPORT_Result)">
-            <Parameter Name="intSelectMode" Mode="In" Type="Int32" />
+          <Parameter Name="intSelectMode" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_IR_DETAIL" ReturnType="Collection(LibolModel.SP_ILL_GET_IR_DETAIL_Result)">
-            <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_IR_LIBADD_COUNTRY" ReturnType="Collection(LibolModel.SP_ILL_GET_IR_LIBADD_COUNTRY_Result)" />
           <FunctionImport Name="SP_ILL_GET_IR_LOG_CANCEL" ReturnType="Collection(LibolModel.SP_ILL_GET_IR_LOG_CANCEL_Result)">
@@ -22855,10 +22849,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intAPDUType" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_IR_RESPONSE">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_IR_SHIPMESS" ReturnType="Collection(LibolModel.SP_ILL_GET_IR_SHIPMESS_Result)">
-            <Parameter Name="intILLID" Mode="In" Type="Int32" />
+          <Parameter Name="intILLID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_LIB_INFOR">
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
@@ -22866,54 +22860,54 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_LIST_ZSERVER" ReturnType="Collection(LibolModel.SP_ILL_GET_LIST_ZSERVER_Result)" />
           <FunctionImport Name="SP_ILL_GET_LOCAL_ELIBRARY_ADDR">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_LOCAL_LIBRARY_ADDR">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_LOCLIBADDR" ReturnType="Collection(LibolModel.SP_ILL_GET_LOCLIBADDR_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_LOCLIBELECADDR" ReturnType="Collection(LibolModel.SP_ILL_GET_LOCLIBELECADDR_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_MEDIUM_TYPES">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_OR_DETAIL" ReturnType="Collection(LibolModel.SP_ILL_GET_OR_DETAIL_Result)">
-            <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_OR_RENEW_LOG" ReturnType="Collection(LibolModel.SP_ILL_GET_OR_RENEW_LOG_Result)">
-            <Parameter Name="lngILLID" Mode="In" Type="Int32" />
+          <Parameter Name="lngILLID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_OREQUEST_ITEMS" ReturnType="Collection(LibolModel.SP_ILL_GET_OREQUEST_ITEMS_Result)">
             <Parameter Name="intID" Mode="In" Type="Int32" />
             <Parameter Name="intExpandInfor" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_OUTGOING_REQUEST_LOG_RECEIVE" ReturnType="Collection(LibolModel.SP_ILL_GET_OUTGOING_REQUEST_LOG_RECEIVE_Result)">
-            <Parameter Name="intIllID" Mode="In" Type="Int32" />
+          <Parameter Name="intIllID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_OUTGOING_REQUESTS" ReturnType="Collection(LibolModel.SP_ILL_GET_OUTGOING_REQUESTS_Result)">
-            <Parameter Name="intOutRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="intOutRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_OUTOVERDUE_INFOR" ReturnType="Collection(LibolModel.SP_ILL_GET_OUTOVERDUE_INFOR_Result)">
-            <Parameter Name="intILLID" Mode="In" Type="Int32" />
+          <Parameter Name="intILLID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_OUTSERREPORT" ReturnType="Collection(LibolModel.SP_ILL_GET_OUTSERREPORT_Result)">
-            <Parameter Name="intSelectMode" Mode="In" Type="Int32" />
+          <Parameter Name="intSelectMode" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_PACKAGE">
             <Parameter Name="strSelectMode" Mode="In" Type="String" />
             <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_PATRON_GROUP">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_PAYMENTTYPES">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_PHYSICALMODE">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_GET_REQITEM_INFOR" ReturnType="Collection(LibolModel.SP_ILL_GET_REQITEM_INFOR_Result)">
             <Parameter Name="lngID" Mode="In" Type="Int32" />
@@ -22935,7 +22929,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_ILL_INCOMMONREQUEST" ReturnType="Collection(LibolModel.SP_ILL_INCOMMONREQUEST_Result)" />
           <FunctionImport Name="SP_ILL_INGENERATEREPORT" ReturnType="Collection(LibolModel.SP_ILL_INGENERATEREPORT_Result)">
-            <Parameter Name="intSelectMode" Mode="In" Type="Int32" />
+          <Parameter Name="intSelectMode" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_INSERT_IN_REQUEST_ITEM">
             <Parameter Name="intID" Mode="In" Type="Int32" />
@@ -23148,7 +23142,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strNote" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_OR_SEND_REG">
-            <Parameter Name="lngILLID" Mode="In" Type="Int32" />
+          <Parameter Name="lngILLID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_OUT_ANSWERCONDITION">
             <Parameter Name="intAnswer" Mode="In" Type="Int32" />
@@ -23160,10 +23154,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strNote" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_OUTGENERATEREPORT" ReturnType="Collection(LibolModel.SP_ILL_OUTGENERATEREPORT_Result)">
-            <Parameter Name="intSelectMode" Mode="In" Type="Int32" />
+          <Parameter Name="intSelectMode" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_OUTGOING_REQUEST_LOG_DEL">
-            <Parameter Name="intIllID" Mode="In" Type="Int32" />
+          <Parameter Name="intIllID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_RECALLIT">
             <Parameter Name="intILLID" Mode="In" Type="Int32" />
@@ -23171,10 +23165,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strNote" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_RESPONSES_GET_DENIED" ReturnType="Collection(LibolModel.SP_ILL_RESPONSES_GET_DENIED_Result)">
-            <Parameter Name="intRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="intRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_RESPONSES_GET_GENDENIED" ReturnType="Collection(LibolModel.SP_ILL_RESPONSES_GET_GENDENIED_Result)">
-            <Parameter Name="intRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="intRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_RESPONSES_GET_PATDENIED" ReturnType="Collection(LibolModel.SP_ILL_RESPONSES_GET_PATDENIED_Result)" />
           <FunctionImport Name="SP_ILL_SEARCH_PATRON">
@@ -23187,7 +23181,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strIssueID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_STAT_QUICKVIEW" ReturnType="Collection(LibolModel.SP_ILL_STAT_QUICKVIEW_Result)">
-            <Parameter Name="intOption" Mode="In" Type="Int32" />
+          <Parameter Name="intOption" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_STATISTIC_SERVICE" ReturnType="Collection(LibolModel.SP_ILL_STATISTIC_SERVICE_Result)" />
           <FunctionImport Name="SP_ILL_UPDATE_COPYPAYPHYTYPE">
@@ -23257,7 +23251,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strBoolSQL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_UPDATE_IR_LOGID_CANCEL">
-            <Parameter Name="intLogID" Mode="In" Type="Int32" />
+          <Parameter Name="intLogID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ILL_UPDATE_IR_STATUS">
             <Parameter Name="intStatus" Mode="In" Type="Int32" />
@@ -23468,11 +23462,11 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intInventoryID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_AVAILABLE_SEL">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_CAT_QUEUE_SEL" ReturnType="Collection(LibolModel.SP_ITEM_CAT_QUEUE_SEL_Result)" />
           <FunctionImport Name="SP_ITEM_COUNT_SEL">
-            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+          <Parameter Name="strItemIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_DETAIL_SEL">
             <Parameter Name="strSelectMode" Mode="In" Type="String" />
@@ -23494,26 +23488,26 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_ODERED_SEL" ReturnType="Collection(LibolModel.SP_ITEM_ODERED_SEL_Result)">
-            <Parameter Name="strTitle" Mode="In" Type="String" />
+          <Parameter Name="strTitle" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_PROCESS">
-            <Parameter Name="strSQLStatement" Mode="In" Type="String" />
+          <Parameter Name="strSQLStatement" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_QUEUE_SEL_INPUTDATE">
             <Parameter Name="InputDate" Mode="In" Type="String" />
             <Parameter Name="intReviewed" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_SEL">
-            <Parameter Name="strSQLStatement" Mode="In" Type="String" />
+          <Parameter Name="strSQLStatement" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_SELECT" ReturnType="Collection(LibolModel.SP_ITEM_SELECT_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ITEM_SELECT_IDS">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_LIB_STORE_SEL">
-            <Parameter Name="strSQL" Mode="In" Type="String" />
+          <Parameter Name="strSQL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_LOCK_PATRON_CARD">
             <Parameter Name="strPatronCode" Mode="In" Type="String" />
@@ -23528,10 +23522,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strNote" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_LOG_FINE_FEES">
-            <Parameter Name="strTransactionIDs" Mode="In" Type="String" />
+          <Parameter Name="strTransactionIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_MARC_BLOCK_SEL" ReturnType="Collection(LibolModel.SP_MARC_BLOCK_SEL_Result)">
-            <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+          <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_MARC_FIELD_GETPROPERTIES" ReturnType="Collection(LibolModel.SP_MARC_FIELD_GETPROPERTIES_Result)">
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
@@ -23550,7 +23544,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strPassword" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_CANCEL_PENDING_REQUEST">
-            <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_CHECK_EDELIV_USER" ReturnType="Collection(LibolModel.SP_OPAC_CHECK_EDELIV_USER_Result)">
             <Parameter Name="strUserName" Mode="In" Type="String" />
@@ -23711,7 +23705,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intSucess" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_CURSOR_CIRHOLDING">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_DEL_RESERVATION" ReturnType="Collection(DateTime)">
             <Parameter Name="intCirID" Mode="In" Type="Int32" />
@@ -23722,13 +23716,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intSucess" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_DICTIONARY">
-            <Parameter Name="strSQL" Mode="In" Type="String" />
+          <Parameter Name="strSQL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_EDATA_GET_DUB_TITLE" ReturnType="Collection(String)">
-            <Parameter Name="lngID" Mode="In" Type="Int32" />
+          <Parameter Name="lngID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_EDATA_GET_METADATA" ReturnType="Collection(LibolModel.SP_OPAC_EDATA_GET_METADATA_Result)">
-            <Parameter Name="lngobjID" Mode="In" Type="Int32" />
+          <Parameter Name="lngobjID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_EDIT_COMMENTS">
             <Parameter Name="strComment" Mode="In" Type="String" />
@@ -23741,10 +23735,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intSucess" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_FULLTEXT_SEARCH" ReturnType="Collection(LibolModel.SP_OPAC_FULLTEXT_SEARCH_Result)">
-            <Parameter Name="strURL" Mode="In" Type="String" />
+          <Parameter Name="strURL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_ACCAUTHOR" ReturnType="Collection(LibolModel.SP_OPAC_GET_ACCAUTHOR_Result)">
-            <Parameter Name="strAccessEntry" Mode="In" Type="String" />
+          <Parameter Name="strAccessEntry" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_BEST_ITEMS" ReturnType="Collection(LibolModel.SP_OPAC_GET_BEST_ITEMS_Result)">
             <Parameter Name="bitSECUREDOPAC" Mode="In" Type="Boolean" />
@@ -23753,17 +23747,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intNumberDay" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_COMMENTS" ReturnType="Collection(LibolModel.SP_OPAC_GET_COMMENTS_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_DIC_ITEM_TYPE" ReturnType="Collection(LibolModel.SP_OPAC_GET_DIC_ITEM_TYPE_Result)" />
           <FunctionImport Name="SP_OPAC_GET_DUEDATE" ReturnType="Collection(DateTime)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_EDATA" ReturnType="Collection(LibolModel.SP_OPAC_GET_EDATA_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_EDATA_DETAIL" ReturnType="Collection(LibolModel.SP_OPAC_GET_EDATA_DETAIL_Result)">
-            <Parameter Name="intFileID" Mode="In" Type="Int32" />
+          <Parameter Name="intFileID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_EDATA_IMAGE">
             <Parameter Name="strTitle" Mode="In" Type="String" />
@@ -23790,7 +23784,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_EDELIV_INFOR" ReturnType="Collection(LibolModel.SP_OPAC_GET_EDELIV_INFOR_Result)">
-            <Parameter Name="strFileIDs" Mode="In" Type="String" />
+          <Parameter Name="strFileIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_EDELIV_INFOR_BY_GROUP" ReturnType="Collection(LibolModel.SP_OPAC_GET_EDELIV_INFOR_BY_GROUP_Result)">
             <Parameter Name="intRequestGroupID" Mode="In" Type="Int32" />
@@ -23804,7 +23798,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intNumberDay" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_HOLDINGINFO" ReturnType="Collection(LibolModel.SP_OPAC_GET_HOLDINGINFO_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_HOLDINGS" ReturnType="Collection(LibolModel.SP_OPAC_GET_HOLDINGS_Result)">
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
@@ -23813,7 +23807,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <FunctionImport Name="SP_OPAC_GET_ILL_DUE_ITEM" ReturnType="Collection(LibolModel.SP_OPAC_GET_ILL_DUE_ITEM_Result)" />
           <FunctionImport Name="SP_OPAC_GET_ILL_REC_ITEM" ReturnType="Collection(LibolModel.SP_OPAC_GET_ILL_REC_ITEM_Result)" />
           <FunctionImport Name="SP_OPAC_GET_ILLREQUEST" ReturnType="Collection(LibolModel.SP_OPAC_GET_ILLREQUEST_Result)">
-            <Parameter Name="strCardNo" Mode="In" Type="String" />
+          <Parameter Name="strCardNo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_INDEXSUBJECT">
             <Parameter Name="strfield" Mode="In" Type="String" />
@@ -23834,7 +23828,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strToDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_ITEM_TITLE" ReturnType="Collection(String)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_MAXID_BY_TOPNUM">
             <Parameter Name="lngTopNum" Mode="In" Type="Int32" />
@@ -23848,28 +23842,28 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intNumberDay" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_NEW_REQUEST_GROUP_ID">
-            <Parameter Name="intNewRequestGroupID" Mode="InOut" Type="Int32" />
+          <Parameter Name="intNewRequestGroupID" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_NUM_OF_REQGROUP">
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
             <Parameter Name="intNumOfReq" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_OAI_ITEM_INFOR">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_OAI_ITEM_LEADER">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_OCCUPATION" ReturnType="Collection(LibolModel.SP_OPAC_GET_OCCUPATION_Result)" />
           <FunctionImport Name="SP_OPAC_GET_ONHOLDING" ReturnType="Collection(LibolModel.SP_OPAC_GET_ONHOLDING_Result)">
-            <Parameter Name="strCardNo" Mode="In" Type="String" />
+          <Parameter Name="strCardNo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_RELATED_ANALYTICS" ReturnType="Collection(LibolModel.SP_OPAC_GET_RELATED_ANALYTICS_Result)">
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
             <Parameter Name="intSerID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_RELATION_TITLES" ReturnType="Collection(LibolModel.SP_OPAC_GET_RELATION_TITLES_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_REQUEST_GROUP" ReturnType="Collection(LibolModel.SP_OPAC_GET_REQUEST_GROUP_Result)">
             <Parameter Name="strRequestGroupID" Mode="In" Type="String" />
@@ -23877,14 +23871,14 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_RESERVATION">
-            <Parameter Name="strCardNo" Mode="In" Type="String" />
+          <Parameter Name="strCardNo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_SER_HOLDINGS" ReturnType="Collection(LibolModel.SP_OPAC_GET_SER_HOLDINGS_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GET_STAS_INFOR" ReturnType="Collection(LibolModel.SP_OPAC_GET_STAS_INFOR_Result)" />
           <FunctionImport Name="SP_OPAC_GET_TITLES_RELATION" ReturnType="Collection(LibolModel.SP_OPAC_GET_TITLES_RELATION_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GETALLLOCATIONS" />
           <FunctionImport Name="SP_OPAC_GETINTERESTITEM">
@@ -23898,10 +23892,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_GETSCHEDULE">
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+          <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_RELATED_TERMS" ReturnType="Collection(LibolModel.SP_OPAC_RELATED_TERMS_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_RELATION_BOOKS" ReturnType="Collection(LibolModel.SP_OPAC_RELATION_BOOKS_Result)">
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
@@ -23920,17 +23914,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="bytInturn" Mode="In" Type="Byte" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_TOP_CHECKOUTED_ITEM">
-            <Parameter Name="intTop" Mode="In" Type="Int32" />
+          <Parameter Name="intTop" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_TOTAL_HOLDREQUEST" ReturnType="Collection(Int32)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_UPDATE_EDELIV_DEBT">
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
             <Parameter Name="mnyAddDebt" Mode="In" Type="Decimal" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_UPDATE_EDOWNLOADTIME">
-            <Parameter Name="intFileID" Mode="In" Type="Int32" />
+          <Parameter Name="intFileID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OPAC_UPDATE_INTERESTEDSUBJECT">
             <Parameter Name="intPatronID" Mode="In" Type="Int32" />
@@ -24044,14 +24038,14 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOut" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_DELETE_EDUCATION">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_DELETE_PATRON">
             <Parameter Name="intPatronID" Mode="In" Type="Int32" />
             <Parameter Name="intRetval" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_DELETE_PATRONGROUP">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_GET_COLLEGE" ReturnType="Collection(LibolModel.SP_PAT_GET_COLLEGE_Result)" />
           <FunctionImport Name="SP_PAT_GET_EDUCATION" ReturnType="Collection(LibolModel.SP_PAT_GET_EDUCATION_Result)" />
@@ -24062,14 +24056,14 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_PAT_GET_LOCATION" ReturnType="Collection(LibolModel.SP_PAT_GET_LOCATION_Result)" />
           <FunctionImport Name="SP_PAT_GET_LOCATION_OF_GROUP" ReturnType="Collection(LibolModel.SP_PAT_GET_LOCATION_OF_GROUP_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_GET_NOTPRINTED_CARD" ReturnType="Collection(LibolModel.SP_PAT_GET_NOTPRINTED_CARD_Result)">
-            <Parameter Name="strID" Mode="In" Type="String" />
+          <Parameter Name="strID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_GET_OCCUPATION" ReturnType="Collection(LibolModel.SP_PAT_GET_OCCUPATION_Result)" />
           <FunctionImport Name="SP_PAT_GET_OTHERADDRESS" ReturnType="Collection(LibolModel.SP_PAT_GET_OTHERADDRESS_Result)">
-            <Parameter Name="intPatronID" Mode="In" Type="Int32" />
+          <Parameter Name="intPatronID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_GET_PATRON">
             <Parameter Name="strPatronIDs" Mode="In" Type="String" />
@@ -24112,7 +24106,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intIssueLibraryID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_SEARCH_PATRON_HCARD" ReturnType="Collection(Int32)">
-            <Parameter Name="strCode" Mode="In" Type="String" />
+          <Parameter Name="strCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_PAT_UPDATE_COLLEGE">
             <Parameter Name="intID" Mode="In" Type="Int32" />
@@ -24200,10 +24194,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOut" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PATRON_BATCH_DELETE">
-            <Parameter Name="strPatronIDs" Mode="In" Type="String" />
+          <Parameter Name="strPatronIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_PATRON_BATCH_EXTEND">
-            <Parameter Name="strSQL" Mode="In" Type="String" />
+          <Parameter Name="strSQL" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_PATRON_BATCH_UPDATE">
             <Parameter Name="strSQL" Mode="In" Type="String" />
@@ -24231,7 +24225,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_PATRON_SELECT_ALLDIC" ReturnType="Collection(LibolModel.SP_PATRON_SELECT_ALLDIC_Result)" />
           <FunctionImport Name="SP_PATRON_STATIC_MONTHS">
-            <Parameter Name="strStatYear" Mode="In" Type="String" />
+          <Parameter Name="strStatYear" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_PRINT_FICHE_SEL">
             <Parameter Name="intItemType" Mode="In" Type="Int32" />
@@ -24269,7 +24263,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strTableName" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_RECALLCOPIES">
-            <Parameter Name="lngTransactionID" Mode="In" Type="Int32" />
+          <Parameter Name="lngTransactionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_RECEIVE_COPIES">
             <Parameter Name="lngIssueID" Mode="In" Type="Int32" />
@@ -24296,7 +24290,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_REMOVE_ROUTING_RECORD">
-            <Parameter Name="intRecordID" Mode="In" Type="Int32" />
+          <Parameter Name="intRecordID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_RENAME_DICTIONARY">
             <Parameter Name="intID" Mode="In" Type="Int32" />
@@ -24330,13 +24324,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strCountry" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_RESERVATION_CHANGETURN">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_RESERVATION_CUTTURN">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_RESERVE_REQUEST_DELETE">
-            <Parameter Name="strCRR_ID" Mode="In" Type="String" />
+          <Parameter Name="strCRR_ID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_RESTORE_HOLDING">
             <Parameter Name="strCopyIDs" Mode="In" Type="String" />
@@ -24411,10 +24405,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strHavingYearIssue" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SER_GET_LAST_RECEIVED_DATE" ReturnType="Collection(DateTime)">
-            <Parameter Name="lngItemID" Mode="In" Type="Int32" />
+          <Parameter Name="lngItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SER_GET_PERIODICAL_INFOR" ReturnType="Collection(LibolModel.SP_SER_GET_PERIODICAL_INFOR_Result)">
-            <Parameter Name="lngItemID" Mode="In" Type="Int32" />
+          <Parameter Name="lngItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SER_GET_RECEIVE_ISSUES" ReturnType="Collection(LibolModel.SP_SER_GET_RECEIVE_ISSUES_Result)">
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
@@ -24426,7 +24420,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strCeasedDate" Mode="InOut" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SER_GET_REGULARITY" ReturnType="Collection(LibolModel.SP_SER_GET_REGULARITY_Result)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SER_GET_REPORTINF">
             <Parameter Name="strFlage" Mode="In" Type="String" />
@@ -24435,10 +24429,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SER_GET_REQUEST_LIST" ReturnType="Collection(LibolModel.SP_SER_GET_REQUEST_LIST_Result)">
-            <Parameter Name="intType" Mode="In" Type="Int32" />
+          <Parameter Name="intType" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SER_GET_SUMMARRYHOLDING" ReturnType="Collection(String)">
-            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SER_ITEM_UPDATE">
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
@@ -24606,10 +24600,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="OptItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_STAT_SER_TOP20">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_STAT_SERIAL_CLASS_DDC">
-            <Parameter Name="strInput" Mode="In" Type="String" />
+          <Parameter Name="strInput" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_STAT_SERIAL_COUNTRY" ReturnType="Collection(LibolModel.SP_STAT_SERIAL_COUNTRY_Result)" />
           <FunctionImport Name="SP_STAT_SERIAL_FREQ" ReturnType="Collection(LibolModel.SP_STAT_SERIAL_FREQ_Result)" />
@@ -24620,7 +24614,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_STATEMENT_SEL">
-            <Parameter Name="strSQLStatement" Mode="In" Type="String" />
+          <Parameter Name="strSQLStatement" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_ACCESSKEY_SELECT">
             <Parameter Name="strFormID" Mode="In" Type="String" />
@@ -24636,24 +24630,24 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intOut" Mode="InOut" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_DOWNLOAD_FILE_DEL">
-            <Parameter Name="strCondition" Mode="In" Type="String" />
+          <Parameter Name="strCondition" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_DOWNLOAD_FILE_INS">
             <Parameter Name="strFileName" Mode="In" Type="String" />
             <Parameter Name="dtCreatedDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_DOWNLOAD_FILE_SEL">
-            <Parameter Name="strCondition" Mode="In" Type="String" />
+          <Parameter Name="strCondition" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_EVENT_GROUP_SEL" ReturnType="Collection(Boolean)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_GET_TEMPLATE" ReturnType="Collection(LibolModel.SP_SYS_GET_TEMPLATE_Result)">
             <Parameter Name="intTemplateID" Mode="In" Type="Int32" />
             <Parameter Name="intTemplateType" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_GETUSER" ReturnType="Collection(LibolModel.SP_SYS_GETUSER_Result)">
-            <Parameter Name="intIDUser" Mode="In" Type="Int32" />
+          <Parameter Name="intIDUser" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_LABEL_SELECT">
             <Parameter Name="strWh" Mode="In" Type="String" />
@@ -24673,19 +24667,19 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           </FunctionImport>
           <FunctionImport Name="SP_SYS_PARAMETER_SEL_EMAIL" ReturnType="Collection(LibolModel.SP_SYS_PARAMETER_SEL_EMAIL_Result)" />
           <FunctionImport Name="SP_SYS_PARAMETER_SELECT">
-            <Parameter Name="strWh" Mode="In" Type="String" />
+          <Parameter Name="strWh" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_TEMP_CODE_DEL">
-            <Parameter Name="strWhere" Mode="In" Type="String" />
+          <Parameter Name="strWhere" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_TEMPFILE_SEL" ReturnType="Collection(LibolModel.SP_SYS_TEMPFILE_SEL_Result)">
-            <Parameter Name="intModuleID" Mode="In" Type="Int32" />
+          <Parameter Name="intModuleID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_TEMPLATE_DEL">
-            <Parameter Name="strID" Mode="In" Type="String" />
+          <Parameter Name="strID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_TEMPLATE_DELETE">
-            <Parameter Name="intTemplate" Mode="In" Type="Int32" />
+          <Parameter Name="intTemplate" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_TEMPLATE_INS">
             <Parameter Name="strTitle" Mode="In" Type="String" />
@@ -24735,7 +24729,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="bytModuleID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_USER_LOCATION_SEL" ReturnType="Collection(LibolModel.SP_SYS_USER_LOCATION_SEL_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_USER_LOGIN" ReturnType="Collection(LibolModel.SP_SYS_USER_LOGIN_Result)">
             <Parameter Name="strUserName" Mode="In" Type="String" />
@@ -24746,17 +24740,17 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strPW" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_USER_SER_LOCATION_SEL" ReturnType="Collection(LibolModel.SP_SYS_USER_SER_LOCATION_SEL_Result)">
-            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_SYS_VIEW_DEL">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_UNBIND">
             <Parameter Name="lngCopyNumberID" Mode="In" Type="Int32" />
             <Parameter Name="lngItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_UNLOCK_PATRON_CARD">
-            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+          <Parameter Name="strPatronCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_UNRECEIVE_COPIES">
             <Parameter Name="lngIssueID" Mode="In" Type="Int32" />
@@ -24772,7 +24766,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intACQItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_UPDATE_ALERT_EDELIV_REQUEST">
-            <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
+          <Parameter Name="lngRequestID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_UPDATE_ARTICLE">
             <Parameter Name="intID" Mode="In" Type="Int32" />
@@ -24926,32 +24920,32 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="strCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_WAP_GET_ILLREQUEST" ReturnType="Collection(LibolModel.SP_WAP_GET_ILLREQUEST_Result)">
-            <Parameter Name="strCode" Mode="In" Type="String" />
+          <Parameter Name="strCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_WAP_GET_ITEM_INFO">
-            <Parameter Name="strIDs" Mode="In" Type="String" />
+          <Parameter Name="strIDs" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_WAP_GET_ONHOLDED" ReturnType="Collection(LibolModel.SP_WAP_GET_ONHOLDED_Result)">
-            <Parameter Name="strCardNo" Mode="In" Type="String" />
+          <Parameter Name="strCardNo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_WAP_GET_ONHOLDING" ReturnType="Collection(LibolModel.SP_WAP_GET_ONHOLDING_Result)">
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_WAP_GET_RESERVATION" ReturnType="Collection(LibolModel.SP_WAP_GET_RESERVATION_Result)">
-            <Parameter Name="strCode" Mode="In" Type="String" />
+          <Parameter Name="strCode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_WAP_GETDETAIL_OFITEM" ReturnType="Collection(LibolModel.SP_WAP_GETDETAIL_OFITEM_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_WAP_HOLDING_ITEMDETAIL" ReturnType="Collection(LibolModel.SP_WAP_HOLDING_ITEMDETAIL_Result)">
-            <Parameter Name="intID" Mode="In" Type="Int32" />
+          <Parameter Name="intID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SQ_ACQ_GET_VENDOR_SENDPO" ReturnType="Collection(LibolModel.SQ_ACQ_GET_VENDOR_SENDPO_Result)">
-            <Parameter Name="intVendorID" Mode="In" Type="Int32" />
+          <Parameter Name="intVendorID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SQ_CIR_PATRON_GROUP_LOC_DELETE">
-            <Parameter Name="intPatronGroupID" Mode="In" Type="Int32" />
+          <Parameter Name="intPatronGroupID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SQ_CIR_PATRON_GROUP_LOC_INSERT">
             <Parameter Name="intPatronGroupID" Mode="In" Type="Int32" />
@@ -24962,6 +24956,11 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="TESTCAI" />
+          <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" />
+          <AssociationSet Name="FK__SYS_USER_GOO__ID__600DFEBC" Association="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC">
+            <End Role="SYS_USER" EntitySet="SYS_USER" />
+            <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -29573,6 +29572,26 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <Property Type="String" Name="COUNTRY" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="PROVINCE" Nullable="false" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
+          <Key>
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="Int32" />
+          <NavigationProperty Name="SYS_USER" Relationship="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" FromRole="SYS_USER_GOOGLE_ACCOUNT" ToRole="SYS_USER" />
+        </EntityType>
+        <Association Name="FK__SYS_USER_GOO__ID__600DFEBC">
+          <End Type="LibolModel.SYS_USER" Role="SYS_USER" Multiplicity="0..1" />
+          <End Type="LibolModel.SYS_USER_GOOGLE_ACCOUNT" Role="SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SYS_USER">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -39430,6 +39449,14 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
           <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_INSERT" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_INSERT" />
           <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_UPDATE" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_UPDATE" />
           <FunctionImportMapping FunctionImportName="TESTCAI" FunctionName="LibolModel.Store.TESTCAI" />
+          <EntitySetMapping Name="SYS_USER_GOOGLE_ACCOUNT">
+            <EntityTypeMapping TypeName="LibolModel.SYS_USER_GOOGLE_ACCOUNT">
+              <MappingFragment StoreEntitySet="SYS_USER_GOOGLE_ACCOUNT">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
