@@ -91,12 +91,12 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
-                        <div class="col"><form id="checkoutCardInfo"><input class="form-control" type="text" /></form></div>
+                        <div class="col"><input class="form-control" type="text" onkeypress="checkoutCardInfo(event)"/></div>
                         <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><form id="checkoutSuccess"><input class="form-control" type="text" /></form></div>
+                        <div class="col"><input class="form-control" type="text" onkeypress="checkoutSuccess(event)"/></div>
                         <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
@@ -107,7 +107,7 @@
             </div>
         </div>
 
-        <div class="col" id="demoajax">
+        <div class="col" id="contentcheckout">
 
         </div>
 
@@ -116,49 +116,47 @@
 <script type="text/javascript">
 
    
-    $('#checkoutCardInfo').on('submit', function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: "CheckOut/CheckOutCardInfo",
-            type: "Get",
-            data: $(this).serialize(),
-            success: function (Response) {
-                $("#demoajax").html(Response)
-            },
-            error: function (jXHR, textStatus, errorThrown) {
-                alert(errorThrown);
-            }
-        });
-    });
-
-    $('#checkoutSuccess').on('submit', function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: "CheckOut/CheckOutSuccess",
-            type: "Get",
-            data: $(this).serialize(),
-            success: function (Response) {
-                $("#demoajax").html(Response)
-            },
-            error: function (jXHR, textStatus, errorThrown) {
-                alert(errorThrown);
-            }
-        });
-    });
-
-    
-   
     document.getElementById("myButton").onclick = function () {
         $.ajax({
             url: "CheckOut/CheckOutCardInfo",
             type: "Get",
             success: function (Response) {
-                $("#demoajax").html(Response)
+                $("#contentcheckout").html(Response)
             }
         });
     };
 
+    function checkoutSuccess(e) {
+        if (e.keyCode == 13) {
+            $.ajax({
+                url: "CheckOut/CheckOutSuccess",
+                data: null,
+                type: "GET",
+                success: function (result) {
+                    $("#contentcheckout").html(result);
+                },
+                error: function (errormessage) {
 
+                }
+            });
+        }
+    }
+
+    function checkoutCardInfo(e) {
+        if (e.keyCode == 13) {
+            $.ajax({
+                url: "CheckOut/CheckOutCardInfo",
+                data: null,
+                type: "GET",
+                success: function (result) {
+                    $("#contentcheckout").html(result);
+                },
+                error: function (errormessage) {
+
+                }
+            });
+        }
+    }
 
 
 </script>

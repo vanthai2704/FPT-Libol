@@ -2059,8 +2059,6 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.min.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -2116,13 +2114,13 @@
     <Content Include="Views\CheckOut\Index.cshtml" />
     <Content Include="Views\CheckIn\Index.cshtml" />
     <Content Include="Views\CheckOut\Giahan.cshtml" />
-    <Content Include="Views\CheckIn\FindByCardNumber.cshtml" />
     <Content Include="Views\Shelf\Index.cshtml" />
     <Content Include="Views\Login\Logout.cshtml" />
     <Content Include="Views\CheckOut\_showPatronInfo.cshtml" />
     <Content Include="Views\CheckIn\_checkinByCardNumber.cshtml" />
     <Content Include="Views\CheckIn\_checkinByDKCB.cshtml" />
     <Content Include="Views\CheckOut\_checkoutSuccess.cshtml" />
+    <Content Include="Views\CheckIn\_findByCardNumber.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

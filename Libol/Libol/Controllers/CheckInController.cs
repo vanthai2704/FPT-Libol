@@ -14,12 +14,6 @@ namespace Libol.Controllers
             return View();
         }
 
-        // GET: FindByCardNumber
-        public ActionResult FindByCardNumber()
-        {
-            return View();
-        }
-        
         [HttpGet]
         public PartialViewResult CheckInByCardNumber()
         {
@@ -30,6 +24,12 @@ namespace Libol.Controllers
         public PartialViewResult CheckInByDKCB()
         {
             return PartialView("_checkinByDKCB");
+        }
+
+        [HttpGet]
+        public PartialViewResult FindByCardNumber()
+        {
+            return PartialView("_findByCardNumber");
         }
     }
 }
