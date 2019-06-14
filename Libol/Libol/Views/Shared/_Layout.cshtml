@@ -109,8 +109,8 @@
             <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
         </footer>
     </div>
-    <input value="@if (@HttpContext.Current.Session["SignInWithGoogle"] != null) {@HttpContext.Current.Session["SignInWithGoogle"].ToString()}" type="hidden" id="SignInWithGoogle" />
-    <div class="g-signin2" data-onsuccess="onSignIn" style="display:none;"></div>
+    <input value="@HttpContext.Current.Session["SignInWithGoogle"].ToString()" type="hidden" id="SignInWithGoogle"/>
+
     <script>
         function highlight(elem) {
             var a = document.getElementsByTagName('li');
@@ -127,7 +127,7 @@
         }
 
         function logout() {
-            var SignInWithGoogle = document.getElementById("SignInWithGoogle").value;
+            var SignInWithGoogle = document.getElementById("SignInWithGoogle").value; 
             if (SignInWithGoogle == "True") {
                 gapi.auth2.init();
                 var auth2 = gapi.auth2.getAuthInstance();
@@ -135,7 +135,7 @@
                     //console.log('User signed out.');
                 });
             }
-
+            
 
             $.ajax({
                 url: "/Login/Logout",
@@ -147,10 +147,10 @@
                     window.location.href = "/Home";
                 },
                 error: function (errormessage) {
-
+                    
                 }
             });
-
+            
         }
     </script>
 
