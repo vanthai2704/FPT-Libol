@@ -2603,6 +2603,7 @@
     <NavigationProperty Name="HOLDING_LOCATION1" Relationship="Self.SYS_USER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
     <NavigationProperty Name="SYS_REFERENCE" Relationship="Self.SYS_USER_REFERENCE" FromRole="SYS_USER" ToRole="SYS_REFERENCE" />
     <NavigationProperty Name="HOLDING_LOCATION2" Relationship="Self.SYS_USER_SER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
+    <NavigationProperty Name="SYS_USER_GOOGLE_ACCOUNT" Relationship="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" FromRole="SYS_USER" ToRole="SYS_USER_GOOGLE_ACCOUNT" />
   </EntityType>
   <EntityType Name="SYS_USER_RIGHT">
     <Key>
@@ -12366,6 +12367,11 @@
       <Parameter Name="intLocationID" Mode="In" Type="Int32" />
     </FunctionImport>
     <FunctionImport Name="TESTCAI" />
+    <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" />
+    <AssociationSet Name="FK__SYS_USER_GOO__ID__600DFEBC" Association="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC">
+      <End Role="SYS_USER" EntitySet="SYS_USER" />
+      <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
+    </AssociationSet>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -16977,4 +16983,24 @@
     <Property Type="String" Name="COUNTRY" Nullable="false" MaxLength="100" />
     <Property Type="String" Name="PROVINCE" Nullable="false" MaxLength="50" />
   </ComplexType>
+  <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
+    <Key>
+      <PropertyRef Name="Email" />
+    </Key>
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="ID" Type="Int32" />
+    <NavigationProperty Name="SYS_USER" Relationship="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" FromRole="SYS_USER_GOOGLE_ACCOUNT" ToRole="SYS_USER" />
+  </EntityType>
+  <Association Name="FK__SYS_USER_GOO__ID__600DFEBC">
+    <End Type="LibolModel.SYS_USER" Role="SYS_USER" Multiplicity="0..1" />
+    <End Type="LibolModel.SYS_USER_GOOGLE_ACCOUNT" Role="SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SYS_USER">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

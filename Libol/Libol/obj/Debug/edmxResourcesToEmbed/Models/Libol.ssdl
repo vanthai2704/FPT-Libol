@@ -522,16 +522,6 @@ warning 6002: The table/view 'Libol.dbo.CAT_DIC_NUMBER' does not have a primary 
     <Property Name="ParentID" Type="int" />
     <Property Name="DicItemID" Type="int" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.CAT_DIC_SUBJBROWSE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="CAT_DIC_SUBJBROWSE">
-          <Property Name="F0" Type="nvarchar" MaxLength="5" />
-          <Property Name="F1" Type="nvarchar" MaxLength="5" />
-          <Property Name="F2" Type="nvarchar" MaxLength="5" />
-          <Property Name="F3" Type="nvarchar" MaxLength="5" />
-          <Property Name="F4" Type="nvarchar" MaxLength="5" />
-          <Property Name="F5" Type="nvarchar" MaxLength="5" />
-        </EntityType>-->
   <EntityType Name="CAT_DIC_THESIS_LEVEL">
     <Key>
       <PropertyRef Name="ID" />
@@ -720,12 +710,6 @@ warning 6002: The table/view 'Libol.dbo.CAT_QUEUE' does not have a primary key d
     <Property Name="ITEMID" Type="int" Nullable="false" />
     <Property Name="REVIEWED" Type="tinyint" Nullable="false" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.CIR_CALENDAR' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="CIR_CALENDAR">
-          <Property Name="OffDay" Type="datetime" />
-          <Property Name="LocationID" Type="int" />
-        </EntityType>-->
   <EntityType Name="CIR_DIC_COLLEGE">
     <Key>
       <PropertyRef Name="ID" />
@@ -2304,11 +2288,6 @@ warning 6002: The table/view 'Libol.dbo.ITEM_UDC' does not have a primary key de
     <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="tmpValue" Type="int" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.lenta' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="lenta">
-          <Property Name="Title" Type="nvarchar" MaxLength="4000" />
-        </EntityType>-->
   <EntityType Name="MARC_AUTHORITY_BLOCK">
     <Key>
       <PropertyRef Name="ID" />
@@ -2665,12 +2644,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Property Name="ID" Type="int" Nullable="false" />
     <Property Name="Subject" Type="nvarchar" MaxLength="200" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SYS_DOWNLOAD_FILE">
-          <Property Name="FileName" Type="varchar" MaxLength="20" />
-          <Property Name="CreatedDate" Type="datetime" />
-        </EntityType>-->
   <EntityType Name="SYS_EVENT_GROUP">
     <Key>
       <PropertyRef Name="ID" />
@@ -2789,6 +2762,13 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
     <Property Name="UserID" Type="int" Nullable="false" />
     <Property Name="LocationID" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
+    <Key>
+      <PropertyRef Name="Email" />
+    </Key>
+    <Property Name="Email" Type="varchar" MaxLength="500" Nullable="false" />
+    <Property Name="ID" Type="int" />
+  </EntityType>
   <EntityType Name="SYS_USER_LOCATION">
     <Key>
       <PropertyRef Name="USERID" />
@@ -2900,6 +2880,18 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
       </Principal>
       <Dependent Role="ITEM">
         <PropertyRef Name="MediumID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SYS_USER_GOO__ID__600DFEBC">
+    <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="0..1" />
+    <End Role="SYS_USER_GOOGLE_ACCOUNT" Type="Self.SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SYS_USER">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
+        <PropertyRef Name="ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3299,9 +3291,6 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <!--Errors Found During Generation:
-error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, but cannot be found.
-        <Association Name="FK_CIR_CALENDAR_HOLDING_LOCATION" />-->
   <Association Name="FK_CIR_FINE_ACQ_CURRENCY">
     <End Role="ACQ_CURRENCY" Type="Self.ACQ_CURRENCY" Multiplicity="1" />
     <End Role="CIR_FINE" Type="Self.CIR_FINE" Multiplicity="*" />
@@ -11569,6 +11558,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <EntitySet Name="SYS_TEMPLATE" EntityType="Self.SYS_TEMPLATE" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER" EntityType="Self.SYS_USER" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER_CIR_LOCATION" EntityType="Self.SYS_USER_CIR_LOCATION" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="Self.SYS_USER_GOOGLE_ACCOUNT" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER_LOCATION" EntityType="Self.SYS_USER_LOCATION" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER_REFERENCE" EntityType="Self.SYS_USER_REFERENCE" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER_RIGHT" EntityType="Self.SYS_USER_RIGHT" Schema="dbo" store:Type="Tables" />
@@ -11856,6 +11846,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <AssociationSet Name="CDMED_ITE_FK" Association="Self.CDMED_ITE_FK">
       <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
       <End Role="ITEM" EntitySet="ITEM" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SYS_USER_GOO__ID__600DFEBC" Association="Self.FK__SYS_USER_GOO__ID__600DFEBC">
+      <End Role="SYS_USER" EntitySet="SYS_USER" />
+      <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
     </AssociationSet>
     <AssociationSet Name="FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET" Association="Self.FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET">
       <End Role="ACQ_BUDGET" EntitySet="ACQ_BUDGET" />

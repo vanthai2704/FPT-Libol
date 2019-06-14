@@ -1973,6 +1973,9 @@
     <Compile Include="Models\SYS_USER.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SYS_USER_GOOGLE_ACCOUNT.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SYS_USER_RIGHT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>

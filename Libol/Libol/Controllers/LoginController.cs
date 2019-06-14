@@ -1,5 +1,4 @@
-
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -30,16 +29,14 @@ namespace Libol.Controllers
             if (checkUser != null && checkUser.Count > 0)
             {
                 Session["UserID"] = checkUser[0].ID;
-                Session["SignInWithGoogle"] = false;
                 return RedirectToAction("Index", "Home");
             }
             else
             {
                 ViewData["Notification"] = "Tên đăng nhập/mật khẩu không đúng!";
-                Session["SignInWithGoogle"] = false;
                 return View();
             }
-            
+
         }
 
         [HttpPost]
@@ -49,22 +46,20 @@ namespace Libol.Controllers
             if (acc != null)
             {
                 Session["UserID"] = acc.ID;
-                Session["SignInWithGoogle"] = true;
                 return Json("", JsonRequestBehavior.AllowGet);
             }
             else
             {
-                
+
                 return Json("EmailNotExist", JsonRequestBehavior.AllowGet);
             }
-            
+
         }
 
         [HttpPost]
         public JsonResult Logout()
         {
             Session["UserID"] = null;
-            Session["SignInWithGoogle"] = null;
             return Json("", JsonRequestBehavior.AllowGet);
         }
     }
