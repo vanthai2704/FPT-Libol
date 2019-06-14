@@ -2,7 +2,6 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <style>
     #textColorInput {
         color: red;
@@ -16,10 +15,10 @@
 <form>
 
     <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Chọn mẫu biên mục  </label>
-        <select class="form-control col-md-2" name="listMarcForm">
-            <option></option>
-            <option></option>
+        <label class="control-label col-md-3 align-self-center">Ấn phẩm theo đơn đặt : </label>
+        <select class="form-control col-md-2">
+            <option>Kinh</option>
+            <option>Mường</option>
         </select>
         <label class="control-label col-md-2 align-self-center">Cấp thư mục : </label>
         <select class="form-control col-md-2">
@@ -93,9 +92,9 @@
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12 text-center">
             <div style="margin : auto">
-                <button type="submit" class="btn btn-primary form-control">@Html.ActionLink("Tạo Mới", "Index", "Shelf")</button>
+                <button type="submit" class="btn btn-primary form-control">@Html.ActionLink("Tạo Mới","Index","Shelf")</button>
                 <button type="button" class="btn btn-primary form-control">Đặt Lại</button>
-                <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal">Thêm Trường</button>
+                <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal" >Thêm Trường</button>
             </div>
         </div>
     </div>
