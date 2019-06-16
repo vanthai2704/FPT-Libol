@@ -160,13 +160,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CatalogueController.cs" />
     <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
     <Compile Include="Controllers\PatronController.cs" />
-
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PrintBarcodeController.cs" />
@@ -1998,13 +1996,13 @@
     <Compile Include="Models\usertest.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-	<Compile Include="Models\FPT_SP_CATA_CHECK_EXIST_TITLE_Result.cs">
+    <Compile Include="Models\FPT_SP_CATA_CHECK_EXIST_TITLE_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-	<Compile Include="Models\FPT_SP_CATA_GET_MARC_FORM_Result.cs">
+    <Compile Include="Models\FPT_SP_CATA_GET_MARC_FORM_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-	<Compile Include="Models\FPT_SP_CATA_GETFIELDS_OF_FORM_Result.cs">
+    <Compile Include="Models\FPT_SP_CATA_GETFIELDS_OF_FORM_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2115,7 +2113,6 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Login\Index.cshtml" />
-
     <Content Include="Views\Patron\Create.cshtml" />
     <Content Include="Views\Patron\Delete.cshtml" />
     <Content Include="Views\Patron\Details.cshtml" />
@@ -2130,15 +2127,14 @@
     <Content Include="Views\PrintLabel\Index.cshtml" />
     <Content Include="Views\CheckIn\Index.cshtml" />
     <Content Include="Views\CheckOut\Index.cshtml" />
-    <Content Include="Views\CheckIn\CheckInSearch.cshtml" />
-    <Content Include="Views\CheckIn\Giahan.cshtml" />
-    <Content Include="Views\CheckOut\CheckOutByCard.cshtml" />
-    <Content Include="Views\CheckOut\CheckOutByDKCB.cshtml" />
-    <Content Include="Views\CheckIn\CheckInSuccess.cshtml" />
-    <Content Include="Views\CheckOut\FindByCardNumber.cshtml" />
     <Content Include="Views\Shelf\Index.cshtml" />
     <Content Include="Views\Login\Logout.cshtml" />
-
+    <Content Include="Views\CheckIn\_checkinByCardNumber.cshtml" />
+    <Content Include="Views\CheckIn\_checkinByDKCB.cshtml" />
+    <Content Include="Views\CheckIn\_findByCardNumber.cshtml" />
+    <Content Include="Views\CheckOut\Giahan.cshtml" />
+    <Content Include="Views\CheckOut\_checkoutSuccess.cshtml" />
+    <Content Include="Views\CheckOut\_showPatronInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
