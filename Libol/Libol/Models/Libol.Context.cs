@@ -21325,5 +21325,76 @@ namespace Libol.Models
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TESTCAI");
         }
+
+    
+        public virtual int DemoGetMarcForm(Nullable<int> intFormID, Nullable<int> intIsAuthority)
+        {
+            var intFormIDParameter = intFormID.HasValue ?
+                new ObjectParameter("intFormID", intFormID) :
+                new ObjectParameter("intFormID", typeof(int));
+    
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DemoGetMarcForm", intFormIDParameter, intIsAuthorityParameter);
+        }
+    
+        public virtual ObjectResult<SP_CATA_GET_MARC_FORM_2019_Result> SP_CATA_GET_MARC_FORM_2019(Nullable<int> intFormID, Nullable<int> intIsAuthority)
+        {
+            var intFormIDParameter = intFormID.HasValue ?
+                new ObjectParameter("intFormID", intFormID) :
+                new ObjectParameter("intFormID", typeof(int));
+    
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_CATA_GET_MARC_FORM_2019_Result>("SP_CATA_GET_MARC_FORM_2019", intFormIDParameter, intIsAuthorityParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_CATA_CHECK_EXIST_TITLE_Result> FPT_SP_CATA_CHECK_EXIST_TITLE(string strTitle, string strItemType)
+        {
+            var strTitleParameter = strTitle != null ?
+                new ObjectParameter("strTitle", strTitle) :
+                new ObjectParameter("strTitle", typeof(string));
+    
+            var strItemTypeParameter = strItemType != null ?
+                new ObjectParameter("strItemType", strItemType) :
+                new ObjectParameter("strItemType", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_CHECK_EXIST_TITLE_Result>("FPT_SP_CATA_CHECK_EXIST_TITLE", strTitleParameter, strItemTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_CATA_GET_MARC_FORM_Result> FPT_SP_CATA_GET_MARC_FORM(Nullable<int> intFormID, Nullable<int> intIsAuthority)
+        {
+            var intFormIDParameter = intFormID.HasValue ?
+                new ObjectParameter("intFormID", intFormID) :
+                new ObjectParameter("intFormID", typeof(int));
+    
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GET_MARC_FORM_Result>("FPT_SP_CATA_GET_MARC_FORM", intFormIDParameter, intIsAuthorityParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_CATA_GETFIELDS_OF_FORM_Result> FPT_SP_CATA_GETFIELDS_OF_FORM(Nullable<int> intFormID, string strCreator, Nullable<int> intIsAuthority)
+        {
+            var intFormIDParameter = intFormID.HasValue ?
+                new ObjectParameter("intFormID", intFormID) :
+                new ObjectParameter("intFormID", typeof(int));
+    
+            var strCreatorParameter = strCreator != null ?
+                new ObjectParameter("strCreator", strCreator) :
+                new ObjectParameter("strCreator", typeof(string));
+    
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GETFIELDS_OF_FORM_Result>("FPT_SP_CATA_GETFIELDS_OF_FORM", intFormIDParameter, strCreatorParameter, intIsAuthorityParameter);
+        }
+
     }
 }

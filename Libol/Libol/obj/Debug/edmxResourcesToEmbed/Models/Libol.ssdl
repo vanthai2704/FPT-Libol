@@ -6916,6 +6916,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Parameter Name="intFormID" Type="int" Mode="In" />
     <Parameter Name="intIsAuthority" Type="int" Mode="In" />
   </Function>
+  <Function Name="SP_CATA_GET_MARC_FORM_2019" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intFormID" Type="int" Mode="In" />
+    <Parameter Name="intIsAuthority" Type="int" Mode="In" />
+  </Function>
   <Function Name="SP_CATA_GET_MODIFIED_FIELDS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intIsAuthority" Type="int" Mode="In" />
     <Parameter Name="intFormID" Type="int" Mode="In" />
