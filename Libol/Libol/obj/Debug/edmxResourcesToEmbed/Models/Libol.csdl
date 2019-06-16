@@ -12366,6 +12366,14 @@
       <Parameter Name="intLocationID" Mode="In" Type="Int32" />
     </FunctionImport>
     <FunctionImport Name="TESTCAI" />
+    <FunctionImport Name="DemoGetMarcForm">
+      <Parameter Name="intFormID" Mode="In" Type="Int32" />
+      <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="SP_CATA_GET_MARC_FORM_2019" ReturnType="Collection(LibolModel.SP_CATA_GET_MARC_FORM_2019_Result)">
+      <Parameter Name="intFormID" Mode="In" Type="Int32" />
+      <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -16976,5 +16984,13 @@
     <Property Type="Boolean" Name="X12ENABLE" Nullable="true" />
     <Property Type="String" Name="COUNTRY" Nullable="false" MaxLength="100" />
     <Property Type="String" Name="PROVINCE" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="SP_CATA_GET_MARC_FORM_2019_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="String" Name="Creator" Nullable="false" MaxLength="50" />
+    <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="LastModifiedDate" Nullable="false" Precision="23" />
+    <Property Type="String" Name="Note" Nullable="true" MaxLength="200" />
   </ComplexType>
 </Schema>

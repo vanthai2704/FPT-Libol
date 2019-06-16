@@ -522,16 +522,6 @@ warning 6002: The table/view 'Libol.dbo.CAT_DIC_NUMBER' does not have a primary 
     <Property Name="ParentID" Type="int" />
     <Property Name="DicItemID" Type="int" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.CAT_DIC_SUBJBROWSE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="CAT_DIC_SUBJBROWSE">
-          <Property Name="F0" Type="nvarchar" MaxLength="5" />
-          <Property Name="F1" Type="nvarchar" MaxLength="5" />
-          <Property Name="F2" Type="nvarchar" MaxLength="5" />
-          <Property Name="F3" Type="nvarchar" MaxLength="5" />
-          <Property Name="F4" Type="nvarchar" MaxLength="5" />
-          <Property Name="F5" Type="nvarchar" MaxLength="5" />
-        </EntityType>-->
   <EntityType Name="CAT_DIC_THESIS_LEVEL">
     <Key>
       <PropertyRef Name="ID" />
@@ -720,12 +710,6 @@ warning 6002: The table/view 'Libol.dbo.CAT_QUEUE' does not have a primary key d
     <Property Name="ITEMID" Type="int" Nullable="false" />
     <Property Name="REVIEWED" Type="tinyint" Nullable="false" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.CIR_CALENDAR' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="CIR_CALENDAR">
-          <Property Name="OffDay" Type="datetime" />
-          <Property Name="LocationID" Type="int" />
-        </EntityType>-->
   <EntityType Name="CIR_DIC_COLLEGE">
     <Key>
       <PropertyRef Name="ID" />
@@ -2304,11 +2288,6 @@ warning 6002: The table/view 'Libol.dbo.ITEM_UDC' does not have a primary key de
     <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="tmpValue" Type="int" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.lenta' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="lenta">
-          <Property Name="Title" Type="nvarchar" MaxLength="4000" />
-        </EntityType>-->
   <EntityType Name="MARC_AUTHORITY_BLOCK">
     <Key>
       <PropertyRef Name="ID" />
@@ -2665,12 +2644,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Property Name="ID" Type="int" Nullable="false" />
     <Property Name="Subject" Type="nvarchar" MaxLength="200" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SYS_DOWNLOAD_FILE">
-          <Property Name="FileName" Type="varchar" MaxLength="20" />
-          <Property Name="CreatedDate" Type="datetime" />
-        </EntityType>-->
   <EntityType Name="SYS_EVENT_GROUP">
     <Key>
       <PropertyRef Name="ID" />
@@ -3299,9 +3272,6 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <!--Errors Found During Generation:
-error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, but cannot be found.
-        <Association Name="FK_CIR_CALENDAR_HOLDING_LOCATION" />-->
   <Association Name="FK_CIR_FINE_ACQ_CURRENCY">
     <End Role="ACQ_CURRENCY" Type="Self.ACQ_CURRENCY" Multiplicity="1" />
     <End Role="CIR_FINE" Type="Self.CIR_FINE" Multiplicity="*" />
@@ -6924,6 +6894,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <Parameter Name="intIsAuthority" Type="int" Mode="In" />
   </Function>
   <Function Name="SP_CATA_GET_MARC_FORM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intFormID" Type="int" Mode="In" />
+    <Parameter Name="intIsAuthority" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_CATA_GET_MARC_FORM_2019" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intFormID" Type="int" Mode="In" />
     <Parameter Name="intIsAuthority" Type="int" Mode="In" />
   </Function>

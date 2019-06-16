@@ -157,7 +157,13 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\CIR_PATRONController.cs" />
+
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CatalogueController.cs" />
+    <Compile Include="Controllers\CheckInController.cs" />
+    <Compile Include="Controllers\CheckOutController.cs" />
+    <Compile Include="Controllers\PatronController.cs" />
+
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -208,6 +214,7 @@
     <Compile Include="Models\Book_code.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CatalogueBusiness.cs" />
     <Compile Include="Models\CAT_AUTHORITY.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -403,6 +410,7 @@
     <Compile Include="Models\CIR_SERIAL_COUNT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityResult\GET_CATALOGUE_FIELDS_Result.cs" />
     <Compile Include="Models\CLASSIFICATION.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1088,6 +1096,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_CATA_GET_LINKTYPES_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_CATA_GET_MARC_FORM_2019_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_CATA_GET_PICKED_FIELDVIEW_Result.cs">
@@ -2078,12 +2089,37 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Login\Index.cshtml" />
+<<<<<<< Updated upstream
     <Content Include="Views\CIR_PATRON\Create.cshtml" />
     <Content Include="Views\CIR_PATRON\Delete.cshtml" />
     <Content Include="Views\CIR_PATRON\Details.cshtml" />
     <Content Include="Views\CIR_PATRON\Edit.cshtml" />
     <Content Include="Views\CIR_PATRON\Index.cshtml" />
     <Content Include="Views\CIR_PATRON\PatronProfile.cshtml" />
+=======
+    <Content Include="Views\Patron\Create.cshtml" />
+    <Content Include="Views\Patron\Delete.cshtml" />
+    <Content Include="Views\Patron\Details.cshtml" />
+    <Content Include="Views\Patron\Edit.cshtml" />
+    <Content Include="Views\Patron\Index.cshtml" />
+    <Content Include="Views\Patron\PatronProfile.cshtml" />
+    <Content Include="Views\Catalogue\MainTab.cshtml" />
+    <Content Include="Views\Catalogue\AddNewCatalogue.cshtml" />
+    <Content Include="Views\Catalogue\SearchCodeNumber.cshtml" />
+    <Content Include="Views\Catalogue\UpdateCatalogue.cshtml" />
+    <Content Include="Views\PrintBarcode\Index.cshtml" />
+    <Content Include="Views\PrintLabel\Index.cshtml" />
+    <Content Include="Views\CheckIn\Index.cshtml" />
+    <Content Include="Views\CheckOut\Index.cshtml" />
+    <Content Include="Views\CheckIn\CheckInSearch.cshtml" />
+    <Content Include="Views\CheckIn\Giahan.cshtml" />
+    <Content Include="Views\CheckOut\CheckOutByCard.cshtml" />
+    <Content Include="Views\CheckOut\CheckOutByDKCB.cshtml" />
+    <Content Include="Views\CheckIn\CheckInSuccess.cshtml" />
+    <Content Include="Views\CheckOut\FindByCardNumber.cshtml" />
+    <Content Include="Views\Shelf\Index.cshtml" />
+    <Content Include="Views\Login\Logout.cshtml" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

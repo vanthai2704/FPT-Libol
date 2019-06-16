@@ -10,13 +10,15 @@ using Libol.Models;
 
 namespace Libol.Controllers
 {
-    public class CIR_PATRONController : Controller
+    public class PatronController : Controller
     {
         private LibolEntities db = new LibolEntities();
 
         // GET: CIR_PATRON
         public ActionResult Index()
         {
+           
+
             var cIR_PATRON = db.CIR_PATRON.Include(c => c.CIR_DIC_EDUCATION).Include(c => c.CIR_DIC_ETHNIC).Include(c => c.CIR_DIC_OCCUPATION).Include(c => c.CIR_PATRON_GROUP).Include(c => c.CIR_PATRON_UNIVERSITY);
             return View(cIR_PATRON.ToList());
         }
@@ -24,6 +26,7 @@ namespace Libol.Controllers
 
         public ActionResult PatronProfile()
         {
+           
             return View();
         }
 
@@ -61,12 +64,24 @@ namespace Libol.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Code,ValidDate,ExpiredDate,LastIssuedDate,LastName,FirstName,MiddleName,Sex,DOB,EthnicID,EducationID,OccupationID,WorkPlace,Telephone,Mobile,Email,Portrait,PatronGroupID,Password,Status,Note,Debt,LastModifiedDate,InterestedSubjectBBK,InterestedSubjectDDC,IDCard")] CIR_PATRON cIR_PATRON)
         {
-            if (ModelState.IsValid)
-            {
-                db.CIR_PATRON.Add(cIR_PATRON);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+
+            var x = db.SP_CATA_GET_MARC_FORM(0, 0);
+   
+             var PatronGroups = db.SP_PAT_GET_PATRONGROUP().ToList();
+            var educations = db.SP_PAT_GET_EDUCATION().ToList();
+            var occupations = db.SP_PAT_GET_OCCUPATION().ToList();
+            var provinces = db.SP_PAT_GET_PROVINCE().ToList();
+            return RedirectToAction("Index");
+            //if (ModelState.IsValid)
+            //{
+            //    //db.CIR_PATRON.Add(cIR_PATRON);
+            //    var createDemo = db.SP_PAT_CREATE_PATRON("SE048933", "6/2/2019", "6/11/2019", "6/1/2019", "Thái", "Nguyễn", "Văn", true, "6/11/1997", 1, 31, 50, "Công ty FPT software", "0969347967", "", "thainvse04893@fpt.edu.vn", "", 1, "Test", 0, "", new System.Data.Entity.Core.Objects.ObjectParameter("intRetval", ParameterDirection.Output));
+                
+            //    db.SaveChanges();
+            //    return RedirectToAction("Index");
+            //    //db.SaveChanges();
+            //    //return RedirectToAction("Index");
+            //}
 
             ViewBag.EducationID = new SelectList(db.CIR_DIC_EDUCATION, "ID", "EducationLevel", cIR_PATRON.EducationID);
             ViewBag.EthnicID = new SelectList(db.CIR_DIC_ETHNIC, "ID", "Ethnic", cIR_PATRON.EthnicID);
@@ -152,11 +167,6 @@ namespace Libol.Controllers
             }
             base.Dispose(disposing);
         }
-
-
-
-
-
-
+      
     }
 }
