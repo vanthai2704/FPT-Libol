@@ -2089,14 +2089,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Login\Index.cshtml" />
-<<<<<<< Updated upstream
-    <Content Include="Views\CIR_PATRON\Create.cshtml" />
-    <Content Include="Views\CIR_PATRON\Delete.cshtml" />
-    <Content Include="Views\CIR_PATRON\Details.cshtml" />
-    <Content Include="Views\CIR_PATRON\Edit.cshtml" />
-    <Content Include="Views\CIR_PATRON\Index.cshtml" />
-    <Content Include="Views\CIR_PATRON\PatronProfile.cshtml" />
-=======
+
     <Content Include="Views\Patron\Create.cshtml" />
     <Content Include="Views\Patron\Delete.cshtml" />
     <Content Include="Views\Patron\Details.cshtml" />
@@ -2119,7 +2112,7 @@
     <Content Include="Views\CheckOut\FindByCardNumber.cshtml" />
     <Content Include="Views\Shelf\Index.cshtml" />
     <Content Include="Views\Login\Logout.cshtml" />
->>>>>>> Stashed changes
+
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
