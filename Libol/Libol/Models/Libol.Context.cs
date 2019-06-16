@@ -21325,7 +21325,6 @@ namespace Libol.Models
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TESTCAI");
         }
-
     
         public virtual int DemoGetMarcForm(Nullable<int> intFormID, Nullable<int> intIsAuthority)
         {
@@ -21395,6 +21394,5 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GETFIELDS_OF_FORM_Result>("FPT_SP_CATA_GETFIELDS_OF_FORM", intFormIDParameter, strCreatorParameter, intIsAuthorityParameter);
         }
-
     }
 }

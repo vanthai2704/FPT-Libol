@@ -1998,6 +1998,15 @@
     <Compile Include="Models\usertest.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+	<Compile Include="Models\FPT_SP_CATA_CHECK_EXIST_TITLE_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+	<Compile Include="Models\FPT_SP_CATA_GET_MARC_FORM_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+	<Compile Include="Models\FPT_SP_CATA_GETFIELDS_OF_FORM_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
