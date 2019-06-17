@@ -7,9 +7,11 @@
     <title>@ViewBag.Title - FPT Libol</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="971697194004-a3705bandc8uaqv5r0b64adm3ggcqu91.apps.googleusercontent.com">
-
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
     <style>
         .navbar {
             padding: 0 !important;
@@ -113,7 +115,16 @@
     </div>
 
     <div class="g-signin2" data-onsuccess="onSignIn" style="display:none;"></div>
+    
     <script>
+        $(document).ready(function () {
+            $(document).ajaxError(function (xhr, props) {
+                if (props.status === 401) {
+                    location.reload();
+                }
+            });
+        });
+
         function highlight(elem) {
             var a = document.getElementsByTagName('li');
             for (i = 0; i <= a.length; i++) {
@@ -147,8 +158,6 @@
         }
     </script>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    
 </body>
 </html>
