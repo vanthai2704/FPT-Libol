@@ -2124,14 +2124,14 @@
     <Content Include="Views\PrintLabel\Index.cshtml" />
     <Content Include="Views\CheckIn\Index.cshtml" />
     <Content Include="Views\CheckOut\Index.cshtml" />
-    <Content Include="Views\CheckIn\CheckInSearch.cshtml" />
-    <Content Include="Views\CheckIn\Giahan.cshtml" />
-    <Content Include="Views\CheckOut\CheckOutByCard.cshtml" />
-    <Content Include="Views\CheckOut\CheckOutByDKCB.cshtml" />
-    <Content Include="Views\CheckIn\CheckInSuccess.cshtml" />
-    <Content Include="Views\CheckOut\FindByCardNumber.cshtml" />
     <Content Include="Views\Shelf\Index.cshtml" />
     <Content Include="Views\Login\Logout.cshtml" />
+    <Content Include="Views\CheckIn\_checkinByCardNumber.cshtml" />
+    <Content Include="Views\CheckIn\_checkinByDKCB.cshtml" />
+    <Content Include="Views\CheckIn\_findByCardNumber.cshtml" />
+    <Content Include="Views\CheckOut\Giahan.cshtml" />
+    <Content Include="Views\CheckOut\_checkoutSuccess.cshtml" />
+    <Content Include="Views\CheckOut\_showPatronInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

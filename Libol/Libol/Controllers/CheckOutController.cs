@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Libol.Models;
 
 namespace Libol.Controllers
 {
     public class CheckOutController : BaseController
     {
+
+        private LibolEntities db = new LibolEntities();
+
         // GET: CheckOut
         public ActionResult Index()
         {
@@ -29,7 +33,8 @@ namespace Libol.Controllers
         [HttpGet]
         public PartialViewResult CheckOutCardInfo()
         {
-            return PartialView("_showPatronInfo");
+            //var data = db.
+                return PartialView("_showPatronInfo");
         }
     }
 }
