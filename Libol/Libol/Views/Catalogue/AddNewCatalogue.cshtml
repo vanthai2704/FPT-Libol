@@ -21,12 +21,35 @@
         @{ 
             IEnumerable<FPT_SP_CATA_GET_MARC_FORM_Result> list = ViewData["ListMarcForm"] as IEnumerable<FPT_SP_CATA_GET_MARC_FORM_Result>;
         }
-        <select class="form-control col-md-2" name="listMarcForm">
+        <select class="form-control col-md-2" name="listMarcForm" id="listMarcFormID"  onchange="SelectedForm();">
             @foreach(FPT_SP_CATA_GET_MARC_FORM_Result item in list)
             {
             <option value="@item.ID">@item.Name</option>
             }
         </select>
+        <script>
+            function SelectedForm() {
+                var empObj = {
+                   
+                    intIsAuthority: 0,
+                    intFormID: 14
+                };
+                $.ajax({
+                    url: "/Catalogue/LoadFormComplated",
+                    type: "POST",
+                    data: JSON.stringify(empObj),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (Response) {
+                       
+                    },
+                    error: function ( errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+                
+            }
+        </script>
 
         <label class="control-label col-md-2 align-self-center">Cấp thư mục : </label>
         <select class="form-control col-md-2">
