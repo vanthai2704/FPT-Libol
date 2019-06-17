@@ -25,67 +25,65 @@
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12">
             <div class="form-group col-md-6">
-                <label for="inputEmail4" class="col-md-6">Mã Tài Liệu</label>
-                <input type="email" class="form-control" id="inputEmail4" placeholder="FPT12345">
-                <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#exampleModal">Tìm</button>
-
+                <label class="col-md-6">Mã Tài Liệu</label>
+                <input type="email" class="form-control" id="txtCode" placeholder="FPT12345">
+                <button type="button" id="btnCodeFind" class="btn btn-primary form-control" data-toggle="modal" data-target="#exampleModal">Tìm</button>
 
             </div>
             <div class="form-group col-md-6">
-                <label for="inputEmail4" class="col-md-6">Mã Đơn Đặt</label>
-                <input type="email" class="form-control" id="inputEmail4" placeholder="">
-                <button type="submit" class="btn btn-primary form-control">Tìm</button>
+                <label class="col-md-6">Mã Đơn Đặt</label>
+                <input type="email" class="form-control" id="txtCodePO" placeholder="">
+                <button type="submit" id="btnCodePOFind" class="btn btn-primary form-control">Tìm</button>
             </div>
 
         </div>
         <label style="margin-top:10px"><h5>Thông tin xếp giá bổ sung</h5></label>
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
-                <label for="inputState" class="col-md-6">Nguồn bổ sung</label>
-                <select id="inputState" class="form-control">
-                    <option selected="">Khác</option>
-                    <option>...</option>
-                </select>
+                <label class="col-md-6">Nguồn bổ sung</label>
+                @Html.DropDownList("abc", ViewBag.listDemo as SelectList, new { @class = "form-control" })
             </div>
             <div class="form-group col-md-8">
-                <label for="inputState" class="col-md-3">Kiểu tư liệu(lưu thông)</label>
-                <select id="inputState" class="form-control">
-                    <option selected="">Giáo Trình</option>
-                    <option>...</option>
-                </select>
+                <label class="col-md-3">Kiểu tư liệu(lưu thông)</label>
+                @Html.DropDownList("abcd", ViewBag.listKTL as SelectList, new { @class = "form-control" })
+                @*<select id="inputState" class="form-control col-md-2">
+                        <option selected="">Giáo Trình</option>
+                        <option>USD</option>
+                    </select>*@
             </div>
         </div>
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
-                <label for="inputState" class="col-md-6">Ngày bổ sung</label>
-                <input type="Date" class="form-control" id="inputAddress1">
+                <label class="col-md-6">Ngày bổ sung</label>
+                <input type="Date" class="form-control" id="txtDateChng">
             </div>
             <div class="form-group col-md-8">
-                <label for="inputState" class="col-md-3">Đơn giá</label>
-                <input type="text" class="form-control col-md-3" id="inputAddress" placeholder="1234">
-                <select id="inputState" class="form-control col-md-2">
-                    <option selected="">VND</option>
-                    <option>USD</option>
-                </select>
-                <label for="inputState" class="col-md-2">Tỉ giá hạch toán</label>
+                <label class="col-md-3">Đơn giá</label>
+                <input type="text" class="form-control col-md-3" id="txtPrice" placeholder="1234">
+                @Html.DropDownList("abcde", ViewBag.listCur as SelectList, new { @class = "form-control" })
+                @*<select id="inputState" class="form-control col-md-2">
+                        <option selected="">VND</option>
+                        <option>USD</option>
+                    </select>*@
+                <label class="col-md-2">Tỉ giá hạch toán</label>
                 <input type="text" class="form-control col-md-1" id="inputAddress" placeholder="1">
             </div>
         </div>
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
-                <label for="inputState" class="col-md-6">Số chứng từ</label>
-                <input type="text" class="form-control" id="inputAddress" placeholder="1234">
+                <label class="col-md-6">Số chứng từ</label>
+                <input type="text" class="form-control" id="txtSCT" placeholder="1234">
             </div>
             <div class="form-group col-md-8">
-                <label for="inputState" class="col-md-3">Ngày chứng từ</label>
+                <label class="col-md-3">Ngày chứng từ</label>
                 <input type="Date" class="form-control" id="inputAddress" placeholder="1234">
             </div>
         </div>
 
-        <label for="inputEmail4" style="margin-top:10px"><h5>Thông tin vị trí xếp giá</h5></label>
+        <label style="margin-top:10px"><h5>Thông tin vị trí xếp giá</h5></label>
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-2">
-                <label for="inputState" class="">Thư viện</label>
+                <label class="">Thư viện</label>
                 <select id="inputState" class="form-control">
                     <option selected="">FSchool</option>
                     <option>...</option>
@@ -94,7 +92,7 @@
                 </select>
             </div>
             <div class="form-group col-md-2">
-                <label for="inputState">Kho</label>
+                <label>Kho</label>
                 <select id="inputState" class="form-control">
                     <option selected="">GK/GPDEF</option>
                     <option>...</option>
@@ -102,35 +100,35 @@
             </div>
 
             <div class="form-group col-md-2">
-                <label for="inputZip">Giá Sách</label>
+                <label>Giá Sách</label>
                 <input type="text" class="form-control col-md-6" id="inputZip">
             </div>
 
             <div class="form-group col-md-3">
-                <label for="inputZip" class="col-md-5">Đăng kí cá biệt</label>
+                <label class="col-md-5">Đăng kí cá biệt</label>
                 <input type="text" class="form-control col-md-2" id="inputZip">
                 <button type="submit" class="btn btn-primary form-control col-md-4">Sinh giá trị</button>
             </div>
             <div class="form-group col-md-3">
-                <label for="inputZip" class="col-md-4">Số lượng</label>
+                <label class="col-md-4">Số lượng</label>
                 <input type="text" class="form-control col-md-3" id="inputZip">
                 <button type="submit" class="btn btn-primary form-control col-md-4">Bổ sung</button>
             </div>
 
         </div>
 
-        <label for="inputEmail4" style="margin-top:10px"><h5>Thông tin xếp giá hiện thời</h5></label>
+        <label style="margin-top:10px"><h5>Thông tin xếp giá hiện thời</h5></label>
         <div class="form-row col-md-12">
-            <label for="inputZip" class="control-label col-md-5">Tổng số ĐKCB : </label>
-            <label for="inputZip" class="col-md-7 text-left">11</label>
+            <label class="control-label col-md-5">Tổng số ĐKCB : </label>
+            <label class="col-md-7 text-left">11</label>
         </div>
         <div class="form-row col-md-12">
-            <label for="inputZip" class="control-label col-md-5">Dữ liệu ĐKCB tổng hợp : </label>
-            <label for="inputZip" class="col-md-7 text-left"><b></b>FSE-HL /TK/XHHL//TK/XHHL003661-71</b></label>
+            <label class="control-label col-md-5">Dữ liệu ĐKCB tổng hợp : </label>
+            <label class="col-md-7 text-left"><b></b>FSE-HL /TK/XHHL//TK/XHHL003661-71</b></label>
         </div>
         <div class="form-row col-md-12">
-            <label for="inputZip" class="control-label col-md-5">Tổng số bản rỗi : </label>
-            <label for="inputZip" class="control-label col-md-7">11</label>
+            <label class="control-label col-md-5">Tổng số bản rỗi : </label>
+            <label class="control-label col-md-7">11</label>
         </div>
 
         <div class="form-row col-md-12 text-center">
@@ -143,7 +141,7 @@
             <caption>
                 <div class="form-row col-md-12 form-inline">
                     <div class="form-group col-md-12">
-                        <label for="inputState" class="col-md-2">Lý Do Loại bỏ</label>
+                        <label class="col-md-2">Lý Do Loại bỏ</label>
                         <select id="inputState" class="form-control">
                             <option selected="">Quà Tặng</option>
                             <option>...</option>
@@ -155,7 +153,7 @@
             </caption>
             <thead>
                 <tr>
-                    <th><input type="checkbox" /></th>
+                    <th><input type="checkbox" onchange="checkAll(this)" /></th>
                     <th>Thư viện</th>
                     <th>Kho</th>
                     <th>Giá sách</th>
@@ -164,8 +162,8 @@
                     <th>ĐKCB</th>
                     <th>Giá tiền</th>
                     <th>Đơn vị</th>
-                    <th>Số chừng từ</th>
-                    <th>Ngày chừng từ</th>
+                    <th>Số chứng từ</th>
+                    <th>Ngày chứng từ</th>
                     <th>Ngày bổ sung</th>
                     <th>Nguồn bổ sung</th>
                     <th>Ghi chú</th>
@@ -226,7 +224,7 @@
                 </tr>
             </tbody>
         </table>
-        
+
 
     </div>
 </form>
@@ -243,27 +241,27 @@
                 <div class="modal-body">
 
                     <div class="form-row">
-                        <label for="recipient-name" class="col-form-label">Nhan đề chính </label>
+                        <label class="col-form-label">Nhan đề chính </label>
                         <input type="text" class="form-control" id="recipient-name">
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Mã xếp giá </label>
+                        <label class="col-form-label">Mã xếp giá </label>
                         <input type="text" class="form-control" id="recipient-name">
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Tác giả </label>
+                        <label class="col-form-label">Tác giả </label>
                         <input type="text" class="form-control" id="recipient-name">
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Nhà xuất bản </label>
+                        <label class="col-form-label">Nhà xuất bản </label>
                         <input type="text" class="form-control" id="recipient-name">
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Năm xuất bản </label>
+                        <label class="col-form-label">Năm xuất bản </label>
                         <input type="text" class="form-control" id="recipient-name">
                     </div>
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">ISBN </label>
+                        <label class="col-form-label">ISBN </label>
                         <input type="text" class="form-control" id="recipient-name">
                     </div>
 
@@ -290,4 +288,76 @@
         modal.find('.modal-body input').val(recipient)
     })
     document.getElementById('inputAddress1').value = moment().format('dd-MM-yyyy');
+
+    // check all check box in table
+    function checkAll(ele) {
+        var checkboxes = document.getElementsByTagName('input');
+        if (ele.checked) {
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = true;
+                }
+            }
+        } else {
+            for (var i = 0; i < checkboxes.length; i++) {
+                console.log(i)
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = false;
+                }
+            }
+        }
+    }
+
+    //test using jquery insert data to table
+    $(document).ready(function () {
+        var employee = {};
+        employee.Name = $('#txtSCT').val();
+        employee.Gender = $('#ddlGender').val();
+        employee.Phone = $('#txtPhone').val();
+        employee.Email = $('#txtEmail').val();
+        employee.Age = $('#txtAge').val();
+        employee.Salary = $('#txtSalary').val();
+
+        $.ajax({
+            url: 'EmployeeService.asmx/AddEmployee',
+            method: 'post',
+            data: '{emp: ' + JSON.stringify(employee) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                getAllEmployees();
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+
+
+
+
+
+        function getAllEmployees() {
+            $.ajax({
+                url: 'EmployeeService.asmx/GetAllEmployees',
+                dataType: "json",
+                method: 'GET',
+                success: function (data) {
+                    var employeeTable = $('#employee tbody');
+                    employeeTable.empty();
+
+                    $(data).each(function (index, emp) {
+                        employeeTable.append('<tr><td>' + emp.ID + '</td><td>'
+                            + emp.Name + '</td><td>' + emp.Gender + '</td><td>'
+                            + emp.Phone + '</td><td>' + emp.Email + '</td><td>'
+                            + emp.Age + '</td><td>' + emp.Salary + '</td></tr>');
+                    });
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+    });
+
 </script>

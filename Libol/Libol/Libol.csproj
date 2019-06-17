@@ -1102,9 +1102,6 @@
     <Compile Include="Models\SP_CATA_GET_LINKTYPES_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SP_CATA_GET_MARC_FORM_2019_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SP_CATA_GET_PICKED_FIELDVIEW_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>

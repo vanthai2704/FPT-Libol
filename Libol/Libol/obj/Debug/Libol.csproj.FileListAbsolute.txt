@@ -472,4 +472,3 @@ C:\Users\Hong Nhat\Desktop\DO_Libol\FPT-Libol\Libol\Libol\bin\Microsoft.CodeDom.
 C:\Users\Hong Nhat\Desktop\DO_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.csproj.CoreCompileInputs.cache
 C:\Users\Hong Nhat\Desktop\DO_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.csproj.CopyComplete
 C:\Users\Hong Nhat\Desktop\DO_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.pdb
-C:\Users\Hong Nhat\Desktop\DO_Libol\FPT-Libol\Libol\Libol\obj\Debug\Libol.csprojAssemblyReference.cache
