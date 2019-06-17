@@ -32,9 +32,9 @@ namespace Libol.Controllers
         public JsonResult LoadFormComplated(int intIsAuthority, int intFormID)
         {
             string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
-            List<GET_CATALOGUE_FIELDS_Result> formComplated = Catalogue(intIsAuthority, intFormID, fieldCode);
+            List<GET_CATALOGUE_FIELDS_Result> formComplated = Catalogue(intIsAuthority, intFormID, fieldCode).ToList();
             ViewData["MarcFormComplated"] = formComplated;
-            return Json("", JsonRequestBehavior.AllowGet);
+            return Json(formComplated, JsonRequestBehavior.AllowGet);
         }
 
         //get list marc form
@@ -42,7 +42,6 @@ namespace Libol.Controllers
         {
             List<FPT_SP_CATA_GET_MARC_FORM_Result> list = db.FPT_SP_CATA_GET_MARC_FORM(0, 0).ToList();
             return list;
-
         }
 
         
@@ -53,6 +52,7 @@ namespace Libol.Controllers
             string fields = "";
             foreach(FPT_SP_CATA_GETFIELDS_OF_FORM_Result item in GetForm)
             {
+                if(item.FieldCode != "001")
                 fields = fields + item.FieldCode + ",";
             }
             return fields;
