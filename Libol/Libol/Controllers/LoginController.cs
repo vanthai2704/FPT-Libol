@@ -29,6 +29,7 @@ namespace Libol.Controllers
             if (checkUser != null && checkUser.Count > 0)
             {
                 Session["UserID"] = checkUser[0].ID;
+                Session["FullName"] = checkUser[0].Name;
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -59,7 +60,7 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult Logout()
         {
-            Session["UserID"] = null;
+            Session.Abandon();
             return Json("", JsonRequestBehavior.AllowGet);
         }
     }
