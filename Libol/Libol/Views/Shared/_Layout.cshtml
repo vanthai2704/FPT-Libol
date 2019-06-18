@@ -115,13 +115,12 @@
     </div>
 
     <div class="g-signin2" data-onsuccess="onSignIn" style="display:none;"></div>
-
+    
     <script>
         $(document).ready(function () {
             $(document).ajaxError(function (xhr, props) {
                 if (props.status === 401) {
-                    //location.reload();
-                    window.open("/Login");
+                    location.reload();
                 }
             });
         });
@@ -159,6 +158,6 @@
         }
     </script>
 
-
+    
 </body>
 </html>

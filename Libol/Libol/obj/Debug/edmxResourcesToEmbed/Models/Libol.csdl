@@ -12380,19 +12380,6 @@
       <Parameter Name="intFormID" Mode="In" Type="Int32" />
       <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
     </FunctionImport>
-    <FunctionImport Name="FPT_SP_CATA_CHECK_EXIST_TITLE" ReturnType="Collection(LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_Result)">
-      <Parameter Name="strTitle" Mode="In" Type="String" />
-      <Parameter Name="strItemType" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="FPT_SP_CATA_GET_MARC_FORM" ReturnType="Collection(LibolModel.FPT_SP_CATA_GET_MARC_FORM_Result)">
-      <Parameter Name="intFormID" Mode="In" Type="Int32" />
-      <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="FPT_SP_CATA_GETFIELDS_OF_FORM" ReturnType="Collection(LibolModel.FPT_SP_CATA_GETFIELDS_OF_FORM_Result)">
-      <Parameter Name="intFormID" Mode="In" Type="Int32" />
-      <Parameter Name="strCreator" Mode="In" Type="String" />
-      <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
-    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -17031,31 +17018,5 @@
     <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
     <Property Type="DateTime" Name="LastModifiedDate" Nullable="false" Precision="23" />
     <Property Type="String" Name="Note" Nullable="true" MaxLength="200" />
-  </ComplexType>
-  <ComplexType Name="FPT_SP_CATA_CHECK_EXIST_TITLE_Result">
-    <Property Type="Int32" Name="ItemID" Nullable="false" />
-    <Property Type="String" Name="Content" Nullable="false" MaxLength="800" />
-  </ComplexType>
-  <ComplexType Name="FPT_SP_CATA_GET_MARC_FORM_Result">
-    <Property Type="Int32" Name="ID" Nullable="false" />
-    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
-    <Property Type="String" Name="Creator" Nullable="false" MaxLength="50" />
-    <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
-    <Property Type="DateTime" Name="LastModifiedDate" Nullable="false" Precision="23" />
-    <Property Type="String" Name="Note" Nullable="true" MaxLength="200" />
-  </ComplexType>
-  <ComplexType Name="FPT_SP_CATA_GETFIELDS_OF_FORM_Result">
-    <Property Type="Int32" Name="ID" Nullable="false" />
-    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
-    <Property Type="String" Name="Creator" Nullable="false" MaxLength="50" />
-    <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
-    <Property Type="DateTime" Name="LastModifiedDate" Nullable="false" Precision="23" />
-    <Property Type="String" Name="Note" Nullable="true" MaxLength="200" />
-    <Property Type="Int32" Name="FormID" Nullable="true" />
-    <Property Type="String" Name="FieldCode" Nullable="true" MaxLength="5" />
-    <Property Type="Boolean" Name="Mandatory" Nullable="true" />
-    <Property Type="String" Name="DefaultValue" Nullable="true" MaxLength="200" />
-    <Property Type="Boolean" Name="IstextBox" Nullable="true" />
-    <Property Type="String" Name="DefaultIndicators" Nullable="true" MaxLength="2" />
   </ComplexType>
 </Schema>

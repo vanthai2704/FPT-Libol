@@ -12,21 +12,14 @@ namespace Libol.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var session = Session["UserID"];
-            string path = Request.RequestContext.HttpContext.Request.RawUrl;
-            if (session == null)
+            if(session == null)
             {
-                
-                if (!filterContext.HttpContext.Request.IsAjaxRequest() || path.Equals("")
-                    || path.Equals("/") || path.Equals("/Home"))
-                {
-                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index" }));
-                }
-                else
+                if (filterContext.HttpContext.Request.IsAjaxRequest())
                 {
                     filterContext.HttpContext.Response.StatusCode = 401;
                     filterContext.HttpContext.Response.End();
                 }
-                
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Login", action = "Index" }));
             }
             base.OnActionExecuting(filterContext);
         }
