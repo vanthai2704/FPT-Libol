@@ -8,7 +8,7 @@ using Libol.EntityResult;
 
 namespace Libol.Controllers
 {
-    public class CatalogueController : Controller
+    public class CatalogueController : BaseController
     {
         private LibolEntities db = new LibolEntities();
         CatalogueBusiness catalogueBusiness = new CatalogueBusiness();
@@ -25,7 +25,8 @@ namespace Libol.Controllers
         //---------------------------------------------
         public ActionResult AddNewCatalogue()
         {
-            ViewData["ListMarcForm"] = ListMarcForm();
+            //get list marc form
+            ViewData["ListMarcForm"] = db.FPT_SP_CATA_GET_MARC_FORM(0, 0).ToList();
             //Cấp thư mục
             ViewData["listLevelDir"] = db.CAT_DIC_DIRLEVEL.OrderBy(d => d.Description).ToList();
             ViewData["ListRecordType"] = db.CAT_DIC_RECORDTYPE.OrderBy(r => r.Description).ToList();
@@ -40,50 +41,25 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddNewCatalogue(int formId, string dirCode, int mediumId, string recordTypeCode, int itemTypeId, byte accessLevel)
+        public JsonResult AddNewItem(int formId, string dirCode, int mediumId, string recordTypeCode, int itemTypeId, byte accessLevel)
         {
-            string cataloguer = this.Session["FullName"].ToString();
-            catalogueBusiness.InsertItem(formId, dirCode, mediumId, recordTypeCode, itemTypeId, accessLevel, cataloguer);
-            return RedirectToAction("Index", "Shelf");
+            int id = Int32.Parse(Session["UserID"].ToString()) ;
+            string cataloguer = db.SYS_USER.Where(a => a.ID == id).Select(a => a.Name).FirstOrDefault();
+            string code = catalogueBusiness.InsertItem(formId, dirCode, mediumId, recordTypeCode, itemTypeId, accessLevel, cataloguer);
+            return Json(code, JsonRequestBehavior.AllowGet);
+            //return RedirectToAction("Index", "Shelf");
         }
+
+
 
         [HttpPost]
         public JsonResult LoadFormComplated(int intIsAuthority, int intFormID)
         {
-            string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
-            List<GET_CATALOGUE_FIELDS_Result> formComplated = Catalogue(intIsAuthority, intFormID, fieldCode).ToList();
+            //string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
+            List<GET_CATALOGUE_FIELDS_Result> formComplated = catalogueBusiness.GetComplatedForm(0, "", intFormID);
             ViewData["MarcFormComplated"] = formComplated;
             return Json(formComplated, JsonRequestBehavior.AllowGet);
         }
-
-        //get list marc form
-        public List<FPT_SP_CATA_GET_MARC_FORM_Result> ListMarcForm()
-        {
-            List<FPT_SP_CATA_GET_MARC_FORM_Result> list = db.FPT_SP_CATA_GET_MARC_FORM(0, 0).ToList();
-            return list;
-        }
-
-        
-        //get all fields by ID 
-        public String GetFieldByID(int intIsAuthority ,string strCreator, int SelectedIndex)
-        {
-            List<FPT_SP_CATA_GETFIELDS_OF_FORM_Result> GetForm = db.FPT_SP_CATA_GETFIELDS_OF_FORM(SelectedIndex, "", 0).ToList();
-            string fields = "";
-            foreach(FPT_SP_CATA_GETFIELDS_OF_FORM_Result item in GetForm)
-            {
-                if(item.FieldCode != "001")
-                fields = fields + item.FieldCode + ",";
-            }
-            return fields;
-        }
-
-        //Get Catalogue
-        public List<GET_CATALOGUE_FIELDS_Result> Catalogue(int intIsAuthority, int intFormID, string strFieldCodes)
-        {
-            List<GET_CATALOGUE_FIELDS_Result> list = db.FPT_GET_CATALOGUE_FIELDS(intIsAuthority , intFormID, strFieldCodes, "", 0);
-            return list;
-        }
-        
 
 
 

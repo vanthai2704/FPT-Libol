@@ -17,7 +17,9 @@ namespace Libol.Models
         {
 
         }
-        public void InsertItem(int formId, string dirCode, int mediumId, string recordTypeCode, int itemTypeId, byte accessLevel, string cataloguer)
+
+
+        public string InsertItem(int formId, string dirCode, int mediumId, string recordTypeCode, int itemTypeId, byte accessLevel, string cataloguer)
         {
             int id = db.ITEMs.Select(i => i.ID).Max() + 1;
             // leader 
@@ -51,8 +53,21 @@ namespace Libol.Models
 
             });
             db.SaveChanges();
+            return code;
         }
 
+        public List<GET_CATALOGUE_FIELDS_Result> GetComplatedForm(int intIsAuthority, string strCreator, int SelectedIndex)
+        {
+            List<FPT_SP_CATA_GETFIELDS_OF_FORM_Result> GetForm = db.FPT_SP_CATA_GETFIELDS_OF_FORM(SelectedIndex, "", 0).ToList();
+            string fields = "";
+            foreach (FPT_SP_CATA_GETFIELDS_OF_FORM_Result item in GetForm)
+            {
+                if (item.FieldCode != "001")
+                    fields = fields + item.FieldCode + ",";
+            }
 
+            List<GET_CATALOGUE_FIELDS_Result> list = db.FPT_GET_CATALOGUE_FIELDS(intIsAuthority, SelectedIndex, fields, "", 0);
+            return list;
+        }
     }
 }
