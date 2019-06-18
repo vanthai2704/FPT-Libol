@@ -1,4 +1,5 @@
 ﻿@using Libol.Models;
+@using Libol.EntityResult;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -13,119 +14,142 @@
     }
 </style>
 <h4 style="margin:1rem">Danh sách biên mục sơ lược</h4>
-<form>
-
+<form action="~/Catalogue/AddNewCatalogue" method="post">
+    @{
+        List<CAT_DIC_DIRLEVEL> listLevelDir = ViewData["listLevelDir"] as List<CAT_DIC_DIRLEVEL>;
+        List<CAT_DIC_RECORDTYPE> ListRecordType = ViewData["ListRecordType"] as List<CAT_DIC_RECORDTYPE>;
+        List<CAT_DIC_ITEM_TYPE> listItemType = ViewData["listItemType"] as List<CAT_DIC_ITEM_TYPE>;
+        List<CAT_DIC_MEDIUM> listMedium = ViewData["listMedium"] as List<CAT_DIC_MEDIUM>;
+        byte[] listAccessLevel = ViewData["listAccessLevel"] as byte[];
+    }
     <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Chon Mau Bien Muc </label>
-
-        @{ 
-            IEnumerable<FPT_SP_CATA_GET_MARC_FORM_Result> list = ViewData["ListMarcForm"] as IEnumerable<FPT_SP_CATA_GET_MARC_FORM_Result>;
-        }
-        <select class="form-control col-md-2" name="listMarcForm" id="listMarcFormID"  onchange="SelectedForm();">
-            @foreach(FPT_SP_CATA_GET_MARC_FORM_Result item in list)
-            {
-            <option value="@item.ID">@item.Name</option>
+        <label class="control-label col-md-3 align-self-center">Cấp thư mục : </label>
+        <select class="form-control col-md-2" name="dirCode">
+            @{
+                foreach (CAT_DIC_DIRLEVEL levelDir in listLevelDir)
+                {
+                    <option value="@levelDir.Code">@levelDir.Description</option>
+                }
             }
         </select>
+    </div>
+    <div class="form-group row col-12">
+        <label class="control-label col-md-3 align-self-center">Kiểu bản ghi : </label>
+        <select class="form-control col-md-2" name="recordTypeCode">
+            @{
+                foreach (CAT_DIC_RECORDTYPE recordType in ListRecordType)
+                {
+                    <option value="@recordType.Code">@recordType.Description</option>
+                }
+            }
+        </select>
+        <label class="control-label col-md-2 align-self-center">Vật mang tin : </label>
+        <select class="form-control col-md-2" name="mediumId">
+            @{
+                foreach (CAT_DIC_MEDIUM medium in listMedium)
+                {
+                    <option value="@medium.ID">@medium.Description</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="form-group row col-12">
+        <label class="control-label col-md-3 align-self-center">Dạng tài liệu : </label>
+        <select class="form-control col-md-2" name="itemTypeId">
+            @{
+                foreach (CAT_DIC_ITEM_TYPE itemType in listItemType)
+                {
+                    <option value="@itemType.ID">@itemType.TypeName</option>
+                }
+            }
+        </select>
+        <label class="control-label col-md-2 align-self-center">Mật độ : </label>
+        <select class="form-control col-md-2" name="accessLevel">
+            @{
+                foreach (byte number in listAccessLevel)
+                {
+                    <option value="@number">@number</option>
+                }
+            }
+        </select>
+        </div>
+        <div class="form-group row col-12">
+
+            <label class="control-label col-md-3 align-self-center">Chọn Mẫu Biên Mục </label>
+
+            @{
+                IEnumerable<FPT_SP_CATA_GET_MARC_FORM_Result> list = ViewData["ListMarcForm"] as IEnumerable<FPT_SP_CATA_GET_MARC_FORM_Result>;
+            }
+            <select class="form-control col-md-2" name="formId" id="listMarcFormID" onchange="SelectedForm();">
+                @foreach (FPT_SP_CATA_GET_MARC_FORM_Result item in list)
+                {
+                    <option value="@item.ID">@item.Name</option>
+                }
+            </select>
+        </div>
         <script>
+
             function SelectedForm() {
+
                 var empObj = {
-                   
                     intIsAuthority: 0,
-                    intFormID: 14
+                    intFormID: $("#listMarcFormID :selected").val()
                 };
+                var html = "";
                 $.ajax({
                     url: "/Catalogue/LoadFormComplated",
                     type: "POST",
                     data: JSON.stringify(empObj),
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
-                    success: function (Response) {
-                       
+                    success: function (result) {
+                        $.each(result, function (i, item) {
+                            if (item.FieldCode == "245$a") {
+                                html += "<div class='form-group row col-12'><label class='control-label col-md-5 align-self-center font-weight-bold text-danger'> <u> " + item.VietFieldName + " [" + item.FieldCode + "]" + " </u></label><input required type='text' class='form-control col-md-2' id=" + item.FieldCode + "></input></div>";
+                            } else {
+                                html += "<div class='form-group row col-12'><label class='control-label col-md-5 align-self-center font-weight-bold'> " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + item.FieldCode + "></input></div>";
+                            }
+                        });
+                        $("#test").html(html);
+                        document.getElementById("btnCreate").disabled = false;
+                        document.getElementById("btnReset").disabled = false;
+                        document.getElementById("btnAddField").disabled = false;
                     },
-                    error: function ( errorThrown) {
+                    error: function (errorThrown) {
                         alert(errorThrown);
                     }
-                });
-                
-            }
-        </script>
 
-        <label class="control-label col-md-2 align-self-center">Cấp thư mục : </label>
-        <select class="form-control col-md-2">
-            <option>Kinh</option>
-            <option>Mường</option>
-        </select>
+                });
+
+            }
+
+        </script>
+    
+
+    <div id="test">
+
     </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Kiểu bản ghi : </label>
-        <select class="form-control col-md-2">
-            <option>Kinh</option>
-            <option>Mường</option>
-        </select>
-        <label class="control-label col-md-2 align-self-center">Vật mang tin : </label>
-        <select class="form-control col-md-2">
-            <option>Kinh</option>
-            <option>Mường</option>
-        </select>
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Dạng tài liệu : </label>
-        <select class="form-control col-md-2">
-            <option>Kinh</option>
-            <option>Mường</option>
-        </select>
-        <label class="control-label col-md-2 align-self-center">Mật độ : </label>
-        <select class="form-control col-md-2">
-            <option>Kinh</option>
-            <option>Mường</option>
-        </select>
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Mẫu biên mục : </label>
-        <select class="form-control col-md-2">
-            <option>Kinh</option>
-            <option>Mường</option>
-        </select>
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">ISBN[020$a] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-        <label class="control-label col-md-2 align-self-center">ISSN[022$a] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Tác giả[100$a] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-        <label class="control-label col-md-2 align-self-center">Tên tập[245$p] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center" id="textColorInput">Nhan đề chính[245$a] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Số thứ tự của tập[245$n] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Số thứ tự của tập[245$n] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Số thứ tự của tập[245$n] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-    </div>
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Số thứ tự của tập[245$n] : </label>
-        <input type="text" class="form-control col-md-2" id="inputEmail3">
-    </div>
+
+    @*@{
+            IEnumerable<GET_CATALOGUE_FIELDS_Result> formComplated = ViewData["MarcFormComplated"] as IEnumerable<GET_CATALOGUE_FIELDS_Result>;
+        }
+        @if (formComplated != null)
+        {
+            foreach (GET_CATALOGUE_FIELDS_Result item in formComplated)
+            {
+                <div class="form-group row col-12" >
+                    <label class="control-label col-md-3 align-self-center">@item.VietFieldName [@item.FieldCode] : </label>
+                    <input type="text" class="form-control col-md-2" id="@item.FieldCode">
+                </div>
+            }
+        }*@
+
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12 text-center">
             <div style="margin : auto">
-                <button type="submit" class="btn btn-primary form-control" onclick="location.href='/Shelf/Index'">Tạo mới</button>
-                <button type="button" class="btn btn-primary form-control">Đặt Lại</button>
-                <button type="button" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal" >Thêm Trường</button>
+                <input disabled type="submit" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới" />
+                <button disabled type="button" id="btnReset" class="btn btn-primary form-control">Đặt Lại</button>
+                <button disabled type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal">Thêm Trường</button>
             </div>
         </div>
     </div>
@@ -163,3 +187,10 @@
         </div>
     </div>
 </div>
+
+@*<div class="form-group row col-12">
+        <label class="control-label col-md-3 align-self-center">ISBN[020$a] : </label>
+        <input type="text" class="form-control col-md-2" id="inputEmail3">
+        <label class="control-label col-md-2 align-self-center">ISSN[022$a] : </label>
+        <input type="text" class="form-control col-md-2" id="inputEmail3">
+    </div>*@
