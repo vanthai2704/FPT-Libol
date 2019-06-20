@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -66,7 +67,34 @@ namespace Libol.Models
                     fields = fields + item.FieldCode + ",";
             }
 
-            List<GET_CATALOGUE_FIELDS_Result> list = db.FPT_GET_CATALOGUE_FIELDS(intIsAuthority, SelectedIndex, fields, "", 0);
+            List<GET_CATALOGUE_FIELDS_Result> list = GET_CATALOGUE_FIELDS(intIsAuthority, SelectedIndex, fields, "", 0);
+            return list;
+        }
+
+        public bool CheckExistNumber(string FieldValue , string FieldCode )
+        {
+            int ItemID = db.CAT_DIC_NUMBER.Where(a => a.Number == FieldValue && a.FieldCode == FieldCode).Select(a => a.ItemID).FirstOrDefault();
+            //System.Data.Entity.Core.Objects.ObjectParameter returnID = new System.Data.Entity.Core.Objects.ObjectParameter("lngItemID", typeof (int));
+            //var value = db.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(FieldValue, FieldCode, returnID);
+            if (ItemID > 0)
+                return false;
+            return true;
+
+        }
+
+        public bool CheckExistTitle(string strTitle, string strItemType)
+        {
+           
+            //if (ItemID > 0)
+            //    return false;
+            return true;
+
+        }
+
+        public List<GET_CATALOGUE_FIELDS_Result> GET_CATALOGUE_FIELDS(int intIsAuthority, int intFormID, string strFieldCodes, string strAddedFieldCodes, int intGroupBy)
+        {
+            List<GET_CATALOGUE_FIELDS_Result> list = db.Database.SqlQuery<GET_CATALOGUE_FIELDS_Result>("SP_CATA_GET_CATALOGUE_FIELDS {0}, {1}, {2},{3},{4}",
+                new object[] { intIsAuthority, intFormID, strFieldCodes, strAddedFieldCodes, 1 }).ToList();
             return list;
         }
     }

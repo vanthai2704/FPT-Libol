@@ -55,12 +55,22 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult LoadFormComplated(int intIsAuthority, int intFormID)
         {
+            catalogueBusiness.CheckExistNumber("9781184", "020$a");
             //string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
             List<GET_CATALOGUE_FIELDS_Result> formComplated = catalogueBusiness.GetComplatedForm(0, "", intFormID);
             ViewData["MarcFormComplated"] = formComplated;
+            
             return Json(formComplated, JsonRequestBehavior.AllowGet);
         }
 
+        //----------------Add Item For Detail -----------
+        //---------------------------------------------
+
+        
+        public ActionResult AddNewCatalogueDetail(string fieldCode , string fieldValue)
+        {
+            return View();
+        }
 
 
         //----------------Search Field Cata -----------
@@ -76,5 +86,8 @@ namespace Libol.Controllers
         {
             return View();
         }
+
+        //
+        
     }
 }
