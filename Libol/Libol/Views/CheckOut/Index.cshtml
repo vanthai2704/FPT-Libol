@@ -152,11 +152,9 @@
         if (e.keyCode == 13) {
             $.ajax({
                 url: "/CheckOut/CheckOutCardInfo",
-
                 data: JSON.stringify(empObj),
                 contentType: "application/json;charset=utf-8",
                 type: "POST",
-
                 success: function (result) {
                     $("#contentcheckout").html(result);
                 },
