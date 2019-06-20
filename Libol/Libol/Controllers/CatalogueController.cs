@@ -55,7 +55,7 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult LoadFormComplated(int intIsAuthority, int intFormID)
         {
-            catalogueBusiness.CheckExistNumber("9781184", "020$a");
+            //catalogueBusiness.CheckExistNumber("9781184", "020$a");
             //string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
             List<GET_CATALOGUE_FIELDS_Result> formComplated = catalogueBusiness.GetComplatedForm(0, "", intFormID);
             ViewData["MarcFormComplated"] = formComplated;
