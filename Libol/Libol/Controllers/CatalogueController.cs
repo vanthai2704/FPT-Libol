@@ -67,7 +67,7 @@ namespace Libol.Controllers
         //---------------------------------------------
 
         
-        public ActionResult AddNewCatalogueDetail(string fieldCode , string fieldValue)
+        public ActionResult AddNewCatalogueDetail(string fieldCode , string fieldValue )
         {
             //get list marc form
             ViewData["ListMarcForm"] = db.FPT_SP_CATA_GET_MARC_FORM(0, 0).ToList();
