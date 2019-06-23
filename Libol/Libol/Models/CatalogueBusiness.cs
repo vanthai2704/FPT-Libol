@@ -82,7 +82,21 @@ namespace Libol.Models
             return list;
         }
 
-        public bool CheckExistNumber(string FieldValue, string FieldCode)
+        public List<GET_CATALOGUE_FIELDS_Result> GetComplatedFormForDetail(int intIsAuthority, string strCreator, int SelectedIndex)
+        {
+            List<FPT_SP_CATA_GETFIELDS_OF_FORM_Result> GetForm = db.FPT_SP_CATA_GETFIELDS_OF_FORM(SelectedIndex, "", 0).ToList();
+            string fields = "";
+            foreach (FPT_SP_CATA_GETFIELDS_OF_FORM_Result item in GetForm)
+            {
+                if (item.FieldCode != "001")
+                    fields = fields + item.FieldCode.Substring( 0 , 3 ) + ",";
+            }
+
+            List<GET_CATALOGUE_FIELDS_Result> list = GET_CATALOGUE_FIELDS(intIsAuthority, SelectedIndex, fields, "", 0);
+            return list;
+        }
+
+        public bool CheckExistNumber(string FieldValue , string FieldCode )
         {
             int ItemID = db.CAT_DIC_NUMBER.Where(a => a.Number == FieldValue && a.FieldCode == FieldCode).Select(a => a.ItemID).FirstOrDefault();
             //System.Data.Entity.Core.Objects.ObjectParameter returnID = new System.Data.Entity.Core.Objects.ObjectParameter("lngItemID", typeof (int));
@@ -115,11 +129,6 @@ namespace Libol.Models
 
 
                     // insert item -- Moc data
-                    item.FormID = 13;
-                    item.MediumID = 3;
-                    item.RecordType = "c";
-                    item.TypeID = 1;
-                    item.BibLevel = "m";
                     InsertItem(item);
 
                     //add content vào các bảng Fields
@@ -155,7 +164,7 @@ namespace Libol.Models
         public List<GET_CATALOGUE_FIELDS_Result> GET_CATALOGUE_FIELDS(int intIsAuthority, int intFormID, string strFieldCodes, string strAddedFieldCodes, int intGroupBy)
         {
             List<GET_CATALOGUE_FIELDS_Result> list = db.Database.SqlQuery<GET_CATALOGUE_FIELDS_Result>("SP_CATA_GET_CATALOGUE_FIELDS {0}, {1}, {2},{3},{4}",
-                new object[] { intIsAuthority, intFormID, strFieldCodes, strAddedFieldCodes, 1 }).ToList();
+                new object[] { intIsAuthority, intFormID, strFieldCodes, strAddedFieldCodes, 0 }).ToList();
             return list;
         }
     }
