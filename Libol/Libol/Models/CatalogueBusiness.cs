@@ -118,8 +118,8 @@ namespace Libol.Models
 
         public string InsertOrUpdateFields(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
         {
-            listFieldsName = new List<string>() { "040", "245", "650" };
-            listFieldsValue = new List<string>() { "$a Test 1 $b test 1::$a Test 2 $b test 2", "Test", "Test" };
+            //listFieldsName = new List<string>() { "040", "245", "650" };
+            //listFieldsValue = new List<string>() { "$a Test 1 $b test 1::$a Test 2 $b test 2", "Test", "Test" };
             // Insert
             if (String.IsNullOrEmpty(item.Code))
             {
