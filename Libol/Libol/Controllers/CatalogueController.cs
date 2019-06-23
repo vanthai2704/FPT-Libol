@@ -58,6 +58,20 @@ namespace Libol.Controllers
         //----------------Add Item For Detail -----------
         //---------------------------------------------
 
+<<<<<<< HEAD
+=======
+        
+        public ActionResult AddNewCatalogueDetail(string fieldCode , string fieldValue)
+        {
+            //get list marc form
+            ViewData["ListMarcForm"] = db.FPT_SP_CATA_GET_MARC_FORM(0, 0).ToList();
+            //Cấp thư mục
+            ViewData["listLevelDir"] = db.CAT_DIC_DIRLEVEL.OrderBy(d => d.Description).ToList();
+            ViewData["ListRecordType"] = db.CAT_DIC_RECORDTYPE.OrderBy(r => r.Description).ToList();
+            ViewData["listItemType"] = db.CAT_DIC_ITEM_TYPE.Where(t => !String.IsNullOrEmpty(t.TypeName)).OrderBy(t => t.TypeName).ToList();
+            //vật mang tin
+            ViewData["listMedium"] = db.CAT_DIC_MEDIUM.Where(m => !String.IsNullOrEmpty(m.Description)).OrderBy(m => m.Description).ToList();
+>>>>>>> parent of 280c507... Doanhdq
 
 
         [HttpPost]
