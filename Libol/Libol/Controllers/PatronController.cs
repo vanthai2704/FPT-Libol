@@ -2,171 +2,282 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.OleDb;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
+using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
     public class PatronController : Controller
     {
         private LibolEntities db = new LibolEntities();
-
-        // GET: CIR_PATRON
-        public ActionResult Index()
-        {
-           
-
-            var cIR_PATRON = db.CIR_PATRON.Include(c => c.CIR_DIC_EDUCATION).Include(c => c.CIR_DIC_ETHNIC).Include(c => c.CIR_DIC_OCCUPATION).Include(c => c.CIR_PATRON_GROUP).Include(c => c.CIR_PATRON_UNIVERSITY);
-            return View(cIR_PATRON.ToList());
-        }
-
-
+       
         public ActionResult PatronProfile()
         {
-           
             return View();
         }
 
-
-        // GET: CIR_PATRON/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CIR_PATRON cIR_PATRON = db.CIR_PATRON.Find(id);
-            if (cIR_PATRON == null)
-            {
-                return HttpNotFound();
-            }
-            return View(cIR_PATRON);
-        }
-
-        // GET: CIR_PATRON/Create
         public ActionResult Create()
         {
-            ViewBag.EducationID = new SelectList(db.CIR_DIC_EDUCATION, "ID", "EducationLevel");
-            ViewBag.EthnicID = new SelectList(db.CIR_DIC_ETHNIC, "ID", "Ethnic");
-            ViewBag.OccupationID = new SelectList(db.CIR_DIC_OCCUPATION, "ID", "Occupation");
-            ViewBag.PatronGroupID = new SelectList(db.CIR_PATRON_GROUP, "ID", "Name");
+            ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
+            ViewBag.PatronGroup = db.SP_PAT_GET_PATRONGROUP().ToList();
+            ViewBag.Education = db.SP_PAT_GET_EDUCATION().ToList();
+            ViewBag.Occupation = db.SP_PAT_GET_OCCUPATION().ToList();
+            ViewBag.College = db.SP_PAT_GET_COLLEGE().ToList();
+            int CollegeID = db.SP_PAT_GET_COLLEGE().ToList()[0].ID;
+            ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
+            ViewBag.Province = db.CIR_DIC_PROVINCE.ToList();
+            ViewBag.Countries = db.SP_GET_COUNTRIES().ToList();
             ViewBag.ID = new SelectList(db.CIR_PATRON_UNIVERSITY, "PatronID", "Grade");
             return View();
         }
 
-        // POST: CIR_PATRON/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Code,ValidDate,ExpiredDate,LastIssuedDate,LastName,FirstName,MiddleName,Sex,DOB,EthnicID,EducationID,OccupationID,WorkPlace,Telephone,Mobile,Email,Portrait,PatronGroupID,Password,Status,Note,Debt,LastModifiedDate,InterestedSubjectBBK,InterestedSubjectDDC,IDCard")] CIR_PATRON cIR_PATRON)
+        public JsonResult OnchangeCollege(int CollegeID)
         {
-
-            var x = db.SP_CATA_GET_MARC_FORM(0, 0);
-   
-             var PatronGroups = db.SP_PAT_GET_PATRONGROUP().ToList();
-            var educations = db.SP_PAT_GET_EDUCATION().ToList();
-            var occupations = db.SP_PAT_GET_OCCUPATION().ToList();
-            var provinces = db.SP_PAT_GET_PROVINCE().ToList();
-            return RedirectToAction("Index");
-            //if (ModelState.IsValid)
-            //{
-            //    //db.CIR_PATRON.Add(cIR_PATRON);
-            //    var createDemo = db.SP_PAT_CREATE_PATRON("SE048933", "6/2/2019", "6/11/2019", "6/1/2019", "Thái", "Nguyễn", "Văn", true, "6/11/1997", 1, 31, 50, "Công ty FPT software", "0969347967", "", "thainvse04893@fpt.edu.vn", "", 1, "Test", 0, "", new System.Data.Entity.Core.Objects.ObjectParameter("intRetval", ParameterDirection.Output));
-                
-            //    db.SaveChanges();
-            //    return RedirectToAction("Index");
-            //    //db.SaveChanges();
-            //    //return RedirectToAction("Index");
-            //}
-
-            ViewBag.EducationID = new SelectList(db.CIR_DIC_EDUCATION, "ID", "EducationLevel", cIR_PATRON.EducationID);
-            ViewBag.EthnicID = new SelectList(db.CIR_DIC_ETHNIC, "ID", "Ethnic", cIR_PATRON.EthnicID);
-            ViewBag.OccupationID = new SelectList(db.CIR_DIC_OCCUPATION, "ID", "Occupation", cIR_PATRON.OccupationID);
-            ViewBag.PatronGroupID = new SelectList(db.CIR_PATRON_GROUP, "ID", "Name", cIR_PATRON.PatronGroupID);
-            ViewBag.ID = new SelectList(db.CIR_PATRON_UNIVERSITY, "PatronID", "Grade", cIR_PATRON.ID);
-            return View(cIR_PATRON);
+            ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
+            List<CIR_DIC_FACULTY> list = new List<CIR_DIC_FACULTY>();
+            foreach (var f in ViewBag.Faculty)
+            {
+                list.Add(new CIR_DIC_FACULTY()
+                {
+                    ID = f.ID,
+                    Faculty = f.Faculty,
+                    CollegeID = f.CollegeID
+                });
+            }
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: CIR_PATRON/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CIR_PATRON cIR_PATRON = db.CIR_PATRON.Find(id);
-            if (cIR_PATRON == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.EducationID = new SelectList(db.CIR_DIC_EDUCATION, "ID", "EducationLevel", cIR_PATRON.EducationID);
-            ViewBag.EthnicID = new SelectList(db.CIR_DIC_ETHNIC, "ID", "Ethnic", cIR_PATRON.EthnicID);
-            ViewBag.OccupationID = new SelectList(db.CIR_DIC_OCCUPATION, "ID", "Occupation", cIR_PATRON.OccupationID);
-            ViewBag.PatronGroupID = new SelectList(db.CIR_PATRON_GROUP, "ID", "Name", cIR_PATRON.PatronGroupID);
-            ViewBag.ID = new SelectList(db.CIR_PATRON_UNIVERSITY, "PatronID", "Grade", cIR_PATRON.ID);
-            return View(cIR_PATRON);
-        }
-
-        // POST: CIR_PATRON/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Code,ValidDate,ExpiredDate,LastIssuedDate,LastName,FirstName,MiddleName,Sex,DOB,EthnicID,EducationID,OccupationID,WorkPlace,Telephone,Mobile,Email,Portrait,PatronGroupID,Password,Status,Note,Debt,LastModifiedDate,InterestedSubjectBBK,InterestedSubjectDDC,IDCard")] CIR_PATRON cIR_PATRON)
+        public JsonResult NewPatron(string strCode, string strValidDate, string strExpiredDate, string strLastIssuedDate, string strLastName, string strFirstName,
+             Nullable<bool> blnSex, string strDOB, Nullable<int> intEthnicID, Nullable<int> intEducationID, Nullable<int> intOccupationID,
+            string strWorkPlace, string strTelephone, string strMobile, string strEmail, string strPortrait, Nullable<int> intPatronGroupID, string strNote,
+            Nullable<int> intIsQue, string strIDCard, string strAddress, Nullable<int> intProvinceID, string strCity, Nullable<int> intCountryID, string strZip,
+            Nullable<int> intisActive, int intCollegeID, int intFacultyID, string strGrade, string strClass)
         {
-            if (ModelState.IsValid)
+            if (strFirstName == null || strFirstName == "" || strLastName == null || strLastName == "")
             {
-                db.Entry(cIR_PATRON).State = EntityState.Modified;
+                return Json(new Result()
+                {
+                    IsError = true,
+                    Data = "Vui lòng điền Họ và tên!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            if (strCode == null || strCode == "")
+            {
+                return Json(new Result()
+                {
+                    IsError = true,
+                    Data = "Vui lòng điền Số thẻ!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            if (db.CIR_PATRON.Where(a => a.Code == strCode).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    IsError = true,
+                    Data = "Bạn đọc với số thẻ " + strCode + "đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                string strMiddleName = "";
+                if (strFirstName.Split(' ').Length > 1)
+                {
+                    List<string> names = strFirstName.Split(' ').ToList();
+                    string firstName = names.First();
+                    names.RemoveAt(0);
+                    strMiddleName = string.Join(",", names);
+                    strFirstName = firstName;
+                }
+
+                var intPatronID = new ObjectParameter("intRetval", typeof(int));
+                db.SP_PAT_CREATE_PATRON(
+                    strCode, strValidDate, strExpiredDate, strLastIssuedDate, strLastName, strFirstName, strMiddleName, blnSex, strDOB, intEthnicID, intEducationID,
+                    intOccupationID, strWorkPlace, strTelephone, strMobile, strEmail, strPortrait, intPatronGroupID, strNote, intIsQue, strIDCard, intPatronID
+                    );
+                int patronID = (int)intPatronID.Value;
+                db.CIR_PATRON.Where(a => a.ID == patronID).First().Password = strCode;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if (strAddress != null && strAddress != "")
+                {
+                    db.SP_PAT_CREATE_OTHERADDRESS(patronID, strAddress, intProvinceID, strCity, intCountryID, strZip, intisActive);
+                }
+                if (intCollegeID > 0)
+                {
+                    db.SP_PAT_CREATE_PATRON_UNIV(patronID, intFacultyID, intCollegeID, strGrade, strClass);
+                }
+                return Json(new Result()
+                {
+                    IsError = false,
+                    Data = strCode
+                }, JsonRequestBehavior.AllowGet);
             }
-            ViewBag.EducationID = new SelectList(db.CIR_DIC_EDUCATION, "ID", "EducationLevel", cIR_PATRON.EducationID);
-            ViewBag.EthnicID = new SelectList(db.CIR_DIC_ETHNIC, "ID", "Ethnic", cIR_PATRON.EthnicID);
-            ViewBag.OccupationID = new SelectList(db.CIR_DIC_OCCUPATION, "ID", "Occupation", cIR_PATRON.OccupationID);
-            ViewBag.PatronGroupID = new SelectList(db.CIR_PATRON_GROUP, "ID", "Name", cIR_PATRON.PatronGroupID);
-            ViewBag.ID = new SelectList(db.CIR_PATRON_UNIVERSITY, "PatronID", "Grade", cIR_PATRON.ID);
-            return View(cIR_PATRON);
         }
 
-        // GET: CIR_PATRON/Delete/5
-        public ActionResult Delete(int? id)
+        [HttpPost]
+        public JsonResult UploadPhotoPatron()
         {
-            if (id == null)
+            string strCode = Request.Form["strCode"];
+            if (strCode != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                for (int i = 0; i < Request.Files.Count; i++)
+                {
+                    var file = Request.Files[i];
+                    var fileName = strCode + " - " + Path.GetFileName(file.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/ImagePatron"), fileName);
+                    file.SaveAs(path);
+                    db.CIR_PATRON.Where(a => a.Code == strCode).First().Portrait = fileName;
+                    db.SaveChanges();
+                }
             }
-            CIR_PATRON cIR_PATRON = db.CIR_PATRON.Find(id);
-            if (cIR_PATRON == null)
-            {
-                return HttpNotFound();
-            }
-            return View(cIR_PATRON);
+
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
-        // POST: CIR_PATRON/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult AddPatronByFile()
         {
-            CIR_PATRON cIR_PATRON = db.CIR_PATRON.Find(id);
-            db.CIR_PATRON.Remove(cIR_PATRON);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            return View();
         }
 
-
-        protected override void Dispose(bool disposing)
+        [HttpPost]
+        public ActionResult PreviewPatronFile()
         {
-            if (disposing)
+            List<PatronFile> listPatronInFile = new List<PatronFile>();
+            for (int i = 0; i < Request.Files.Count; i++)
             {
-                db.Dispose();
+                var file = Request.Files[i];
+                var fileName = Path.GetFileName(file.FileName);
+                var path = Path.Combine(Server.MapPath("~/Uploads"), fileName);
+                file.SaveAs(path);
+                
+                DataSet ds = new DataSet();
+                string ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties=Excel 12.0;";
+
+                using (OleDbConnection conn = new System.Data.OleDb.OleDbConnection(ConnectionString))
+                {
+                    conn.Open();
+                    using (DataTable dtExcelSchema = conn.GetSchema("Tables"))
+                    {
+                        string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                        string query = "SELECT * FROM [" + sheetName + "]";
+                        OleDbDataAdapter adapter = new OleDbDataAdapter(query, conn);
+                        adapter.Fill(ds, "Items");
+                        if (ds.Tables.Count > 0)
+                        {
+                            if (ds.Tables[0].Rows.Count > 0)
+                            {
+                                for (int j = 0; j < ds.Tables[0].Rows.Count; j++)
+                                {
+                                    if (ds.Tables[0].Rows[j].Field<string>("Mã Sinh viên") != null)
+                                    {
+                                        PatronFile patronFile = new PatronFile();
+                                        patronFile.strCode = ds.Tables[0].Rows[j].Field<string>("Mã Sinh viên");
+                                        patronFile.FullName = ds.Tables[0].Rows[j].Field<string>("Họ và tên");
+                                        patronFile.blnSex = ds.Tables[0].Rows[j].Field<string>("Giới tính ");
+                                        patronFile.strDOB = ds.Tables[0].Rows[j].Field<DateTime>("Ngày sinh");
+                                        patronFile.strEmail = ds.Tables[0].Rows[j].Field<string>("Email");
+                                        patronFile.strAddress = ds.Tables[0].Rows[j].Field<string>("Địa chỉ thường trú");
+                                        patronFile.Faculty = ds.Tables[0].Rows[j].Field<string>("Chuyên ngành");
+                                        patronFile.strMobile = ds.Tables[0].Rows[j].Field<string>("Điện thoại");
+                                        patronFile.strGrade = ds.Tables[0].Rows[j].Field<string>("Khoá");
+                                        patronFile.College = ds.Tables[0].Rows[j].Field<string>("Trường");
+                                        patronFile.strCity = ds.Tables[0].Rows[j].Field<string>("Thành phố");
+                                        patronFile.strClass = ds.Tables[0].Rows[j].Field<string>("Lớp");
+                                        patronFile.PatronGroup = ds.Tables[0].Rows[j].Field<string>("Nhóm");
+                                        listPatronInFile.Add(patronFile);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            base.Dispose(disposing);
+            ViewBag.ListPatron = listPatronInFile;
+            return View();
         }
-      
+
+        [HttpPost]
+        public ActionResult InsertFileToDB()
+        {
+            List<PatronFile> listPatronInFile =(List<PatronFile>) Session["listPatronInFile"];
+            if (listPatronInFile != null)
+            {
+                foreach (PatronFile p in listPatronInFile)
+                {
+                    string strLastName = "";
+                    string strFirstName = "";
+                    if (p.FullName.Split(' ').Length > 1)
+                    {
+                        List<string> names = p.FullName.Split(' ').ToList();
+                        strLastName = names.Last();
+                        names.RemoveAt(names.Count - 1);
+                        strFirstName = string.Join(" ", names);
+                    }
+                    int intPatronGroupID = 0;
+                    CIR_PATRON_GROUP patronGroup = db.CIR_PATRON_GROUP.Where(a => a.Name.Trim() == p.PatronGroup.Trim()).Count() ==  0 ? 
+                        null : db.CIR_PATRON_GROUP.Where(a => a.Name.Trim() == p.PatronGroup.Trim()).First();
+                    if (patronGroup != null)
+                    {
+                        intPatronGroupID = patronGroup.ID;
+                    }
+                    int intCollegeID = 0;
+                    CIR_DIC_COLLEGE college = db.CIR_DIC_COLLEGE.Where(a => a.College.Trim() == p.College.Trim()).Count() == 0 ?
+                        null : db.CIR_DIC_COLLEGE.Where(a => a.College.Trim() == p.College.Trim()).First();
+                    if (college != null)
+                    {
+                        intCollegeID = college.ID;
+                    }
+                    int intFacultyID = 0;
+                    CIR_DIC_FACULTY faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == intCollegeID).Where(a => a.Faculty.Trim() == p.Faculty.Trim()).Count() == 0 ? 
+                        null : db.CIR_DIC_FACULTY.Where(a => a.CollegeID == intCollegeID).Where(a => a.Faculty.Trim() == p.Faculty.Trim()).First();
+                    if (faculty != null)
+                    {
+                        intFacultyID = faculty.ID;
+                    }
+                    NewPatron(p.strCode, "", "", "", strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString(), null, null, null, null, null, p.strMobile
+                        , p.strEmail, null, intPatronGroupID, null, 0, null, p.strAddress, 1, p.strCity, 209, "", 0, intCollegeID, intFacultyID, p.strGrade, p.strClass);
+                }
+                ViewBag.Notify = "Danh sách đã được thêm vào hệ thống!";
+            }
+
+            return View();
+        }
+    }
+    class Result
+    {
+        public bool IsError { get; set; }
+        public string Data { get; set; }
+    }
+
+    public class PatronFile
+    {
+        public string strCode { get; set; }
+        public string FullName { get; set; }
+        public string blnSex { get; set; }
+        public DateTime strDOB { get; set; }
+        public string strEmail { get; set; }
+        public string strAddress { get; set; }
+        public string Faculty { get; set; }
+        public string strMobile { get; set; }
+        public string strGrade { get; set; }
+        public string College { get; set; }
+        public string strCity { get; set; }
+        public string strClass { get; set; }
+        public string PatronGroup { get; set; }
+
     }
 }
