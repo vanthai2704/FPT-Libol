@@ -60,9 +60,14 @@ namespace Libol.Controllers
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         
         public ActionResult AddNewCatalogueDetail(string fieldCode , string fieldValue)
+=======
+       
+        public ActionResult AddNewCatalogueDetail()
+>>>>>>> parent of 71010c2... Merge branch 'DoanhDQ'
 =======
        
         public ActionResult AddNewCatalogueDetail()
@@ -77,7 +82,10 @@ namespace Libol.Controllers
             //vật mang tin
             ViewData["listMedium"] = db.CAT_DIC_MEDIUM.Where(m => !String.IsNullOrEmpty(m.Description)).OrderBy(m => m.Description).ToList();
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> parent of 280c507... Doanhdq
+=======
+>>>>>>> parent of 71010c2... Merge branch 'DoanhDQ'
 =======
 >>>>>>> parent of 71010c2... Merge branch 'DoanhDQ'
 
