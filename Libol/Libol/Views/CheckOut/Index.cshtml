@@ -1,13 +1,9 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <head>
-
     <style>
-
         body {
             overflow-x: hidden;
             box-sizing: border-box;
@@ -31,7 +27,6 @@
                 width: 20rem;
                 padding-left: 5px;
             }
-
 
         @@media (min-width: 768px) {
             #sidebar-wrapper {
@@ -78,7 +73,7 @@
                             <div class="form-group"><label class="col-form-label">Ngày mượn:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" type="date" value="2019-06-11" /></div>
+                            <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-bottom: 5px;">
@@ -86,17 +81,17 @@
                             <div class="form-group"><label class="col-form-label">Hạn trả:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" type="date" value="06/11/2019" /></div>
+                            <div class="form-group"><input class="form-control" id="strFixDueDate" type="date" value="2029-06-11" /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
-                        <div class="col"><input class="form-control" type="text" onkeypress="checkoutCardInfo(event)"/></div>
+                        <div class="col"><input class="form-control" id="strPatronCode" type="text" onkeypress="checkoutCardInfo(event)" /></div>
                         <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" type="text" onkeypress="checkoutSuccess(event)"/></div>
+                        <div class="col"><input class="form-control" type="text" onkeypress="checkoutSuccess(event)" /></div>
                         <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
@@ -106,16 +101,11 @@
 
             </div>
         </div>
-
         <div class="col" id="contentcheckout">
-
         </div>
-
     </div>
 </body>
 <script type="text/javascript">
-
-   
     document.getElementById("myButton").onclick = function () {
         $.ajax({
             url: "CheckOut/CheckOutCardInfo",
@@ -127,38 +117,52 @@
     };
 
     function checkoutSuccess(e) {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strFixDueDate").value,
+            intLoanMode: 1,
+            intHoldIgnore: 0,
+            strCopyNumbers: 'TK/HCHL001415',
+            strCheckOutDate: '06/21/2019'
+        };
         if (e.keyCode == 13) {
             $.ajax({
                 url: "CheckOut/CheckOutSuccess",
-                data: null,
-                type: "GET",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
                 success: function (result) {
-                    $("#contentcheckout").html(result);
+                    $("#contentcheckout").html(result)
                 },
                 error: function (errormessage) {
-
+                    console.log("error");
                 }
             });
         }
     }
 
     function checkoutCardInfo(e) {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strFixDueDate").value
+        };
         if (e.keyCode == 13) {
             $.ajax({
-                url: "CheckOut/CheckOutCardInfo",
-                data: null,
-                type: "GET",
+                url: "/CheckOut/CheckOutCardInfo",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
                 success: function (result) {
                     $("#contentcheckout").html(result);
                 },
                 error: function (errormessage) {
-
+                    console.log("abcssd");
                 }
             });
         }
     }
-
-
 </script>
 
 

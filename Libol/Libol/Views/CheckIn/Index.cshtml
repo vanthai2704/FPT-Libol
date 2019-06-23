@@ -79,12 +79,12 @@
                             <div class="form-group"><label class="col-form-label">Ngày trả:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" type="date"  /></div>
+                            <div class="form-group"><input class="form-control" id="strFixDueDate" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
-                        <div class="col"><input class="form-control" type="text" onkeypress="checkinByCardNumber(event)"/></div>
+                        <div class="col"><input class="form-control" type="text" id="strPatronCode" onkeypress="checkinByCardNumber(event)"/></div>
                         <div class="col-4"><label class="col-form-label"> <a onclick="findByCardNumber();" href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
@@ -137,16 +137,22 @@
     }
  
     function checkinByCardNumber(e) {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strFixDueDate").value
+        };
         if (e.keyCode == 13) {
             $.ajax({
-                url: "CheckIn/CheckInByCardNumber",
-                data: null,
-                type: "GET",
+                url: "/CheckIn/CheckInByCardNumber",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
                 success: function (result) {
                     $("#contentcheckin").html(result);
                 },
                 error: function (errormessage) {
-
+                    console.log("abcssd");
                 }
             });
         }
@@ -154,20 +160,29 @@
     
 
     function checkinbyDKCB(e) {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strFixDueDate").value,
+            intType: 1,
+            intAutoPaid: 0,
+            strCopyNumbers: 'TK/HCHL001415',
+            strCheckInDate: '12/31/2019'
+        };
         if (e.keyCode == 13) {
             $.ajax({
                 url: "CheckIn/CheckInByDKCB",
-                data: null,
-                type: "Get",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
                 success: function (result) {
                     $("#contentcheckin").html(result)
                 },
                 error: function (errormessage) {
-
+                    console.log("error");
                 }
             });
         }
     }
-
 </script>
 

@@ -4,10 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
+using Libol.EntityResult;
+using System.Data;
+using System.Data.Entity.Core.Objects;
 
 namespace Libol.Controllers
 {
-    public class CheckOutController : BaseController
+    public class CheckOutController : Controller
     {
 
         private LibolEntities db = new LibolEntities();
@@ -17,7 +20,7 @@ namespace Libol.Controllers
         {
             return View();
         }
-        
+
         // GET: Giahan
         public ActionResult Giahan()
         {
@@ -25,16 +28,44 @@ namespace Libol.Controllers
         }
 
         // GET: CheckOutSuccess
-        public PartialViewResult CheckOutSuccess()
+        [HttpPost]
+        public PartialViewResult CheckOutSuccess(
+            string strFullName,
+            string strPatronCode,
+            string strFixDueDate,
+            int intLoanMode,
+            int intHoldIgnore,
+            string strCopyNumbers,
+            string strCheckOutDate
+            )
         {
+            SP_GET_PATRON_INFOR_Result patroninfo =
+                db.SP_GET_PATRON_INFOR("", strPatronCode, strFixDueDate).First();
+            ViewData["patroninfo"] = patroninfo;
+
+            db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, "12/31/2019", strCheckOutDate, intHoldIgnore,
+               new ObjectParameter("intOutValue", typeof(int)),
+                new ObjectParameter("intOutID", typeof(int)));
+
+            //List <SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            //ViewData["patronloaninfo"] = patronloaninfo;
             return PartialView("_checkoutSuccess");
         }
 
-        [HttpGet]
-        public PartialViewResult CheckOutCardInfo()
+        [HttpPost]
+        public PartialViewResult CheckOutCardInfo(string strFullName, string strPatronCode, string strFixDueDate)
         {
-            //var data = db.
-                return PartialView("_showPatronInfo");
+            //CIR_PATRON patron =
+            //    db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
+            //string v = patron.CIR_DIC_ETHNIC.CIR_PATRON;
+            //ViewBag.a = db.SP_GET_PATRON_INFOR("", strPatronCode, "").ToList();
+            SP_GET_PATRON_INFOR_Result patroninfo =
+                db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
+            ViewData["patroninfo"] = patroninfo;
+
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            ViewData["patronloaninfo"] = patronloaninfo;
+            return PartialView("_showPatronInfo");
         }
     }
 }
