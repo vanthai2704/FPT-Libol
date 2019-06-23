@@ -4,12 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
-using Libol.EntityResult;
-using System.Data;
 
 namespace Libol.Controllers
 {
-    public class CheckOutController : Controller
+    public class CheckOutController : BaseController
     {
 
         private LibolEntities db = new LibolEntities();
@@ -19,7 +17,7 @@ namespace Libol.Controllers
         {
             return View();
         }
-
+        
         // GET: Giahan
         public ActionResult Giahan()
         {
@@ -32,16 +30,11 @@ namespace Libol.Controllers
             return PartialView("_checkoutSuccess");
         }
 
-        [HttpPost]
-        public PartialViewResult CheckOutCardInfo(string strFullName, string strPatronCode, string strFixDueDate)
+        [HttpGet]
+        public PartialViewResult CheckOutCardInfo()
         {
-            SP_GET_PATRON_INFOR_Result patroninfo =
-                db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
-
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
-            return PartialView("_showPatronInfo");
+            //var data = db.
+                return PartialView("_showPatronInfo");
         }
     }
 }

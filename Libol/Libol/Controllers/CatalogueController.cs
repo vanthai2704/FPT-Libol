@@ -70,6 +70,7 @@ namespace Libol.Controllers
 >>>>>>> parent of 71010c2... Merge branch 'DoanhDQ'
 =======
        
+<<<<<<< HEAD
         public ActionResult AddNewCatalogueDetail()
 >>>>>>> parent of 71010c2... Merge branch 'DoanhDQ'
         {
@@ -96,20 +97,12 @@ namespace Libol.Controllers
 
         [HttpPost]
         public ActionResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
+=======
+        public ActionResult AddNewCatalogueDetail(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
+>>>>>>> parent of a3cf7ba... Merge branch 'master' into ThaiNV
         {
             catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue, item);
-            return RedirectToAction("Index", "Shelf");
-        }
-
-        [HttpPost]
-        public JsonResult GetComplatedFormForDetail(int intIsAuthority, int intFormID)
-        {
-            //catalogueBusiness.CheckExistNumber("9781184", "020$a");
-            //string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
-            List<GET_CATALOGUE_FIELDS_Result> formComplated = catalogueBusiness.GetComplatedFormForDetail(0, "", intFormID);
-            ViewData["MarcFormComplated"] = formComplated;
-
-            return Json(formComplated, JsonRequestBehavior.AllowGet);
+            return View();
         }
 
 
