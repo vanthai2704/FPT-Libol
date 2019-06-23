@@ -108,11 +108,17 @@
                     doWork(result);
                     $.each(result, function (i, item) {
                         var field = item.FieldCode;
-                        field = field.replace('$', '');
 
-                        html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "></input> </div>";
+                        field = field.replace('$', '');
+                        //if (item.FieldCode == '245$a') {
+                        //    html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "></input>    <button type='button' id=btn" + field + " class='btn btn-info' onclick='clicked(dv" + field + ");'>Info</button>  </div>";
+                        //}
+                        //else {
+                            html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "></input> </div>";
+                        //}
                     });
                     $("#test").html(html);
+                    $('#dv245a').append("<button type='button' id='btn' class='btn btn-info' onclick='clicked(dv245a);'>Info</button>");
                     document.getElementById("lb245a").style.color = "red";
                     document.getElementById("btnCreate").disabled = false;
                     document.getElementById("btnReset").disabled = false;
@@ -127,10 +133,30 @@
         }
 
     </script>
+
+    <script>
+        
+        function clicked(item) {
+            
+            
+            $('<label class="control-label col-md-5 align-self-center font-weight-bold" > Truong Lap </label>  <input type="text" id="rep' + item.id + '" class="form-control row col-2"   style="margin-left: 0px"/> <a href="" id="remScnt">Remove</a> ').appendTo(item);
+            $('#remScnt').click( function() { 
+                //remove 
+                debugger;
+                $('#remScnt').empty();
+            });
+               
+
+           
+
+
+            return false;
+        }
+    </script>
     <script>
         function doWork(data) {
             $.each(data, function (i, item) {
-                console.log(item.FieldCode);
+               
 
 
             });
@@ -141,7 +167,7 @@
                 formId: $("#listMarcFormID :selected").val(),
                 dirCode: $("#levelDir :selected").val(),
                 mediumId: $("#mediumId :selected").val(),
-                recordTypeCode: $("#recordTypeCode :selected").val() ,
+                recordTypeCode: $("#recordTypeCode :selected").val(),
                 itemTypeId: $("#itemTypeId :selected").val(),
                 accessLevel: $("#accessLevel :selected").val()
             };
@@ -154,8 +180,8 @@
                 dataType: "json",
                 success: function (code) {
 
-                    alert("Bạn Đã Tạo Thành Công Biên Mục : " + code );
-                    
+                    alert("Bạn Đã Tạo Thành Công Biên Mục : " + code);
+
                 },
                 error: function (errorThrown) {
                     alert(errorThrown);
