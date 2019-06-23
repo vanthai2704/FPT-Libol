@@ -1,13 +1,9 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <head>
-
     <style>
-
         body {
             overflow-x: hidden;
             box-sizing: border-box;
@@ -31,7 +27,6 @@
                 width: 20rem;
                 padding-left: 5px;
             }
-
 
         @@media (min-width: 768px) {
             #sidebar-wrapper {
@@ -106,16 +101,11 @@
 
             </div>
         </div>
-
         <div class="col" id="contentcheckout">
-
         </div>
-
     </div>
 </body>
 <script type="text/javascript">
-
-
     document.getElementById("myButton").onclick = function () {
         $.ajax({
             url: "CheckOut/CheckOutCardInfo",
@@ -127,16 +117,26 @@
     };
 
     function checkoutSuccess(e) {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strFixDueDate").value,
+            intLoanMode: 1,
+            intHoldIgnore: 0,
+            strCopyNumbers: 'TK/HCHL001415',
+            strCheckOutDate: '06/21/2019'
+        };
         if (e.keyCode == 13) {
             $.ajax({
                 url: "CheckOut/CheckOutSuccess",
-                data: null,
-                type: "GET",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
                 success: function (result) {
-                    $("#contentcheckout").html(result);
+                    $("#contentcheckout").html(result)
                 },
                 error: function (errormessage) {
-
+                    console.log("error");
                 }
             });
         }
@@ -148,7 +148,6 @@
             strPatronCode: document.getElementById("strPatronCode").value,
             strFixDueDate: document.getElementById("strFixDueDate").value
         };
-
         if (e.keyCode == 13) {
             $.ajax({
                 url: "/CheckOut/CheckOutCardInfo",
@@ -164,8 +163,6 @@
             });
         }
     }
-
-
 </script>
 
 
