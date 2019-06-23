@@ -40,15 +40,7 @@ namespace Libol.Controllers
             return View();
         }
 
-        [HttpPost]
-        public JsonResult AddNewItem(int formId, string dirCode, int mediumId, string recordTypeCode, int itemTypeId, byte accessLevel)
-        {
-            int id = Int32.Parse(Session["UserID"].ToString()) ;
-            string cataloguer = db.SYS_USER.Where(a => a.ID == id).Select(a => a.Name).FirstOrDefault();
-            string code = catalogueBusiness.InsertItem(formId, dirCode, mediumId, recordTypeCode, itemTypeId, accessLevel, cataloguer);
-            return Json(code, JsonRequestBehavior.AllowGet);
-            //return RedirectToAction("Index", "Shelf");
-        }
+        
 
 
 
@@ -66,9 +58,10 @@ namespace Libol.Controllers
         //----------------Add Item For Detail -----------
         //---------------------------------------------
 
-        
-        public ActionResult AddNewCatalogueDetail(string fieldCode , string fieldValue)
+       
+        public ActionResult AddNewCatalogueDetail(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
         {
+            catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue, item);
             return View();
         }
 
