@@ -59,9 +59,14 @@ namespace Libol.Controllers
         //---------------------------------------------
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         
         public ActionResult AddNewCatalogueDetail(string fieldCode , string fieldValue)
+=======
+       
+        public ActionResult AddNewCatalogueDetail()
+>>>>>>> parent of 71010c2... Merge branch 'DoanhDQ'
         {
             //get list marc form
             ViewData["ListMarcForm"] = db.FPT_SP_CATA_GET_MARC_FORM(0, 0).ToList();
@@ -71,8 +76,15 @@ namespace Libol.Controllers
             ViewData["listItemType"] = db.CAT_DIC_ITEM_TYPE.Where(t => !String.IsNullOrEmpty(t.TypeName)).OrderBy(t => t.TypeName).ToList();
             //vật mang tin
             ViewData["listMedium"] = db.CAT_DIC_MEDIUM.Where(m => !String.IsNullOrEmpty(m.Description)).OrderBy(m => m.Description).ToList();
+<<<<<<< HEAD
 >>>>>>> parent of 280c507... Doanhdq
+=======
+>>>>>>> parent of 71010c2... Merge branch 'DoanhDQ'
 
+            byte[] listAccessLevel = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            ViewData["listAccessLevel"] = listAccessLevel;
+            return View();
+        }
 
         [HttpPost]
         public ActionResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
