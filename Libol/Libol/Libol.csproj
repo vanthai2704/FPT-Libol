@@ -2005,6 +2005,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SupportClass\DataTableAjaxPostModel.cs" />
+    <Compile Include="SupportClass\Wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -2056,6 +2057,7 @@
     <Content Include="Content\DataTables\DataTables-1.10.18\js\jquery.dataTables.js" />
     <Content Include="Content\DataTables\Select-1.3.0\css\select.bootstrap4.css" />
     <Content Include="Content\DataTables\Select-1.3.0\js\dataTables.select.js" />
+    <Content Include="Content\ImagePatron\NoImage.png" />
     <Content Include="Content\Images\9280-200.png" />
     <Content Include="Content\Images\book.png" />
     <Content Include="Content\Images\btn_google_signin_light_normal_web%402x.png" />
@@ -2118,6 +2120,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -2182,6 +2185,9 @@
     <Content Include="Views\CheckOut\_checkoutSuccess.cshtml" />
     <Content Include="Views\CheckOut\_showPatronInfo.cshtml" />
     <Content Include="Views\Management\Account.cshtml" />
+    <Content Include="Views\Patron\AddPatronByFile.cshtml" />
+    <Content Include="Views\Patron\PreviewPatronFile.cshtml" />
+    <Content Include="Views\Patron\InsertFileToDB.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

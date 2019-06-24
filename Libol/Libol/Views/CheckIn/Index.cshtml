@@ -85,7 +85,7 @@
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
                         <div class="col"><input class="form-control" type="text" id="strPatronCode" onkeypress="checkinByCardNumber(event)"/></div>
-                        <div class="col-4"><label class="col-form-label"> <a onclick="findByCardNumber();" href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
+                        <div class="col-4"><label class="col-form-label"> <a onclick="findByCardNumber();" href="#">Tìm</a> | <a href="/Patron/Create">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
@@ -160,16 +160,26 @@
     
 
     function checkinbyDKCB(e) {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strFixDueDate").value,
+            intType: 1,
+            intAutoPaid: 0,
+            strCopyNumbers: 'TK/HCHL001415',
+            strCheckInDate: '12/31/2019'
+        };
         if (e.keyCode == 13) {
             $.ajax({
                 url: "CheckIn/CheckInByDKCB",
-                data: null,
-                type: "Get",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
                 success: function (result) {
                     $("#contentcheckin").html(result)
                 },
                 error: function (errormessage) {
-
+                    console.log("error");
                 }
             });
         }

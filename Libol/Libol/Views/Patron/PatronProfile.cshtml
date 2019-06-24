@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "PatronProfile";
+    ViewBag.Title = "Trang bạn đọc";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -136,6 +136,7 @@
                         <h3 class="name">Xuất nhập dữ liệu</h3>
                     </div>
                     <ul class="list-group">
+                        <li class="list-group-item"><span>@Html.ActionLink("Thêm theo lô", "AddPatronByFile", "Patron")</span></li>
                         <li class="list-group-item"><span>Khuôn đăng xuất</span></li>
                         <li class="list-group-item"><span>Xuất dữ liệu</span></li>
                         <li class="list-group-item"><span>Khuôn đăng nhập</span></li>
