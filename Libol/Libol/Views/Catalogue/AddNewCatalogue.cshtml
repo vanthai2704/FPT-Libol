@@ -90,9 +90,10 @@
         </select>
     </div>
     <script>
-        var arrFieldName = [];
+        var Data = [];
         function SelectedForm() {
-            arrFieldName = ["001"];
+
+            Data = ["001"];
             var empObj = {
                 intIsAuthority: 0,
                 intFormID: $("#listMarcFormID :selected").val()
@@ -105,21 +106,21 @@
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (result) {
-                    doWork(result);
                     $.each(result, function (i, item) {
-                        arrFieldName.push(item.FieldCode);
+                        Data.push(item.FieldCode);
                         var field = item.FieldCode;
 
                         field = field.replace('$', '');
-                        //if (item.FieldCode == '245$a') {
-                        //    html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "></input>    <button type='button' id=btn" + field + " class='btn btn-info' onclick='clicked(dv" + field + ");'>Info</button>  </div>";
-                        //}
-                        //else {
+                        if (item.FieldCode == '245$b') {
+                            html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Nhan Đề Song Song [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "1></input>     </div> " +
+                                "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Phụ Đề [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "2></input>     </div>";
+                        }
+                        else {
                             html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "></input> </div>";
-                        //}
+                        }
                     });
                     $("#test").html(html);
-                    $('#dv245a').append("<button type='button' id='btn' class='btn btn-info' onclick='clicked(dv245a);'>Info</button>");
+                    //$('#dv245a').append("<button type='button' id='btn' class='btn btn-info' onclick='clicked(dv245a);'>Info</button>");
                     document.getElementById("lb245a").style.color = "red";
                     document.getElementById("btnCreate").disabled = false;
                     document.getElementById("btnReset").disabled = false;
@@ -135,50 +136,58 @@
 
     </script>
 
-    @*<script>
-        
-        function clicked(item) {
- 
-            $('<label class="control-label col-md-5 align-self-center font-weight-bold" > Truong Lap </label>  <input type="text" id="rep' + item.id + '" class="form-control row col-2"   style="margin-left: 0px"/> <a href="" id="remScnt">Remove</a> ').appendTo(item);
-            $('#remScnt').click( function() { 
-                //remove 
-                debugger;
-                $('#remScnt').empty();
-            });
-            return false;
-        }
-    </script>*@
 
     <script>
-        function doWork() {
-            var arrFieldValue = [];
-            $.each(arrFieldName, function (i, item) {
-                item = item.replace('$', '');
-                //get Value of inputTag base FieldCode
-                var strValue = $("#" + item).val();
-                arrFieldValue.push(strValue);
-            });
-            console.log(arrFieldValue[2])
-            debugger;
-        }
 
-        function AddNewItem() {
-            var empObj = {
-                formId: $("#listMarcFormID :selected").val(),
-                dirCode: $("#levelDir :selected").val(),
-                mediumId: $("#mediumId :selected").val(),
-                recordTypeCode: $("#recordTypeCode :selected").val(),
-                itemTypeId: $("#itemTypeId :selected").val(),
-                accessLevel: $("#accessLevel :selected").val()
-            };
+        function doWork() {
+            var arrFieldName = [];
+            var arrFieldValue = [];
+            $.each(Data, function (i, item) {
+                inputId = item.replace('$', '');
+                //get Value of inputTag base FieldCode
+                var strValue = $("#" + inputId).val();  
+                switch (item) {
+                    case '020$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    case '022$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    case '245$b':
+                        //Nhan Đề song song
+                        var strValue1 = $("#" + inputId + "1").val();  
+                        arrFieldName.push(item + "1");
+                        arrFieldValue.push(strValue1);
+                        //phụ đề
+                        var strValue2 = $("#" + inputId + "2").val();  
+                        arrFieldName.push(item + "2");
+                        arrFieldValue.push(strValue2);
+                        break;
+                    case '650$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    case '653$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    case '700$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    default:
+                        arrFieldName.push(item);
+                        arrFieldValue.push(strValue);
+                }
+                debugger;
+            });
+
+            //var jsondata = { list: arrFieldName, list: arrFieldValue };
 
             $.ajax({
-                url: "/Catalogue/AddNewItem",
+                url: "/Catalogue/InsertItem",
                 type: "POST",
-                data: JSON.stringify(empObj),
+                data: JSON.stringify({ listFieldsName: arrFieldName, listFieldsValue: arrFieldValue }),
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
-                success: function (code) {
+                success: function () {
 
                     alert("Bạn Đã Tạo Thành Công Biên Mục : " + code);
 
@@ -188,7 +197,57 @@
                 }
 
             });
+
+            function getRepeatValue(item, strValue) {
+                if (strValue.indexOf("::") > 0) {
+                    while (strValue.length > 0) {
+                        var index = strValue.indexOf("::");
+                        if (index > 0) {
+                            var value = strValue.substring(0, index);
+                            arrFieldName.push(item);
+                            arrFieldValue.push(value);
+                            strValue = strValue.substring(index + 2, strValue.length);
+                        } else {
+                            var value = strValue;
+                            arrFieldName.push(item);
+                            arrFieldValue.push(value);
+                            strValue = "";
+                        }
+                    }
+                } else {
+                    arrFieldName.push(item);
+                    arrFieldValue.push(strValue);
+                }
+            }
         }
+
+        //function AddNewItem() {
+        //    var empObj = {
+        //        formId: $("#listMarcFormID :selected").val(),
+        //        dirCode: $("#levelDir :selected").val(),
+        //        mediumId: $("#mediumId :selected").val(),
+        //        recordTypeCode: $("#recordTypeCode :selected").val(),
+        //        itemTypeId: $("#itemTypeId :selected").val(),
+        //        accessLevel: $("#accessLevel :selected").val()
+        //    };
+
+        //    $.ajax({
+        //        url: "/Catalogue/AddNewItem",
+        //        type: "POST",
+        //        data: JSON.stringify(empObj),
+        //        contentType: "application/json;charset=utf-8",
+        //        dataType: "json",
+        //        success: function (code) {
+
+        //            alert("Bạn Đã Tạo Thành Công Biên Mục : " + code);
+
+        //        },
+        //        error: function (errorThrown) {
+        //            alert(errorThrown);
+        //        }
+
+        //    });
+        //}
     </script>
 
 
@@ -248,3 +307,18 @@
         <label class="control-label col-md-2 align-self-center">ISSN[022$a] : </label>
         <input type="text" class="form-control col-md-2" id="inputEmail3">
     </div>*@
+
+
+@*<script>
+
+        function clicked(item) {
+
+            $('<label class="control-label col-md-5 align-self-center font-weight-bold" > Truong Lap </label>  <input type="text" id="rep' + item.id + '" class="form-control row col-2"   style="margin-left: 0px"/> <a href="" id="remScnt">Remove</a> ').appendTo(item);
+            $('#remScnt').click( function() {
+                //remove
+                debugger;
+                $('#remScnt').empty();
+            });
+            return false;
+        }
+    </script>*@
