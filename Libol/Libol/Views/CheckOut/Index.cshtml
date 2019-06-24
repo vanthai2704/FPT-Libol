@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <head>
+    <script src="~/Scripts/jquery.blockUI.js"></script>
     <style>
         body {
             overflow-x: hidden;
@@ -150,12 +151,29 @@
         };
         if (e.keyCode == 13) {
             $.ajax({
-                url: "/CheckOut/CheckOutCardInfo",
-                data: JSON.stringify(empObj),
                 contentType: "application/json;charset=utf-8",
                 type: "POST",
+                beforeSend: function (request) {
+                    $.blockUI({
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: '#000',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff'
+                        }
+                    });
+                },
+                complete: function (request, json) {
+
+                },
+                url: "/CheckOut/CheckOutCardInfo",
+                data: JSON.stringify(empObj),
                 success: function (result) {
                     $("#contentcheckout").html(result);
+                    $.unblockUI()
                 },
                 error: function (errormessage) {
                     console.log("abcssd");
