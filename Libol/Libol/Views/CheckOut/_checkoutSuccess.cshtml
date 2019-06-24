@@ -1,4 +1,46 @@
-﻿<h4 style="margin-top:1rem;">Ghi mượn ấn phẩm</h4>
+﻿@{
+    Libol.Models.SP_GET_PATRON_INFOR_Result patroninfo = (Libol.Models.SP_GET_PATRON_INFOR_Result)ViewData["patroninfo"];
+    List<Libol.Models.SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = (List<Libol.Models.SP_GET_PATRON_ONLOAN_COPIES_Result>)ViewData["patronloaninfo"];
+}
+<head>
+    <style>
+        .columnleft {
+            float: right;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/DataTables/Select-1.3.0/css/select.bootstrap4.css">
+    <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
+    <script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#table_loaninfo').DataTable({
+                columnDefs: [{
+                    orderable: false,
+                    className: 'select-checkbox',
+                }],
+                select: {
+                    style: 'os',
+                    selector: 'td:first-child'
+                },
+                order: [[1, 'asc']],
+                orderCellsTop: true,
+
+            });
+
+            $('#table_loaninfo').on('click', '#select_all', function () {
+                if ($('#select_all:checked').val() === 'on') {
+                    table.rows({ search: 'applied' }).select();
+                }
+                else {
+                    table.rows().deselect();
+                }
+            });
+        });
+    </script>
+</head>
+<h4 style="margin-top:1rem;">Ghi mượn ấn phẩm</h4>
 <h5 style="padding-bottom:10px;">Thông tin bạn đọc</h5>
 <div class="form-row" style="padding-bottom:10px;">
     <div class="col-7">
@@ -10,67 +52,70 @@
                 <div class="form-row">
                     <div class="col">
                         <div class="form-row">
-                            <div class="col"><label>Tên số thẻ: <strong>Nguyễn Văn Đức (SE04287)</strong></label><a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal">Thông tin chi tiết</a></div>
+                            <div class="col"><label>Tên số thẻ: <strong>@patroninfo.FirstName @patroninfo.MiddleName @patroninfo.LastName (@patroninfo.Code)</strong></label><a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal">Thông tin chi tiết</a></div>
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col"><label class="col-form-label">Ngày sinh: <strong>02/12/1995</strong></label></div>
+                    <div class="col"><label class="col-form-label">Ngày sinh: <strong>@string.Format("{0:MM/dd/yyyy}", patroninfo.DOB)</strong></label></div>
                 </div>
                 <div class="form-row">
-                    <div class="col"><label class="col-form-label">Giá trị thẻ: <strong>07/10/2014 - 07-10-2019</strong></label></div>
+                    <div class="col"><label class="col-form-label">Giá trị thẻ: <strong>@patroninfo.ValidDate.ToString("dd/MM/yyyy") - @patroninfo.ExpiredDate.ToString("dd/MM/yyyy")</strong></label></div>
                 </div>
                 <div class="form-row">
-                    <div class="col"><label class="col-form-label">Nhóm: <strong>Sinh viên FU Hà Nội</strong></label></div>
+                    <div class="col"><label class="col-form-label">Nhóm: <strong>@ViewBag.groupname</strong></label></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<h5 style="padding-bottom:10px;">Danh sách ấn phẩm vừa ghi mượn</h5>
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>Thu Hồi</th>
-            <th>Nhan đề</th>
-            <th>ĐKCB</th>
-            <th>Ngày mượn</th>
-            <th>Ngày trả</th>
-            <th>Ghi chú</th>
-            <th>Sửa</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Thu hồi</td>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Thu hồi</td>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>mary@example.com</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Thu hồi</td>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>july@example.com</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-            <td></td>
-        </tr>
-    </tbody>
-</table>
+<h5 style="padding-bottom:10px;">Ấn phẩm vừa ghi mượn</h5>
+<div class="col" style="padding-left:50px; padding-bottom:10px;">
+    <div class="form-row">
+        <div class="col"><label class="col-form-label">Nhan đề: <strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></div>
+    </div>
+    <div class="form-row">
+        <div class="col"><label class="col-form-label">ĐKCB: <strong>GT/KHXH002154</strong></label></div>
+    </div>
+    <div class="form-row">
+        <div class="col"><label class="col-form-label">Ngày mượn: <strong>13/05/2019</strong></label></div>
+    </div>
+    <div class="form-row">
+        <div class="col"><label class="col-form-label">Ngày trả: <strong>05/06/2019</strong></label></div>
+    </div>
+    <div class="form-row">
+        <div class="col"><label class="col-form-label">Ghi chú: <strong>0</strong></label></div>
+    </div>
+</div>
+<div class="form-row" style="padding-top:10px;">
+    <div class="col">
+        <h5>Bạn đọc cũng đang mượn các ấn phẩm</h5>
+            <table id="table_loaninfo" class="table table-striped table-bordered datatables">
+                <thead>
+                    <tr>
+                        <th>Nhan đề</th>
+                        <th>ĐKCB</th>
+                        <th>Ngày mượn</th>
+                        <th>Ngày trả</th>
+                        <th>Ghi chú</th>
+                    </tr>
 
+                </thead>
+                <tbody>
+                    @foreach (var item in patronloaninfo)
+                    {
+                        <tr>
+                            <td>@item.TITLE</td>
+                            <td>@item.COPYNUMBER</td>
+                            <td>@string.Format("{0:yyyy-MM-dd}", item.CHECKOUTDATE)</td>
+                            <td>@string.Format("{0:yyyy-MM-dd}", item.DUEDATE)</td>
+                            <td>@item.NOTE</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    </div>
+</div>
 <!-- The Modal -->
 <div class="modal" id="myModal">
     <div class="modal-dialog">
@@ -90,16 +135,45 @@
                 <div class="col" style="padding-left:50px; padding-bottom:10px;">
                     <table>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
-                            <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            <td class="columnleft">Họ tên: </td>
+                            <td><strong>@patroninfo.FirstName @patroninfo.MiddleName @patroninfo.LastName</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
-                            <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            <td class="columnleft">Dân tộc: </td>
+                            <td><strong>@ViewBag.ethic</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Ngày mượn: </label></td>
-                            <td><label class="col-form-label"><strong>13/05/2019</strong></label></td>
+                            <td class="columnleft">Ngày sinh: </td>
+                            <td><strong>@string.Format("{0:MM/dd/yyyy}", patroninfo.DOB)</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Giới tính: </td>
+                            <td>
+                                @if (patroninfo.Sex.Equals("1"))
+                                {<strong>Nam</strong>}
+                                else
+                                {<strong>Nữ</strong>}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Trình độ văn hóa </td>
+                            <td><strong>@ViewBag.educationlevel</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Số thẻ: </td>
+                            <td><strong>@patroninfo.Code</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Ngày cấy thẻ: </td>
+                            <td><strong>@patroninfo.ValidDate.ToString("dd/MM/yyyy")</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Ngày hết hạn thẻ: </td>
+                            <td><strong>@patroninfo.ExpiredDate.ToString("dd/MM/yyyy")</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">nhóm bạn đọc: </td>
+                            <td><strong>@ViewBag.groupname</strong></td>
                         </tr>
                     </table>
                 </div>
@@ -109,16 +183,20 @@
                 <div class="col" style="padding-left:50px; padding-bottom:10px;">
                     <table>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
-                            <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            <td class="columnleft">Khoa: </td>
+                            <td><strong>@ViewBag.faculty</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
-                            <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            <td class="columnleft">Nhóm nghề nghiệp: </td>
+                            <td><strong>@ViewBag.occupation</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Ngày mượn: </label></td>
-                            <td><label class="col-form-label"><strong>13/05/2019</strong></label></td>
+                            <td class="columnleft">Trường: </td>
+                            <td><strong>@ViewBag.college</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Địa chỉ nơi làm việc: </td>
+                            <td><strong>@patroninfo.WorkPlace</strong></td>
                         </tr>
                     </table>
                 </div>
@@ -128,12 +206,20 @@
                 <div class="col" style="padding-left:50px; padding-bottom:10px;">
                     <table>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
-                            <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            <td class="columnleft">Địa chỉ: </td>
+                            <td><strong>Address</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
-                            <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            <td class="columnleft">SĐT cố định: </td>
+                            <td><strong>@patroninfo.Telephone</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">SĐT di động: </td>
+                            <td><strong>@patroninfo.Mobile</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Email: </td>
+                            <td><strong>@patroninfo.Email</strong></td>
                         </tr>
                     </table>
                 </div>

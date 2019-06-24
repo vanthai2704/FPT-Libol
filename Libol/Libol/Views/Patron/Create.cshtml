@@ -1,17 +1,19 @@
 ﻿@model Libol.Models.CIR_PATRON
+@using Libol.Models;
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Bạn đọc";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <style>
     label {
         text-align: right;
     }
+
     button {
         margin-right: 15px;
     }
+
     .avatar {
         position: absolute;
         top: 130px;
@@ -19,15 +21,16 @@
         width: 100px;
         height: 185px;
     }
-        .avatar img, .avatar a{
+
+        .avatar img, .avatar a {
             position: inherit;
             width: 100%;
         }
+
         .avatar a {
             left: -35px;
             top: 60px;
         }
-    
 </style>
 
 <h3 style="margin-top: 20px;margin-bottom: 20px;">Cập Nhật Thông Tin Bạn Đọc</h3>
@@ -36,368 +39,365 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @*<div class="form-group">
-            @Html.LabelFor(model => model.ID, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.ID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ID, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group row ">
+            <label class="control-label col-md-1 align-self-center">Họ và tên</label>
+            <input type="text" class="form-control col-md-2" id="strFirstName">
+            <input type="text" class="form-control col-md-2" id="strLastName">
+
+            <div class="col-md-1">
+                <div class="form-check-inline">
+                    <input type="radio" class="form-check-input" id="blnSex" name="sex" checked>
+                    <label class="form-check-label" for="formCheck-1">Nam</label>
+                    <input type="radio" class="form-check-input" id="radio2" name="sex">
+                    <label class="form-check-label" for="formCheck-1">Nữ</label>
+                </div>
             </div>
-        </div>*@
 
-    <div class="form-group row ">
-        <label class="control-label col-md-1 align-self-center">Họ và tên</label>
-        @*@Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-md-2" })*@
-
-        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control col-md-2" } })
-        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-
-        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control col-md-2" } })
-        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-
-
-        <div class="col-md-1">
-            <div class="form-check-inline">
-                <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" checked>
-                <label class="form-check-label" for="formCheck-1">Nam</label>
-                <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2">
-                <label class="form-check-label" for="formCheck-1">Nữ</label>
+            <div class="avatar">
+                <input id="photoPatron" name="uploadFile" type="file" style="width: 100px;float: left;margin-left: -200px;" accept="image/x-png,image/gif,image/jpeg" onchange="onFileSelected(event)">
+                <img src="~/Content/ImagePatron/NoImage.png" style="margin-left: -100px;width: 100px;height: 150px;" id="avatarImage" />
             </div>
+
         </div>
-        
-        <div class="avatar">
-            <img src="https://media.ex-cdn.com/EXP/media.phunutoday.vn/files/hoantran/2018/05/24/img_0131-1145.jpg"  />
-            <a href="#">Ảnh</a>
+
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Ngày sinh</label>
+
+            <input type="date" class="form-control col-md-2" id="strDOB">
+
+            <label class="control-label col-md-2 align-self-center">Dân tộc</label>
+            <select class="form-control col-md-3" id="intEthnicID">
+                <option value="-1">----- Chọn -----</option>
+                @foreach (var item in ViewBag.Ethnic)
+                {
+                    <option value="@item.ID">@item.Ethnic</option>
+                }
+            </select>
+            <a class="col-md-1" href="#">Thêm</a>
         </div>
-        
 
-        @*@Html.LabelFor(model => model.Sex, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Sex, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Sex, "", new { @class = "text-danger" })
-            </div>*@
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Số thẻ</label>
+            <input type="text" class="form-control col-md-2" id="strCode">
+            <label class="control-label col-md-2 align-self-center">Nhóm bạn đọc</label>
+            <select class="form-control col-md-3" id="intPatronGroupID">
+                <option value="-1">----- Chọn -----</option>
+                @foreach (var item in ViewBag.PatronGroup)
+                {
+                    <option value="@item.ID">@item.Name</option>
+                }
+            </select>
+            <a class="col-md-1" href="#">Xem</a>
+        </div>
 
-    </div>
-
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Ngày sinh</label>
-
-        <input type="date" class="form-control col-md-2">
-
-        <label class="control-label col-md-2 align-self-center">Dân tộc</label>
-        <select class="form-control col-md-3">
-            <option>Kinh</option>
-            <option>Mường</option>
-        </select>
-        <a class="col-md-1" href="#">Thêm</a>
-    </div>
-
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Số thẻ</label>
-        <input type="text" class="form-control col-md-2">
-        <label class="control-label col-md-2 align-self-center">Nhóm bạn đọc</label>
-        <select class="form-control col-md-3">
-            <option>Kĩ sư công nghệ</option>
-            <option>Giảng viên</option>
-        </select>
-        <a class="col-md-1" href="#">Xem</a>
-    </div>
-
-    <div class="form-group row" >
-        <label class="control-label col-md-1 align-self-center">Ngày cấp</label>
-        <input type="date" class="form-control col-md-2">
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Ngày cấp</label>
+            <input type="date" class="form-control col-md-2" id="strLastIssuedDate">
             <label class="control-label col-md-2 align-self-center">Ngày hiệu lực</label>
-            <input type="date" class="form-control col-md-2">
+            <input type="date" class="form-control col-md-2" id="strValidDate">
             <label class="control-label col-md-2 align-self-center">Ngày hết hạn</label>
-            <input type="date" class="form-control col-md-2">
-        
+            <input type="date" class="form-control col-md-2" id="strExpiredDate">
+
+        </div>
+
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Trình độ</label>
+            <select class="form-control col-md-2" id="intEducationID">
+                <option value="-1">----- Chọn -----</option>
+                @foreach (var item in ViewBag.Education)
+                {
+                    <option value="@item.ID">@item.EducationLevel</option>
+                }
+            </select>
+
+            <label class="control-label col-md-2 align-self-center">Nghề nghiệp</label>
+            <select class="form-control col-md-3" id="intOccupationID">
+                <option value="-1">----- Chọn -----</option>
+                @foreach (var item in ViewBag.Occupation)
+                {
+                    <option value="@item.ID">@item.Occupation</option>
+                }
+            </select>
+            <a href="#" class="col-md-1">Thêm</a>
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Nơi làm việc</label>
+            <input type="text" class="form-control col-md-2" id="strWorkPlace">
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Trường</label>
+            <select class="form-control col-md-3" onchange="OnchangeCollege()" id="college">
+                <option value="-1">----- Chọn -----</option>
+                @foreach (var item in ViewBag.College)
+                {
+                    <option value="@item.ID">@item.College</option>
+                }
+            </select>
+            <a href="#" class="col-md-1">Thêm</a>
+            <label class="control-label align-self-center" style="margin-right: 10px">Khoa</label>
+            <select class="form-control col-md-3" id="faculty">
+                <option value="-1">----- Chọn -----</option>
+                
+            </select>
+            <a href="#" class="col-md-1">Thêm</a>
+            <label class="control-label col-md-1 align-self-center">Khóa</label>
+            <input type="text" class="form-control col-md-1" id="strGrade">
+            <label class="control-label col-md-1 align-self-center">Lớp</label>
+            <input type="text" class="form-control col-md-1" id="strClass">
+        </div>
+
+        <h4>Địa Chỉ</h4>
+        <hr />
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Địa chỉ</label>
+            <input type="text" class="form-control col-md-6" id="strAddress">
+            <label class="control-label col-md-1 align-self-center">Thành phố</label>
+            <input type="text" class="form-control col-md-2" id="strCity">
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Tỉnh</label>
+            <select class="form-control col-md-2" id="intProvinceID">
+                @foreach (var item in ViewBag.Province)
+                {
+                    <option value="@item.ID">@item.Province</option>
+                }
+            </select>
+            <a href="#" class="col-md-1">Thêm</a>
+            <label class="control-label col-md-1 align-self-center">Nước</label>
+            <select class="form-control col-md-2" id="intCountryID">
+                @foreach (var item in ViewBag.Countries)
+                {
+                    <option value="@item.ID">@item.Country</option>
+                }
+            </select>
+            <label class="control-label col-md-1 align-self-center">Mã vùng</label>
+            <input type="text" class="form-control col-md-1" id="strZip">
+            <div class="col-md-2"><input type="checkbox" id="intisActive"/> Địa chỉ chính</div>
+        </div>
+
+        <h4>Thông tin khác</h4>
+        <hr />
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Điện thoại</label>
+            <input type="text" class="form-control col-md-2" id="strTelephone">
+            <label class="control-label col-md-3 align-self-center">Mobile</label>
+            <input type="text" class="form-control col-md-2" id="strMobile">
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Email</label>
+            <input type="email" class="form-control col-md-2" id="strEmail">
+            <label class="control-label col-md-3 align-self-center">Chứng minh thư</label>
+            <input type="text" class="form-control col-md-2" id="strIDCard">
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-md-1 align-self-center">Ghi chú</label>
+            <textarea class="form-control col-md-5" rows="5" id="strNote"></textarea>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-1"></div>
+            <button type="button" class="btn btn-primary col-md-1" onclick="NewPatron()">Cập nhật</button>
+            <button type="button" class="btn btn-primary col-md-1" onclick="Reset()">Đặt lại</button>
+            <button type="button" class="btn btn-primary col-md-1" onclick="SearchPatron()">Tìm kiếm</button>
+        </div>
+
     </div>
-
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Trình độ</label>
-        <select class="form-control col-md-2">
-            <option>Kĩ sư công nghệ</option>
-            <option>Giảng viên</option>
-        </select>
-
-        <label class="control-label col-md-2 align-self-center">Nghề nghiệp</label>
-        <select class="form-control col-md-3">
-            <option>Kĩ sư công nghệ</option>
-            <option>Giảng viên</option>
-        </select>
-        <a href="#" class="col-md-1">Thêm</a>
-    </div>
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Nơi làm việc</label>
-        <input type="date" class="form-control col-md-2">
-    </div>
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Trường</label>
-        <select class="form-control col-md-3">
-            <option>Đại học FPT</option>
-            <option>Giảng viên</option>
-        </select>
-        <a href="#" class="col-md-1">Thêm</a>
-        <label class="control-label align-self-center" style="margin-right: 10px">Khoa</label>
-        <select class="form-control col-md-1">
-            <option>Khoa 1</option>
-            <option>Giảng viên</option>
-        </select>
-        <a href="#" class="col-md-1">Thêm</a>
-        <label class="control-label col-md-1 align-self-center">Khóa</label>
-        <input type="text" class="form-control col-md-1">
-        <label class="control-label col-md-1 align-self-center">Lớp</label>
-        <input type="text" class="form-control col-md-1">
-    </div>
-
-    <h4>Địa Chỉ</h4>
-    <hr />
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Địa chỉ</label>
-        <input type="text" class="form-control col-md-6">
-        <label class="control-label col-md-1 align-self-center">Thành phố</label>
-        <input type="text" class="form-control col-md-2">
-    </div>
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Tỉnh</label>
-        <select class="form-control col-md-2">
-            <option>Khoa 1</option>
-            <option>Giảng viên</option>
-        </select>
-        <a href="#" class="col-md-1">Thêm</a>
-        <label class="control-label col-md-1 align-self-center">Nước</label>
-        <select class="form-control col-md-2">
-            <option>Khoa 1</option>
-            <option>Giảng viên</option>
-        </select>
-        <label class="control-label col-md-1 align-self-center">Mã vùng</label>
-        <input type="text" class="form-control col-md-1">
-        <div class="col-md-2"><input type="checkbox" /> Địa chỉ chính</div>
-    </div>
-
-    <h4>Thông tin khác</h4>
-    <hr />
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Điện thoại</label>
-        <input type="text" class="form-control col-md-2">
-        <label class="control-label col-md-3 align-self-center">Mobile</label>
-        <input type="text" class="form-control col-md-2">
-    </div>
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Email</label>
-        <input type="text" class="form-control col-md-2">
-        <label class="control-label col-md-3 align-self-center">Chứng minh thư</label>
-        <input type="text" class="form-control col-md-2">
-    </div>
-    <div class="form-group row">
-        <label class="control-label col-md-1 align-self-center">Ghi chú</label>
-        <textarea class="form-control col-md-5" rows="5"></textarea>
-    </div>
-    <div class="form-group row">
-        <div class="col-md-1"></div>
-        <button type="submit" class="btn btn-primary col-md-1">Cập nhật</button>
-        <button type="button" class="btn btn-primary col-md-1">Đặt lại</button>
-        <button type="button" class="btn btn-primary col-md-1">Tìm kiếm</button>
-    </div>
-    @*<div class="form-group">
-            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ValidDate, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.ValidDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ValidDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ExpiredDate, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.ExpiredDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ExpiredDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.LastIssuedDate, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.LastIssuedDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LastIssuedDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.MiddleName, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EthnicID, "EthnicID", htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.DropDownList("EthnicID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EthnicID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EducationID, "EducationID", htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.DropDownList("EducationID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EducationID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.OccupationID, "OccupationID", htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.DropDownList("OccupationID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.OccupationID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.WorkPlace, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.WorkPlace, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.WorkPlace, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Telephone, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Telephone, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Telephone, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Mobile, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Portrait, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Portrait, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Portrait, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PatronGroupID, "PatronGroupID", htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.DropDownList("PatronGroupID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.PatronGroupID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Debt, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.Debt, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Debt, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.LastModifiedDate, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.LastModifiedDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LastModifiedDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.InterestedSubjectBBK, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.InterestedSubjectBBK, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InterestedSubjectBBK, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.InterestedSubjectDDC, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.InterestedSubjectDDC, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InterestedSubjectDDC, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IDCard, htmlAttributes: new { @class = "control-label col-md-md-2" })
-            <div class="col-md-md-10">
-                @Html.EditorFor(model => model.IDCard, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.IDCard, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-md-offset-2 col-md-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>*@
-</div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalNotify">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin bạn đọc</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="notifyMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    function OnchangeCollege() {
+        var e = document.getElementById("college");
+        var id = e.options[e.selectedIndex].value;
+        var empObj = {
+            CollegeID: id
+        };
+        $.ajax({
+            url: "/Patron/OnchangeCollege",
+            data: JSON.stringify(empObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = "<option value=' - 1'>----- Chọn -----</option>"
+                for (r in result) {
+                    html = html + "<option value=" + result[r].ID+">" + result[r].Faculty + "</option>"
+                }
+                document.getElementById("faculty").innerHTML = html;
+                
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+    function onFileSelected(event) {
+        var selectedFile = event.target.files[0];
+        var reader = new FileReader();
+
+        var imgtag = document.getElementById("avatarImage");
+        imgtag.title = selectedFile.name;
+
+        reader.onload = function (event) {
+            imgtag.src = event.target.result;
+        };
+
+        reader.readAsDataURL(selectedFile);
+    }
+
+    function NewPatron() {
+
+        var intEthnicIDElement = document.getElementById("intEthnicID");
+        var EthnicID = intEthnicIDElement.options[intEthnicIDElement.selectedIndex].value == -1 ? null: intEthnicIDElement.options[intEthnicIDElement.selectedIndex].value;
+
+        var intEducationIDElement = document.getElementById("intEducationID");
+        var EducationID = intEducationIDElement.options[intEducationIDElement.selectedIndex].value == -1 ? null : intEducationIDElement.options[intEducationIDElement.selectedIndex].value;
+
+        var intOccupationIDElement = document.getElementById("intOccupationID");
+        var OccupationID = intOccupationIDElement.options[intOccupationIDElement.selectedIndex].value == -1 ? null : intOccupationIDElement.options[intOccupationIDElement.selectedIndex].value;
+
+        var intPatronGroupIDElement = document.getElementById("intPatronGroupID");
+        var PatronGroupID = intPatronGroupIDElement.options[intPatronGroupIDElement.selectedIndex].value == -1 ? null : intPatronGroupIDElement.options[intPatronGroupIDElement.selectedIndex].value;
+
+        var intProvinceIDElement = document.getElementById("intProvinceID");
+        var ProvinceID = intProvinceIDElement.options[intProvinceIDElement.selectedIndex].value;
+
+        var intCountryIDElement = document.getElementById("intCountryID");
+        var CountryID = intCountryIDElement.options[intCountryIDElement.selectedIndex].value;
+
+        var intCollegeIDElement = document.getElementById("college");
+        var CollegeID = intCollegeIDElement.options[intCollegeIDElement.selectedIndex].value == -1 ;
+
+        var intFacultyIDElement = document.getElementById("faculty");
+        var FacultyID = intFacultyIDElement.options[intFacultyIDElement.selectedIndex].value == -1 ;
+
+        var empObj = {
+            strCode: document.getElementById("strCode").value ,
+            strValidDate: document.getElementById("strValidDate").value ,
+            strExpiredDate: document.getElementById("strExpiredDate").value ,
+            strLastIssuedDate: document.getElementById("strLastIssuedDate").value ,
+            strLastName: document.getElementById("strLastName").value ,
+            strFirstName: document.getElementById("strFirstName").value,
+            blnSex: document.getElementById("blnSex").checked ,
+            strDOB: document.getElementById("strDOB").value,
+            intEthnicID: EthnicID,
+            intEducationID: EducationID,
+            intOccupationID: OccupationID,
+            strWorkPlace: document.getElementById("strWorkPlace").value,
+            strTelephone: document.getElementById("strTelephone").value,
+            strMobile: document.getElementById("strMobile").value,
+            strEmail: document.getElementById("strEmail").value,
+            strPortrait: null,
+            intPatronGroupID: PatronGroupID,
+            strNote: document.getElementById("strNote").value,
+            intIsQue: 0,
+            strIDCard: document.getElementById("strIDCard").value,
+            strAddress: document.getElementById("strAddress").value,
+            intProvinceID: ProvinceID,
+            strCity: document.getElementById("strCity").value,
+            intCountryID: CountryID,
+            strZip: document.getElementById("strZip").value,
+            intisActive: document.getElementById("intisActive").checked,
+            intCollegeID: CollegeID,
+            intFacultyID: FacultyID,
+            strGrade: document.getElementById("strGrade").value,
+            strClass: document.getElementById("strClass").value
+        };
+        $.ajax({
+            url: "/Patron/NewPatron",
+            data: JSON.stringify(empObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result.IsError) {
+                    $("#modalNotify").modal();
+                    document.getElementById("notifyMessage").innerText = result.Data;
+                }
+                else {
+                    UploadPhotoPatron(result.Data);
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+    function UploadPhotoPatron(strCode) {
+        var formData = new FormData();
+        var totalFiles = document.getElementById("photoPatron").files.length;
+        for (var i = 0; i < totalFiles; i++) {
+            var file = document.getElementById("photoPatron").files[i];
+            formData.append("photoPatron", file);
+            formData.append("strCode", strCode);
+        }
+        $.ajax({
+            type: "POST",
+            url: '/Patron/UploadPhotoPatron',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+            },
+            error: function (error) {
+            }
+        });
+    }
+
+    function Reset() {
+        document.getElementById("strCode").value = "",
+        document.getElementById("strValidDate").value = "",
+        document.getElementById("strExpiredDate").value ="" ,
+        document.getElementById("strLastIssuedDate").value = "",
+        document.getElementById("strLastName").value = "",
+        document.getElementById("strFirstName").value = "",
+        document.getElementById("blnSex").checked = true,
+        document.getElementById("strDOB").value = "",
+        document.getElementById("strWorkPlace").value = "",
+        document.getElementById("strTelephone").value = "",
+        document.getElementById("strMobile").value ="",
+        document.getElementById("strEmail").value = "",
+        document.getElementById("strNote").value = "",
+        document.getElementById("strIDCard").value = "",
+        document.getElementById("strAddress").value = "",
+        document.getElementById("strCity").value = "",
+        document.getElementById("strZip").value = "",
+        document.getElementById("intisActive").checked = false,
+        document.getElementById("strGrade").value = "",
+        document.getElementById("strClass").value = "",
+        document.getElementById("intEthnicID").value = -1,
+        document.getElementById("intEducationID").value = -1,
+        document.getElementById("intOccupationID").value = -1,
+        document.getElementById("intPatronGroupID").value = -1,
+        document.getElementById("college").value = -1,
+        document.getElementById("faculty").value = -1,
+        document.getElementById("avatarImage").src = "/Content/ImagePatron/NoImage.png"
+    }
+
+    function SearchPatron() {
+
+    }
+</script>
