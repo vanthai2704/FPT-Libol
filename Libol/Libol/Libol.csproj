@@ -2182,6 +2182,7 @@
     <Content Include="Views\CheckOut\_checkoutSuccess.cshtml" />
     <Content Include="Views\CheckOut\_showPatronInfo.cshtml" />
     <Content Include="Views\Management\Account.cshtml" />
+    <Content Include="Views\Catalogue\AddNewCatalogueDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

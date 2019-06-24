@@ -76,9 +76,9 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public ActionResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
+        public ActionResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue)
         {
-            catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue, item);
+            catalogueBusiness.HandleListFields(listFieldsName, listFieldsValue);
             return RedirectToAction("Index", "Shelf");
         }
 

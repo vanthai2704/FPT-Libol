@@ -9861,15 +9861,41 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="DemoGetMarcForm" FunctionName="LibolModel.Store.SP_CATA_GET_MARC_FORM" />
-    <FunctionImportMapping FunctionImportName="SP_CATA_GET_MARC_FORM_2019" FunctionName="LibolModel.Store.SP_CATA_GET_MARC_FORM_2019">
+    <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE">
       <ResultMapping>
-        <ComplexTypeMapping TypeName="LibolModel.SP_CATA_GET_MARC_FORM_2019_Result">
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_Result">
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_MARC_FORM" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_MARC_FORM">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_MARC_FORM_Result">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Creator" ColumnName="Creator" />
           <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
           <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
           <ScalarProperty Name="Note" ColumnName="Note" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GETFIELDS_OF_FORM" FunctionName="LibolModel.Store.FPT_SP_CATA_GETFIELDS_OF_FORM">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GETFIELDS_OF_FORM_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Creator" ColumnName="Creator" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="LastModifiedDate" ColumnName="LastModifiedDate" />
+          <ScalarProperty Name="Note" ColumnName="Note" />
+          <ScalarProperty Name="FormID" ColumnName="FormID" />
+          <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+          <ScalarProperty Name="Mandatory" ColumnName="Mandatory" />
+          <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
+          <ScalarProperty Name="IstextBox" ColumnName="IstextBox" />
+          <ScalarProperty Name="DefaultIndicators" ColumnName="DefaultIndicators" />
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
