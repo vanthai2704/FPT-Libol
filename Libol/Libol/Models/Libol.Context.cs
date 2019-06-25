@@ -21374,6 +21374,14 @@ namespace Libol.Models
             return list;
         }
 
+        public List<SP_ILL_SEARCH_PATRON_Result> FPT_SP_ILL_SEARCH_PATRON(string strPatronName, string strPatronCode)
+        {
+
+            List<SP_ILL_SEARCH_PATRON_Result> list = this.Database.SqlQuery<SP_ILL_SEARCH_PATRON_Result>("SP_ILL_SEARCH_PATRON {0}, {1}",
+                new object[] { strPatronName, strPatronCode}).ToList();
+            return list;
+        }
+
 
 
     }
