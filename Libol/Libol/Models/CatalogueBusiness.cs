@@ -304,7 +304,7 @@ namespace Libol.Models
 
                     string nameTmp = listFieldName[i];
                     string valueTmp = listFieldValue[i];
-                    if ("090".Equals(nameTmp.Substring(0, 3)) && checkInput)
+                    if ("090".Equals(nameTmp.Substring(0, 3)) )
                     {
                         if (listFieldName[i].Equals("090$a") && checkInput)
                         {
@@ -324,7 +324,7 @@ namespace Libol.Models
                         listFieldNameOutput.Add("090");
                         flag090 = false;
                     }
-                    if ("245".Equals(nameTmp.Substring(0, 3)) && checkInput)
+                    if ("245".Equals(nameTmp.Substring(0, 3)) )
                     {
 
                         if (listFieldName[i].Equals("245$a") && checkInput)
@@ -371,7 +371,7 @@ namespace Libol.Models
                         flag245 = false;
                     }
 
-                    if ("300".Equals(nameTmp.Substring(0, 3)) && checkInput)
+                    if ("300".Equals(nameTmp.Substring(0, 3)) )
                     {
                         if (listFieldName[i].Equals("300$a") && checkInput)
                         {
@@ -401,7 +401,7 @@ namespace Libol.Models
                         flag300 = false;
                     }
 
-                    if ("260".Equals(nameTmp.Substring(0, 3)) && checkInput)
+                    if ("260".Equals(nameTmp.Substring(0, 3)) )
                     {
                         if (listFieldName[i].Equals("260$a") && checkInput)
                         {
