@@ -17,12 +17,16 @@
 <form action="~/Catalogue/AddNewCatalogue" method="post">
     @{
         List<FPT_SP_CATA_GET_MARC_FORM_Result> list = ViewData["ListMarcForm"] as List<FPT_SP_CATA_GET_MARC_FORM_Result>; // FormID ++
-        List <CAT_DIC_DIRLEVEL> listLevelDir = ViewData["listLevelDir"] as List<CAT_DIC_DIRLEVEL>; //cap thuw muc :  DirLevel : ++
+
+        List<CAT_DIC_DIRLEVEL> listLevelDir = ViewData["listLevelDir"] as List<CAT_DIC_DIRLEVEL>; //cap thuw muc :  DirLevel : ++
+
         List<CAT_DIC_RECORDTYPE> ListRecordType = ViewData["ListRecordType"] as List<CAT_DIC_RECORDTYPE>; //Kieu ban ghi : RecordType ++
         List<CAT_DIC_ITEM_TYPE> listItemType = ViewData["listItemType"] as List<CAT_DIC_ITEM_TYPE>; //dang tai lieu  : TypeID : 927$a
         List<CAT_DIC_MEDIUM> listMedium = ViewData["listMedium"] as List<CAT_DIC_MEDIUM>; // vat mang tin : MediumID : 925$a
         byte[] listAccessLevel = ViewData["listAccessLevel"] as byte[]; // muc do mat : AccessLevel :  926$a
-    } 
+
+    }
+
 
 
     <div class="form-group row col-12">
@@ -115,8 +119,8 @@
                             html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Nhan Đề Song Song [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "1></input>     </div> " +
                                 "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Phụ Đề [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "2></input>     </div>";
                         }
-                        else if (!(item.FieldCode == '900' || item.FieldCode == '911' || item.FieldCode == '925' || item.FieldCode == '926' || item.FieldCode == '927') ) {
-                            debugger;
+
+                        else if (!(item.FieldCode == '900' || item.FieldCode == '911' || item.FieldCode == '925' || item.FieldCode == '926' || item.FieldCode == '927')) {
                             html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "></input> </div>";
                         }
                     });
@@ -153,10 +157,6 @@
                 inputId = item.replace('$', '');
                 //get Value of inputTag base FieldCode
                 var strValue = $("#" + inputId).val();
-                if (typeof strValue === "undefined") {
-                    strValue = "";
-                }
-                debugger;
                 switch (item) {
                     case '926':
                         arrFieldName.push(item);
@@ -178,11 +178,11 @@
                         break;
                     case '245$b':
                         //Nhan Đề song song
-                        var strValue1 = $("#" + inputId + "1").val();  
+                        var strValue1 = $("#" + inputId + "1").val();
                         arrFieldName.push(item + "1");
                         arrFieldValue.push(strValue1);
                         //phụ đề
-                        var strValue2 = $("#" + inputId + "2").val();  
+                        var strValue2 = $("#" + inputId + "2").val();
                         arrFieldName.push(item + "2");
                         arrFieldValue.push(strValue2);
                         break;
@@ -209,8 +209,8 @@
                 data: JSON.stringify({ listFieldsName: arrFieldName, listFieldsValue: arrFieldValue }),
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
-                success: function (code) {
-                    alert("Bạn Đã Tạo Thành Công Biên Mục : " + code);
+                success: function (code) {      
+                    $('#myModal').modal('show');
 
                 },
                 error: function (errorThrown) {
@@ -281,7 +281,7 @@
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12 text-center">
             <div style="margin : auto">
-                <input disabled type="button" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới" onclick="doWork();" />
+                <input disabled type="button" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới"  onclick="doWork();"  />
                 <button disabled type="button" id="btnReset" class="btn btn-primary form-control">Đặt Lại</button>
                 <button disabled type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal">Thêm Trường</button>
             </div>

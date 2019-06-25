@@ -65,6 +65,7 @@ namespace Libol.Controllers
         {
             //catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue, item);
             return Json("Doanhdq", JsonRequestBehavior.AllowGet);
+
         }
 
         [HttpPost]
