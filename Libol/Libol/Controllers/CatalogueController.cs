@@ -61,10 +61,10 @@ namespace Libol.Controllers
 
 
         [HttpPost]
-        public ActionResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
+        public JsonResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
         {
-            catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue, item);
-            return RedirectToAction("Index", "Shelf");
+            //catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue, item);
+            return Json("Doanhdq", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
