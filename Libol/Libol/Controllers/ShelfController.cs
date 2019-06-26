@@ -30,8 +30,13 @@ namespace Libol.Controllers
             //SelectList listKTL = new SelectList(getlistKTL, "ID", "LoanType");
             //ViewBag.listKTL = listKTL;
 
-            ViewData["listLibs"] = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, 49, 1);
-            ViewData["listLocs"] = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(20, 49, 0, -1);
+            List< SP_HOLDING_LIBRARY_SELECT_Result > listLibsResult = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, 49, 1);
+            List<HOLDING_LIBRARY> libs = SP_HOLDING_LIBRARY_SELECT_Result.ConvertToHoldingLibrary(listLibsResult);
+            List<SP_HOLDING_LOCATION_GET_INFO_Result> listLocsResult = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(20, 49, 0, -1);
+            List<HOLDING_LOCATION> locs = SP_HOLDING_LOCATION_GET_INFO_Result.ConvertToHoldingLocation(listLocsResult);
+
+            ViewData["listLibs"] = libs;
+            ViewData["listLocs"] = locs;
 
             return View();
         }
