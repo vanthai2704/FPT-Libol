@@ -35,7 +35,7 @@
           <SQLDebugging>False</SQLDebugging>
           <ExternalProgram>
           </ExternalProgram>
-          <StartExternalURL>http://localhost:51234/Catalogue/AddNewCatalogue</StartExternalURL>
+          <StartExternalURL>http://localhost:51234/Shelf</StartExternalURL>
           <StartCmdLineArguments>
           </StartCmdLineArguments>
           <StartWorkingDirectory>
