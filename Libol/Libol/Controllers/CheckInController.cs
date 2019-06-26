@@ -44,7 +44,7 @@ namespace Libol.Controllers
             SP_GET_PATRON_INFOR_Result patroninfo =
                db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
             ViewData["patroninfo"] = patroninfo;
-            db.SP_CHECKIN(43, intType, intAutoPaid, strCopyNumbers, strCheckInDate, 
+            db.SP_CHECKIN(43, intType, intAutoPaid, strCopyNumbers, strCheckInDate,
                 new ObjectParameter("strTransIDs", typeof(string)),
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
@@ -54,9 +54,10 @@ namespace Libol.Controllers
             return PartialView("_checkinByDKCB");
         }
 
-        [HttpGet]
-        public PartialViewResult FindByCardNumber()
+        [HttpPost]
+        public PartialViewResult FindByCardNumber(string strFullName)
         {
+            ViewBag.listpatron = db.FPT_SP_ILL_SEARCH_PATRON(strFullName, "").ToList().Take(50).ToList();
             return PartialView("_findByCardNumber");
         }
     }
