@@ -45,9 +45,20 @@
 
         <div class="form-group row ">
             <label class="control-label col-md-1 align-self-center">Họ và tên</label>
-            <input type="text" class="form-control col-md-2" id="strFirstName">
-            <input type="text" class="form-control col-md-2" id="strLastName">
-
+            <div class="col-md-2" style="padding: 0px !important">
+                <input type="text" class="form-control" id="strFirstName">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Họ
+                </div>
+            </div>
+            
+            <div class="col-md-2"  style="padding: 0px !important">
+                <input type="text" class="form-control" id="strLastName">
+                <div class="invalid-feedback ">
+                    Vui lòng nhập Tên
+                </div>
+            </div>
+            
             <div class="col-md-1">
                 <div class="form-check-inline">
                     <input type="radio" class="form-check-input" id="blnSex" name="sex" checked>
@@ -66,8 +77,13 @@
 
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Ngày sinh</label>
-
-            <input type="date" class="form-control col-md-2" id="strDOB">
+            <div class="col-md-2"  style="padding: 0px !important">
+                <input type="date" class="form-control " id="strDOB">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Ngày sinh
+                </div>
+            </div>
+            
 
             <label class="control-label col-md-2 align-self-center">Dân tộc</label>
             <select class="form-control col-md-3" id="intEthnicID">
@@ -77,31 +93,58 @@
                     <option value="@item.ID">@item.Ethnic</option>
                 }
             </select>
-            <a class="col-md-1" href="#">Thêm</a>
+            <a class="col-md-1" href="#" onclick="ShowDialogAddDictionary('intEthnicID')">Thêm</a>
         </div>
 
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Số thẻ</label>
-            <input type="text" class="form-control col-md-2" id="strCode">
+            <div class="col-md-2"  style="padding: 0px !important">
+                <input type="text" class="form-control " id="strCode">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Số thẻ
+                </div>
+            </div>
+            
             <label class="control-label col-md-2 align-self-center">Nhóm bạn đọc</label>
-            <select class="form-control col-md-3" id="intPatronGroupID">
-                <option value="-1">----- Chọn -----</option>
-                @foreach (var item in ViewBag.PatronGroup)
-                {
-                    <option value="@item.ID">@item.Name</option>
-                }
-            </select>
-            <a class="col-md-1" href="#">Xem</a>
+            <div class=" col-md-3"  style="padding: 0px !important">
+                <select class="form-control" id="intPatronGroupID">
+                    <option value="-1">----- Chọn -----</option>
+                    @foreach (var item in ViewBag.PatronGroup)
+                    {
+                        <option value="@item.ID">@item.Name</option>
+                    }
+                </select>
+                <div class="invalid-feedback">
+                    Vui lòng chọn Nhóm bạn đọc
+                </div>
+            </div>
         </div>
 
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Ngày cấp</label>
-            <input type="date" class="form-control col-md-2" id="strLastIssuedDate">
+            <div class=" col-md-2"  style="padding: 0px !important">
+                <input type="date" class="form-control" id="strLastIssuedDate">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Ngày cấp
+                </div>
+            </div>
+            
             <label class="control-label col-md-2 align-self-center">Ngày hiệu lực</label>
-            <input type="date" class="form-control col-md-2" id="strValidDate">
+            <div class=" col-md-2"  style="padding: 0px !important">
+                <input type="date" class="form-control" id="strValidDate">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Ngày hiệu lực
+                </div>
+            </div>
+            
             <label class="control-label col-md-2 align-self-center">Ngày hết hạn</label>
-            <input type="date" class="form-control col-md-2" id="strExpiredDate">
-
+            <div  class="col-md-2"  style="padding: 0px !important">
+                <input type="date" class="form-control" id="strExpiredDate">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Ngày hết hạn
+                </div>
+            </div>
+            
         </div>
 
         <div class="form-group row">
@@ -113,8 +156,9 @@
                     <option value="@item.ID">@item.EducationLevel</option>
                 }
             </select>
+            <a href="#" class="col-md-1" onclick="ShowDialogAddDictionary('intEducationID')">Thêm</a>
 
-            <label class="control-label col-md-2 align-self-center">Nghề nghiệp</label>
+            <label class="control-label col-md-1 align-self-center">Nghề nghiệp</label>
             <select class="form-control col-md-3" id="intOccupationID">
                 <option value="-1">----- Chọn -----</option>
                 @foreach (var item in ViewBag.Occupation)
@@ -122,7 +166,7 @@
                     <option value="@item.ID">@item.Occupation</option>
                 }
             </select>
-            <a href="#" class="col-md-1">Thêm</a>
+            <a href="#" class="col-md-1" onclick="ShowDialogAddDictionary('intOccupationID')">Thêm</a>
         </div>
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Nơi làm việc</label>
@@ -130,20 +174,32 @@
         </div>
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Trường</label>
-            <select class="form-control col-md-3" onchange="OnchangeCollege()" id="college">
-                <option value="-1">----- Chọn -----</option>
-                @foreach (var item in ViewBag.College)
-                {
-                    <option value="@item.ID">@item.College</option>
-                }
-            </select>
-            <a href="#" class="col-md-1">Thêm</a>
+            <div class="col-md-3"  style="padding: 0px !important">
+                <select class="form-control " onchange="OnchangeCollege()" id="college">
+                    <option value="-1">----- Chọn -----</option>
+                    @foreach (var item in ViewBag.College)
+                    {
+                        <option value="@item.ID">@item.College</option>
+                    }
+                </select>
+                <div class="invalid-feedback">
+                    Vui lòng chọn Trường
+                </div>
+            </div>
+            
+            <a href="#" class="col-md-1" onclick="ShowDialogAddDictionary('college')">Thêm</a>
             <label class="control-label align-self-center" style="margin-right: 10px">Khoa</label>
-            <select class="form-control col-md-3" id="faculty">
-                <option value="-1">----- Chọn -----</option>
-                
-            </select>
-            <a href="#" class="col-md-1">Thêm</a>
+            <div class=" col-md-3"  style="padding: 0px !important">
+                <select class="form-control" id="faculty">
+                    <option value="-1">----- Chọn -----</option>
+
+                </select>
+                <div class="invalid-feedback">
+                    Vui lòng chọn Khoa
+                </div>
+            </div>
+            
+            <a href="#" class="col-md-1" onclick="ShowDialogAddDictionary('faculty')">Thêm</a>
             <label class="control-label col-md-1 align-self-center">Khóa</label>
             <input type="text" class="form-control col-md-1" id="strGrade">
             <label class="control-label col-md-1 align-self-center">Lớp</label>
@@ -166,7 +222,7 @@
                     <option value="@item.ID">@item.Province</option>
                 }
             </select>
-            <a href="#" class="col-md-1">Thêm</a>
+            <a href="#" class="col-md-1" onclick="ShowDialogAddDictionary('intProvinceID')">Thêm</a>
             <label class="control-label col-md-1 align-self-center">Nước</label>
             <select class="form-control col-md-2" id="intCountryID">
                 @foreach (var item in ViewBag.Countries)
@@ -225,6 +281,29 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalDictionary">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="lblDictionary">Thêm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtDictionary">
+                        <input type="hidden" id="field">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="AddDictionarry()">Thêm</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <script>
     function OnchangeCollege() {
         var e = document.getElementById("college");
@@ -239,7 +318,7 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (result) {
-                var html = "<option value=' - 1'>----- Chọn -----</option>"
+                var html = "<option value='-1'>----- Chọn -----</option>"
                 for (r in result) {
                     html = html + "<option value=" + result[r].ID+">" + result[r].Faculty + "</option>"
                 }
@@ -287,13 +366,16 @@
         var CountryID = intCountryIDElement.options[intCountryIDElement.selectedIndex].value;
 
         var intCollegeIDElement = document.getElementById("college");
-        var CollegeID = intCollegeIDElement.options[intCollegeIDElement.selectedIndex].value == -1 ;
+        var CollegeID = intCollegeIDElement.options[intCollegeIDElement.selectedIndex].value ;
 
         var intFacultyIDElement = document.getElementById("faculty");
-        var FacultyID = intFacultyIDElement.options[intFacultyIDElement.selectedIndex].value == -1 ;
+        var FacultyID = intFacultyIDElement.options[intFacultyIDElement.selectedIndex].value ;
+
+        var code = document.getElementById("strCode").value;
+        var codeUpperCase = code.toUpperCase();
 
         var empObj = {
-            strCode: document.getElementById("strCode").value ,
+            strCode: codeUpperCase ,
             strValidDate: document.getElementById("strValidDate").value ,
             strExpiredDate: document.getElementById("strExpiredDate").value ,
             strLastIssuedDate: document.getElementById("strLastIssuedDate").value ,
@@ -331,12 +413,20 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (result) {
-                if (result.IsError) {
-                    $("#modalNotify").modal();
-                    document.getElementById("notifyMessage").innerText = result.Data;
-                }
-                else {
-                    UploadPhotoPatron(result.Data);
+                switch (result.CodeError) {
+                    case 0:
+                        UploadPhotoPatron(result.Data);
+                        break;
+                    case 1:
+                        showInvalid(result.Data);
+                        break;
+                    case 2:
+                        $("#modalNotify").modal();
+                        document.getElementById("notifyMessage").innerText = result.Data;
+                    break;
+                    default:
+                        UploadPhotoPatron(result.Data);
+                    
                 }
             },
             error: function (errormessage) {
@@ -361,6 +451,9 @@
             contentType: false,
             processData: false,
             success: function (response) {
+                $("#modalNotify").modal();
+                document.getElementById("notifyMessage").innerText = "Thêm bạn đọc thành công!";
+                Reset();
             },
             error: function (error) {
             }
@@ -393,8 +486,103 @@
         document.getElementById("intOccupationID").value = -1,
         document.getElementById("intPatronGroupID").value = -1,
         document.getElementById("college").value = -1,
+        document.getElementById("faculty").innerHTML = "<option value='-1'>----- Chọn -----</option>",
         document.getElementById("faculty").value = -1,
         document.getElementById("avatarImage").src = "/Content/ImagePatron/NoImage.png"
+       
+        hideInvalid("strFirstName-strLastName-strDOB-strCode-intPatronGroupID-strValidDate-strExpiredDate-strLastIssuedDate-college-faculty");
+    }
+
+    function showInvalid(invalidFields) {
+        var fields = invalidFields.split("-");
+        for (i = 0; i < fields.length; i++) {
+            if (fields[i] != "") {
+                var element = document.getElementById(fields[i]);
+                element.classList.add("is-invalid");
+            }
+        }
+    }
+
+    function hideInvalid(invalidFields) {
+        var fields = invalidFields.split("-");
+        for (i = 0; i < fields.length; i++) {
+            if (fields[i] != "") {
+                var element = document.getElementById(fields[i]);
+                element.classList.remove("is-invalid");
+            }
+        }
+    }
+
+    function ShowDialogAddDictionary(lblDictionary) {
+        if (lblDictionary == "intEthnicID") {
+            document.getElementById("lblDictionary").innerText = "Thêm dân tộc";
+            document.getElementById("field").value = "intEthnicID";
+            $("#modalDictionary").modal();
+        }
+        if (lblDictionary == "intOccupationID") {
+            document.getElementById("lblDictionary").innerText = "Thêm nghề nghiệp";
+            document.getElementById("field").value = "intOccupationID";
+            $("#modalDictionary").modal();
+        }
+        if (lblDictionary == "college") {
+            document.getElementById("lblDictionary").innerText = "Thêm trường";
+            document.getElementById("field").value = "college";
+            $("#modalDictionary").modal();
+        }
+        if (lblDictionary == "faculty") {
+            var intCollegeIDElement = document.getElementById("college");
+            var CollegeID = intCollegeIDElement.options[intCollegeIDElement.selectedIndex].value;
+            if (CollegeID == -1) {
+                $("#modalNotify").modal();
+                document.getElementById("notifyMessage").innerText = "Vui lòng chọn trường!";
+            } else {
+                document.getElementById("lblDictionary").innerText = "Thêm khoa";
+                document.getElementById("field").value = "faculty";
+                $("#modalDictionary").modal();
+            }
+            
+        }
+        if (lblDictionary == "intProvinceID") {
+            document.getElementById("lblDictionary").innerText = "Thêm tỉnh";
+            document.getElementById("field").value = "intProvinceID";
+            $("#modalDictionary").modal();
+        } 
+        if (lblDictionary == "intEducationID") {
+            document.getElementById("lblDictionary").innerText = "Thêm trình độ";
+            document.getElementById("field").value = "intEducationID";
+            $("#modalDictionary").modal();
+        }
+        
+    }
+
+    function AddDictionarry() {
+        var intCollegeIDElement = document.getElementById("college");
+        var college = intCollegeIDElement.options[intCollegeIDElement.selectedIndex].value;
+        var empObj = {
+            field: document.getElementById("field").value,
+            data: document.getElementById("txtDictionary").value,
+            CollegeID: college
+        }
+        $.ajax({
+            url: "/Patron/AddDictionary",
+            data: JSON.stringify(empObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = "<option value='-1'>----- Chọn -----</option>";
+                if (result.Field == "intProvinceID") {
+                    html = "";
+                }
+                for (r in result.ListSelection) {
+                    html = html + "<option value=" + result.ListSelection[r].ID + ">" + result.ListSelection[r].Data + "</option>"
+                }
+                document.getElementById(result.Field).innerHTML = html;
+            },
+            error: function (errormessage) {
+
+            }
+        });
     }
 
     function SearchPatron() {
