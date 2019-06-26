@@ -1,4 +1,4 @@
-﻿
+﻿@using Libol.Models;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -22,6 +22,11 @@
 </style>
 
 <form>
+    @{
+        List<ACQ_ACQUIRE_SOURCE> listNBS = ViewData["ListNBS"] as List<ACQ_ACQUIRE_SOURCE>; // list NBS
+        List<CIR_LOAN_TYPE> listKTL = ViewData["listKTL"] as List<CIR_LOAN_TYPE>; // list KTL
+        List<ACQ_CURRENCY> listCurrency = ViewData["ListCurrency"] as List<ACQ_CURRENCY>; // ListCurrency
+    }
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12">
             <div class="form-group col-md-6">
@@ -31,7 +36,7 @@
 
             </div>
             <div class="form-group col-md-6">
-                <label class="col-md-6">Mã Đơn Đặt</label>
+                <label class="col-md-6">Mã Đề Nghị</label>
                 <input type="email" class="form-control" id="txtCodePO" placeholder="">
                 <button type="submit" id="btnCodePOFind" class="btn btn-primary form-control">Tìm</button>
             </div>
@@ -41,32 +46,45 @@
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
                 <label class="col-md-6">Nguồn bổ sung</label>
-                @Html.DropDownList("abc", ViewBag.listDemo as SelectList, new { @class = "form-control" })
+                <select class="form-control" name="nbsList" id="nbsList">
+                    @{
+                        foreach (ACQ_ACQUIRE_SOURCE item in listNBS)
+                        {
+                            <option value="@item.ID">@item.Source</option>
+                        }
+                    }
+                </select>
             </div>
             <div class="form-group col-md-8">
                 <label class="col-md-3">Kiểu tư liệu(lưu thông)</label>
-                @Html.DropDownList("abcd", ViewBag.listKTL as SelectList, new { @class = "form-control" })
-                @*<select id="inputState" class="form-control col-md-2">
-                        <option selected="">Giáo Trình</option>
-                        <option>USD</option>
-                    </select>*@
+                <select class="form-control" name="ktlList" id="ktlList">
+                    @{
+                        foreach (CIR_LOAN_TYPE item in listKTL)
+                        {
+                            <option value="@item.ID">@item.LoanType</option>
+                        }
+                    }
+                </select>
             </div>
         </div>
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
                 <label class="col-md-6">Ngày bổ sung</label>
-                <input type="Date" class="form-control" id="txtDateChng">
+                <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
             </div>
             <div class="form-group col-md-8">
                 <label class="col-md-3">Đơn giá</label>
                 <input type="text" class="form-control col-md-3" id="txtPrice" placeholder="1234">
-                @Html.DropDownList("abcde", ViewBag.listCur as SelectList, new { @class = "form-control" })
-                @*<select id="inputState" class="form-control col-md-2">
-                        <option selected="">VND</option>
-                        <option>USD</option>
-                    </select>*@
+                <select class="form-control" name="ktlList" id="currencyList" onchange="selectCurrency();">
+                    @{
+                        foreach (ACQ_CURRENCY item in listCurrency)
+                        {
+                            <option value="@item.Rate" >@item.CurrencyCode</option>
+                        }
+                    }
+                </select>
                 <label class="col-md-2">Tỉ giá hạch toán</label>
-                <input type="text" class="form-control col-md-1" id="inputAddress" placeholder="1">
+                <label type="text" class="form-control col-md-1" id="itemRate"></label>
             </div>
         </div>
         <div class="form-row col-md-12 form-inline">
@@ -76,7 +94,17 @@
             </div>
             <div class="form-group col-md-8">
                 <label class="col-md-3">Ngày chứng từ</label>
-                <input type="Date" class="form-control" id="inputAddress" placeholder="1234">
+                <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+            </div>
+        </div>
+        <div class="form-row col-md-12 form-inline">
+            <div class="form-group col-md-4">
+                <label class="col-md-6">Tên Đề Nghị</label>
+                <input type="text" class="form-control" id="txtSCT" placeholder="1234">
+            </div>
+            <div class="form-group col-md-8">
+                <label class="col-md-3">Ngày Đề Nghị</label>
+                <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
             </div>
         </div>
 
@@ -284,10 +312,15 @@
         // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
         // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
         var modal = $(this)
-        modal.find('.modal-title').text('New message to ' + recipient)
+        //modal.find('.modal-title').text('New message to ' + recipient)
         modal.find('.modal-body input').val(recipient)
     })
-    document.getElementById('inputAddress1').value = moment().format('dd-MM-yyyy');
+
+    function selectCurrency() {
+        var item = $("#currencyList :selected").val();
+
+        $('#itemRate').text(item);
+    };
 
     // check all check box in table
     function checkAll(ele) {
@@ -308,56 +341,6 @@
         }
     }
 
-    //test using jquery insert data to table
-    $(document).ready(function () {
-        var employee = {};
-        employee.Name = $('#txtSCT').val();
-        employee.Gender = $('#ddlGender').val();
-        employee.Phone = $('#txtPhone').val();
-        employee.Email = $('#txtEmail').val();
-        employee.Age = $('#txtAge').val();
-        employee.Salary = $('#txtSalary').val();
-
-        $.ajax({
-            url: 'EmployeeService.asmx/AddEmployee',
-            method: 'post',
-            data: '{emp: ' + JSON.stringify(employee) + '}',
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function () {
-                getAllEmployees();
-                console.log(data);
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        });
-
-
-
-
-
-        function getAllEmployees() {
-            $.ajax({
-                url: 'EmployeeService.asmx/GetAllEmployees',
-                dataType: "json",
-                method: 'GET',
-                success: function (data) {
-                    var employeeTable = $('#employee tbody');
-                    employeeTable.empty();
-
-                    $(data).each(function (index, emp) {
-                        employeeTable.append('<tr><td>' + emp.ID + '</td><td>'
-                            + emp.Name + '</td><td>' + emp.Gender + '</td><td>'
-                            + emp.Phone + '</td><td>' + emp.Email + '</td><td>'
-                            + emp.Age + '</td><td>' + emp.Salary + '</td></tr>');
-                    });
-                },
-                error: function (err) {
-                    console.log(err);
-                }
-            });
-        }
-    });
+   
 
 </script>
