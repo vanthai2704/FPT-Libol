@@ -2192,6 +2192,7 @@
     <Content Include="Views\Patron\AddPatronByFile.cshtml" />
     <Content Include="Views\Patron\PreviewPatronFile.cshtml" />
     <Content Include="Views\Patron\InsertFileToDB.cshtml" />
+    <Content Include="Views\Patron\SearchPatron.cshtml" />
     <Content Include="Views\Catalogue\AddNewCatalogueDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
