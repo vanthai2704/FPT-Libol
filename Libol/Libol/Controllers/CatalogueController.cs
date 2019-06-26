@@ -8,7 +8,7 @@ using Libol.EntityResult;
 
 namespace Libol.Controllers
 {
-    public class CatalogueController : BaseController
+    public class CatalogueController : Controller
     {
         private LibolEntities db = new LibolEntities();
         CatalogueBusiness catalogueBusiness = new CatalogueBusiness();
@@ -61,9 +61,9 @@ namespace Libol.Controllers
 
 
         [HttpPost]
-        public ActionResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
+        public ActionResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue)
         {
-            catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue, item);
+            catalogueBusiness.HandleListFields(listFieldsName, listFieldsValue);
             return RedirectToAction("Index", "Shelf");
         }
 

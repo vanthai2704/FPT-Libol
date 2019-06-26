@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Libol.EntityResult;
 using Libol.Models;
 
 namespace Libol.Controllers
 {
-    public class ShelfController : BaseController
+    public class ShelfController : Controller
     {
         LibolEntities libol = new LibolEntities();
+        ShelfBusiness shelfBusiness = new ShelfBusiness();
         // GET: Shelf
         public ActionResult Index()
         {
@@ -27,6 +29,9 @@ namespace Libol.Controllers
             //var getlistKTL = libol.CIR_LOAN_TYPE.ToList();
             //SelectList listKTL = new SelectList(getlistKTL, "ID", "LoanType");
             //ViewBag.listKTL = listKTL;
+
+            ViewData["listLibs"] = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, 49, 1);
+            ViewData["listLocs"] = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(20, 49, 0, -1);
 
             return View();
         }

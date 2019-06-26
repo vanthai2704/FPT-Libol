@@ -85,7 +85,7 @@
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
                         <div class="col"><input class="form-control" type="text" id="strPatronCode" onkeypress="checkinByCardNumber(event)"/></div>
-                        <div class="col-4"><label class="col-form-label"> <a onclick="findByCardNumber();" href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
+                        <div class="col-4"><label class="col-form-label"> <a onclick="findByCardNumber();" href="#">Tìm</a> | <a href="/Patron/Create">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
@@ -125,7 +125,7 @@
         $.ajax({
             url: "CheckIn/FindByCardNumber",
             data: null,
-            type: "GET",
+            type: "Post",
             success: function (result) {
                 
                 document.getElementById("contentcheckin").innerHTML = result;
@@ -184,5 +184,33 @@
             });
         }
     }
+    function Searchpatronbyname(e) {
+        var empObj = {
+            strFullName: document.getElementById("searchpatronbyname").value
+        };
+        if (e.keyCode == 13) {
+            $.ajax({
+                url: "/CheckIn/FindByCardNumber",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                success: function (result) {
+                    $("#contentcheckin").html(result);
+                    console.log('ýes');
+                },
+                error: function (errormessage) {
+                    console.log('error')
+                }
+            });
+        }
+    }
+    $('#btnsearchpatron').on('click', function (e) {
+
+        alert("click success");
+    });
+    $('#btnsearchpatron').click(function (e) {
+        alert('abc')
+        e.preventDefault();
+    });
 </script>
 
