@@ -224,7 +224,7 @@ namespace Libol.Models
                             }
                         }
                         else
-                        db.Database.ExecuteSqlCommand("INSERT INTO " + fieldName + " (ItemID, FieldCode, Content, Ind1, Ind2) VALUES (" + item.ID + ",'" + listFieldsName[i] + "','" +""+ listFieldsValue[i] + "','" + "" + "','" + "'" + ")");
+                        db.Database.ExecuteSqlCommand("INSERT INTO " + fieldName + " (ItemID, FieldCode, Content, Ind1, Ind2) VALUES (" + item.ID + ",'" + listFieldsName[i] + "',N'" +""+ listFieldsValue[i] + "','" + "" + "','" + "'" + ")");
 
 
                     }
@@ -318,7 +318,7 @@ namespace Libol.Models
                         outputValue090 = outputValue090 + valueTmp;
                         continue;
                     }
-                    if (flag090)
+                    if (flag090 && !String.IsNullOrEmpty(outputValue090))
                     {
                         listFieldValueOutput.Add(outputValue090);
                         listFieldNameOutput.Add("090");
@@ -364,7 +364,7 @@ namespace Libol.Models
                         outputValue245 = outputValue245 + valueTmp;
                         continue;
                     }
-                    if (flag245)
+                    if (flag245 && !String.IsNullOrEmpty(outputValue245))
                     {
                         listFieldValueOutput.Add(outputValue245);
                         listFieldNameOutput.Add("245");
@@ -394,7 +394,7 @@ namespace Libol.Models
                         continue;
 
                     }
-                    if (flag300)
+                    if (flag300 && !String.IsNullOrEmpty(outputValue300))
                     {
                         listFieldValueOutput.Add(outputValue300);
                         listFieldNameOutput.Add("300");
@@ -420,7 +420,7 @@ namespace Libol.Models
                         continue;
 
                     }
-                    if (flag260)
+                    if (flag260 && !String.IsNullOrEmpty(outputValue260))
                     {
                         listFieldValueOutput.Add(outputValue260);
                         listFieldNameOutput.Add("260");
@@ -434,11 +434,11 @@ namespace Libol.Models
                         listFieldValueOutput.Add(valueTmp);
                        
                     }
-                    else
-                    {
-                        listFieldNameOutput.Remove(nameTmp);
-                        listFieldValueOutput.Remove(valueTmp);
-                    }
+                    //else
+                    //{
+                    //    listFieldNameOutput.Remove(nameTmp);
+                    //    listFieldValueOutput.Remove(valueTmp);
+                    //}
 
 
                 }
