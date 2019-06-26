@@ -83,7 +83,9 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="col"><label class="col-form-label">Đang mượn: <strong>@patronloaninfo.Count()</strong></label></div>
+            <div class="col"><label class="col-form-label">Đang mượn: @if (patronloaninfo.Count() > 0)
+            {<strong>@patronloaninfo.Count()</strong> <a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal3">Chi tiết</a> }
+            else {<strong>@patronloaninfo.Count()</strong> }</label></div>
         </div>
         <div class="form-row">
             <div class="col"><label class="col-form-label" style="color:red;">Quá hạn: <strong>0</strong></label></div>
@@ -92,7 +94,9 @@
             <div class="col"><label class="col-form-label">Còn được mượn: <strong>@(ViewBag.loanquota - patronloaninfo.Count())</strong></label></div>
         </div>
         <div class="form-row">
-            <div class="col"><label class="col-form-label" style="color:red;">Nợ: <strong>0</strong></label></div>
+            <div class="col"><label class="col-form-label">Tình trạng: @if (ViewBag.active == 1)
+            {<strong>Thẻ mở</strong>}
+            else { <strong style="color:red;" >Thẻ khóa</strong> <a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal2">Chi tiết</a>}</label></div>
         </div>
     </div>
 </div>
@@ -197,7 +201,7 @@
                 <table>
                     <tr>
                         <td class="columnleft">Khoa: </td>
-                        <td><strong>@ViewBag.faculty</strong></td>
+                        <td><strong>faculty</strong></td>
                     </tr>
                     <tr>
                         <td class="columnleft">Nhóm nghề nghiệp: </td>
@@ -205,7 +209,7 @@
                     </tr>
                     <tr>
                         <td class="columnleft">Trường: </td>
-                        <td><strong>@ViewBag.college</strong></td>
+                        <td><strong>college</strong></td>
                     </tr>
                     <tr>
                         <td class="columnleft">Địa chỉ nơi làm việc: </td>

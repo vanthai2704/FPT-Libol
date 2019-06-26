@@ -171,7 +171,7 @@
     <Compile Include="Controllers\PrintBarcodeController.cs" />
     <Compile Include="Controllers\PrintLabelController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
-    <Compile Include="EntityResult\SP_ILL_SEARCH_PATRON_Result.cs" />
+    <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -834,6 +834,7 @@
     <Compile Include="Models\REGULARITY_OUT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SearchPatronBusiness.cs" />
     <Compile Include="Models\SER_ARTICLE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1102,6 +1103,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_CATA_GET_LINKTYPES_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_CATA_GET_MARC_FORM_2019_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_CATA_GET_PICKED_FIELDVIEW_Result.cs">
