@@ -48,6 +48,7 @@ namespace Libol.Controllers
             ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
             ViewBag.occupation = patron.CIR_DIC_OCCUPATION.Occupation;
             ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
+            ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
             SP_GET_PATRON_INFOR_Result patroninfo =
                 db.SP_GET_PATRON_INFOR("", strPatronCode, strFixDueDate).First();
             ViewData["patroninfo"] = patroninfo;
@@ -73,7 +74,7 @@ namespace Libol.Controllers
             ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
             ViewBag.occupation = patron.CIR_DIC_OCCUPATION.Occupation;
             ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
-            //ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.
+            ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
             SP_GET_PATRON_INFOR_Result patroninfo =
                 db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
             ViewData["patroninfo"] = patroninfo;

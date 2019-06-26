@@ -8,7 +8,7 @@ using Libol.EntityResult;
 
 namespace Libol.Controllers
 {
-    public class CatalogueController : BaseController
+    public class CatalogueController : Controller
     {
         private LibolEntities db = new LibolEntities();
         CatalogueBusiness catalogueBusiness = new CatalogueBusiness();
