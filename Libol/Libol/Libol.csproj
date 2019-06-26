@@ -171,6 +171,8 @@
     <Compile Include="Controllers\PrintBarcodeController.cs" />
     <Compile Include="Controllers\PrintLabelController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
+    <Compile Include="EntityResult\SP_HOLDING_LIBRARY_SELECT_Result.cs" />
+    <Compile Include="EntityResult\SP_HOLDING_LOCATION_GET_INFO_Result.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -857,6 +859,7 @@
     <Compile Include="Models\SER_SUBJECT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ShelfBusiness.cs" />
     <Compile Include="Models\SP_ACQ_ACQUIRE_SOURCE_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
