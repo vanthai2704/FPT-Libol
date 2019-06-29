@@ -21395,17 +21395,15 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GETFIELDS_OF_FORM_Result>("FPT_SP_CATA_GETFIELDS_OF_FORM", intFormIDParameter, strCreatorParameter, intIsAuthorityParameter);
         }
     
-        public virtual int FPT_SP_ILL_SEARCH_PATRON(string strPatronName, string strPatronCode)
+        public virtual ObjectResult<FPT_EDU_GET_SHELF_CONTENT_Result> FPT_EDU_GET_SHELF_CONTENT(string itemCode)
         {
-            var strPatronNameParameter = strPatronName != null ?
-                new ObjectParameter("strPatronName", strPatronName) :
-                new ObjectParameter("strPatronName", typeof(string));
+            var itemCodeParameter = itemCode != null ?
+                new ObjectParameter("itemCode", itemCode) :
+                new ObjectParameter("itemCode", typeof(string));
     
-            var strPatronCodeParameter = strPatronCode != null ?
-                new ObjectParameter("strPatronCode", strPatronCode) :
-                new ObjectParameter("strPatronCode", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_ILL_SEARCH_PATRON", strPatronNameParameter, strPatronCodeParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_EDU_GET_SHELF_CONTENT_Result>("FPT_EDU_GET_SHELF_CONTENT", itemCodeParameter);
         }
+    
+
     }
 }
