@@ -14,9 +14,7 @@ namespace Libol.Models
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Objects;
     using System.Linq;
-    using Libol.EntityResult;
-    using System.Collections.Generic;
-
+    
     public partial class LibolEntities : DbContext
     {
         public LibolEntities()
@@ -21323,6 +21321,37 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SQ_CIR_PATRON_GROUP_LOC_UPDATE", strIDSourceParameter, intLocationIDParameter);
         }
     
+        public virtual int TESTCAI()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TESTCAI");
+        }
+    
+        public virtual int DemoGetMarcForm(Nullable<int> intFormID, Nullable<int> intIsAuthority)
+        {
+            var intFormIDParameter = intFormID.HasValue ?
+                new ObjectParameter("intFormID", intFormID) :
+                new ObjectParameter("intFormID", typeof(int));
+    
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DemoGetMarcForm", intFormIDParameter, intIsAuthorityParameter);
+        }
+    
+        public virtual ObjectResult<SP_CATA_GET_MARC_FORM_2019_Result> SP_CATA_GET_MARC_FORM_2019(Nullable<int> intFormID, Nullable<int> intIsAuthority)
+        {
+            var intFormIDParameter = intFormID.HasValue ?
+                new ObjectParameter("intFormID", intFormID) :
+                new ObjectParameter("intFormID", typeof(int));
+    
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_CATA_GET_MARC_FORM_2019_Result>("SP_CATA_GET_MARC_FORM_2019", intFormIDParameter, intIsAuthorityParameter);
+        }
+    
         public virtual ObjectResult<FPT_SP_CATA_CHECK_EXIST_TITLE_Result> FPT_SP_CATA_CHECK_EXIST_TITLE(string strTitle, string strItemType)
         {
             var strTitleParameter = strTitle != null ?
@@ -21365,24 +21394,15 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GETFIELDS_OF_FORM_Result>("FPT_SP_CATA_GETFIELDS_OF_FORM", intFormIDParameter, strCreatorParameter, intIsAuthorityParameter);
         }
-
-        public List<GET_CATALOGUE_FIELDS_Result> FPT_GET_CATALOGUE_FIELDS(int intIsAuthority, int intFormID, string strFieldCodes, string strAddedFieldCodes, int intGroupBy)
+    
+        public virtual ObjectResult<FPT_EDU_GET_SHELF_CONTENT_Result> FPT_EDU_GET_SHELF_CONTENT(string itemCode)
         {
-
-            List<GET_CATALOGUE_FIELDS_Result> list = this.Database.SqlQuery<GET_CATALOGUE_FIELDS_Result>("SP_CATA_GET_CATALOGUE_FIELDS {0}, {1}, {2},{3},{4}",
-                new object[] { intIsAuthority, intFormID, strFieldCodes, strAddedFieldCodes, 1 }).ToList();
-            return list;
+            var itemCodeParameter = itemCode != null ?
+                new ObjectParameter("itemCode", itemCode) :
+                new ObjectParameter("itemCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_EDU_GET_SHELF_CONTENT_Result>("FPT_EDU_GET_SHELF_CONTENT", itemCodeParameter);
         }
-
-        public List<SP_ILL_SEARCH_PATRON_Result> FPT_SP_ILL_SEARCH_PATRON(string strPatronName, string strPatronCode)
-        {
-
-            List<SP_ILL_SEARCH_PATRON_Result> list = this.Database.SqlQuery<SP_ILL_SEARCH_PATRON_Result>("SP_ILL_SEARCH_PATRON {0}, {1}",
-                new object[] { strPatronName, strPatronCode}).ToList();
-            return list;
-        }
-
-
-
+    
     }
 }
