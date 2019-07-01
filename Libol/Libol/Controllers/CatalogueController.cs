@@ -40,7 +40,16 @@ namespace Libol.Controllers
             return View();
         }
 
-        
+        //Check Tittle
+        [HttpPost]
+        public JsonResult CheckTitle(string strTitle, string strItemType)
+        {
+            //catalogueBusiness.CheckExistNumber("9781184", "020$a");
+            //string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
+            strTitle = "N'" + strTitle +"'";
+            List<FPT_SP_CATA_CHECK_EXIST_TITLE_Result> titleList = db.FPT_SP_CATA_CHECK_EXIST_TITLE(strTitle, strItemType).ToList();
+            return Json(titleList, JsonRequestBehavior.AllowGet);
+        }
 
 
 
@@ -57,7 +66,6 @@ namespace Libol.Controllers
 
         //----------------Add Item For Detail -----------
         //---------------------------------------------
-
 
 
         [HttpPost]

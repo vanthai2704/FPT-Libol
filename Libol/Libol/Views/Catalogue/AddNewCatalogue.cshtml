@@ -127,7 +127,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-info" onclick="location.href='/Catalogue/AddCatalogueDetail';">Thêm Trường</button>
                 <button type="button" class="btn btn-success" onclick="location.href='/Catalogue/AddNewCatalogue';">Biên Mục Mới</button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='/Catalogue/MainTab';">Xếp Giá</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='/Shelf/Index?Code='">Xếp Giá</button>
             </div>
         </div>
     </div>
@@ -170,6 +170,12 @@
                 document.getElementById("btnCreate").disabled = false;
                 document.getElementById("btnReset").disabled = false;
                 document.getElementById("btnAddField").disabled = false;
+                $(document).ready(function () {
+                    $("#245a").focusout(function () {
+                        checkTitle($('#245a').val() , '');
+                        
+                    });
+                });
             },
             error: function (errorThrown) {
                 alert(errorThrown);
@@ -178,12 +184,32 @@
         });
 
     }
+    function checkTitle(tit , type) {
+        
+        $.ajax({
+            url: "/Catalogue/CheckTitle",
+            type: "POST",
+            data: JSON.stringify({ strTitle: tit, strItemType: type }),
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (code) {
+               
 
+
+            },
+            error: function (errorThrown) {
+                alert(errorThrown);
+            }
+
+        });
+    }
+ 
 </script>
 
 
 <script>
 
+    
     function doWork() {
         var arrFieldName = [];
         var arrFieldValue = [];
