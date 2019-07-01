@@ -12393,6 +12393,10 @@
       <Parameter Name="strCreator" Mode="In" Type="String" />
       <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="FPT_SP_ILL_SEARCH_PATRON">
+      <Parameter Name="strPatronName" Mode="In" Type="String" />
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
