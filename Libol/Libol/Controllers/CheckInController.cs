@@ -1,5 +1,4 @@
-﻿using Libol.EntityResult;
-using Libol.Models;
+﻿using Libol.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
@@ -12,7 +11,7 @@ namespace Libol.Controllers
     public class CheckInController : BaseController
     {
         private LibolEntities db = new LibolEntities();
-        SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
+
         // GET: CheckIn
         public ActionResult Index()
         {
@@ -58,8 +57,7 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult FindByCardNumber(string strFullName)
         {
-
-            ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").ToList().Take(50).ToList();
+            ViewBag.listpatron = db.FPT_SP_ILL_SEARCH_PATRON(strFullName, "").ToList().Take(50).ToList();
             return PartialView("_findByCardNumber");
         }
     }

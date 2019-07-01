@@ -1,5 +1,4 @@
 ﻿@using Libol.SupportClass;
-@using Libol.Controllers;
 @{
     ViewBag.Title = "Thêm bạn đọc theo lô";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,32 +16,22 @@
     $(document).ready(function () {
         $('#table_patron thead tr').clone(true).appendTo('#table_patron thead');
         $('#table_patron thead tr:eq(1) th').each(function (i) {
-            var title = $(this).text();
-            $(this).html('<input class="form-control" type="text" placeholder="Tìm ' + title + '" />');
+                var title = $(this).text();
+                $(this).html('<input class="form-control" type="text" placeholder="Tìm ' + title + '" />');
 
-            $('input', this).on('keyup change', function () {
-                if (table.column(i).search() !== this.value) {
-                    table
-                        .column(i)
-                        .search(this.value)
-                        .draw();
-                }
-            });
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                });
         });
     });
 
 </script>
 @*END------------SCRIPT FOR DATATABLES*@
-@if (ViewBag.ListPatronInvalid.Count > 0)
-{
-    <p>Vui lòng kiểm tra các dòng sau trong file excel</p>
-}
-
-@foreach (PatronFile patronInvalid in ViewBag.ListPatronInvalid)
-{
-    <p>@patronInvalid.Line </p>
-}
-
 @{Session["listPatronInFile"] = @ViewBag.ListPatron;}
 @using (Html.BeginForm("InsertFileToDB", "Patron", FormMethod.Post))
 {
@@ -75,7 +64,7 @@
                     <td>@item.strCode</td>
                     <td>@item.FullName</td>
                     <td>@item.blnSex</td>
-                    <td>@item.strDOB.ToShortDateString()</td>
+                    <td>@item.strDOB</td>
                     <td>@item.strEmail</td>
                     <td>@item.strAddress</td>
                     <td>@item.Faculty</td>

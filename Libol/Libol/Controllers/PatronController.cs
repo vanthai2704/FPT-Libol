@@ -35,6 +35,7 @@ namespace Libol.Controllers
             ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
             ViewBag.Province = db.CIR_DIC_PROVINCE.ToList();
             ViewBag.Countries = db.SP_GET_COUNTRIES().ToList();
+            ViewBag.ID = new SelectList(db.CIR_PATRON_UNIVERSITY, "PatronID", "Grade");
             return View();
         }
 
@@ -64,55 +65,21 @@ namespace Libol.Controllers
             Nullable<int> intIsQue, string strIDCard, string strAddress, Nullable<int> intProvinceID, string strCity, Nullable<int> intCountryID, string strZip,
             Nullable<int> intisActive, int intCollegeID, int intFacultyID, string strGrade, string strClass)
         {
-            string InvalidFields = "";
-            if ( String.IsNullOrEmpty(strFirstName))
-            {
-                InvalidFields += "strFirstName-";
-            }
-            if (String.IsNullOrEmpty(strLastName))
-            {
-                InvalidFields += "strLastName-";
-            }
-            if (String.IsNullOrEmpty(strDOB))
-            {
-                InvalidFields += "strDOB-";
-            }
-            if (String.IsNullOrEmpty(strCode))
-            {
-                InvalidFields += "strCode-";
-            }
-            if (intPatronGroupID == null)
-            {
-                InvalidFields += "intPatronGroupID-";
-            }
-            if (String.IsNullOrEmpty(strValidDate))
-            {
-                InvalidFields += "strValidDate-";
-            }
-            if (String.IsNullOrEmpty(strExpiredDate))
-            {
-                InvalidFields += "strExpiredDate-";
-            }
-            if (String.IsNullOrEmpty(strLastIssuedDate))
-            {
-                InvalidFields += "strLastIssuedDate-";
-            }
-            if (intCollegeID == -1)
-            {
-                InvalidFields += "college-";
-            }
-            if (intFacultyID == -1)
-            {
-                InvalidFields += "faculty-";
-            }
-
-
-            if (InvalidFields != "")
+            if (strFirstName == null || strFirstName == "" || strLastName == null || strLastName == "")
             {
                 return Json(new Result()
                 {
-                    CodeError = 1,
-                    Data = InvalidFields
+                    IsError = true,
+                    Data = "Vui lòng điền Họ và tên!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            if (strCode == null || strCode == "")
+            {
+                return Json(new Result()
+                {
+                    IsError = true,
+                    Data = "Vui lòng điền Số thẻ!"
                 }, JsonRequestBehavior.AllowGet);
             }
             else
@@ -120,8 +87,8 @@ namespace Libol.Controllers
             {
                 return Json(new Result()
                 {
-                    CodeError = 2,
-                    Data = "Bạn đọc với số thẻ " + strCode + " đã tồn tại!"
+                    IsError = true,
+                    Data = "Bạn đọc với số thẻ " + strCode + "đã tồn tại!"
                 }, JsonRequestBehavior.AllowGet);
             }
             else
@@ -154,7 +121,7 @@ namespace Libol.Controllers
                 }
                 return Json(new Result()
                 {
-                    CodeError = 0,
+                    IsError = false,
                     Data = strCode
                 }, JsonRequestBehavior.AllowGet);
             }
@@ -189,7 +156,6 @@ namespace Libol.Controllers
         public ActionResult PreviewPatronFile()
         {
             List<PatronFile> listPatronInFile = new List<PatronFile>();
-            List<PatronFile> listPatronInFileInvalid = new List<PatronFile>();
             for (int i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
@@ -215,15 +181,13 @@ namespace Libol.Controllers
                             {
                                 for (int j = 0; j < ds.Tables[0].Rows.Count; j++)
                                 {
-                                    string DOB;
                                     if (ds.Tables[0].Rows[j].Field<string>("Mã Sinh viên") != null)
                                     {
                                         PatronFile patronFile = new PatronFile();
-                                        patronFile.Line = j + 2;
                                         patronFile.strCode = ds.Tables[0].Rows[j].Field<string>("Mã Sinh viên");
                                         patronFile.FullName = ds.Tables[0].Rows[j].Field<string>("Họ và tên");
                                         patronFile.blnSex = ds.Tables[0].Rows[j].Field<string>("Giới tính ");
-                                        
+                                        patronFile.strDOB = ds.Tables[0].Rows[j].Field<DateTime>("Ngày sinh");
                                         patronFile.strEmail = ds.Tables[0].Rows[j].Field<string>("Email");
                                         patronFile.strAddress = ds.Tables[0].Rows[j].Field<string>("Địa chỉ thường trú");
                                         patronFile.Faculty = ds.Tables[0].Rows[j].Field<string>("Chuyên ngành");
@@ -233,32 +197,7 @@ namespace Libol.Controllers
                                         patronFile.strCity = ds.Tables[0].Rows[j].Field<string>("Thành phố");
                                         patronFile.strClass = ds.Tables[0].Rows[j].Field<string>("Lớp");
                                         patronFile.PatronGroup = ds.Tables[0].Rows[j].Field<string>("Nhóm");
-                                        try
-                                        {
-                                            patronFile.strDOB = ds.Tables[0].Rows[j].Field<DateTime>("Ngày sinh");
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            DOB = ds.Tables[0].Rows[j].Field<string>("Ngày sinh");
-                                            try
-                                            {
-                                                patronFile.strDOB = Convert.ToDateTime(DOB);
-                                            }
-                                            catch (Exception)
-                                            {
-                                                patronFile.IsValid = false;
-                                            }
-                                            
-                                        }
-                                        
-                                        if (patronFile.IsValid)
-                                        {
-                                            listPatronInFile.Add(patronFile);
-                                        }
-                                        else
-                                        {
-                                            listPatronInFileInvalid.Add(patronFile);
-                                        }
+                                        listPatronInFile.Add(patronFile);
                                     }
 
                                 }
@@ -268,7 +207,6 @@ namespace Libol.Controllers
                 }
             }
             ViewBag.ListPatron = listPatronInFile;
-            ViewBag.ListPatronInvalid = listPatronInFileInvalid;
             return View();
         }
 
@@ -310,9 +248,7 @@ namespace Libol.Controllers
                     {
                         intFacultyID = faculty.ID;
                     }
-                    DateTime strExpiredDate = DateTime.Now;
-                    strExpiredDate= strExpiredDate.AddYears(4);
-                    NewPatron(p.strCode, DateTime.Now.ToShortDateString(), strExpiredDate.ToShortDateString(), DateTime.Now.ToShortDateString(), strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString(), null, null, null, null, null, p.strMobile
+                    NewPatron(p.strCode, "", "", "", strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString(), null, null, null, null, null, p.strMobile
                         , p.strEmail, null, intPatronGroupID, null, 0, null, p.strAddress, 1, p.strCity, 209, "", 0, intCollegeID, intFacultyID, p.strGrade, p.strClass);
                 }
                 ViewBag.Notify = "Danh sách đã được thêm vào hệ thống!";
@@ -320,114 +256,15 @@ namespace Libol.Controllers
 
             return View();
         }
-
-        [HttpPost]
-        public JsonResult AddDictionary(string field, string data, int CollegeID)
-        {
-            AddDictionaryResult addDictionaryResult = new AddDictionaryResult();
-            List<DictionarySelection> list = new List<DictionarySelection>();
-            if (field == "intEthnicID")
-            {
-                db.SP_PAT_CREATE_ETHNIC(data, new ObjectParameter("intOut", typeof(int)));
-                addDictionaryResult.Field = "intEthnicID";
-                foreach(SP_PAT_GET_ETHNIC_Result r in db.SP_PAT_GET_ETHNIC().ToList())
-                {
-                    DictionarySelection dictionary = new DictionarySelection();
-                    dictionary.ID = r.ID;
-                    dictionary.Data = r.Ethnic;
-                    list.Add(dictionary);
-                }
-                addDictionaryResult.ListSelection = list;
-                
-            }
-
-            if (field == "intOccupationID")
-            {
-                db.SP_PAT_CREATE_OCCUPATION(data, new ObjectParameter("intOut", typeof(int)));
-                addDictionaryResult.Field = "intOccupationID";
-                foreach (SP_PAT_GET_OCCUPATION_Result r in db.SP_PAT_GET_OCCUPATION().ToList())
-                {
-                    DictionarySelection dictionary = new DictionarySelection();
-                    dictionary.ID = r.ID;
-                    dictionary.Data = r.Occupation;
-                    list.Add(dictionary);
-                }
-                addDictionaryResult.ListSelection = list;
-            }
-
-            if (field == "college")
-            {
-                db.SP_PAT_CREATE_COLLEGE(data, new ObjectParameter("intOut", typeof(int)));
-                addDictionaryResult.Field = "college";
-                foreach (SP_PAT_GET_COLLEGE_Result r in db.SP_PAT_GET_COLLEGE().ToList())
-                {
-                    DictionarySelection dictionary = new DictionarySelection();
-                    dictionary.ID = r.ID;
-                    dictionary.Data = r.College;
-                    list.Add(dictionary);
-                }
-                addDictionaryResult.ListSelection = list;
-            }
-
-            if (field == "faculty")
-            {
-                db.SP_PAT_CREATE_FACULTY(CollegeID ,data, new ObjectParameter("intOut", typeof(int)));
-                addDictionaryResult.Field = "faculty";
-                foreach (CIR_DIC_FACULTY r in db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList())
-                {
-                    DictionarySelection dictionary = new DictionarySelection();
-                    dictionary.ID = r.ID;
-                    dictionary.Data = r.Faculty;
-                    list.Add(dictionary);
-                }
-                addDictionaryResult.ListSelection = list;
-            }
-
-            if (field == "intProvinceID")
-            {
-                db.SP_PAT_CREATE_PROVINCE(data, new ObjectParameter("intOut", typeof(int)));
-                addDictionaryResult.Field = "intProvinceID";
-                foreach (CIR_DIC_PROVINCE r in db.CIR_DIC_PROVINCE.ToList())
-                {
-                    DictionarySelection dictionary = new DictionarySelection();
-                    dictionary.ID = r.ID;
-                    dictionary.Data = r.Province;
-                    list.Add(dictionary);
-                }
-                addDictionaryResult.ListSelection = list;
-            }
-
-            if (field == "intEducationID")
-            {
-                db.SP_PAT_CREATE_EDUCATION(data, new ObjectParameter("intOut", typeof(int)));
-                addDictionaryResult.Field = "intEducationID";
-                foreach (SP_PAT_GET_EDUCATION_Result r in db.SP_PAT_GET_EDUCATION().ToList())
-                {
-                    DictionarySelection dictionary = new DictionarySelection();
-                    dictionary.ID = r.ID;
-                    dictionary.Data = r.EducationLevel;
-                    list.Add(dictionary);
-                }
-                addDictionaryResult.ListSelection = list;
-            }
-
-            return Json(addDictionaryResult, JsonRequestBehavior.AllowGet);
-        } 
-
-        public ActionResult SearchPatron()
-        {
-            return View();
-        }
     }
     class Result
     {
-        public int CodeError { get; set; }
+        public bool IsError { get; set; }
         public string Data { get; set; }
     }
 
     public class PatronFile
     {
-        public int Line { get; set; }
         public string strCode { get; set; }
         public string FullName { get; set; }
         public string blnSex { get; set; }
@@ -441,48 +278,6 @@ namespace Libol.Controllers
         public string strCity { get; set; }
         public string strClass { get; set; }
         public string PatronGroup { get; set; }
-        private bool isValid = true;
-        public bool IsValid
-        {
-            get
-            {
-                
-                if (String.IsNullOrEmpty(strCode) ||
-                    String.IsNullOrEmpty(FullName) ||
-                    String.IsNullOrEmpty(blnSex) ||
-                    String.IsNullOrEmpty(strEmail) ||
-                    String.IsNullOrEmpty(strAddress) ||
-                    String.IsNullOrEmpty(Faculty) ||
-                    String.IsNullOrEmpty(strMobile) ||
-                    String.IsNullOrEmpty(strGrade) ||
-                    String.IsNullOrEmpty(College) ||
-                    String.IsNullOrEmpty(strCity) ||
-                    String.IsNullOrEmpty(strClass) ||
-                    String.IsNullOrEmpty(PatronGroup))
-                {
-                    isValid = false;
-                }
 
-                
-                return isValid;
-            }
-            set
-            {
-                isValid = value;
-            }
-            
-        }
-    }
-
-    public class AddDictionaryResult
-    {
-        public string Field { get; set; }
-        public List<DictionarySelection> ListSelection { get; set; }
-    }
-
-    public class DictionarySelection
-    {
-        public int ID { get; set; }
-        public string Data { get; set; }
     }
 }

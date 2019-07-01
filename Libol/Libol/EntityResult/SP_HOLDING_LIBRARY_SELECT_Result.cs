@@ -13,25 +13,6 @@ namespace Libol.EntityResult
 
         }
 
-        public static List<HOLDING_LIBRARY> ConvertToHoldingLibrary(List<SP_HOLDING_LIBRARY_SELECT_Result> list)
-        {
-            List<HOLDING_LIBRARY> libs = new List<HOLDING_LIBRARY>();
-            foreach (var item in list)
-            {
-                libs.Add(new HOLDING_LIBRARY() {
-
-                    ID = item.ID,
-                    Name = item.Name,
-                    AccessEntry = item.AccessEntry,
-                    Code = item.Code,
-                    Address = item.Address,
-                    LocalLib = item.LocalLib
-
-                });
-            }
-            return libs;
-        }
-
         public int ID { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
