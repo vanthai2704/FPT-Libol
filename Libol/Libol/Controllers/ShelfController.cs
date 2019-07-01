@@ -73,5 +73,24 @@ namespace Libol.Controllers
             var demo = libol.FPT_EDU_ADD_COLLEGE(a);
 
         }
+
+        [HttpPost]
+        public JsonResult GenCopyNumber(int locId)
+        {
+            string copyNumber = shelfBusiness.GenCopyNumber(locId);
+            return Json(new Result()
+            {
+               
+                Data = copyNumber
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult InsertHolding(HOLDING holding,int numberOfCN)
+        {
+           List<HOLDING> listHoldings = shelfBusiness.InsertHolding(holding,numberOfCN);
+            return Json(listHoldings);
+        }
+
     }
 }
