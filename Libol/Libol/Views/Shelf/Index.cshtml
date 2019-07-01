@@ -1,4 +1,4 @@
-﻿
+﻿@using Libol.Models;
 @{
     /**/
 
@@ -24,6 +24,15 @@
 </style>
 
 <form>
+    @{
+        List<ACQ_ACQUIRE_SOURCE> listNBS = ViewData["ListNBS"] as List<ACQ_ACQUIRE_SOURCE>; // list NBS
+        List<CIR_LOAN_TYPE> listKTL = ViewData["listKTL"] as List<CIR_LOAN_TYPE>; // list KTL
+        List<ACQ_CURRENCY> listCurrency = ViewData["ListCurrency"] as List<ACQ_CURRENCY>; // ListCurrency
+        List<HOLDING_LIBRARY> listHoldingLibrary = ViewData["listLibs"] as List<HOLDING_LIBRARY>; // listHoldingLibrary
+        List<HOLDING_LOCATION> listHoldingLocation = ViewData["listLocs"] as List<HOLDING_LOCATION>; // list KTL
+        //List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentFields = ViewData["listContentResult"] as List<FPT_EDU_GET_SHELF_CONTENT_Result>;
+
+    }
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12">
             <div class="form-group col-md-6">
@@ -33,7 +42,7 @@
 
             </div>
             <div class="form-group col-md-6">
-                <label class="col-md-6">Mã Đơn Đặt</label>
+                <label class="col-md-6">Mã Đề Nghị</label>
                 <input type="email" class="form-control" id="txtCodePO" placeholder="">
                 <button type="submit" id="btnCodePOFind" class="btn btn-primary form-control">Tìm</button>
             </div>
@@ -43,32 +52,46 @@
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
                 <label class="col-md-6">Nguồn bổ sung</label>
-                @Html.DropDownList("abc", ViewBag.listDemo as SelectList, new { @class = "form-control" })
+                <select class="form-control" name="nbsList" id="nbsList">
+                    @{
+                        foreach (ACQ_ACQUIRE_SOURCE item in listNBS)
+                        {
+                            <option value="@item.ID">@item.Source</option>
+                        }
+                    }
+                </select>
             </div>
             <div class="form-group col-md-8">
                 <label class="col-md-3">Kiểu tư liệu(lưu thông)</label>
-                @Html.DropDownList("abcd", ViewBag.listKTL as SelectList, new { @class = "form-control" })
-                @*<select id="inputState" class="form-control col-md-2">
-                        <option selected="">Giáo Trình</option>
-                        <option>USD</option>
-                    </select>*@
+                <select class="form-control" name="ktlList" id="ktlList">
+                    @{
+                        foreach (CIR_LOAN_TYPE item in listKTL)
+                        {
+                            <option value="@item.ID">@item.LoanType</option>
+                        }
+                    }
+                </select>
             </div>
         </div>
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
                 <label class="col-md-6">Ngày bổ sung</label>
-                <input type="Date" class="form-control" id="txtDateChng">
+                <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
             </div>
             <div class="form-group col-md-8">
                 <label class="col-md-3">Đơn giá</label>
                 <input type="text" class="form-control col-md-3" id="txtPrice" placeholder="1234">
-                @Html.DropDownList("abcde", ViewBag.listCur as SelectList, new { @class = "form-control" })
-                @*<select id="inputState" class="form-control col-md-2">
-                        <option selected="">VND</option>
-                        <option>USD</option>
-                    </select>*@
+                <select class="form-control" name="ktlList" id="currencyList" onchange="selectCurrency();">
+                    <option value="-1">----- Chọn -----</option>
+                    @{
+                        foreach (ACQ_CURRENCY item in listCurrency)
+                        {
+                            <option value="@item.Rate">@item.CurrencyCode</option>
+                        }
+                    }
+                </select>
                 <label class="col-md-2">Tỉ giá hạch toán</label>
-                <input type="text" class="form-control col-md-1" id="inputAddress" placeholder="1">
+                <label type="text" class="form-control col-md-1" id="itemRate"></label>
             </div>
         </div>
         <div class="form-row col-md-12 form-inline">
@@ -78,7 +101,17 @@
             </div>
             <div class="form-group col-md-8">
                 <label class="col-md-3">Ngày chứng từ</label>
-                <input type="Date" class="form-control" id="inputAddress" placeholder="1234">
+                <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+            </div>
+        </div>
+        <div class="form-row col-md-12 form-inline">
+            <div class="form-group col-md-4">
+                <label class="col-md-6">Tên Đề Nghị</label>
+                <input type="text" class="form-control" id="txtSCT" placeholder="1234">
+            </div>
+            <div class="form-group col-md-8">
+                <label class="col-md-3">Ngày Đề Nghị</label>
+                <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
             </div>
         </div>
 
@@ -86,32 +119,43 @@
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-2">
                 <label class="">Thư viện</label>
-                <select id="inputState" class="form-control">
-                    <option selected="">FSchool</option>
-                    <option>...</option>
-                    <option>ABC</option>
-                    <option>...</option>
+                <select class="form-control" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                    <option value="-1">----- Chọn -----</option>
+                    @{
+                        foreach (HOLDING_LIBRARY item in listHoldingLibrary)
+                        {
+                            if (@item.AccessEntry.Equals("VND"))
+                            {
+                                <option selected value="@item.ID">@item.AccessEntry</option>
+                            }
+                            else
+                            {
+                                <option value="@item.ID">@item.AccessEntry</option>
+                            }
+                        }
+                    }
                 </select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-4">
                 <label>Kho</label>
-                <select id="inputState" class="form-control">
-                    <option selected="">GK/GPDEF</option>
-                    <option>...</option>
+                <select class="form-control" name="HoldingList" id="HoldingList">
+                    <option value="-1">----- Chọn -----</option>
                 </select>
             </div>
-
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Giá Sách</label>
                 <input type="text" class="form-control col-md-6" id="inputZip">
             </div>
+        </div>
+        <div class="form-row col-md-12 form-inline">
+            
 
             <div class="form-group col-md-3">
                 <label class="col-md-5">Đăng kí cá biệt</label>
                 <input type="text" class="form-control col-md-2" id="txtCopyNumber">
                 <button type="button" class="btn btn-primary form-control col-md-4" onclick="GenCopyNumber()">Sinh giá trị</button>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-4">
                 <label class="col-md-4">Số lượng</label>
                 <input type="text" class="form-control col-md-3" id="txtNumberOfCN">
                 <button type="button" class="btn btn-primary form-control col-md-4" onclick="InsertHoldings()">Bổ sung</button>
