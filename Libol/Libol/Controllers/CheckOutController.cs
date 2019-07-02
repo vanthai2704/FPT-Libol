@@ -14,6 +14,9 @@ namespace Libol.Controllers
     {
 
         private LibolEntities db = new LibolEntities();
+        CheckOutBusiness checkOutBusiness = new CheckOutBusiness();
+        private string strTransactionIDs = "";
+        private string patroncode = "";
 
         // GET: CheckOut
         public ActionResult Index()
@@ -57,8 +60,20 @@ namespace Libol.Controllers
                new ObjectParameter("intOutValue", typeof(int)),
                 new ObjectParameter("intOutID", typeof(int)));
 
+            string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
+            if (patroncode == strPatronCode)
+            {
+                strTransactionIDs = strTransactionIDs + lastid;
+            }
+            else
+            {
+                strTransactionIDs = lastid;
+            }
+            ViewBag.currentloaninfo = checkOutBusiness.SP_GET_CURRENT_LOANINFORs(strTransactionIDs, "Loan").ToList();
+            
             List <SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
             ViewData["patronloaninfo"] = patronloaninfo;
+            patroncode = strPatronCode;
             return PartialView("_checkoutSuccess");
         }
 
