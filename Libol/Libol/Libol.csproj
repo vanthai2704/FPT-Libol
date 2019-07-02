@@ -2194,6 +2194,7 @@
     <Content Include="Views\Patron\InsertFileToDB.cshtml" />
     <Content Include="Views\Patron\SearchPatron.cshtml" />
     <Content Include="Views\Catalogue\AddNewCatalogueDetail.cshtml" />
+    <Content Include="Views\Patron\_SearchPatronDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

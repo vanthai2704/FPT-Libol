@@ -21,7 +21,7 @@ namespace Libol.Controllers
         public JsonResult Account(DataTableAjaxPostModel model)
         {
             var users = db.SYS_USER;
-            var search = db.SYS_USER.Where(a => true);
+            var search = users.Where(a => true);
             if(model.search.value != null)
             {
                 string searchValue = model.search.value;
