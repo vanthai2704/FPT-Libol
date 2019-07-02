@@ -15,8 +15,8 @@ namespace Libol.Controllers
 
         private LibolEntities db = new LibolEntities();
         CheckOutBusiness checkOutBusiness = new CheckOutBusiness();
-        private string strTransactionIDs = "";
-        private string patroncode = "";
+        private static string strTransactionIDs = "";
+        private static string patroncode = "0";
 
         // GET: CheckOut
         public ActionResult Index()
@@ -56,23 +56,26 @@ namespace Libol.Controllers
                 db.SP_GET_PATRON_INFOR("", strPatronCode, strFixDueDate).First();
             ViewData["patroninfo"] = patroninfo;
 
-            db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, "12/31/2019", strCheckOutDate, intHoldIgnore,
+            int success= db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, "12/31/2019", strCheckOutDate, intHoldIgnore,
                new ObjectParameter("intOutValue", typeof(int)),
                 new ObjectParameter("intOutID", typeof(int)));
-
             string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
-            if (patroncode == strPatronCode)
+            if (success == 3)
             {
-                strTransactionIDs = strTransactionIDs + lastid;
+                if (patroncode == strPatronCode)
+                {
+                    strTransactionIDs = strTransactionIDs + "," + lastid;
+                }
+                else
+                {
+                    strTransactionIDs = lastid;
+                }
             }
             else
             {
-                strTransactionIDs = lastid;
+                strTransactionIDs = "0";
             }
             ViewBag.currentloaninfo = checkOutBusiness.SP_GET_CURRENT_LOANINFORs(strTransactionIDs, "Loan").ToList();
-            
-            List <SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
             patroncode = strPatronCode;
             return PartialView("_checkoutSuccess");
         }
