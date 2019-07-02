@@ -15,58 +15,36 @@ namespace Libol.Controllers
         // GET: Shelf
         public ActionResult Index()
         {
-            //LibolEntities libol = new LibolEntities();
-            ////get list Nguon Bo Sung
-            //var getListDB = libol.ACQ_ACQUIRE_SOURCE.ToList();
-            //SelectList list = new SelectList(getListDB, "ID", "Source");
-            //ViewBag.listDemo = list;
 
-            LoadListNBS();
-            LoadListKTL();
-            LoadListCurrency();
+            //get list marc form
+            ViewData["ListNBS"] = libol.ACQ_ACQUIRE_SOURCE.OrderBy(d => d.ID).ToList();
+            //Cấp thư mục
+            ViewData["listKTL"] = libol.CIR_LOAN_TYPE.ToList();
+            ViewData["ListCurrency"] = libol.ACQ_CURRENCY.OrderBy(d => d.CurrencyCode).ToList();
 
-            // get list Kieu tu lieu
-            //var getlistKTL = libol.CIR_LOAN_TYPE.ToList();
-            //SelectList listKTL = new SelectList(getlistKTL, "ID", "LoanType");
-            //ViewBag.listKTL = listKTL;
+          
 
-            ViewData["listLibs"] = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, 49, 1);
-            ViewData["listLocs"] = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(20, 49, 0, -1);
+            List< SP_HOLDING_LIBRARY_SELECT_Result > listLibsResult = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, 49, 1);
+            List<HOLDING_LIBRARY> libs = SP_HOLDING_LIBRARY_SELECT_Result.ConvertToHoldingLibrary(listLibsResult);
+            //List<SP_HOLDING_LOCATION_GET_INFO_Result> listLocsResult = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(20, 49, 0, -1);
+            //List<HOLDING_LOCATION> locs = SP_HOLDING_LOCATION_GET_INFO_Result.ConvertToHoldingLocation(listLocsResult);
+            //ViewData["listLocs"] = locs;
+            ViewData["listLibs"] = libs;
 
             return View();
-        }
-
-        public void LoadListNBS()
-        {
-            //get list Nguon Bo Sung
-            var getListDB = libol.ACQ_ACQUIRE_SOURCE.ToList();
-            SelectList list = new SelectList(getListDB, "ID", "Source");
-            ViewBag.listDemo = list;
 
         }
 
-        public void LoadListKTL()
+        // cho nay phai xu ly
+        [HttpPost]
+        public JsonResult SelectHolding(int libID)
         {
-            // get list Kieu tu lieu
-            var getlistKTL = libol.CIR_LOAN_TYPE.ToList();
-            SelectList listKTL = new SelectList(getlistKTL, "ID", "LoanType");
-            ViewBag.listKTL = listKTL;
-        }
-        public void LoadListCurrency()
-        {
-            // get list Currency
-            var selectedValue = 4;
-            var getlistKTL = libol.ACQ_CURRENCY.ToList();
-            SelectList listKTL = new SelectList(getlistKTL, "", "CurrencyCode", selectedValue);
-            ViewBag.listCur = listKTL;
+            List<SP_HOLDING_LOCATION_GET_INFO_Result> listLocsResult = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(libID, 49, 0, -1);
+            List<HOLDING_LOCATION> locs = SP_HOLDING_LOCATION_GET_INFO_Result.ConvertToHoldingLocation(listLocsResult);
+            ViewData["listLocs"] = locs;
+            return Json(locs, JsonRequestBehavior.AllowGet);
         }
 
-        // demo load Data by Stored Proceduce
-        public void Demo()
-        {
-            string a = "ada";
-            var demo = libol.FPT_EDU_ADD_COLLEGE(a);
 
         }
     }
-}

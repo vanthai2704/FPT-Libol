@@ -171,7 +171,7 @@
     <Compile Include="Controllers\PrintBarcodeController.cs" />
     <Compile Include="Controllers\PrintLabelController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
-    <Compile Include="EntityResult\SP_ILL_SEARCH_PATRON_Result.cs" />
+    <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LIBRARY_SELECT_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LOCATION_GET_INFO_Result.cs" />
     <Compile Include="Global.asax.cs">
@@ -503,6 +503,11 @@
     <Compile Include="Models\FIELD_AUTHORITY.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FLibContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FLibContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_EDU_COLLEGE_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -542,6 +547,7 @@
     <Compile Include="Models\FPT_EDU_GET_PATRON_ONLOAN_INCOMMING_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_EDU_GET_SHELF_CONTENT_Result.cs" />
     <Compile Include="Models\FPT_EDU_GET_VALUEFROMID_BOOK_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -836,6 +842,7 @@
     <Compile Include="Models\REGULARITY_OUT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SearchPatronBusiness.cs" />
     <Compile Include="Models\SER_ARTICLE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1105,6 +1112,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_CATA_GET_LINKTYPES_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_CATA_GET_MARC_FORM_2019_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_CATA_GET_PICKED_FIELDVIEW_Result.cs">
@@ -2073,6 +2083,10 @@
     <Content Include="Content\Site.css" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Models\FLibContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FLibContext.cs</LastGenOutput>
     </Content>
     <Content Include="Models\Libol.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

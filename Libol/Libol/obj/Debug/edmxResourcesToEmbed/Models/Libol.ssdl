@@ -5478,6 +5478,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
     <Parameter Name="strLocationID" Type="nvarchar" Mode="In" />
   </Function>
+  <Function Name="FPT_SP_ILL_SEARCH_PATRON" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronName" Type="nvarchar" Mode="In" />
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="GET_BLACK_PATRON_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="GET_PATRON_LOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
@@ -11392,6 +11396,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Parameter Name="intLocationID" Type="int" Mode="In" />
   </Function>
   <Function Name="TESTCAI" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="ufn_removeMark" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
+    <Parameter Name="text" Type="nvarchar(max)" Mode="In" />
+  </Function>
   <EntityContainer Name="LibolModelStoreContainer">
     <EntitySet Name="ACQ_ACQUIRE_SOURCE" EntityType="Self.ACQ_ACQUIRE_SOURCE" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ACQ_BUDGET" EntityType="Self.ACQ_BUDGET" Schema="dbo" store:Type="Tables" />

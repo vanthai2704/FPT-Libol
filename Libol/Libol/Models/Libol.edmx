@@ -5466,7 +5466,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="FPT_EDU_SP_RENEW_ITEM_BY_ALL_ID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strFixedID" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+		<Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
           <Parameter Name="strItemType" Type="varchar" Mode="In" />
         </Function>
@@ -5482,6 +5482,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="FPT_SP_GET_STAT_BOOK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
           <Parameter Name="strLocationID" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_ILL_SEARCH_PATRON" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strPatronName" Type="nvarchar" Mode="In" />
+          <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
         </Function>
         <Function Name="GET_BLACK_PATRON_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GET_PATRON_LOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -11397,6 +11401,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="intLocationID" Type="int" Mode="In" />
         </Function>
         <Function Name="TESTCAI" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="ufn_removeMark" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
+          <Parameter Name="text" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <EntityContainer Name="LibolModelStoreContainer">
           <EntitySet Name="ACQ_ACQUIRE_SOURCE" EntityType="Self.ACQ_ACQUIRE_SOURCE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ACQ_BUDGET" EntityType="Self.ACQ_BUDGET" Schema="dbo" store:Type="Tables" />
@@ -24994,6 +25001,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intFormID" Mode="In" Type="Int32" />
             <Parameter Name="strCreator" Mode="In" Type="String" />
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_ILL_SEARCH_PATRON">
+            <Parameter Name="strPatronName" Mode="In" Type="String" />
+            <Parameter Name="strPatronCode" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
@@ -39526,7 +39537,8 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="DemoGetMarcForm" FunctionName="LibolModel.Store.SP_CATA_GET_MARC_FORM" />
-          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE">
+          <FunctionImportMapping FunctionImportName="FPT_SP_ILL_SEARCH_PATRON" FunctionName="LibolModel.Store.FPT_SP_ILL_SEARCH_PATRON" />
+           <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE">
             <ResultMapping>
               <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_Result">
                 <ScalarProperty Name="ItemID" ColumnName="ItemID" />
@@ -39564,7 +39576,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

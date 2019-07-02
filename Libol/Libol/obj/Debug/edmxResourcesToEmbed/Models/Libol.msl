@@ -9861,6 +9861,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="DemoGetMarcForm" FunctionName="LibolModel.Store.SP_CATA_GET_MARC_FORM" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_ILL_SEARCH_PATRON" FunctionName="LibolModel.Store.FPT_SP_ILL_SEARCH_PATRON" />
     <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE">
       <ResultMapping>
         <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_Result">
