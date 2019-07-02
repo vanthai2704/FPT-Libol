@@ -88,7 +88,7 @@
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
                         <div class="col"><input class="form-control" id="strPatronCode" type="text" onkeypress="checkoutCardInfo(event)" /></div>
-                        <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="/Patron/Create">Thêm</a></label></div>
+                        <div class="col-4"><label class="col-form-label"><a onclick="findByCardNumber();" href="#">Tìm</a> | <a href="/Patron/Create">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
@@ -181,6 +181,8 @@
             });
         }
     }
+
+    
 </script>
 
 
