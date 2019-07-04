@@ -92,7 +92,7 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" type="text" onkeypress="checkoutSuccess(event)" /></div>
+                        <div class="col"><input class="form-control" id="strCopyNumber" type="text" onkeypress="checkoutSuccess(event)" /></div>
                         <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
@@ -124,7 +124,7 @@
             strFixDueDate: document.getElementById("strFixDueDate").value,
             intLoanMode: 1,
             intHoldIgnore: 0,
-            strCopyNumbers: 'TK/HCHL001415',
+            strCopyNumbers: document.getElementById("strCopyNumber").value,
             strCheckOutDate: '06/21/2019'
         };
         if (e.keyCode == 13) {

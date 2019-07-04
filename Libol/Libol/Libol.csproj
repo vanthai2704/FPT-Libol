@@ -172,6 +172,7 @@
     <Compile Include="Controllers\PrintLabelController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
     <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
+    <Compile Include="EntityResult\SP_GET_CURRENT_CHECKIN_INFOR_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LIBRARY_SELECT_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LOCATION_GET_INFO_Result.cs" />
     <Compile Include="Global.asax.cs">
@@ -346,6 +347,7 @@
     <Compile Include="Models\CAT_QUEUE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CheckOutBusiness.cs" />
     <Compile Include="Models\CIR_DIC_COLLEGE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
