@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
 using Libol.SupportClass;
+using XCrypt;
 
 namespace Libol.Controllers
 {
@@ -12,9 +13,25 @@ namespace Libol.Controllers
     {
         private LibolEntities db = new LibolEntities();
         // GET: Management
-        public ActionResult Account()
+        public ActionResult Account(string username)
         {
-            return View();
+            if (!String.IsNullOrEmpty(username))
+            {
+                if(db.SYS_USER.Where(a => a.Username == username).Count() > 0)
+                {
+                    SYS_USER user = db.SYS_USER.Where(a => a.Username == username).First();
+                    return View(user);
+                }
+                else
+                {
+                    return View(new SYS_USER());
+                }
+            }
+            else
+            {
+                return View(new SYS_USER());
+            }
+            
         }
 
         [HttpPost]
@@ -82,8 +99,75 @@ namespace Libol.Controllers
                 data = result
             });
         }
-        
 
+        [HttpPost]
+        public JsonResult UpdateUser(int ID, string Name, string Username, string Email, string Password,string RepeatPassword)
+        {
+            if (db.SYS_USER.Where(a => a.ID != ID).Where(a => a.Username == Username).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Người dùng với tên đăng nhập " + Username + " đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            string InvalidFields = "";
+            if (String.IsNullOrEmpty(Name))
+            {
+                InvalidFields += "txtName-";
+            }
+            if (String.IsNullOrEmpty(Email))
+            {
+                InvalidFields += "txtEmail-";
+            }
+            if (String.IsNullOrEmpty(Username))
+            {
+                InvalidFields += "txtUsername-";
+            }
+            if (!String.IsNullOrEmpty(Password) && Password != RepeatPassword)
+            {
+                InvalidFields += "txtRepeatPassword-";
+            }
+            if (InvalidFields != "")
+            {
+                return Json(new Result()
+                {
+                    CodeError = 1,
+                    Data = InvalidFields
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var user = db.SYS_USER.Where(a => a.ID == ID).First();
+                user.Name = Name;
+                user.Username = Username;
+                if (!String.IsNullOrEmpty(Password))
+                {
+                    string passEncrypt = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(Password, "pl");
+                    user.Password = passEncrypt;
+                }
+                
+                if(user.SYS_USER_GOOGLE_ACCOUNT.Count() > 0)
+                {
+                    var userGoogleAccount = user.SYS_USER_GOOGLE_ACCOUNT.First();
+                    userGoogleAccount.Email = Email;
+                }
+                else
+                {
+                    
+                    var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
+                    userGoogleAccount.ID = ID;
+                    userGoogleAccount.Email = Email;
+                    db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
+                }
+                db.SaveChanges();
+                return Json(new Result()
+                {
+                    CodeError = 0,
+                    Data = "Tài khoản " + Username + " đã được cập nhật thành công cho " + Name
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 
     public class CustomUser

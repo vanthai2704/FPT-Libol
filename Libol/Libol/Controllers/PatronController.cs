@@ -53,14 +53,12 @@ namespace Libol.Controllers
                 }
                 else
                 {
-                    CIR_PATRON emptyPatron = new CIR_PATRON();
-                    return View(emptyPatron);
+                    return View(new CIR_PATRON());
                 }
             }
             else
             {
-                CIR_PATRON emptyPatron = new CIR_PATRON();
-                return View(emptyPatron);
+                return View(new CIR_PATRON());
             }
             
         }
@@ -278,6 +276,10 @@ namespace Libol.Controllers
                 }
 
                 var intPatronID = new ObjectParameter("intRetval", typeof(int));
+                if (String.IsNullOrEmpty(strPortrait))
+                {
+                    strPortrait = db.CIR_PATRON.Where(a => a.ID == ID).First().Portrait;
+                }
                 db.SP_PAT_UPDATE_PATRON(
                     ID, strCode, strValidDate, strExpiredDate, strLastIssuedDate, strLastName, strFirstName, strMiddleName, blnSex, strDOB, intEthnicID, intEducationID,
                     intOccupationID, strWorkPlace, strTelephone, strMobile, strEmail, strPortrait, intPatronGroupID, strNote, strIDCard, intPatronID

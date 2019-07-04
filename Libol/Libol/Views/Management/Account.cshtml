@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Libol.Models.SYS_USER
+@{
     ViewBag.Title = "Quản lý tài khoản";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -38,8 +39,18 @@
             columns: [
                 {
                     "data": null,
-                    "defaultContent": "" },
-                { "data": "Username" },
+                    "defaultContent": ""
+                },
+                {
+                    "data": "Username",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<a href="/Management/Account?username='+data+'">' + data + '</a>';
+                        }
+
+                        return data;
+                    }
+                },
                 { "data": "Name" },
             ],
             
@@ -94,27 +105,56 @@
         <div class="col">
             <div class="form-group row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Họ tên</label>
-                <input type="text" class="form-control col">
+                <input type="text" class="form-control col" value="@Model.Name" id="txtName">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Họ tên
+                </div>
             </div>
             <div class="form-group row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Tên đăng nhập</label>
-                <input type="text" class="form-control col">
+                <input type="text" class="form-control col" value="@Model.Username" id="txtUsername">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Tên đăng nhập
+                </div>
             </div>
             <div class="form-group row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Địa chỉ mail</label>
-                <input type="email" class="form-control col">
+                @if (Model.SYS_USER_GOOGLE_ACCOUNT.Count() > 0)
+                {
+                    <input type="email" class="form-control col" value="@Model.SYS_USER_GOOGLE_ACCOUNT.First().Email" id="txtEmail">
+                }
+                else
+                {
+                    <input type="email" class="form-control col" id="txtEmail">
+                }
+                <div class="invalid-feedback">
+                    Vui lòng nhập Email
+                </div>
             </div>
             <div class="form-group row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Mật khẩu</label>
-                <input type="password" class="form-control col">
+                <input type="password" class="form-control col" id="txtPassword">
+                <div class="invalid-feedback">
+                    Vui lòng nhập Mật khẩu
+                </div>
             </div>
             <div class="form-group row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Gõ lại mật khẩu</label>
-                <input type="password" class="form-control col">
+                <input type="password" class="form-control col" id="txtRepeatPassword">
+                <div class="invalid-feedback">
+                    Mật khẩu không khớp
+                </div>
             </div>
             <div class="form-group row" style="padding-right : 3rem">
                 <div class="col">
-                    <button type="button" class="btn btn-primary float-right">Nhập</button>
+                    @if (Model.ID > 0)
+                    {
+                        <button type="button" class="btn btn-primary float-right" onclick="UpdateUser()">Cập nhật</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary float-right" onclick="CreateUser()">Cập nhật</button>
+                    }
                 </div>
                 <div class="col">
                     <button type="button" class="btn btn-primary">Tạo mới</button>
@@ -124,4 +164,112 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="txtID" value="@Model.ID" />
+    <div class="modal" tabindex="-1" role="dialog" id="modalNotifyUpdate">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin tài khoản</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="notifyMessageUpdate"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="reloadUpdate()">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalNotify">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin tài khoản</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="notifyMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
+
+
+
+<script>
+    function CreateUser() {
+
+    }
+
+    function UpdateUser() {
+        var empObj = {
+            ID: document.getElementById("txtID").value,
+            Name: document.getElementById("txtName").value,
+            Username: document.getElementById("txtUsername").value,
+            Email: document.getElementById("txtEmail").value,
+            Password: document.getElementById("txtPassword").value,
+            RepeatPassword: document.getElementById("txtRepeatPassword").value
+            
+        }
+        $.ajax({
+            url: "/Management/UpdateUser",
+            data: JSON.stringify(empObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                switch (result.CodeError) {
+                    case 0:
+                        $("#modalNotifyUpdate").modal();
+                        document.getElementById("notifyMessageUpdate").innerText = result.Data;
+                        break;
+                    case 1:
+                        showInvalid(result.Data);
+                        break;
+                    case 2:
+                        $("#modalNotify").modal();
+                        document.getElementById("notifyMessage").innerText = result.Data;
+                        break;
+                    default:
+                        UploadPhotoPatronUpdate(result.Data);
+
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+    function showInvalid(invalidFields) {
+        var fields = invalidFields.split("-");
+        for (i = 0; i < fields.length; i++) {
+            if (fields[i] != "") {
+                var element = document.getElementById(fields[i]);
+                element.classList.add("is-invalid");
+            }
+        }
+    }
+
+    function hideInvalid(invalidFields) {
+        var fields = invalidFields.split("-");
+        for (i = 0; i < fields.length; i++) {
+            if (fields[i] != "") {
+                var element = document.getElementById(fields[i]);
+                element.classList.remove("is-invalid");
+            }
+        }
+    }
+
+    function reloadUpdate() {
+        window.location.href = "/Management/Account"
+    }
+</script>

@@ -81,7 +81,14 @@
 
             <div class="avatar">
                 <input id="photoPatron" name="uploadFile" type="file" style="width: 100px;float: left;margin-left: -200px;" accept="image/x-png,image/gif,image/jpeg" onchange="onFileSelected(event)">
-                <img src="~/Content/ImagePatron/NoImage.png" style="margin-left: -100px;width: 100px;height: 150px;" id="avatarImage" />
+                @if (String.IsNullOrEmpty(Model.Portrait))
+                {
+                    <img src="~/Content/ImagePatron/NoImage.png" style="margin-left: -100px;width: 100px;height: 150px;" id="avatarImage" />
+                }
+                else
+                {
+                    <img src="~/Content/ImagePatron/@Model.Portrait" style="margin-left: -100px;width: 100px;height: 150px;" id="avatarImage" />
+                }
             </div>
 
         </div>
@@ -407,7 +414,7 @@
         </div>
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Ghi chú</label>
-            <textarea class="form-control col-md-5" rows="5" id="strNote" value="@Model.Note"></textarea>
+            <textarea class="form-control col-md-5" rows="5" id="strNote">@Model.Note</textarea>
         </div>
         <div class="form-group row">
             <div class="col-md-1"></div>
