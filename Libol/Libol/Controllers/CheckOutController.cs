@@ -57,14 +57,14 @@ namespace Libol.Controllers
             catch (Exception)
             {
                 ViewBag.faculty = null;
-                try
-                {
-                    ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
-                }
-                catch (Exception)
-                {
-                    ViewBag.college = null;
-                }
+            }
+            try
+            {
+                ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
+            }
+            catch (Exception)
+            {
+                ViewBag.college = null;
             }
             SP_GET_PATRON_INFOR_Result patroninfo =
                 db.SP_GET_PATRON_INFOR("", strPatronCode, strFixDueDate).First();
@@ -114,19 +114,21 @@ namespace Libol.Controllers
             ViewBag.loanquota = patron.CIR_PATRON_GROUP.LoanQuota;
             ViewBag.ethic = patron.CIR_DIC_ETHNIC == null ? null : patron.CIR_DIC_ETHNIC.Ethnic;
             ViewBag.educationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel;
-            try{
+            try
+            {
                 ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 ViewBag.faculty = null;
-                try {
-                    ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
-                }
-                catch (Exception)
-                {
-                    ViewBag.college = null;
-                }
+            }
+            try
+            {
+                ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
+            }
+            catch (Exception)
+            {
+                ViewBag.college = null;
             }
             ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
             ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;

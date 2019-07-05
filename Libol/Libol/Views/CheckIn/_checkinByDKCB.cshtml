@@ -58,7 +58,7 @@
                 <div class="form-row">
                     <div class="col">
                         <div class="form-row">
-                            <div class="col"><label>Tên số thẻ: <strong>@patroninfo.FirstName @patroninfo.MiddleName @patroninfo.LastName (@patroninfo.Code)</strong></label><a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal">Thông tin chi tiết</a></div>
+                            <div class="col"><label><strong>@patroninfo.FirstName @patroninfo.MiddleName @patroninfo.LastName (@patroninfo.Code)</strong></label><a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal">Thông tin chi tiết</a></div>
                         </div>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
 
 <!-- The Modal -->
 <div class="modal" id="myModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 550px;">
         <div class="modal-content">
 
             <!-- Modal Header -->
@@ -150,16 +150,45 @@
                 <div class="col" style="padding-left:50px; padding-bottom:10px;">
                     <table>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
-                            <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            <td class="columnleft">Họ tên: </td>
+                            <td><strong>@patroninfo.FirstName @patroninfo.MiddleName @patroninfo.LastName</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
-                            <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            <td class="columnleft">Dân tộc: </td>
+                            <td><strong>@ViewBag.ethic</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Ngày mượn: </label></td>
-                            <td><label class="col-form-label"><strong>13/05/2019</strong></label></td>
+                            <td class="columnleft">Ngày sinh: </td>
+                            <td><strong>@string.Format("{0:MM/dd/yyyy}", patroninfo.DOB)</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Giới tính: </td>
+                            <td>
+                                @if (patroninfo.Sex.Equals("1"))
+                                {<strong>Nam</strong>}
+                                else
+                                {<strong>Nữ</strong>}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Trình độ văn hóa </td>
+                            <td><strong>@ViewBag.educationlevel</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Số thẻ: </td>
+                            <td><strong>@patroninfo.Code</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Ngày cấy thẻ: </td>
+                            <td><strong>@patroninfo.ValidDate.ToString("dd/MM/yyyy")</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Ngày hết hạn thẻ: </td>
+                            <td><strong>@patroninfo.ExpiredDate.ToString("dd/MM/yyyy")</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">nhóm bạn đọc: </td>
+                            <td><strong>@ViewBag.groupname</strong></td>
                         </tr>
                     </table>
                 </div>
@@ -169,16 +198,20 @@
                 <div class="col" style="padding-left:50px; padding-bottom:10px;">
                     <table>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
-                            <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            <td class="columnleft">Khoa: </td>
+                            <td><strong>@ViewBag.faculty</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
-                            <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            <td class="columnleft">Nhóm nghề nghiệp: </td>
+                            <td><strong>@ViewBag.occupation</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Ngày mượn: </label></td>
-                            <td><label class="col-form-label"><strong>13/05/2019</strong></label></td>
+                            <td class="columnleft">Trường: </td>
+                            <td><strong>@ViewBag.college</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Địa chỉ nơi làm việc: </td>
+                            <td><strong>@patroninfo.WorkPlace</strong></td>
                         </tr>
                     </table>
                 </div>
@@ -188,12 +221,20 @@
                 <div class="col" style="padding-left:50px; padding-bottom:10px;">
                     <table>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">ĐKCB: </label></td>
-                            <td><label class="col-form-label"><strong>GT/KHXH002154</strong></label></td>
+                            <td class="columnleft">Địa chỉ: </td>
+                            <td><strong>@ViewBag.address</strong></td>
                         </tr>
                         <tr>
-                            <td class="columnleft"><label class="col-form-label">Nhan đề: </label></td>
-                            <td><label class="col-form-label"><strong>Giáo trình tư tưởng Hồ Chí Minh</strong></label></td>
+                            <td class="columnleft">SĐT cố định: </td>
+                            <td><strong>@patroninfo.Telephone</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">SĐT di động: </td>
+                            <td><strong>@patroninfo.Mobile</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Email: </td>
+                            <td><strong>@patroninfo.Email</strong></td>
                         </tr>
                     </table>
                 </div>
