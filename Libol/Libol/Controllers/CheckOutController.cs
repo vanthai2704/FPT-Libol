@@ -48,10 +48,24 @@ namespace Libol.Controllers
             ViewBag.loanquota = patron.CIR_PATRON_GROUP.LoanQuota;
             ViewBag.ethic = patron.CIR_DIC_ETHNIC == null ? null : patron.CIR_DIC_ETHNIC.Ethnic;
             ViewBag.educationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel;
-            ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null ? null : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
             ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
-            ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null ? null : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
             ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
+            try
+            {
+                ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
+            }
+            catch (Exception)
+            {
+                ViewBag.faculty = null;
+                try
+                {
+                    ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
+                }
+                catch (Exception)
+                {
+                    ViewBag.college = null;
+                }
+            }
             SP_GET_PATRON_INFOR_Result patroninfo =
                 db.SP_GET_PATRON_INFOR("", strPatronCode, strFixDueDate).First();
             ViewData["patroninfo"] = patroninfo;
@@ -83,13 +97,16 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult CheckOutCardInfo(string strFullName, string strPatronCode, string strFixDueDate)
         {
-            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Count() == 0)
+            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Where(a => a.isLocked == 1).Count() == 0)
             {
                 ViewBag.active = 1;
             }
             else
             {
                 ViewBag.active = 0;
+                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).First().Note;
+                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().StartedDate;
+                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().LockedDays);
             }
             CIR_PATRON patron =
                 db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
@@ -97,9 +114,21 @@ namespace Libol.Controllers
             ViewBag.loanquota = patron.CIR_PATRON_GROUP.LoanQuota;
             ViewBag.ethic = patron.CIR_DIC_ETHNIC == null ? null : patron.CIR_DIC_ETHNIC.Ethnic;
             ViewBag.educationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel;
-            ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null ? null : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
+            try{
+                ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
+            }
+            catch(Exception)
+            {
+                ViewBag.faculty = null;
+                try {
+                    ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
+                }
+                catch (Exception)
+                {
+                    ViewBag.college = null;
+                }
+            }
             ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
-            ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null ? null : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
             ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
             SP_GET_PATRON_INFOR_Result patroninfo =
                 db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
