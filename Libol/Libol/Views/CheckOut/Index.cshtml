@@ -182,7 +182,23 @@
         }
     }
 
-    
+    function rollbackacheckout() {
+        var empObj = {
+            strCopyNumbers: 'TK/HCHL001415',
+        };
+        $.ajax({
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            url: "/CheckOut/Rollbackacheckout",
+            data: JSON.stringify(empObj),
+            success: function (result) {
+                $("#contentcheckout").html(result);
+            },
+            error: function (errormessage) {
+            }
+        });
+    }
+
 </script>
 
 

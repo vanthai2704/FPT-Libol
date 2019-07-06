@@ -63,7 +63,6 @@
 {
     <div class="form-row" style="padding-top:10px;">
         <div class="col">
-            <h5>Bạn đọc cũng đang mượn các ấn phẩm</h5>
             <table id="table_loaninfo" class="table table-striped table-bordered datatables">
                 <thead>
                     <tr>
@@ -81,9 +80,9 @@
                     <tr>
                         <td>@item.FullName</td>
                         <td>@item.Code</td>
-                        <td>@string.Format("{0:yyyy-MM-dd}", @item.DOB)</td>
-                        <td>@string.Format("{0:yyyy-MM-dd}", @item.ValidDate)</td>
-                        <td>@string.Format("{0:yyyy-MM-dd}", @item.ExpiredDate)</td>
+                        <td>@string.Format("{0:dd-MM-yyyy}", @item.DOB)</td>
+                        <td>@string.Format("{0:dd-MM-yyyy}", @item.ValidDate)</td>
+                        <td>@string.Format("{0:dd-MM-yyyy}", @item.ExpiredDate)</td>
                     </tr>
                     }
                 </tbody>

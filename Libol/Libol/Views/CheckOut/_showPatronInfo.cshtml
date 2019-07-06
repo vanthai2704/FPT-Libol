@@ -25,7 +25,7 @@
                 }],
                 select: {
                     style: 'os',
-                    selector: 'td:first-child'
+                    selector: 'td:nth-child(1)'
                 },
                 order: [[1, 'asc']],
                 orderCellsTop: true,
@@ -110,7 +110,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- The Modal Patron Detail -->
 <div class="modal" id="myModal">
@@ -264,8 +263,8 @@
                                         <td></td>
                                         <td>@item.TITLE</td>
                                         <td>@item.COPYNUMBER</td>
-                                        <td>@string.Format("{0:yyyy-MM-dd}", item.CHECKOUTDATE)</td>
-                                        <td>@string.Format("{0:yyyy-MM-dd}", item.DUEDATE)</td>
+                                        <td>@string.Format("{0:dd-MM-yyyy}", item.CHECKOUTDATE)</td>
+                                        <td>@string.Format("{0:dd-MM-yyyy}", item.DUEDATE)</td>
                                         <td>@item.NOTE</td>
                                     </tr>
                                 }

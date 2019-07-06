@@ -124,8 +124,8 @@
                     <td></td>
                     <td>@item.TITLE</td>
                     <td>@item.COPYNUMBER</td>
-                    <td>@string.Format("{0:yyyy-MM-dd}", item.CHECKOUTDATE)</td>
-                    <td>@string.Format("{0:yyyy-MM-dd}", item.DUEDATE)</td>
+                    <td>@string.Format("{0:dd-MM-yyyy}", item.CHECKOUTDATE)</td>
+                    <td>@string.Format("{0:dd-MM-yyyy}", item.DUEDATE)</td>
                     <td>@item.NOTE</td>
                 </tr>
             }
@@ -168,7 +168,7 @@
                         </tr>
                         <tr>
                             <td class="columnleft">Ngày sinh: </td>
-                            <td><strong>@string.Format("{0:MM/dd/yyyy}", patroninfo.DOB)</strong></td>
+                            <td><strong>@string.Format("{0:dd-MM-yyyy}", patroninfo.DOB)</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Giới tính: </td>

@@ -27,6 +27,7 @@ namespace Libol.Controllers
         // GET: Giahan
         public ActionResult Giahan()
         {
+            patroncode = "0";
             return View();
         }
 
@@ -108,6 +109,36 @@ namespace Libol.Controllers
                 ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().StartedDate;
                 ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().LockedDays);
             }
+
+            getpatrondetail(strPatronCode);
+
+            SP_GET_PATRON_INFOR_Result patroninfo =
+                db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
+            ViewData["patroninfo"] = patroninfo;
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            ViewData["patronloaninfo"] = patronloaninfo;
+            return PartialView("_showPatronInfo");
+        }
+
+        //thu hoi 1 an pham
+        public PartialViewResult Rollbackacheckout (string strCopyNumbers)
+        {
+            db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("dd/MM/yyyy"),
+               new ObjectParameter("strTransIDs", typeof(string)),
+               new ObjectParameter("strPatronCode", typeof(string)),
+               new ObjectParameter("intError", typeof(int)));
+
+            strTransactionIDs = strTransactionIDs.Replace(","+ strCopyNumbers, "");
+            ViewBag.currentloaninfo = checkOutBusiness.SP_GET_CURRENT_LOANINFORs(strTransactionIDs, "Loan").ToList();
+            SP_GET_PATRON_INFOR_Result patroninfo =
+               db.SP_GET_PATRON_INFOR("", patroncode, DateTime.Now.ToString("dd/MM/yyyy")).First();
+            ViewData["patroninfo"] = patroninfo;
+            getpatrondetail(patroncode);
+            return PartialView("_checkoutSuccess");
+        }
+
+        public void getpatrondetail(string strPatronCode)
+        {
             CIR_PATRON patron =
                 db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
             ViewBag.groupname = patron.CIR_PATRON_GROUP.Name;
@@ -132,12 +163,6 @@ namespace Libol.Controllers
             }
             ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
             ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
-            SP_GET_PATRON_INFOR_Result patroninfo =
-                db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
-            return PartialView("_showPatronInfo");
         }
     }
 }
