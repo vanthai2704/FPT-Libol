@@ -1,5 +1,4 @@
 ﻿@{
-    Libol.Models.SP_GET_PATRON_INFOR_Result patroninfo = (Libol.Models.SP_GET_PATRON_INFOR_Result)ViewData["patroninfo"];
     List<Libol.Models.SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = (List<Libol.Models.SP_GET_PATRON_ONLOAN_COPIES_Result>)ViewData["patronloaninfo"];
 }
 <head>
@@ -54,18 +53,18 @@
                 <div class="form-row">
                     <div class="col">
                         <div class="form-row">
-                            <div class="col"><label><strong>@patroninfo.FirstName @patroninfo.MiddleName @patroninfo.LastName (@patroninfo.Code)</strong></label><a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal">Thông tin chi tiết</a></div>
+                            <div class="col"><label><strong>@ViewBag.PatronDetail.Name (@ViewBag.PatronDetail.strCode)</strong></label><a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal">Thông tin chi tiết</a></div>
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="col"><label class="col-form-label">Ngày sinh: <strong>@string.Format("{0:MM/dd/yyyy}", patroninfo.DOB)</strong></label></div>
+                    <div class="col"><label class="col-form-label">Ngày sinh: <strong>@ViewBag.PatronDetail.strDOB</strong></label></div>
                 </div>
                 <div class="form-row">
-                    <div class="col"><label class="col-form-label">Giá trị thẻ: <strong>@patroninfo.ValidDate.ToString("dd/MM/yyyy") - @patroninfo.ExpiredDate.ToString("dd/MM/yyyy")</strong></label></div>
+                    <div class="col"><label class="col-form-label">Giá trị thẻ: <strong>@ViewBag.PatronDetail.strValidDate - @ViewBag.PatronDetail.strExpiredDate</strong></label></div>
                 </div>
                 <div class="form-row">
-                    <div class="col"><label class="col-form-label">Nhóm: <strong>Sinh viên FU Hà Nội</strong></label></div>
+                    <div class="col"><label class="col-form-label">Nhóm: <strong>@ViewBag.PatronDetail.intPatronGroupID</strong></label></div>
                 </div>
             </div>
         </div>
@@ -129,44 +128,41 @@
                     <table>
                         <tr>
                             <td class="columnleft">Họ tên: </td>
-                            <td><strong>@patroninfo.FirstName @patroninfo.MiddleName @patroninfo.LastName</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.Name</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Dân tộc: </td>
-                            <td><strong>@ViewBag.ethic</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.intEthnicID</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Ngày sinh: </td>
-                            <td><strong>@string.Format("{0:dd-MM-yyyy}", patroninfo.DOB)</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strDOB</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Giới tính: </td>
                             <td>
-                                @if (patroninfo.Sex.Equals("1"))
-                                {<strong>Nam</strong>}
-                                else
-                                {<strong>Nữ</strong>}
+                                <strong>@ViewBag.PatronDetail.Sex</strong>
                             </td>
                         </tr>
                         <tr>
                             <td class="columnleft">Trình độ văn hóa </td>
-                            <td><strong>@ViewBag.educationlevel</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strEducationlevel</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Số thẻ: </td>
-                            <td><strong>@patroninfo.Code</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strCode</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Ngày cấy thẻ: </td>
-                            <td><strong>@patroninfo.ValidDate.ToString("dd/MM/yyyy")</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strValidDate</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Ngày hết hạn thẻ: </td>
-                            <td><strong>@patroninfo.ExpiredDate.ToString("dd/MM/yyyy")</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strExpiredDate</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">nhóm bạn đọc: </td>
-                            <td><strong>@ViewBag.groupname</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.intPatronGroupID</strong></td>
                         </tr>
                     </table>
                 </div>
@@ -177,19 +173,19 @@
                     <table>
                         <tr>
                             <td class="columnleft">Khoa: </td>
-                            <td><strong>@ViewBag.faculty</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.intFacultyID</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Nhóm nghề nghiệp: </td>
-                            <td><strong>@ViewBag.occupation</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.intOccupationID</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Trường: </td>
-                            <td><strong>@ViewBag.college</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.intCollegeID</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Địa chỉ nơi làm việc: </td>
-                            <td><strong>@patroninfo.WorkPlace</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strWorkPlace</strong></td>
                         </tr>
                     </table>
                 </div>
@@ -200,19 +196,19 @@
                     <table>
                         <tr>
                             <td class="columnleft">Địa chỉ: </td>
-                            <td><strong>@ViewBag.address</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strAddress</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">SĐT cố định: </td>
-                            <td><strong>@patroninfo.Telephone</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strTelephone</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">SĐT di động: </td>
-                            <td><strong>@patroninfo.Mobile</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strMobile</strong></td>
                         </tr>
                         <tr>
                             <td class="columnleft">Email: </td>
-                            <td><strong>@patroninfo.Email</strong></td>
+                            <td><strong>@ViewBag.PatronDetail.strEmail</strong></td>
                         </tr>
                     </table>
                 </div>
@@ -220,7 +216,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Sửa</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
             </div>
 
         </div>

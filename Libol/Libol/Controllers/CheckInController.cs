@@ -22,12 +22,9 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult CheckInByCardNumber(string strFullName, string strPatronCode, string strFixDueDate)
         {
-            SP_GET_PATRON_INFOR_Result patroninfo =
-                db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
             getpatrondetail(strPatronCode);
-
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            int id2 = ViewBag.PatronDetail.ID;
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id2).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
             ViewData["patronloaninfo"] = patronloaninfo;
             return PartialView("_checkinByCardNumber");
         }
@@ -43,15 +40,13 @@ namespace Libol.Controllers
             string strCheckInDate
         )
         {
-            SP_GET_PATRON_INFOR_Result patroninfo =
-               db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
             db.SP_CHECKIN(43, intType, intAutoPaid, strCopyNumbers, strCheckInDate,
                 new ObjectParameter("strTransIDs", typeof(string)),
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
             getpatrondetail(strPatronCode);
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            int id2 = ViewBag.PatronDetail.ID;
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id2).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
             ViewData["patronloaninfo"] = patronloaninfo;
             return PartialView("_checkinByDKCB");
         }
@@ -77,9 +72,9 @@ namespace Libol.Controllers
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
             }
-            
             getpatrondetail(strPatronCode);
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            int id2 = ViewBag.PatronDetail.ID;
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id2).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
             ViewData["patronloaninfo"] = patronloaninfo;
             return PartialView("_checkinByDKCB");
         }
@@ -87,37 +82,64 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult FindByCardNumber(string strFullName)
         {
-
             ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").ToList().Take(50).ToList();
             return PartialView("_findByCardNumber");
         }
 
         public void getpatrondetail(string strPatronCode)
         {
-            CIR_PATRON patron =
-                db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
-            ViewBag.groupname = patron.CIR_PATRON_GROUP.Name;
-            ViewBag.loanquota = patron.CIR_PATRON_GROUP.LoanQuota;
-            ViewBag.ethic = patron.CIR_DIC_ETHNIC == null ? null : patron.CIR_DIC_ETHNIC.Ethnic;
-            ViewBag.educationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel;
-            try
+            SP_GET_PATRON_INFOR_Result patroninfo =
+               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("dd/MM/yyyy")).First();
+            CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
+            ViewBag.PatronDetail = new CustomPatron
             {
-                ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
-            }
-            catch (Exception)
-            {
-                ViewBag.faculty = null;
-            }
-            try
-            {
-                ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
-            }
-            catch (Exception)
-            {
-                ViewBag.college = null;
-            }
-            ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
-            ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
+                ID = patron.ID,
+                strCode = patron.Code,
+                Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName,
+                strDOB = Convert.ToDateTime(patron.DOB).ToString("dd/MM/yyyy"),
+                strValidDate = Convert.ToDateTime(patroninfo.ValidDate).ToString("dd/MM/yyyy"),
+                strExpiredDate = Convert.ToDateTime(patron.ExpiredDate).ToString("dd/MM/yyyy"),
+                Sex = patron.Sex == "1" ? "Nam" : "Nữ",
+                intEthnicID = db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).Count() == 0 ? "" : db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).First().Ethnic,
+                intCollegeID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College,
+                intFacultyID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty,
+                strEducationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel,
+                strWorkPlace = patroninfo.WorkPlace,
+                strGrade = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Grade,
+                strClass = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Class,
+                strAddress = patron.CIR_PATRON_OTHER_ADDR.Count == 0 ? "" : patron.CIR_PATRON_OTHER_ADDR.First().Address,
+                strTelephone = patron.Telephone,
+                strMobile = patron.Mobile,
+                strEmail = patron.Email,
+                strNote = patron.Note,
+                intOccupationID = patron.CIR_DIC_OCCUPATION == null ? "" : patron.CIR_DIC_OCCUPATION.Occupation,
+                intPatronGroupID = patron.CIR_PATRON_GROUP == null ? "" : patron.CIR_PATRON_GROUP.Name
+            };
+        }
+
+        public class CustomPatron
+        {
+            public int ID { get; set; }
+            public string strCode { get; set; }
+            public string Name { get; set; }
+            public string strDOB { get; set; }
+            public string strValidDate { get; set; }
+            public string strExpiredDate { get; set; }
+            public string Sex { get; set; }
+            public string intEthnicID { get; set; }
+            public string intCollegeID { get; set; }
+            public string intFacultyID { get; set; }
+            public string strEducationlevel { get; set; }
+            public string strWorkPlace { get; set; }
+            public string strGrade { get; set; }
+            public string strClass { get; set; }
+            public string strAddress { get; set; }
+            public string strTelephone { get; set; }
+            public string strMobile { get; set; }
+            public string strEmail { get; set; }
+            public string strNote { get; set; }
+            public string intOccupationID { get; set; }
+            public string intPatronGroupID { get; set; }
         }
     }
 }

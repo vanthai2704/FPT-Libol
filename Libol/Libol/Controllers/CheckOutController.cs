@@ -44,10 +44,6 @@ namespace Libol.Controllers
             )
         {
             getpatrondetail(strPatronCode);
-            SP_GET_PATRON_INFOR_Result patroninfo =
-                db.SP_GET_PATRON_INFOR("", strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
-
             int success= db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, "12/31/2019", strCheckOutDate, intHoldIgnore,
                new ObjectParameter("intOutValue", typeof(int)),
                 new ObjectParameter("intOutID", typeof(int)));
@@ -88,11 +84,8 @@ namespace Libol.Controllers
             }
 
             getpatrondetail(strPatronCode);
-
-            SP_GET_PATRON_INFOR_Result patroninfo =
-                db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            int id = ViewBag.PatronDetail.ID;
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
             ViewData["patronloaninfo"] = patronloaninfo;
             return PartialView("_showPatronInfo");
         }
@@ -116,30 +109,58 @@ namespace Libol.Controllers
 
         public void getpatrondetail(string strPatronCode)
         {
-            CIR_PATRON patron =
-                db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
-            ViewBag.groupname = patron.CIR_PATRON_GROUP.Name;
-            ViewBag.loanquota = patron.CIR_PATRON_GROUP.LoanQuota;
-            ViewBag.ethic = patron.CIR_DIC_ETHNIC == null ? null : patron.CIR_DIC_ETHNIC.Ethnic;
-            ViewBag.educationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel;
-            try
+            SP_GET_PATRON_INFOR_Result patroninfo =
+               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("dd/MM/yyyy")).First();
+            CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
+            ViewBag.PatronDetail = new CustomPatron
             {
-                ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
-            }
-            catch (Exception)
-            {
-                ViewBag.faculty = null;
-            }
-            try
-            {
-                ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
-            }
-            catch (Exception)
-            {
-                ViewBag.college = null;
-            }
-            ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
-            ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
+                ID = patron.ID,
+                strCode = patron.Code,
+                Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName,
+                strDOB = Convert.ToDateTime(patron.DOB).ToString("dd/MM/yyyy"),
+                strValidDate = Convert.ToDateTime(patroninfo.ValidDate).ToString("dd/MM/yyyy"),
+                strExpiredDate = Convert.ToDateTime(patron.ExpiredDate).ToString("dd/MM/yyyy"),
+                Sex = patron.Sex == "1" ? "Nam" : "Nữ",
+                intEthnicID = db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).Count() == 0 ? "" : db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).First().Ethnic,
+                intCollegeID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College,
+                intFacultyID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty,
+                strEducationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel,
+                strWorkPlace = patroninfo.WorkPlace,
+                strGrade = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Grade,
+                strClass = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Class,
+                strAddress = patron.CIR_PATRON_OTHER_ADDR.Count == 0 ? "" : patron.CIR_PATRON_OTHER_ADDR.First().Address,
+                strTelephone = patron.Telephone,
+                strMobile = patron.Mobile,
+                strEmail = patron.Email,
+                strNote = patron.Note,
+                intOccupationID = patron.CIR_DIC_OCCUPATION == null ? "" : patron.CIR_DIC_OCCUPATION.Occupation,
+                intPatronGroupID = patron.CIR_PATRON_GROUP == null ? "" : patron.CIR_PATRON_GROUP.Name
+            };
+        }
+
+        public class CustomPatron
+        {
+            public int ID { get; set; }
+            public string strCode { get; set; }
+            public string Name { get; set; }
+            public string strDOB { get; set; }
+            public string strValidDate { get; set; }
+            public string strExpiredDate { get; set; }
+            public string Sex { get; set; }
+            public string intEthnicID { get; set; }
+            public string intCollegeID { get; set; }
+            public string intFacultyID { get; set; }
+            public string strEducationlevel { get; set; }
+            public string strWorkPlace { get; set; }
+            public string strGrade { get; set; }
+            public string strClass { get; set; }
+            public string strAddress { get; set; }
+            public string strTelephone { get; set; }
+            public string strMobile { get; set; }
+            public string strEmail { get; set; }
+            public string strNote { get; set; }
+            public string intOccupationID { get; set; }
+            public string intPatronGroupID { get; set; }
         }
     }
 }
