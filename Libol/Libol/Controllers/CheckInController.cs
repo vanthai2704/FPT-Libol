@@ -57,6 +57,34 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        public PartialViewResult CheckInByDKCBs(
+           string strFullName,
+           string strPatronCode,
+           string strFixDueDate,
+           int intType,
+           int intAutoPaid,
+           string[] strCopyNumbers,
+           string strCheckInDate
+       )
+        {
+            SP_GET_PATRON_INFOR_Result patroninfo =
+               db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
+            ViewData["patroninfo"] = patroninfo;
+            foreach (string CopyNumber in strCopyNumbers)
+            {
+                db.SP_CHECKIN(43, intType, intAutoPaid, CopyNumber, strCheckInDate,
+                new ObjectParameter("strTransIDs", typeof(string)),
+                new ObjectParameter("strPatronCode", typeof(string)),
+                new ObjectParameter("intError", typeof(int)));
+            }
+            
+            getpatrondetail(strPatronCode);
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            ViewData["patronloaninfo"] = patronloaninfo;
+            return PartialView("_checkinByDKCB");
+        }
+
+        [HttpPost]
         public PartialViewResult FindByCardNumber(string strFullName)
         {
 

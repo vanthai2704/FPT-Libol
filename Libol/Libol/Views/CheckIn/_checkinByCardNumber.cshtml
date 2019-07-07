@@ -38,37 +38,6 @@
                     table.rows().deselect();
                 }
             });
-        
-
-            $('#abc1').click(function (e) {
-                alert('abc')
-            e.preventDefault();
-            var empObj = {
-                strFullName: '',
-                strFixDueDate: '2029-06-11',
-                intType : 1,
-                intAutoPaid : 0,
-                strCopyNumbers : 'TK/HCHL001415',
-                strCheckInDate: '06/21/2019',
-                strTransIDs : '0',
-                strPatronCode : '900047107',
-                intError : 0
-            };
-            $.ajax({
-                url: "/CheckIn/CheckInByDKCB",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    console.log("abcssd");  
-                    $("#contentcheckin").html(result);
-                },
-                error: function (errormessage) {
-                    console.log("abcssd");
-                    alert('fail');
-                }
-            });
-            });
         });
     </script>
 </head>
@@ -137,7 +106,7 @@
     <label class="form-check-label" for="exampleCheck1">Ghi nhận phí phạt</label>
 </div>
 <div class="form-row">
-    <div class="col"><button class="btn btn-primary" type="button" id="abc1">Ghi trả</button></div>
+    <div class="col"><button class="btn btn-primary" type="button" onclick="checkinbyDKCBs()">Ghi trả</button></div>
 </div>
 
 <!-- The Modal -->
