@@ -43,6 +43,13 @@
                 margin-left: -15rem;
             }
         }
+        th {
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -182,9 +189,9 @@
         }
     }
 
-    function rollbackacheckout() {
+    function rollbackacheckout(copyNumber) {
         var empObj = {
-            strCopyNumbers: 'TK/HCHL001415',
+            strCopyNumbers: copyNumber,
         };
         $.ajax({
             contentType: "application/json;charset=utf-8",

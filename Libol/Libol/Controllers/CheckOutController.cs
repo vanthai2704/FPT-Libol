@@ -21,13 +21,13 @@ namespace Libol.Controllers
         // GET: CheckOut
         public ActionResult Index()
         {
+            patroncode = "0";
             return View();
         }
 
         // GET: Giahan
         public ActionResult Giahan()
         {
-            patroncode = "0";
             return View();
         }
 
@@ -43,30 +43,7 @@ namespace Libol.Controllers
             string strCheckOutDate
             )
         {
-            CIR_PATRON patron =
-                db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
-            ViewBag.groupname = patron.CIR_PATRON_GROUP.Name;
-            ViewBag.loanquota = patron.CIR_PATRON_GROUP.LoanQuota;
-            ViewBag.ethic = patron.CIR_DIC_ETHNIC == null ? null : patron.CIR_DIC_ETHNIC.Ethnic;
-            ViewBag.educationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel;
-            ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
-            ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
-            try
-            {
-                ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
-            }
-            catch (Exception)
-            {
-                ViewBag.faculty = null;
-            }
-            try
-            {
-                ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
-            }
-            catch (Exception)
-            {
-                ViewBag.college = null;
-            }
+            getpatrondetail(strPatronCode);
             SP_GET_PATRON_INFOR_Result patroninfo =
                 db.SP_GET_PATRON_INFOR("", strPatronCode, strFixDueDate).First();
             ViewData["patroninfo"] = patroninfo;
