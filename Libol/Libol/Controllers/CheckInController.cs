@@ -80,9 +80,15 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult FindByCardNumber(string strFullName)
+        public PartialViewResult FindByName(string strFullName)
         {
             ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").ToList().Take(50).ToList();
+            return PartialView("_findByCardNumber");
+        }
+        [HttpGet]
+        public PartialViewResult FindByCardNumber()
+        {
+            ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs("", "").ToList().Take(0).ToList();
             return PartialView("_findByCardNumber");
         }
 
