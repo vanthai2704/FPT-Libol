@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
+using System.Data.Entity.SqlServer;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
@@ -53,14 +54,12 @@ namespace Libol.Controllers
                 }
                 else
                 {
-                    CIR_PATRON emptyPatron = new CIR_PATRON();
-                    return View(emptyPatron);
+                    return View(new CIR_PATRON());
                 }
             }
             else
             {
-                CIR_PATRON emptyPatron = new CIR_PATRON();
-                return View(emptyPatron);
+                return View(new CIR_PATRON());
             }
             
         }
@@ -278,6 +277,10 @@ namespace Libol.Controllers
                 }
 
                 var intPatronID = new ObjectParameter("intRetval", typeof(int));
+                if (String.IsNullOrEmpty(strPortrait))
+                {
+                    strPortrait = db.CIR_PATRON.Where(a => a.ID == ID).First().Portrait;
+                }
                 db.SP_PAT_UPDATE_PATRON(
                     ID, strCode, strValidDate, strExpiredDate, strLastIssuedDate, strLastName, strFirstName, strMiddleName, blnSex, strDOB, intEthnicID, intEducationID,
                     intOccupationID, strWorkPlace, strTelephone, strMobile, strEmail, strPortrait, intPatronGroupID, strNote, strIDCard, intPatronID
@@ -385,7 +388,7 @@ namespace Libol.Controllers
                                         {
                                             patronFile.strDOB = ds.Tables[0].Rows[j].Field<DateTime>("Ngày sinh");
                                         }
-                                        catch (Exception e)
+                                        catch (Exception)
                                         {
                                             DOB = ds.Tables[0].Rows[j].Field<string>("Ngày sinh");
                                             try
@@ -398,7 +401,10 @@ namespace Libol.Controllers
                                             }
                                             
                                         }
-                                        
+
+                                        patronFile.IsValid = CheckCodeInFile(patronFile.strCode, listPatronInFile);
+
+
                                         if (patronFile.IsValid)
                                         {
                                             listPatronInFile.Add(patronFile);
@@ -418,6 +424,19 @@ namespace Libol.Controllers
             ViewBag.ListPatron = listPatronInFile;
             ViewBag.ListPatronInvalid = listPatronInFileInvalid;
             return View();
+        }
+
+        public bool CheckCodeInFile(string strCode, List<PatronFile> listPatronInFile)
+        {
+            bool IsValid = true;
+            foreach(PatronFile p in listPatronInFile)
+            {
+                if(p.strCode == strCode)
+                {
+                    IsValid = false;
+                }
+            }
+            return IsValid;
         }
 
         [HttpPost]
@@ -582,9 +601,12 @@ namespace Libol.Controllers
             {
                 string searchValue = model.search.value;
                 search = search.Where(a => a.Code.Contains(searchValue)
-                        || (a.FirstName + " " + a.MiddleName + " " + a.LastName).Contains(searchValue)
-                        || (a.FirstName +  " " + a.LastName).Contains(searchValue)
-                        || a.DOB.ToString().Contains(searchValue)
+                        || (a.FirstName.Trim() + " " + a.MiddleName.Trim() + " " + a.LastName.Trim()).Contains(searchValue)
+                        || (a.FirstName.Trim() +  " " + a.LastName.Trim()).Contains(searchValue)
+                        || (SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || ("0"+SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || (SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || ("0"+SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
                         || a.Sex.Contains(searchValue)
                         || (a.CIR_DIC_ETHNIC != null && a.CIR_DIC_ETHNIC.Ethnic.Contains(searchValue))
                         || (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College.Contains(searchValue))
@@ -607,14 +629,17 @@ namespace Libol.Controllers
             if (model.columns[1].search.value != null)
             {
                 string searchValue = model.columns[1].search.value;
-                search = search.Where(a => (a.FirstName + " " + a.MiddleName + " " + a.LastName).Contains(searchValue)
-                            || (a.FirstName + " " + a.LastName).Contains(searchValue)
+                search = search.Where(a => (a.FirstName.Trim() + " " + a.MiddleName.Trim() + " " + a.LastName.Trim()).Contains(searchValue)
+                            || (a.FirstName.Trim() + " " + a.LastName.Trim()).Contains(searchValue)
                 );
             }
             if (model.columns[2].search.value != null)
             {
                 string searchValue = model.columns[2].search.value;
-                search = search.Where(a => a.DOB.ToString().Contains(searchValue));
+                search = search.Where(a => (SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || ("0" + SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || (SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || ("0" + SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue));
             }
             if (model.columns[3].search.value != null)
             {

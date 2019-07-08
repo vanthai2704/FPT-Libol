@@ -43,6 +43,13 @@
                 margin-left: -15rem;
             }
         }
+        th {
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -74,7 +81,7 @@
                             <div class="form-group"><label class="col-form-label">Ngày mượn:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+                            <div class="form-group"><input class="form-control" type="date" id="strCheckoutDate" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-bottom: 5px;">
@@ -82,7 +89,7 @@
                             <div class="form-group"><label class="col-form-label">Hạn trả:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" id="strFixDueDate" type="date" value="2029-06-11" /></div>
+                            <div class="form-group"><input class="form-control" id="strDueDate" type="date"  /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;">
@@ -92,7 +99,7 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" type="text" onkeypress="checkoutSuccess(event)" /></div>
+                        <div class="col"><input class="form-control" id="strCopyNumber" type="text" onkeypress="checkoutSuccess(event)" /></div>
                         <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
@@ -121,11 +128,11 @@
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strFixDueDate").value,
+            strFixDueDate: document.getElementById("strDueDate").value,
             intLoanMode: 1,
             intHoldIgnore: 0,
-            strCopyNumbers: 'TK/HCHL001415',
-            strCheckOutDate: '06/21/2019'
+            strCopyNumbers: document.getElementById("strCopyNumber").value,
+            strCheckOutDate: document.getElementById("strCheckoutDate").value
         };
         if (e.keyCode == 13) {
             $.ajax({
@@ -147,7 +154,7 @@
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strFixDueDate").value
+            strFixDueDate: document.getElementById("strDueDate").value
         };
         if (e.keyCode == 13) {
             $.ajax({
@@ -182,7 +189,23 @@
         }
     }
 
-    
+    function rollbackacheckout(copyNumber) {
+        var empObj = {
+            strCopyNumbers: copyNumber,
+        };
+        $.ajax({
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            url: "/CheckOut/Rollbackacheckout",
+            data: JSON.stringify(empObj),
+            success: function (result) {
+                $("#contentcheckout").html(result);
+            },
+            error: function (errormessage) {
+            }
+        });
+    }
+
 </script>
 
 
