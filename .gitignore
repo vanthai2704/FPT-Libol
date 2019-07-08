@@ -7,3 +7,5 @@ Libol/.vs/Libol/v15/Server/sqlite3/storage.ide-shm
 Libol/.vs/Libol/v15/Server/sqlite3/storage.ide
 Libol/.vs/Libol/v15/.suo
 *.dll
+Libol/Libol/obj/Debug/Libol.csproj.FileListAbsolute.txt
+Libol/Libol/obj/Debug/Libol.csprojAssemblyReference.cache
