@@ -175,7 +175,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p id="notifyMessageUpdate"></p>
+                    <p id="notifyMessageUpdate" style="color: green;"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="reloadUpdate()">Đóng</button>
@@ -193,7 +193,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p id="notifyMessage"></p>
+                    <p id="notifyMessage" style="color:red;"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -229,14 +229,14 @@
                 switch (result.CodeError) {
                     case 0:
                         $("#modalNotifyUpdate").modal();
-                        document.getElementById("notifyMessageUpdate").innerText = result.Data;
+                        document.getElementById("notifyMessageUpdate").innerHTML = result.Data;
                         break;
                     case 1:
                         showInvalid(result.Data);
                         break;
                     case 2:
                         $("#modalNotify").modal();
-                        document.getElementById("notifyMessage").innerText = result.Data;
+                        document.getElementById("notifyMessage").innerHTML = result.Data;
                         break;
                     default:
                         UploadPhotoPatronUpdate(result.Data);
