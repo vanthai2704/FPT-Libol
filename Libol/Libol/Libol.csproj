@@ -172,6 +172,7 @@
     <Compile Include="Controllers\PrintLabelController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
     <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
+    <Compile Include="EntityResult\SP_CATA_GET_MODIFIED_FIELDS_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LIBRARY_SELECT_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LOCATION_GET_INFO_Result.cs" />
     <Compile Include="Global.asax.cs">
@@ -547,7 +548,9 @@
     <Compile Include="Models\FPT_EDU_GET_PATRON_ONLOAN_INCOMMING_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_EDU_GET_SHELF_CONTENT_Result.cs" />
+    <Compile Include="Models\FPT_EDU_GET_SHELF_CONTENT_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_EDU_GET_VALUEFROMID_BOOK_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -555,6 +558,12 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_EDU_SP_GETLOANTYPES_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GET_BLACK_PATRON_INFOR_Result.cs">
@@ -2189,7 +2198,6 @@
     <Content Include="Views\Catalogue\MainTab.cshtml" />
     <Content Include="Views\Catalogue\AddNewCatalogue.cshtml" />
     <Content Include="Views\Catalogue\SearchCodeNumber.cshtml" />
-    <Content Include="Views\Catalogue\UpdateCatalogue.cshtml" />
     <Content Include="Views\PrintBarcode\Index.cshtml" />
     <Content Include="Views\PrintLabel\Index.cshtml" />
     <Content Include="Views\CheckIn\Index.cshtml" />

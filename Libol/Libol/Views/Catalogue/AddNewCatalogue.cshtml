@@ -127,7 +127,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-info" onclick="location.href='/Catalogue/AddCatalogueDetail';">Thêm Trường</button>
                 <button type="button" class="btn btn-success" onclick="location.href='/Catalogue/AddNewCatalogue';">Biên Mục Mới</button>
-                <button type="button" class="btn btn-secondary" onclick="location.href='/Shelf/Index?Code='">Xếp Giá</button>
+                <button type="button" class="btn btn-secondary" id="btnShelf" >Xếp Giá</button>
             </div>
         </div>
     </div>
@@ -157,11 +157,11 @@
 
                     field = field.replace('$', '');
                     if (item.FieldCode == '245$b') {
-                        html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Nhan Đề Song Song [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "1></input>     </div> " +
-                            "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Phụ Đề [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "2></input>     </div>";
+                        html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Nhan Đề Song Song [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "1></input>     </div> " +
+                            "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Phụ Đề [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "2></input>     </div>";
                     }
                     else if (!(item.FieldCode == '900' || item.FieldCode == '911' || item.FieldCode == '925' || item.FieldCode == '926' || item.FieldCode == '927')) {
-                        html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-2' id=" + field + "></input> </div>";
+                        html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "></input> </div>";
                     }
                 });
                 $("#formCreated").html(html);
@@ -171,10 +171,17 @@
                 document.getElementById("btnReset").disabled = false;
                 document.getElementById("btnAddField").disabled = false;
                 $(document).ready(function () {
+                    //check tittle
                     $("#245a").focusout(function () {
-                        checkTitle($('#245a').val() , '');
+                        checkTitle($('#245a').val(), '');
                         
                     });
+
+                    //Check ISBN  \\ Chưa check cho trường hợp lặp
+                    $("#020a").focusout(function () {
+                        checkItemNumber($('#020a').val() , '020$a');
+                    });
+
                 });
             },
             error: function (errorThrown) {
@@ -184,18 +191,48 @@
         });
 
     }
-    function checkTitle(tit , type) {
-        
+    function checkTitle(tit, type) {
         $.ajax({
             url: "/Catalogue/CheckTitle",
             type: "POST",
             data: JSON.stringify({ strTitle: tit, strItemType: type }),
             contentType: "application/json;charset=utf-8",
             dataType: "json",
-            success: function (code) {
-               
+            success: function (listTitle) {
+                if (listTitle.length > 0) {
+                    $("#dv245a").append("<label class='control-label col-md-3 align-self-center font-weight-bold'  id ='lbCheck245'> </label>").focus();
+                    $('#lbCheck245').text("Nhan đề đã tồn tại , mời nhập lại !").css('color' , 'red');
+                    //alert 
+                    $('#245a').focus();
+                }
+                else {
+                    $('#lbCheck245').remove();
+                }
+            },
+            error: function (errorThrown) {
+                alert(errorThrown);
+            }
 
-
+        });
+    }
+    function checkItemNumber(value , code) {
+        $.ajax({
+            url: "/Catalogue/CheckItemNumber",
+            type: "POST",
+            data: JSON.stringify({ strFieldValue: value, strFieldCode: code }),
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (Value) {
+                if (Value > 0) {
+                    $("#020a").append("<label class='control-label col-md-3 align-self-center font-weight-bold'  id ='lbCheck020'> </label>").focus();
+                    $('#lbCheck020').text("Mã ISBN đã tồn tại , mời nhập lại !").css('color', 'red');
+                    //alert 
+                    
+                }
+                else {
+                    $('#lbCheck245').remove();
+                }
+                
             },
             error: function (errorThrown) {
                 alert(errorThrown);
@@ -276,10 +313,13 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (code) {
+                //pop up Modal 
                 $('#codeId').text(code);
                 $('#centralModalSm').modal({ backdrop: 'static', keyboard: false })
                 $('#centralModalSm').modal('toggle');
-
+                $('#btnShelf').click(function () {
+                    window.location.href = '/Shelf/Index?Code=' + code;
+                });
 
             },
             error: function (errorThrown) {

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
 using Libol.EntityResult;
+using System.Data.Entity.Core.Objects;
 
 namespace Libol.Controllers
 {
@@ -15,11 +16,11 @@ namespace Libol.Controllers
         // GET: Catalogue
         public ActionResult MainTab()
         {
-            
+
             return View();
         }
 
- 
+
 
         //----------------Add New Cata ----------------
         //---------------------------------------------
@@ -46,9 +47,18 @@ namespace Libol.Controllers
         {
             //catalogueBusiness.CheckExistNumber("9781184", "020$a");
             //string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
-            strTitle = "N'" + strTitle +"'";
-            List<FPT_SP_CATA_CHECK_EXIST_TITLE_Result> titleList = db.FPT_SP_CATA_CHECK_EXIST_TITLE(strTitle, strItemType).ToList();
+            //strTitle = "N'" + strTitle +"'";
+            List<FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result> titleList = db.FPT_SP_CATA_CHECK_EXIST_TITLE_2019(strTitle, strItemType).ToList();
             return Json(titleList, JsonRequestBehavior.AllowGet);
+        }
+
+        //Check ISBN
+        [HttpPost]
+        public JsonResult CheckItemNumber(string strFieldValue, string strFieldCode)
+        {
+            ObjectParameter Output = new ObjectParameter("lngItemID", typeof(Int32));
+            db.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(strFieldValue, strFieldCode, Output);
+            return Json(Output.Value, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -60,7 +70,7 @@ namespace Libol.Controllers
             //string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
             List<GET_CATALOGUE_FIELDS_Result> formComplated = catalogueBusiness.GetComplatedForm(0, "", intFormID);
             ViewData["MarcFormComplated"] = formComplated;
-            
+
             return Json(formComplated, JsonRequestBehavior.AllowGet);
         }
 
@@ -69,10 +79,11 @@ namespace Libol.Controllers
 
 
         [HttpPost]
-        public JsonResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, ITEM item)
+        public JsonResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue)
         {
-            //catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue, item);
-            return Json("Doanhdq", JsonRequestBehavior.AllowGet);
+            string code = catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue);
+            string itemID = db.ITEMs.Where( i=> i.Code == code).Select( i=> i.ID).FirstOrDefault().ToString();
+            return Json(itemID, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -95,14 +106,62 @@ namespace Libol.Controllers
             return View();
         }
 
-        //----------------Update Cata -----------
-        //---------------------------------------------
-        public ActionResult UpdateCatalogue()
+        [HttpPost]
+        public JsonResult SearchCode(string strCode, string strCN, string strTT)
         {
-            return View();
+            List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> inforList = catalogueBusiness.SearchCode(strCode, strCN, strTT);
+            return Json(inforList, JsonRequestBehavior.AllowGet);
         }
 
-        //
-        
+
+
+
+        //----------------Detail Cata -----------
+        //---------------------------------------------
+        public ActionResult AddNewCatalogueDetail()
+        {
+            string Id = Request["ID"];
+            string strFieldCode = "";
+            if (Id != "")
+            {
+                List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(Id).ToList();
+                //Lay Content cua LEADER
+                ViewData["Leader"] = listContent[0];
+                listContent.RemoveAt(0);
+                //Ghep Cac truong trung nhau thanh 1 dong
+                List<int> index = new List<int>();
+                for (int i = 0; i < listContent.Count; i++)
+                {
+                    if(i > 0)
+                    {
+                        if (listContent[i].FieldCode == listContent[i - 1].FieldCode)
+                        {
+                            index.Add(i-1);
+                            listContent[i].Content = listContent[i-1].Content + "::" + listContent[i].Content;
+                        }
+                    }
+                    
+                }
+                //remove các trường trùng đã được ghép
+                for (int i = 0; i < index.Count; i++)
+                {
+                    listContent.RemoveAt(index[i] - i);
+                }
+
+                ViewData["ListContent"] = listContent;
+                
+                //get mô tả từng trường
+                foreach (SP_CATA_GET_CONTENTS_OF_ITEMS_Result item in listContent)
+                {
+                    strFieldCode = strFieldCode + item.IDSort + ",";
+                }
+
+                List<SP_CATA_GET_MODIFIED_FIELDS_Result> listField = catalogueBusiness.FPT_SP_CATA_GET_MODIFIED_FIELDS(0, 0, strFieldCode, "", "", 0).ToList();
+
+                ViewData["ListField"] = listField;
+            }
+
+            return View();
+        }
     }
 }

@@ -210,7 +210,7 @@ namespace Libol.Models
                         BibLevel = bibLevel
                     };
                     InsertItem(ref item);
-
+                    code = item.Code;
                     //add content vào các bảng Fields
                     for (int i = 0; i < listFieldsName.Count; i++)
                     {
@@ -238,7 +238,7 @@ namespace Libol.Models
             }
 
 
-            return "";
+            return code;
         }
 
 
@@ -453,5 +453,52 @@ namespace Libol.Models
                 new object[] { intIsAuthority, intFormID, strFieldCodes, strAddedFieldCodes, 0 }).ToList();
             return list;
         }
+
+        public List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> SearchCode(string strCode ,string strCN, string strTT)
+        {
+            List<int> ItemId = new List<int>();
+
+            if(strCode != "")
+            {
+                int id = db.ITEMs.Where(a => a.Code == strCode).Select(a => a.ID).FirstOrDefault();
+                ItemId.Add(id);
+            }
+            if (strCN != "")
+            {
+                int id = db.HOLDINGs.Where(a => a.CopyNumber == strCN).Select(a => a.ItemID).FirstOrDefault();
+                ItemId.Add(id);
+            }
+            if (strTT != "")
+            {
+                strTT = strTT.ToUpper();
+                List<int> id = db.ITEM_TITLE.Where(a => a.Title.Contains(strTT)).Select(a => a.ItemID).ToList();
+                ItemId = ItemId.Concat(id).ToList();
+            }
+
+            //get Infor
+            List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> inforList = new List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result>();
+            foreach (int item in ItemId)
+            {
+                 inforList = inforList.Concat(db.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(item.ToString(), 0).ToList()).ToList();
+
+            }
+
+            return inforList;
+        }
+
+        public List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> GetContentByID(string Id)
+        {
+            List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> list = db.SP_CATA_GET_CONTENTS_OF_ITEMS(Id, 0).ToList();
+            return list;
+        }
+
+        public List<SP_CATA_GET_MODIFIED_FIELDS_Result> FPT_SP_CATA_GET_MODIFIED_FIELDS(Nullable<int> intIsAuthority, Nullable<int> intFormID, string strFieldCodes, string strAddedFieldCodes, string strUsedFieldCodes, Nullable<int> intGroupBy)
+        {
+            List<SP_CATA_GET_MODIFIED_FIELDS_Result> list = db.Database.SqlQuery<SP_CATA_GET_MODIFIED_FIELDS_Result>("SP_CATA_GET_MODIFIED_FIELDS {0}, {1}, {2},{3},{4},{5}",
+                new object[] { intIsAuthority, intFormID, strFieldCodes, strAddedFieldCodes, strUsedFieldCodes , intGroupBy }).ToList();
+            return list;
+        }
+
+
     }
 }
