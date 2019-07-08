@@ -24,8 +24,7 @@ namespace Libol.Controllers
         {
             getpatrondetail(strPatronCode);
             int id2 = ViewBag.PatronDetail.ID;
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id2).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
+            getonloandetail(id2);
             return PartialView("_checkinByCardNumber");
         }
 
@@ -46,8 +45,7 @@ namespace Libol.Controllers
                 new ObjectParameter("intError", typeof(int)));
             getpatrondetail(strPatronCode);
             int id2 = ViewBag.PatronDetail.ID;
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id2).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
+            getonloandetail(id2);
             return PartialView("_checkinByDKCB");
         }
 
@@ -74,8 +72,7 @@ namespace Libol.Controllers
             }
             getpatrondetail(strPatronCode);
             int id2 = ViewBag.PatronDetail.ID;
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id2).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
+            getonloandetail(id2);
             return PartialView("_checkinByDKCB");
         }
 
@@ -146,6 +143,49 @@ namespace Libol.Controllers
             public string strNote { get; set; }
             public string intOccupationID { get; set; }
             public string intPatronGroupID { get; set; }
+        }
+
+        public class OnLoan
+        {
+            public string Title { get; set; }
+            public string Copynumber { get; set; }
+            public string CheckoutDate { get; set; }
+            public string DueDate { get; set; }
+            public string Note { get; set; }
+        }
+
+        public string getcopynumber(string copynumber)
+        {
+            string validate = copynumber.Replace("$a", "");
+            validate = validate.Replace("$b", "");
+            validate = validate.Replace("$b", "");
+            validate = validate.Replace("=$b", "");
+            validate = validate.Replace(":$b", "");
+            validate = validate.Replace("/$c", "");
+            validate = validate.Replace(".$n", "");
+            validate = validate.Replace(":$p", "");
+            validate = validate.Replace(";$c", "");
+            validate = validate.Replace("+$e", "");
+            return validate;
+        }
+
+        public void getonloandetail(int id)
+        {
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            List<OnLoan> onLoans = new List<OnLoan>();
+
+            foreach (SP_GET_PATRON_ONLOAN_COPIES_Result a in patronloaninfo)
+            {
+                onLoans.Add(new OnLoan
+                {
+                    Title = getcopynumber(a.TITLE),
+                    Copynumber = a.COPYNUMBER,
+                    CheckoutDate = a.CHECKOUTDATE.ToString("dd/MM/yyyy"),
+                    DueDate = a.DUEDATE.Value.ToString("dd/MM/yyyy"),
+                    Note = a.NOTE
+                });
+            }
+            ViewBag.patronloaninfo = onLoans;
         }
     }
 }

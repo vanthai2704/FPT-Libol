@@ -81,7 +81,7 @@
                             <div class="form-group"><label class="col-form-label">Ngày mượn:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+                            <div class="form-group"><input class="form-control" type="date" id="strCheckoutDate" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-bottom: 5px;">
@@ -89,7 +89,7 @@
                             <div class="form-group"><label class="col-form-label">Hạn trả:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" id="strFixDueDate" type="date" value="2029-06-11" /></div>
+                            <div class="form-group"><input class="form-control" id="strDueDate" type="date"  /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;">
@@ -128,11 +128,11 @@
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strFixDueDate").value,
+            strFixDueDate: document.getElementById("strDueDate").value,
             intLoanMode: 1,
             intHoldIgnore: 0,
             strCopyNumbers: document.getElementById("strCopyNumber").value,
-            strCheckOutDate: '06/21/2019'
+            strCheckOutDate: document.getElementById("strCheckoutDate").value
         };
         if (e.keyCode == 13) {
             $.ajax({
@@ -154,7 +154,7 @@
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strFixDueDate").value
+            strFixDueDate: document.getElementById("strDueDate").value
         };
         if (e.keyCode == 13) {
             $.ajax({

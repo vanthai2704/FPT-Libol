@@ -1,5 +1,4 @@
 ﻿@{
-    List<Libol.Models.SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = (List<Libol.Models.SP_GET_PATRON_ONLOAN_COPIES_Result>)ViewData["patronloaninfo"];
 }
 <head>
     <style>
@@ -88,7 +87,7 @@
     </div>
 </div>
 <h5>Bạn đọc này cũng đang mượn các ấn phẩm</h5>
-@if (patronloaninfo.Count() > 0)
+@if (ViewBag.patronloaninfo.Count > 0)
 {
     <table id="table_loaninfo" class="table table-striped table-bordered datatables">
         <thead>
@@ -103,15 +102,15 @@
 
         </thead>
         <tbody>
-            @foreach (var item in patronloaninfo)
+            @foreach (var item in ViewBag.patronloaninfo)
             {
                 <tr>
                     <td></td>
-                    <td>@item.TITLE</td>
-                    <td>@item.COPYNUMBER</td>
-                    <td>@string.Format("{0:dd-MM-yyyy}", item.CHECKOUTDATE)</td>
-                    <td>@string.Format("{0:dd-MM-yyyy}", item.DUEDATE)</td>
-                    <td>@item.NOTE</td>
+                    <td>@item.Title</td>
+                    <td>@item.Copynumber</td>
+                    <td>@item.CheckoutDate</td>
+                    <td>@item.DueDate</td>
+                    <td>@item.Note</td>
                 </tr>
             }
         </tbody>
@@ -233,7 +232,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
             </div>
 
         </div>

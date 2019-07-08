@@ -10,7 +10,7 @@ using System.Data.Entity.Core.Objects;
 
 namespace Libol.Controllers
 {
-    public class CheckOutController : Controller
+    public class CheckOutController : BaseController
     {
 
         private LibolEntities db = new LibolEntities();
@@ -44,7 +44,7 @@ namespace Libol.Controllers
             )
         {
             getpatrondetail(strPatronCode);
-            int success= db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, "12/31/2019", strCheckOutDate, intHoldIgnore,
+            int success= db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, strFixDueDate, strCheckOutDate, intHoldIgnore,
                new ObjectParameter("intOutValue", typeof(int)),
                 new ObjectParameter("intOutID", typeof(int)));
             string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
@@ -63,7 +63,7 @@ namespace Libol.Controllers
             {
                 strTransactionIDs = "0";
             }
-            ViewBag.currentloaninfo = checkOutBusiness.SP_GET_CURRENT_LOANINFORs(strTransactionIDs, "Loan").ToList();
+            getcurrentloandetail();
             patroncode = strPatronCode;
             return PartialView("_checkoutSuccess");
         }
@@ -85,8 +85,7 @@ namespace Libol.Controllers
 
             getpatrondetail(strPatronCode);
             int id = ViewBag.PatronDetail.ID;
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
+            getonloandetail(id);
             return PartialView("_showPatronInfo");
         }
 
@@ -99,10 +98,7 @@ namespace Libol.Controllers
                new ObjectParameter("intError", typeof(int)));
 
             strTransactionIDs = strTransactionIDs.Replace(","+ strCopyNumbers, "");
-            ViewBag.currentloaninfo = checkOutBusiness.SP_GET_CURRENT_LOANINFORs(strTransactionIDs, "Loan").ToList();
-            SP_GET_PATRON_INFOR_Result patroninfo =
-               db.SP_GET_PATRON_INFOR("", patroncode, DateTime.Now.ToString("dd/MM/yyyy")).First();
-            ViewData["patroninfo"] = patroninfo;
+            getcurrentloandetail();
             getpatrondetail(patroncode);
             return PartialView("_checkoutSuccess");
         }
@@ -138,6 +134,44 @@ namespace Libol.Controllers
             };
         }
 
+        public void getonloandetail(int id)
+        {
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            List<OnLoan> onLoans = new List<OnLoan>();
+
+            foreach (SP_GET_PATRON_ONLOAN_COPIES_Result a in patronloaninfo)
+            {
+                onLoans.Add(new OnLoan
+                {
+                    Title = getcopynumber(a.TITLE),
+                    Copynumber = a.COPYNUMBER,
+                    CheckoutDate = a.CHECKOUTDATE.ToString("dd/MM/yyyy"),
+                    DueDate = a.DUEDATE.Value.ToString("dd/MM/yyyy"),
+                    Note = a.NOTE
+                });
+            }
+            ViewBag.patronloaninfo = onLoans;
+        }
+
+        public void getcurrentloandetail()
+        {
+            List<SP_GET_CURRENT_LOANINFOR_Result> currentloaninfo = checkOutBusiness.SP_GET_CURRENT_LOANINFORs(strTransactionIDs, "Loan").ToList();
+            List<OnLoan> onLoans = new List<OnLoan>();
+
+            foreach (SP_GET_CURRENT_LOANINFOR_Result a in currentloaninfo)
+            {
+                onLoans.Add(new OnLoan
+                {
+                    Title = getcopynumber(a.Title),
+                    Copynumber = a.CopyNumber,
+                    CheckoutDate = a.CheckOutDate.ToString("dd/MM/yyyy"),
+                    DueDate = a.DueDate.ToString("dd/MM/yyyy"),
+                    Note = a.Note
+                });
+            }
+            ViewBag.currentloaninfo = onLoans;
+        }
+
         public class CustomPatron
         {
             public int ID { get; set; }
@@ -161,6 +195,30 @@ namespace Libol.Controllers
             public string strNote { get; set; }
             public string intOccupationID { get; set; }
             public string intPatronGroupID { get; set; }
+        }
+
+        public class OnLoan
+        {
+            public string Title { get; set; }
+            public string Copynumber { get; set; }
+            public string CheckoutDate { get; set; }
+            public string DueDate { get; set; }
+            public string Note { get; set; }
+        }
+
+        public string getcopynumber(string copynumber)
+        {
+            string validate = copynumber.Replace("$a", "");
+            validate = validate.Replace("$b", "");
+            validate = validate.Replace("$b", "");
+            validate = validate.Replace("=$b", "");
+            validate = validate.Replace(":$b", "");
+            validate = validate.Replace("/$c", "");
+            validate = validate.Replace(".$n", "");
+            validate = validate.Replace(":$p", "");
+            validate = validate.Replace(";$c", "");
+            validate = validate.Replace("+$e", "");
+            return validate;
         }
     }
 }

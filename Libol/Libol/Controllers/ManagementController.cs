@@ -108,7 +108,15 @@ namespace Libol.Controllers
                 return Json(new Result()
                 {
                     CodeError = 2,
-                    Data = "Người dùng với tên đăng nhập " + Username + " đã tồn tại!"
+                    Data = "Người dùng với tên đăng nhập <strong style='color:black; '>" + Username + "</strong> đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID != ID).Where(a => a.Email == Email).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Người dùng với email <strong style='color:black; '>" + Email + "</strong> đã tồn tại!"
                 }, JsonRequestBehavior.AllowGet);
             }
             string InvalidFields = "";
@@ -164,7 +172,7 @@ namespace Libol.Controllers
                 return Json(new Result()
                 {
                     CodeError = 0,
-                    Data = "Tài khoản " + Username + " đã được cập nhật thành công cho " + Name
+                    Data = "Tài khoản <strong style='color:black;'>" + Username + " </strong> đã được cập nhật thành công cho <strong style='color:black;'>" + Name + "</strong>"
                 }, JsonRequestBehavior.AllowGet);
             }
         }

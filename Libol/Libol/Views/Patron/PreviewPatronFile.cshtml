@@ -35,7 +35,7 @@
 @*END------------SCRIPT FOR DATATABLES*@
 @if (ViewBag.ListPatronInvalid.Count > 0)
 {
-    <p>Vui lòng kiểm tra các dòng sau trong file excel</p>
+    <p style="color: red;">Vui lòng kiểm tra các dòng sau trong file excel</p>
 }
 
 @foreach (PatronFile patronInvalid in ViewBag.ListPatronInvalid)
