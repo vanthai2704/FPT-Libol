@@ -120,11 +120,13 @@
                                                                                                      //List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentFields = ViewData["listContentResult"] as List<FPT_EDU_GET_SHELF_CONTENT_Result>;
 
     }
+    <label class="col-md-12" style="color:red" AutoSize="true">@ViewBag.content</label>
+    
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12">
             <div class="form-group col-md-6">
                 <label class="col-md-6">Mã Tài Liệu</label>
-                <input type="email" class="form-control" id="txtCode" placeholder="FPT12345">
+                <input type="email" class="form-control" id="txtCode">@Request.QueryString["Code"]
                 <button type="button" id="btnCodeFind" class="btn btn-primary form-control" data-toggle="modal" data-target="#exampleModal">Tìm</button>
 
             </div>
@@ -169,7 +171,6 @@
                 <label class="col-md-3">Đơn giá</label>
                 <input type="text" class="form-control col-md-3" id="txtPrice" placeholder="1234">
                 <select class="form-control" name="ktlList" id="currencyList" onchange="selectCurrency();">
-                    <option value="-1">----- Chọn -----</option>
                     @{
                         foreach (ACQ_CURRENCY item in listCurrency)
                         {
@@ -178,7 +179,7 @@
                     }
                 </select>
                 <label class="col-md-2">Tỉ giá hạch toán</label>
-                <label type="text" class="form-control col-md-1" id="itemRate"></label>
+                <label type="text" class="form-control col-md-1" id="itemRate">1</label>
             </div>
         </div>
         <div class="form-row col-md-12 form-inline">

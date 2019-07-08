@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
+using System.Data.Entity.SqlServer;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
@@ -15,7 +16,7 @@ using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
-    public class PatronController : Controller
+    public class PatronController : BaseController
     {
         private LibolEntities db = new LibolEntities();
        
@@ -24,8 +25,9 @@ namespace Libol.Controllers
             return View();
         }
 
-        public ActionResult Create()
+        public ActionResult Create(string strPatronID)
         {
+            
             ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
             ViewBag.PatronGroup = db.SP_PAT_GET_PATRONGROUP().ToList();
             ViewBag.Education = db.SP_PAT_GET_EDUCATION().ToList();
@@ -35,7 +37,31 @@ namespace Libol.Controllers
             ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
             ViewBag.Province = db.CIR_DIC_PROVINCE.ToList();
             ViewBag.Countries = db.SP_GET_COUNTRIES().ToList();
-            return View();
+
+            
+            if(!String.IsNullOrEmpty(strPatronID))
+            {
+                int id = Int32.Parse(strPatronID);
+                var patron = db.CIR_PATRON.Where(a => a.ID == id).Count() == 0 ? null : db.CIR_PATRON.Where(a => a.ID == id).First();
+                if(patron != null)
+                {
+                    if (patron.CIR_PATRON_UNIVERSITY != null)
+                    {
+                        ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == patron.CIR_PATRON_UNIVERSITY.CollegeID).ToList();
+                    }
+
+                    return View(patron);
+                }
+                else
+                {
+                    return View(new CIR_PATRON());
+                }
+            }
+            else
+            {
+                return View(new CIR_PATRON());
+            }
+            
         }
 
 
@@ -161,6 +187,125 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        public JsonResult UpdatePatron(int ID, string strCode, string strValidDate, string strExpiredDate, string strLastIssuedDate, string strLastName, string strFirstName,
+             Nullable<bool> blnSex, string strDOB, Nullable<int> intEthnicID, Nullable<int> intEducationID, Nullable<int> intOccupationID,
+            string strWorkPlace, string strTelephone, string strMobile, string strEmail, string strPortrait, Nullable<int> intPatronGroupID, string strNote,
+            Nullable<int> intIsQue, string strIDCard, string strAddress, Nullable<int> intProvinceID, string strCity, Nullable<int> intCountryID, string strZip,
+            Nullable<int> intisActive, int intCollegeID, int intFacultyID, string strGrade, string strClass)
+        {
+            var patron = db.CIR_PATRON.Where(a => a.ID == ID).Count() == 0 ? null : db.CIR_PATRON.Where(a => a.ID == ID).First();
+            if (patron == null)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Xảy ra lỗi vui lòng tìm kiếm lại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+
+            string InvalidFields = "";
+            if (String.IsNullOrEmpty(strFirstName))
+            {
+                InvalidFields += "strFirstName-";
+            }
+            if (String.IsNullOrEmpty(strLastName))
+            {
+                InvalidFields += "strLastName-";
+            }
+            if (String.IsNullOrEmpty(strDOB))
+            {
+                InvalidFields += "strDOB-";
+            }
+            if (String.IsNullOrEmpty(strCode))
+            {
+                InvalidFields += "strCode-";
+            }
+            if (intPatronGroupID == null)
+            {
+                InvalidFields += "intPatronGroupID-";
+            }
+            if (String.IsNullOrEmpty(strValidDate))
+            {
+                InvalidFields += "strValidDate-";
+            }
+            if (String.IsNullOrEmpty(strExpiredDate))
+            {
+                InvalidFields += "strExpiredDate-";
+            }
+            if (String.IsNullOrEmpty(strLastIssuedDate))
+            {
+                InvalidFields += "strLastIssuedDate-";
+            }
+            if (intCollegeID == -1)
+            {
+                InvalidFields += "college-";
+            }
+            if (intFacultyID == -1)
+            {
+                InvalidFields += "faculty-";
+            }
+
+
+            if (InvalidFields != "")
+            {
+                return Json(new Result()
+                {
+                    CodeError = 1,
+                    Data = InvalidFields
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            if (db.CIR_PATRON.Where(a => (a.Code == strCode && a.ID != ID)).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Bạn đọc với số thẻ " + strCode + " đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                string strMiddleName = "";
+                if (strFirstName.Split(' ').Length > 1)
+                {
+                    List<string> names = strFirstName.Split(' ').ToList();
+                    string firstName = names.First();
+                    names.RemoveAt(0);
+                    strMiddleName = string.Join(",", names);
+                    strFirstName = firstName;
+                }
+
+                var intPatronID = new ObjectParameter("intRetval", typeof(int));
+                if (String.IsNullOrEmpty(strPortrait))
+                {
+                    strPortrait = db.CIR_PATRON.Where(a => a.ID == ID).First().Portrait;
+                }
+                db.SP_PAT_UPDATE_PATRON(
+                    ID, strCode, strValidDate, strExpiredDate, strLastIssuedDate, strLastName, strFirstName, strMiddleName, blnSex, strDOB, intEthnicID, intEducationID,
+                    intOccupationID, strWorkPlace, strTelephone, strMobile, strEmail, strPortrait, intPatronGroupID, strNote, strIDCard, intPatronID
+                    );
+                int patronID = (int)intPatronID.Value;
+                db.CIR_PATRON.Where(a => a.ID == patronID).First().Password = strCode;
+                db.SaveChanges();
+                if (strAddress != null && strAddress != "" && patron.CIR_PATRON_OTHER_ADDR.Count() > 0)
+                {
+                    db.SP_CIR_PATRON_OA_DELETE(patron.CIR_PATRON_OTHER_ADDR.First().ID);
+                    db.SP_PAT_CREATE_OTHERADDRESS(patronID, strAddress, intProvinceID, strCity, intCountryID, strZip, intisActive);
+                }
+                if (intCollegeID > 0)
+                {
+                    db.SP_PAT_UPDATE_PATRON_UNIV(patronID, intFacultyID, intCollegeID, strGrade, strClass);
+                }
+                return Json(new Result()
+                {
+                    CodeError = 0,
+                    Data = strCode
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
         public JsonResult UploadPhotoPatron()
         {
             string strCode = Request.Form["strCode"];
@@ -194,6 +339,12 @@ namespace Libol.Controllers
             {
                 var file = Request.Files[i];
                 var fileName = Path.GetFileName(file.FileName);
+                if (String.IsNullOrEmpty(fileName))
+                {
+                    ViewBag.ListPatron = listPatronInFile;
+                    ViewBag.ListPatronInvalid = listPatronInFileInvalid;
+                    return View();
+                }
                 var path = Path.Combine(Server.MapPath("~/Uploads"), fileName);
                 file.SaveAs(path);
                 
@@ -237,7 +388,7 @@ namespace Libol.Controllers
                                         {
                                             patronFile.strDOB = ds.Tables[0].Rows[j].Field<DateTime>("Ngày sinh");
                                         }
-                                        catch (Exception e)
+                                        catch (Exception)
                                         {
                                             DOB = ds.Tables[0].Rows[j].Field<string>("Ngày sinh");
                                             try
@@ -250,7 +401,10 @@ namespace Libol.Controllers
                                             }
                                             
                                         }
-                                        
+
+                                        patronFile.IsValid = CheckCodeInFile(patronFile.strCode, listPatronInFile);
+
+
                                         if (patronFile.IsValid)
                                         {
                                             listPatronInFile.Add(patronFile);
@@ -270,6 +424,19 @@ namespace Libol.Controllers
             ViewBag.ListPatron = listPatronInFile;
             ViewBag.ListPatronInvalid = listPatronInFileInvalid;
             return View();
+        }
+
+        public bool CheckCodeInFile(string strCode, List<PatronFile> listPatronInFile)
+        {
+            bool IsValid = true;
+            foreach(PatronFile p in listPatronInFile)
+            {
+                if(p.strCode == strCode)
+                {
+                    IsValid = false;
+                }
+            }
+            return IsValid;
         }
 
         [HttpPost]
@@ -416,9 +583,197 @@ namespace Libol.Controllers
 
         public ActionResult SearchPatron()
         {
+            ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
+            ViewBag.PatronGroup = db.SP_PAT_GET_PATRONGROUP().ToList();
+            ViewBag.College = db.SP_PAT_GET_COLLEGE().ToList();
+            ViewBag.Faculty = db.CIR_DIC_FACULTY.Select(a => a.Faculty).Distinct().ToList();
             return View();
         }
+
+        [HttpPost]
+        public JsonResult ListPatron(DataTableAjaxPostModel model)
+        {
+            
+
+            var patrons = db.CIR_PATRON;
+            var search = patrons.Where(a => true);
+            if (model.search.value != null)
+            {
+                string searchValue = model.search.value;
+                search = search.Where(a => a.Code.Contains(searchValue)
+                        || (a.FirstName.Trim() + " " + a.MiddleName.Trim() + " " + a.LastName.Trim()).Contains(searchValue)
+                        || (a.FirstName.Trim() +  " " + a.LastName.Trim()).Contains(searchValue)
+                        || (SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || ("0"+SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || (SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || ("0"+SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || a.Sex.Contains(searchValue)
+                        || (a.CIR_DIC_ETHNIC != null && a.CIR_DIC_ETHNIC.Ethnic.Contains(searchValue))
+                        || (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College.Contains(searchValue))
+                        || (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty.Contains(searchValue))
+                        || (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.Grade.Contains(searchValue))
+                        || (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.Class.Contains(searchValue))
+                        || a.Telephone.Contains(searchValue)
+                        || a.Mobile.Contains(searchValue)
+                        || a.Email.Contains(searchValue)
+                        || (a.CIR_PATRON_GROUP != null && a.CIR_PATRON_GROUP.Name.Contains(searchValue))
+                );
+                
+                
+            }
+            if (model.columns[0].search.value != null)
+            {
+                string searchValue = model.columns[0].search.value;
+                search = search.Where(a => a.Code.Contains(searchValue));
+            }
+            if (model.columns[1].search.value != null)
+            {
+                string searchValue = model.columns[1].search.value;
+                search = search.Where(a => (a.FirstName.Trim() + " " + a.MiddleName.Trim() + " " + a.LastName.Trim()).Contains(searchValue)
+                            || (a.FirstName.Trim() + " " + a.LastName.Trim()).Contains(searchValue)
+                );
+            }
+            if (model.columns[2].search.value != null)
+            {
+                string searchValue = model.columns[2].search.value;
+                search = search.Where(a => (SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || ("0" + SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || (SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
+                        || ("0" + SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue));
+            }
+            if (model.columns[3].search.value != null)
+            {
+                string searchValue = model.columns[3].search.value;
+                search = search.Where(a => a.Sex.Contains(searchValue));
+            }
+            if (model.columns[4].search.value != null)
+            {
+                string searchValue = model.columns[4].search.value;
+                search = search.Where(a => (a.CIR_DIC_ETHNIC != null && a.CIR_DIC_ETHNIC.Ethnic.Contains(searchValue)));
+            }
+            if (model.columns[5].search.value != null)
+            {
+                string searchValue = model.columns[5].search.value;
+                search = search.Where(a => (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College.Contains(searchValue)));
+            }
+            if (model.columns[6].search.value != null)
+            {
+                string searchValue = model.columns[6].search.value;
+                search = search.Where(a => (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty.Contains(searchValue)));
+            }
+            if (model.columns[7].search.value != null)
+            {
+                string searchValue = model.columns[7].search.value;
+                search = search.Where(a => (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.Grade.Contains(searchValue)));
+            }
+            if (model.columns[8].search.value != null)
+            {
+                string searchValue = model.columns[8].search.value;
+                search = search.Where(a => (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.Class.Contains(searchValue)));
+            }
+            if (model.columns[9].search.value != null)
+            {
+                string searchValue = model.columns[9].search.value;
+                search = search.Where(a => a.Telephone.Contains(searchValue));
+            }
+            if (model.columns[10].search.value != null)
+            {
+                string searchValue = model.columns[10].search.value;
+                search = search.Where(a => a.Mobile.Contains(searchValue));
+            }
+            if (model.columns[11].search.value != null)
+            {
+                string searchValue = model.columns[11].search.value;
+                search = search.Where(a => a.Email.Contains(searchValue));
+            }
+            if (model.columns[12].search.value != null)
+            {
+                string searchValue = model.columns[12].search.value;
+                search = search.Where(a => (a.CIR_PATRON_GROUP != null && a.CIR_PATRON_GROUP.Name.Contains(searchValue)));
+            }
+            var sorting = search.OrderBy(a => a.ID);
+            var paging = sorting.Skip(model.start).Take(model.length).ToList();
+            var result = new List<CustomPatron>(paging.Count);
+            foreach (var s in paging)
+            {
+                result.Add(new CustomPatron
+                {
+                    strCode = s.Code,
+                    Name = s.FirstName + " " + s.MiddleName + " " + s.LastName,
+                    strDOB = Convert.ToDateTime(s.DOB).ToString("dd/MM/yyyy"),
+                    strLastIssuedDate = Convert.ToDateTime(s.LastIssuedDate).ToString("dd/MM/yyyy"),
+                    strExpiredDate = Convert.ToDateTime(s.ExpiredDate).ToString("dd/MM/yyyy"),
+                    Sex = s.Sex == "1" ? "Nam": "Nữ",
+                    intEthnicID = db.CIR_DIC_ETHNIC.Where(a => a.ID == s.EthnicID).Count() == 0? "" : db.CIR_DIC_ETHNIC.Where(a => a.ID == s.EthnicID).First().Ethnic,
+                    intCollegeID = (s.CIR_PATRON_UNIVERSITY == null || s.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null) ? "" : s.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College,
+                    intFacultyID = (s.CIR_PATRON_UNIVERSITY == null || s.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null) ? "" : s.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty,
+                    strGrade = s.CIR_PATRON_UNIVERSITY == null ? "" : s.CIR_PATRON_UNIVERSITY.Grade,
+                    strClass =s.CIR_PATRON_UNIVERSITY == null ? "" : s.CIR_PATRON_UNIVERSITY.Class,
+                    strAddress = s.CIR_PATRON_OTHER_ADDR.Count == 0 ? "" : s.CIR_PATRON_OTHER_ADDR.First().Address,
+                    strTelephone = s.Telephone,
+                    strMobile = s.Mobile,
+                    strEmail = s.Email,
+                    strNote = s.Note,
+                    intOccupationID = s.CIR_DIC_OCCUPATION == null ? "" : s.CIR_DIC_OCCUPATION.Occupation,
+                    intPatronGroupID = s.CIR_PATRON_GROUP == null ? "": s.CIR_PATRON_GROUP.Name
+                });
+            };
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = patrons.Count(),
+                recordsFiltered = search.Count(),
+                data = result
+            });
+        }
+
+        [HttpPost]
+        public PartialViewResult PatronDetail(string strCode)
+        {
+            var patron = db.CIR_PATRON.Where(a => a.Code == strCode).First();
+            ViewBag.PatronDetail = new CustomPatron
+            {
+                ID = patron.ID,
+                strCode = patron.Code,
+                Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName,
+                strDOB = Convert.ToDateTime(patron.DOB).ToString("dd/MM/yyyy"),
+                strLastIssuedDate = Convert.ToDateTime(patron.LastIssuedDate).ToString("dd/MM/yyyy"),
+                strExpiredDate = Convert.ToDateTime(patron.ExpiredDate).ToString("dd/MM/yyyy"),
+                Sex = patron.Sex == "1" ? "Nam" : "Nữ",
+                intEthnicID = db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).Count() == 0 ? "" : db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).First().Ethnic,
+                intCollegeID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College,
+                intFacultyID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty,
+                strGrade = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Grade,
+                strClass = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Class,
+                strAddress = patron.CIR_PATRON_OTHER_ADDR.Count == 0 ? "" : patron.CIR_PATRON_OTHER_ADDR.First().Address,
+                strTelephone = patron.Telephone,
+                strMobile = patron.Mobile,
+                strEmail = patron.Email,
+                strNote = patron.Note,
+                intOccupationID = patron.CIR_DIC_OCCUPATION == null ? "" : patron.CIR_DIC_OCCUPATION.Occupation,
+                intPatronGroupID = patron.CIR_PATRON_GROUP == null ? "" : patron.CIR_PATRON_GROUP.Name
+            };
+            return PartialView("_SearchPatronDetail");
+        }
+
+        [HttpPost]
+        public JsonResult DeletePatron(string strPatronID)
+        {
+            int id = Int32.Parse(strPatronID);
+            db.SP_PATRON_BATCH_DELETE(strPatronID);
+            if(db.CIR_PATRON.Where(a => a.ID == id).Count() > 0)
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("", JsonRequestBehavior.AllowGet);
+            }
+            
+        }
     }
+
+    
     class Result
     {
         public int CodeError { get; set; }
@@ -484,5 +839,28 @@ namespace Libol.Controllers
     {
         public int ID { get; set; }
         public string Data { get; set; }
+    }
+
+    public class CustomPatron
+    {
+        public int ID { get; set; }
+        public string strCode { get; set; }
+        public string Name { get; set; }
+        public string strDOB { get; set; }
+        public string strLastIssuedDate { get; set; }
+        public string strExpiredDate { get; set; }
+        public string Sex { get; set; }
+        public string intEthnicID { get; set; }
+        public string intCollegeID { get; set; }
+        public string intFacultyID { get; set; }
+        public string strGrade { get; set; }
+        public string strClass { get; set; }
+        public string strAddress { get; set; }
+        public string strTelephone { get; set; }
+        public string strMobile { get; set; }
+        public string strEmail { get; set; }
+        public string strNote { get; set; }
+        public string intOccupationID { get; set; }
+        public string intPatronGroupID { get; set; }
     }
 }

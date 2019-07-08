@@ -10,14 +10,18 @@ using System.Data.Entity.Core.Objects;
 
 namespace Libol.Controllers
 {
-    public class CheckOutController : Controller
+    public class CheckOutController : BaseController
     {
 
         private LibolEntities db = new LibolEntities();
+        CheckOutBusiness checkOutBusiness = new CheckOutBusiness();
+        private static string strTransactionIDs = "";
+        private static string patroncode = "0";
 
         // GET: CheckOut
         public ActionResult Index()
         {
+            patroncode = "0";
             return View();
         }
 
@@ -39,56 +43,182 @@ namespace Libol.Controllers
             string strCheckOutDate
             )
         {
-            CIR_PATRON patron =
-                db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
-            ViewBag.groupname = patron.CIR_PATRON_GROUP.Name;
-            ViewBag.loanquota = patron.CIR_PATRON_GROUP.LoanQuota;
-            ViewBag.ethic = patron.CIR_DIC_ETHNIC == null ? null : patron.CIR_DIC_ETHNIC.Ethnic;
-            ViewBag.educationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel;
-            ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null ? null : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
-            ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
-            ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null ? null : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
-            ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
-            SP_GET_PATRON_INFOR_Result patroninfo =
-                db.SP_GET_PATRON_INFOR("", strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
-
-            db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, "12/31/2019", strCheckOutDate, intHoldIgnore,
+            getpatrondetail(strPatronCode);
+            int success= db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, strFixDueDate, strCheckOutDate, intHoldIgnore,
                new ObjectParameter("intOutValue", typeof(int)),
                 new ObjectParameter("intOutID", typeof(int)));
-
-            List <SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
+            string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
+            if (success == 3)
+            {
+                if (patroncode == strPatronCode)
+                {
+                    strTransactionIDs = strTransactionIDs + "," + lastid;
+                }
+                else
+                {
+                    strTransactionIDs = lastid;
+                }
+            }
+            else
+            {
+                strTransactionIDs = "0";
+            }
+            getcurrentloandetail();
+            patroncode = strPatronCode;
             return PartialView("_checkoutSuccess");
         }
 
         [HttpPost]
         public PartialViewResult CheckOutCardInfo(string strFullName, string strPatronCode, string strFixDueDate)
         {
-            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Count() == 0)
+            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Where(a => a.isLocked == 1).Count() == 0)
             {
                 ViewBag.active = 1;
             }
             else
             {
                 ViewBag.active = 0;
+                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).First().Note;
+                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().StartedDate;
+                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().LockedDays);
             }
-            CIR_PATRON patron =
-                db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
-            ViewBag.groupname = patron.CIR_PATRON_GROUP.Name;
-            ViewBag.loanquota = patron.CIR_PATRON_GROUP.LoanQuota;
-            ViewBag.ethic = patron.CIR_DIC_ETHNIC == null ? null : patron.CIR_DIC_ETHNIC.Ethnic;
-            ViewBag.educationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel;
-            ViewBag.faculty = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null ? null : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty;
-            ViewBag.occupation = patron.CIR_DIC_OCCUPATION == null ? null : patron.CIR_DIC_OCCUPATION.Occupation;
-            ViewBag.college = patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null ? null : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College;
-            ViewBag.address = patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).Count() == 0 ? null : patron.CIR_PATRON_OTHER_ADDR.Where(a => a.PatronID == patron.ID).First().Address;
-            SP_GET_PATRON_INFOR_Result patroninfo =
-                db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
-            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(patroninfo.ID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
-            ViewData["patronloaninfo"] = patronloaninfo;
+
+            getpatrondetail(strPatronCode);
+            int id = ViewBag.PatronDetail.ID;
+            getonloandetail(id);
             return PartialView("_showPatronInfo");
+        }
+
+        //thu hoi 1 an pham
+        public PartialViewResult Rollbackacheckout (string strCopyNumbers)
+        {
+            db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("dd/MM/yyyy"),
+               new ObjectParameter("strTransIDs", typeof(string)),
+               new ObjectParameter("strPatronCode", typeof(string)),
+               new ObjectParameter("intError", typeof(int)));
+
+            strTransactionIDs = strTransactionIDs.Replace(","+ strCopyNumbers, "");
+            getcurrentloandetail();
+            getpatrondetail(patroncode);
+            return PartialView("_checkoutSuccess");
+        }
+
+        public void getpatrondetail(string strPatronCode)
+        {
+            SP_GET_PATRON_INFOR_Result patroninfo =
+               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("dd/MM/yyyy")).First();
+            CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
+            ViewBag.PatronDetail = new CustomPatron
+            {
+                ID = patron.ID,
+                strCode = patron.Code,
+                Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName,
+                strDOB = Convert.ToDateTime(patron.DOB).ToString("dd/MM/yyyy"),
+                strValidDate = Convert.ToDateTime(patroninfo.ValidDate).ToString("dd/MM/yyyy"),
+                strExpiredDate = Convert.ToDateTime(patron.ExpiredDate).ToString("dd/MM/yyyy"),
+                Sex = patron.Sex == "1" ? "Nam" : "Nữ",
+                intEthnicID = db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).Count() == 0 ? "" : db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).First().Ethnic,
+                intCollegeID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College,
+                intFacultyID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty,
+                strEducationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel,
+                strWorkPlace = patroninfo.WorkPlace,
+                strGrade = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Grade,
+                strClass = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Class,
+                strAddress = patron.CIR_PATRON_OTHER_ADDR.Count == 0 ? "" : patron.CIR_PATRON_OTHER_ADDR.First().Address,
+                strTelephone = patron.Telephone,
+                strMobile = patron.Mobile,
+                strEmail = patron.Email,
+                strNote = patron.Note,
+                intOccupationID = patron.CIR_DIC_OCCUPATION == null ? "" : patron.CIR_DIC_OCCUPATION.Occupation,
+                intPatronGroupID = patron.CIR_PATRON_GROUP == null ? "" : patron.CIR_PATRON_GROUP.Name
+            };
+        }
+
+        public void getonloandetail(int id)
+        {
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            List<OnLoan> onLoans = new List<OnLoan>();
+
+            foreach (SP_GET_PATRON_ONLOAN_COPIES_Result a in patronloaninfo)
+            {
+                onLoans.Add(new OnLoan
+                {
+                    Title = getcopynumber(a.TITLE),
+                    Copynumber = a.COPYNUMBER,
+                    CheckoutDate = a.CHECKOUTDATE.ToString("dd/MM/yyyy"),
+                    DueDate = a.DUEDATE.Value.ToString("dd/MM/yyyy"),
+                    Note = a.NOTE
+                });
+            }
+            ViewBag.patronloaninfo = onLoans;
+        }
+
+        public void getcurrentloandetail()
+        {
+            List<SP_GET_CURRENT_LOANINFOR_Result> currentloaninfo = checkOutBusiness.SP_GET_CURRENT_LOANINFORs(strTransactionIDs, "Loan").ToList();
+            List<OnLoan> onLoans = new List<OnLoan>();
+
+            foreach (SP_GET_CURRENT_LOANINFOR_Result a in currentloaninfo)
+            {
+                onLoans.Add(new OnLoan
+                {
+                    Title = getcopynumber(a.Title),
+                    Copynumber = a.CopyNumber,
+                    CheckoutDate = a.CheckOutDate.ToString("dd/MM/yyyy"),
+                    DueDate = a.DueDate.ToString("dd/MM/yyyy"),
+                    Note = a.Note
+                });
+            }
+            ViewBag.currentloaninfo = onLoans;
+        }
+
+        public class CustomPatron
+        {
+            public int ID { get; set; }
+            public string strCode { get; set; }
+            public string Name { get; set; }
+            public string strDOB { get; set; }
+            public string strValidDate { get; set; }
+            public string strExpiredDate { get; set; }
+            public string Sex { get; set; }
+            public string intEthnicID { get; set; }
+            public string intCollegeID { get; set; }
+            public string intFacultyID { get; set; }
+            public string strEducationlevel { get; set; }
+            public string strWorkPlace { get; set; }
+            public string strGrade { get; set; }
+            public string strClass { get; set; }
+            public string strAddress { get; set; }
+            public string strTelephone { get; set; }
+            public string strMobile { get; set; }
+            public string strEmail { get; set; }
+            public string strNote { get; set; }
+            public string intOccupationID { get; set; }
+            public string intPatronGroupID { get; set; }
+        }
+
+        public class OnLoan
+        {
+            public string Title { get; set; }
+            public string Copynumber { get; set; }
+            public string CheckoutDate { get; set; }
+            public string DueDate { get; set; }
+            public string Note { get; set; }
+        }
+
+        public string getcopynumber(string copynumber)
+        {
+            string validate = copynumber.Replace("$a", "");
+            validate = validate.Replace("$b", "");
+            validate = validate.Replace("$b", "");
+            validate = validate.Replace("=$b", "");
+            validate = validate.Replace(":$b", "");
+            validate = validate.Replace("/$c", "");
+            validate = validate.Replace(".$n", "");
+            validate = validate.Replace(":$p", "");
+            validate = validate.Replace(";$c", "");
+            validate = validate.Replace("+$e", "");
+            return validate;
         }
     }
 }
