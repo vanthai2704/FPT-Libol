@@ -87,7 +87,7 @@
                             <div class="form-group"><label class="col-form-label">Ngày trả:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" id="strFixDueDate" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+                            <div class="form-group"><input class="form-control" id="strCheckinDate" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;">
@@ -148,7 +148,7 @@
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strFixDueDate").value
+            strFixDueDate: document.getElementById("strCheckinDate").value
         };
         if (e.keyCode == 13) {
             $.ajax({
@@ -171,11 +171,11 @@
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strFixDueDate").value,
+            strFixDueDate: document.getElementById("strCheckinDate").value,
             intType: 1,
             intAutoPaid: 0,
             strCopyNumbers: document.getElementById("strCopyNumber").value,
-            strCheckInDate: '12/31/2019'
+            strCheckInDate: document.getElementById("strCheckinDate").value
         };
         if (e.keyCode == 13) {
             $.ajax({
@@ -256,11 +256,11 @@
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strFixDueDate").value,
+            strFixDueDate: document.getElementById("strCheckinDate").value,
             intType: 1,
             intAutoPaid: 0,
             strCopyNumbers: ids,
-            strCheckInDate: '12/31/2019'
+            strCheckInDate: document.getElementById("strCheckinDate").value
         };
         $.ajax({
             url: "CheckIn/CheckInByDKCBs",

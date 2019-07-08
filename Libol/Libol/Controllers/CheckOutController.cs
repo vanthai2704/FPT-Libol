@@ -210,7 +210,7 @@ namespace Libol.Controllers
         {
             string validate = copynumber.Replace("$a", "");
             validate = validate.Replace("$b", "");
-            validate = validate.Replace("$b", "");
+            validate = validate.Replace("$c", "");
             validate = validate.Replace("=$b", "");
             validate = validate.Replace(":$b", "");
             validate = validate.Replace("/$c", "");
