@@ -391,7 +391,7 @@
         var data = {
             holding: {
                 // getItemID
-                ItemID: 11927,
+                ItemID: @Request.QueryString["ItemID"],
                 LocationID: locID,
                 LibID: libID,
                 Price: price,
@@ -445,7 +445,7 @@
                 "type": "POST",
                 "datatype": "json",
                 "data": {
-                    "code": "FPT190025982",
+                    "code": @Request.QueryString["Code"],
                 }
             },
            
