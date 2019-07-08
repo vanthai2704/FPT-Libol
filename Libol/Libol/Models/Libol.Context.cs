@@ -21395,6 +21395,19 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GETFIELDS_OF_FORM_Result>("FPT_SP_CATA_GETFIELDS_OF_FORM", intFormIDParameter, strCreatorParameter, intIsAuthorityParameter);
         }
     
+        public virtual int FPT_SP_ILL_SEARCH_PATRON(string strPatronName, string strPatronCode)
+        {
+            var strPatronNameParameter = strPatronName != null ?
+                new ObjectParameter("strPatronName", strPatronName) :
+                new ObjectParameter("strPatronName", typeof(string));
+    
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_ILL_SEARCH_PATRON", strPatronNameParameter, strPatronCodeParameter);
+        }
+    
         public virtual ObjectResult<FPT_EDU_GET_SHELF_CONTENT_Result> FPT_EDU_GET_SHELF_CONTENT(string itemCode)
         {
             var itemCodeParameter = itemCode != null ?
@@ -21404,6 +21417,43 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_EDU_GET_SHELF_CONTENT_Result>("FPT_EDU_GET_SHELF_CONTENT", itemCodeParameter);
         }
     
-
+        public virtual int FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(string strFieldValue, string strFieldCode, ObjectParameter lngItemID)
+        {
+            var strFieldValueParameter = strFieldValue != null ?
+                new ObjectParameter("strFieldValue", strFieldValue) :
+                new ObjectParameter("strFieldValue", typeof(string));
+    
+            var strFieldCodeParameter = strFieldCode != null ?
+                new ObjectParameter("strFieldCode", strFieldCode) :
+                new ObjectParameter("strFieldCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER", strFieldValueParameter, strFieldCodeParameter, lngItemID);
+        }
+    
+        public virtual ObjectResult<FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result> FPT_SP_CATA_CHECK_EXIST_TITLE_2019(string strTitle, string strItemType)
+        {
+            var strTitleParameter = strTitle != null ?
+                new ObjectParameter("strTitle", strTitle) :
+                new ObjectParameter("strTitle", typeof(string));
+    
+            var strItemTypeParameter = strItemType != null ?
+                new ObjectParameter("strItemType", strItemType) :
+                new ObjectParameter("strItemType", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result>("FPT_SP_CATA_CHECK_EXIST_TITLE_2019", strTitleParameter, strItemTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(string strItemIDs, Nullable<int> intIsAuthority)
+        {
+            var strItemIDsParameter = strItemIDs != null ?
+                new ObjectParameter("strItemIDs", strItemIDs) :
+                new ObjectParameter("strItemIDs", typeof(string));
+    
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result>("FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM", strItemIDsParameter, intIsAuthorityParameter);
+        }
     }
 }

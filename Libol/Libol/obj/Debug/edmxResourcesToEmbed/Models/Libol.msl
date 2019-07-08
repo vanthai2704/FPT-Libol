@@ -9900,5 +9900,36 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_EDU_GET_SHELF_CONTENT" FunctionName="LibolModel.Store.FPT_EDU_GET_SHELF_CONTENT">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_EDU_GET_SHELF_CONTENT_Result">
+          <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE_2019">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result">
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result">
+          <ScalarProperty Name="VietIndicators" ColumnName="VietIndicators" />
+          <ScalarProperty Name="Indicators" ColumnName="Indicators" />
+          <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="Ind1" ColumnName="Ind1" />
+          <ScalarProperty Name="Ind2" ColumnName="Ind2" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+          <ScalarProperty Name="VietFieldName" ColumnName="VietFieldName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

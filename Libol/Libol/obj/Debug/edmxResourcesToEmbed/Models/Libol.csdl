@@ -12397,6 +12397,22 @@
       <Parameter Name="strPatronName" Mode="In" Type="String" />
       <Parameter Name="strPatronCode" Mode="In" Type="String" />
     </FunctionImport>
+    <FunctionImport Name="FPT_EDU_GET_SHELF_CONTENT" ReturnType="Collection(LibolModel.FPT_EDU_GET_SHELF_CONTENT_Result)">
+      <Parameter Name="itemCode" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER">
+      <Parameter Name="strFieldValue" Mode="In" Type="String" />
+      <Parameter Name="strFieldCode" Mode="In" Type="String" />
+      <Parameter Name="lngItemID" Mode="InOut" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" ReturnType="Collection(LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result)">
+      <Parameter Name="strTitle" Mode="In" Type="String" />
+      <Parameter Name="strItemType" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" ReturnType="Collection(LibolModel.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result)">
+      <Parameter Name="strItemIDs" Mode="In" Type="String" />
+      <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -17061,5 +17077,23 @@
     <Property Type="String" Name="DefaultValue" Nullable="true" MaxLength="200" />
     <Property Type="Boolean" Name="IstextBox" Nullable="true" />
     <Property Type="String" Name="DefaultIndicators" Nullable="true" MaxLength="2" />
+  </ComplexType>
+  <ComplexType Name="FPT_EDU_GET_SHELF_CONTENT_Result">
+    <Property Type="String" Name="FieldCode" Nullable="false" MaxLength="5" />
+    <Property Type="String" Name="Content" Nullable="false" MaxLength="1000" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result">
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+    <Property Type="String" Name="Content" Nullable="false" MaxLength="800" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result">
+    <Property Type="String" Name="VietIndicators" Nullable="true" MaxLength="2000" />
+    <Property Type="String" Name="Indicators" Nullable="true" MaxLength="1600" />
+    <Property Type="String" Name="FieldCode" Nullable="false" MaxLength="10" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+    <Property Type="String" Name="Ind1" Nullable="true" MaxLength="1" />
+    <Property Type="String" Name="Ind2" Nullable="true" MaxLength="1" />
+    <Property Type="String" Name="Content" Nullable="true" MaxLength="1000" />
+    <Property Type="String" Name="VietFieldName" Nullable="true" MaxLength="550" />
   </ComplexType>
 </Schema>

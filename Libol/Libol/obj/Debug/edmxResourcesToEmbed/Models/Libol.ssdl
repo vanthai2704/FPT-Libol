@@ -2883,7 +2883,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__SYS_USER_GOO__ID__600DFEBC">
+  <Association Name="FK__SYS_USER_GOO__ID__610222F5">
     <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="0..1" />
     <End Role="SYS_USER_GOOGLE_ACCOUNT" Type="Self.SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
     <ReferentialConstraint>
@@ -5374,6 +5374,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
     <Parameter Name="intUserID" Type="int" Mode="In" />
   </Function>
+  <Function Name="FPT_EDU_GET_SHELF_CONTENT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="itemCode" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="FPT_EDU_GET_VALUEFROMID_BOOK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="IDin" Type="nvarchar" Mode="In" />
   </Function>
@@ -5461,9 +5464,22 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
   <Function Name="FPT_EDU_SP_RENEW_ITEM_BY_ALL_ID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strFixedID" Type="varchar" Mode="In" />
   </Function>
+  <Function Name="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strFieldValue" Type="varchar" Mode="In" />
+    <Parameter Name="strFieldCode" Type="varchar" Mode="In" />
+    <Parameter Name="lngItemID" Type="int" Mode="InOut" />
+  </Function>
   <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
     <Parameter Name="strItemType" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
+    <Parameter Name="strItemType" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
+    <Parameter Name="intIsAuthority" Type="int" Mode="In" />
   </Function>
   <Function Name="FPT_SP_CATA_GET_MARC_FORM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intFormID" Type="int" Mode="In" />
@@ -11867,7 +11883,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
       <End Role="ITEM" EntitySet="ITEM" />
     </AssociationSet>
-    <AssociationSet Name="FK__SYS_USER_GOO__ID__600DFEBC" Association="Self.FK__SYS_USER_GOO__ID__600DFEBC">
+    <AssociationSet Name="FK__SYS_USER_GOO__ID__610222F5" Association="Self.FK__SYS_USER_GOO__ID__610222F5">
       <End Role="SYS_USER" EntitySet="SYS_USER" />
       <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
     </AssociationSet>

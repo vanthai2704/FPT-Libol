@@ -2888,7 +2888,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SYS_USER_GOO__ID__600DFEBC">
+        <Association Name="FK__SYS_USER_GOO__ID__610222F5">
           <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="0..1" />
           <End Role="SYS_USER_GOOGLE_ACCOUNT" Type="Self.SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
           <ReferentialConstraint>
@@ -5379,6 +5379,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
           <Parameter Name="intUserID" Type="int" Mode="In" />
         </Function>
+        <Function Name="FPT_EDU_GET_SHELF_CONTENT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="itemCode" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="FPT_EDU_GET_VALUEFROMID_BOOK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="IDin" Type="nvarchar" Mode="In" />
         </Function>
@@ -5466,9 +5469,22 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="FPT_EDU_SP_RENEW_ITEM_BY_ALL_ID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strFixedID" Type="varchar" Mode="In" />
         </Function>
-		<Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strFieldValue" Type="varchar" Mode="In" />
+          <Parameter Name="strFieldCode" Type="varchar" Mode="In" />
+          <Parameter Name="lngItemID" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
           <Parameter Name="strItemType" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
+          <Parameter Name="strItemType" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
+          <Parameter Name="intIsAuthority" Type="int" Mode="In" />
         </Function>
         <Function Name="FPT_SP_CATA_GET_MARC_FORM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intFormID" Type="int" Mode="In" />
@@ -11872,7 +11888,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
           </AssociationSet>
-          <AssociationSet Name="FK__SYS_USER_GOO__ID__600DFEBC" Association="Self.FK__SYS_USER_GOO__ID__600DFEBC">
+          <AssociationSet Name="FK__SYS_USER_GOO__ID__610222F5" Association="Self.FK__SYS_USER_GOO__ID__610222F5">
             <End Role="SYS_USER" EntitySet="SYS_USER" />
             <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
           </AssociationSet>
@@ -25006,6 +25022,22 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strPatronName" Mode="In" Type="String" />
             <Parameter Name="strPatronCode" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="FPT_EDU_GET_SHELF_CONTENT" ReturnType="Collection(LibolModel.FPT_EDU_GET_SHELF_CONTENT_Result)">
+          <Parameter Name="itemCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER">
+            <Parameter Name="strFieldValue" Mode="In" Type="String" />
+            <Parameter Name="strFieldCode" Mode="In" Type="String" />
+            <Parameter Name="lngItemID" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" ReturnType="Collection(LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result)">
+            <Parameter Name="strTitle" Mode="In" Type="String" />
+            <Parameter Name="strItemType" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" ReturnType="Collection(LibolModel.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result)">
+            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+            <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -29670,6 +29702,24 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="DefaultValue" Nullable="true" MaxLength="200" />
           <Property Type="Boolean" Name="IstextBox" Nullable="true" />
           <Property Type="String" Name="DefaultIndicators" Nullable="true" MaxLength="2" />
+        </ComplexType>
+        <ComplexType Name="FPT_EDU_GET_SHELF_CONTENT_Result">
+          <Property Type="String" Name="FieldCode" Nullable="false" MaxLength="5" />
+          <Property Type="String" Name="Content" Nullable="false" MaxLength="1000" />
+        </ComplexType>
+        <ComplexType Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result">
+          <Property Type="Int32" Name="ItemID" Nullable="false" />
+          <Property Type="String" Name="Content" Nullable="false" MaxLength="800" />
+        </ComplexType>
+        <ComplexType Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result">
+          <Property Type="String" Name="VietIndicators" Nullable="true" MaxLength="2000" />
+          <Property Type="String" Name="Indicators" Nullable="true" MaxLength="1600" />
+          <Property Type="String" Name="FieldCode" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="ItemID" Nullable="false" />
+          <Property Type="String" Name="Ind1" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="Ind2" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="Content" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="VietFieldName" Nullable="true" MaxLength="550" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -39573,6 +39623,37 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
                 <ScalarProperty Name="DefaultValue" ColumnName="DefaultValue" />
                 <ScalarProperty Name="IstextBox" ColumnName="IstextBox" />
                 <ScalarProperty Name="DefaultIndicators" ColumnName="DefaultIndicators" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_EDU_GET_SHELF_CONTENT" FunctionName="LibolModel.Store.FPT_EDU_GET_SHELF_CONTENT">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_EDU_GET_SHELF_CONTENT_Result">
+                <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" />
+          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE_2019">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result">
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result">
+                <ScalarProperty Name="VietIndicators" ColumnName="VietIndicators" />
+                <ScalarProperty Name="Indicators" ColumnName="Indicators" />
+                <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="Ind1" ColumnName="Ind1" />
+                <ScalarProperty Name="Ind2" ColumnName="Ind2" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="VietFieldName" ColumnName="VietFieldName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
