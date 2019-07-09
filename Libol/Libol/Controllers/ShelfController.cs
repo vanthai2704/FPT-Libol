@@ -32,7 +32,7 @@ namespace Libol.Controllers
             //List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentResult = libol.FPT_EDU_GET_SHELF_CONTENT("FPT070013581");
             //List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentResult = getContentShelf();
             ViewBag.content = getContentShelf();
-            
+
 
             return View();
 
@@ -49,7 +49,7 @@ namespace Libol.Controllers
         public string getContentShelf()
         {
             string idMTL = Request.QueryString["Code"];
-            List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentResult = libol.FPT_EDU_GET_SHELF_CONTENT("FPT070013582").ToList();
+            List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentResult = db.FPT_EDU_GET_SHELF_CONTENT(idMTL).ToList();
             string contentOutput = "";
             string fieldCode = "";
             string field020 = "";
@@ -86,7 +86,7 @@ namespace Libol.Controllers
                     field245 = item.Content;
                     if (field245.Contains("$a"))
                     {
-                        field245 = field245.Replace("$a",".-");
+                        field245 = field245.Replace("$a", ".-");
                     }
                     if (field245.Contains("=$b"))
                     {
@@ -162,7 +162,7 @@ namespace Libol.Controllers
             return contentOutput;
         }
 
-       
+
 
         [HttpPost]
         public JsonResult GenCopyNumber(int locId)
@@ -198,7 +198,7 @@ namespace Libol.Controllers
             }
             for (int i = 0; i < holdingIDList.Length; i++)
             {
-              //  db.SP_HOLDING_REMOVED_PROC(""+holdingIDList[i], holdingIDList[i]);
+                //  db.SP_HOLDING_REMOVED_PROC(""+holdingIDList[i], holdingIDList[i]);
                 var id = holdingIDList[i];
                 var currentHolding = db.HOLDINGs.Where(h => h.ID == id).Single();
                 db.HOLDINGs.Remove(currentHolding);
@@ -447,7 +447,7 @@ namespace Libol.Controllers
                     ReceiptedDate = holding.ReceiptedDate.Value.ToString("dd/MM/yyyy"),
                     RecordNumber = holding.RecordNumber,
                     Shelf = holding.Shelf,
-                    Status = shelfBusiness.GetHoldingStatus(holding.InUsed,holding.InCirculation.Value,holding.Acquired),
+                    Status = shelfBusiness.GetHoldingStatus(holding.InUsed, holding.InCirculation.Value, holding.Acquired),
                 });
             }
 
@@ -455,7 +455,23 @@ namespace Libol.Controllers
             return Json(new { draw = draw, recordsFiltered = RecordsTotal, recordsTotal = RecordsTotal, data = holdingTables });
         }
 
+        public string getcontent(string copynumber)
+        {
+            string validate = copynumber.Replace("$a", "");
+            validate = validate.Replace("$b", "");
+            validate = validate.Replace("$c", "");
+            validate = validate.Replace(",$c ", "");
+            validate = validate.Replace("=$b", "");
+            validate = validate.Replace(":$b", "");
+            validate = validate.Replace("/$c", "");
+            validate = validate.Replace(".$n", "");
+            validate = validate.Replace(":$p", "");
+            validate = validate.Replace(";$c", "");
+            validate = validate.Replace("+$e", "");
+            validate = validate.Replace("$e", "");
 
+            return validate;
+        }
 
 
     }
@@ -494,23 +510,7 @@ namespace Libol.Controllers
     }
 
 
-        public string getcontent(string copynumber)
-        {
-            string validate = copynumber.Replace("$a", "");
-            validate = validate.Replace("$b", "");
-            validate = validate.Replace("$c", "");
-            validate = validate.Replace(",$c ", "");
-            validate = validate.Replace("=$b", "");
-            validate = validate.Replace(":$b", "");
-            validate = validate.Replace("/$c", "");
-            validate = validate.Replace(".$n", "");
-            validate = validate.Replace(":$p", "");
-            validate = validate.Replace(";$c", "");
-            validate = validate.Replace("+$e", "");
-            validate = validate.Replace("$e", "");
+        
 
-            return validate;
-        }
 
-    }
 }

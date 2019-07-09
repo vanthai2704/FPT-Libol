@@ -224,7 +224,11 @@ namespace Libol.Models
                             }
                         }
                         else
+                        {
+                            string x = item.ID + ",'" + listFieldsName[i] + "',N'" + "" + listFieldsValue[i] + "','" + "" + "','" + "'";
                         db.Database.ExecuteSqlCommand("INSERT INTO " + fieldName + " (ItemID, FieldCode, Content, Ind1, Ind2) VALUES (" + item.ID + ",'" + listFieldsName[i] + "',N'" +""+ listFieldsValue[i] + "','" + "" + "','" + "'" + ")");
+
+                        }
 
 
                     }
@@ -242,7 +246,7 @@ namespace Libol.Models
         }
 
 
-        public void HandleListFields(List<string> listFieldName, List<string> listFieldValue)
+        public string HandleListFields(List<string> listFieldName, List<string> listFieldValue)
         {
             List<string> listFieldNameOutput = new List<string>();
             List<string> listFieldValueOutput = new List<string>();
@@ -443,7 +447,7 @@ namespace Libol.Models
 
                 }
             }
-            InsertOrUpdateFields(listFieldNameOutput, listFieldValueOutput);
+           return InsertOrUpdateFields(listFieldNameOutput, listFieldValueOutput);
 
         }
 

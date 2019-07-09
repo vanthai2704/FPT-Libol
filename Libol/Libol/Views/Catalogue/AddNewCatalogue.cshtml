@@ -313,12 +313,13 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (code) {
-                //pop up Modal 
-                $('#codeId').text(code);
+                //pop up Modal
+                
+                $('#codeId').text(code[0]);
                 $('#centralModalSm').modal({ backdrop: 'static', keyboard: false })
                 $('#centralModalSm').modal('toggle');
                 $('#btnShelf').click(function () {
-                    window.location.href = '/Shelf/Index?Code=' + code;
+                    window.location.href = '/Shelf/Index?Code=' + code[0] +'&ItemID='+code[1];
                 });
 
             },

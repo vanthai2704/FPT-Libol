@@ -433,6 +433,7 @@
     }
 
     $(document).ready(function () {
+        var code = '@Request.QueryString["Code"]' ;
         var table = $("#table_holdinglist").DataTable({
 
             "processing": true,
@@ -445,7 +446,7 @@
                 "type": "POST",
                 "datatype": "json",
                 "data": {
-                    "code": @Request.QueryString["Code"],
+                    "code": code,
                 }
             },
            

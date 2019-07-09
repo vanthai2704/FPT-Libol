@@ -81,9 +81,10 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue)
         {
-            string code = catalogueBusiness.InsertOrUpdateFields(listFieldsName, listFieldsValue);
+            string code = catalogueBusiness.HandleListFields(listFieldsName, listFieldsValue);
             string itemID = db.ITEMs.Where( i=> i.Code == code).Select( i=> i.ID).FirstOrDefault().ToString();
-            return Json(itemID, JsonRequestBehavior.AllowGet);
+            string[] data = { code,itemID };
+            return Json(data, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -164,4 +165,7 @@ namespace Libol.Controllers
             return View();
         }
     }
+
+   
+
 }
