@@ -42,7 +42,7 @@ namespace Libol.Controllers
             if(model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => a.Username.Contains(searchValue));
+                search = search.Where(a => a.Username.Contains(searchValue) || a.Name.Contains(searchValue));
             }
             if (model.columns[1].search.value != null)
             {

@@ -900,10 +900,33 @@
     }
 
     function SearchPatron() {
-        window.location.href = "/Patron/SearchPatron"
+        window.location.href = "/Patron/SearchPatronFilter"
     }
 
     function reloadUpdate() {
         window.location.href = "/Patron/Create"
+    }
+
+    $(document).ready(function () {
+        if (getParameterByName('strPatronID') == null || getParameterByName('strPatronID') == '') {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById('strLastIssuedDate').value = today;
+            document.getElementById('strValidDate').value = today;
+        }
+        
+    });
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 </script>

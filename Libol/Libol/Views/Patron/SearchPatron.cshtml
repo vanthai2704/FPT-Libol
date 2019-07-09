@@ -15,34 +15,22 @@
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
 <script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
     $(document).ready(function () {
-        $('#table_patron thead tr:eq(1) th').each(function (i) {
-            $('select', this).on('change', function () {
-                if (table.column(i).search() !== this.value) {
-                    table
-                        .column(i)
-                        .search(this.value)
-                        .draw();
-                }
-            });
-
-            $('input', this).on('keyup change', function () {
-                if (table.column(i).search() !== this.value) {
-                    table
-                        .column(i)
-                        .search(this.value)
-                        .draw();
-                }
-            });
-
-
-
-        });
+       
         var table = $('#table_patron').DataTable({
             "processing": true,
             "serverSide": true,
             ajax: {
-                url: "/Patron/ListPatron",
+                url: "/Patron/ListPatron?strCode=" + getParameterByName('strCode') + "&blnSex=" + getParameterByName('blnSex') + "&strLastIssuedDate=" + getParameterByName('strLastIssuedDate') + "&intPatronGroupID=" + getParameterByName('intPatronGroupID') + "&strClass=" + getParameterByName('strClass') + "&strGrade=" + getParameterByName('strGrade') + "&strName=" + getParameterByName('strName') + "&strDOB=" + getParameterByName('strDOB') + "&strExpiredDate=" + getParameterByName('strExpiredDate') + "&faculty=" + getParameterByName('faculty') + "&intOccupationID=" + getParameterByName('intOccupationID') +"",
                 type: 'POST',
             },
             columns: [
@@ -129,53 +117,7 @@
             <th>Email</th>
             <th>Nhóm bạn đọc</th>
         </tr>
-        <tr>
-            <th><input class="form-control" type="text" /></th>
-            <th><input class="form-control" type="text" /></th>
-            <th><input class="form-control" type="text" /></th>
-            <th><select><option value=""></option><option value="1">Nam</option><option value="0">Nữ</option></select></th>
-            <th>
-                <select style="width: 50px;">
-                    <option value=""></option>
-                    @foreach (var item in ViewBag.Ethnic)
-                    {
-                        <option value="@item.Ethnic">@item.Ethnic</option>
-                    }
-                </select>
-            </th>
-            <th>
-                <select style="width: 180px;">
-                    <option value=""></option>
-                    @foreach (var item in ViewBag.College)
-                    {
-                        <option value="@item.College">@item.College</option>
-                    }
-                </select>
-            </th>
-            <th>
-                <select value="" style="width: 180px;">
-                    <option></option>
-                    @foreach (var item in ViewBag.Faculty)
-                    {
-                        <option value="@item">@item</option>
-                    }
-                </select>
-            </th>
-            <th><input class="form-control" type="text" /></th>
-            <th><input class="form-control" type="text" /></th>
-            <th><input class="form-control" type="text" /></th>
-            <th><input class="form-control" type="text" /></th>
-            <th><input class="form-control" type="text" /></th>
-            <th>
-                <select>
-                    <option value="" style="width: 180px;"></option>
-                    @foreach (var item in ViewBag.PatronGroup)
-                    {
-                        <option value="@item.Name">@item.Name</option>
-                    }
-                </select>
-            </th>
-        </tr>
+        
     </thead>
 </table>
 

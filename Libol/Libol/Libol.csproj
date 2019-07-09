@@ -2080,6 +2080,8 @@
     <Content Include="Content\DataTables\DataTables-1.10.18\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\DataTables-1.10.18\js\dataTables.bootstrap4.js" />
     <Content Include="Content\DataTables\DataTables-1.10.18\js\jquery.dataTables.js" />
+    <Content Include="Content\DataTables\dataTables.checkboxes.css" />
+    <Content Include="Content\DataTables\dataTables.checkboxes.min.js" />
     <Content Include="Content\DataTables\Select-1.3.0\css\select.bootstrap4.css" />
     <Content Include="Content\DataTables\Select-1.3.0\js\dataTables.select.js" />
     <Content Include="Content\ImagePatron\NoImage.png" />
@@ -2214,6 +2216,7 @@
     <Content Include="Views\Catalogue\AddNewCatalogueDetail.cshtml" />
     <Content Include="Views\Patron\_SearchPatronDetail.cshtml" />
     <Content Include="Uploads\Mẫu import user libol...xls" />
+    <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
