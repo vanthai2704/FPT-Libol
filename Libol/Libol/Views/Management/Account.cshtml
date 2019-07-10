@@ -3,6 +3,15 @@
     ViewBag.Title = "Quản lý tài khoản";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .form-row {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.5rem;
+    }
+</style>
 @*START------------SCRIPT FOR DATATABLES*@
 <link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
 <link rel="stylesheet" type="text/css" href="~/Content/DataTables/Select-1.3.0/css/select.bootstrap4.css">
@@ -14,7 +23,7 @@
 <script>
     var table;
     $(document).ready(function () {
-        
+
         table = $('#table_account').DataTable({
             columnDefs: [{
                 targets: 0,
@@ -42,7 +51,7 @@
                     "data": "Username",
                     "render": function (data, type, row, meta) {
                         if (type === 'display') {
-                            data = '<a href="/Management/Account?username='+data+'">' + data + '</a>';
+                            data = '<a href="/Management/Account?username=' + data + '">' + data + '</a>';
                         }
 
                         return data;
@@ -50,28 +59,37 @@
                 },
                 { "data": "Name" },
             ],
-            
-            
+
+
             order: [[1, 'asc']],
-            orderCellsTop: true,            
-        });                
+            orderCellsTop: true,
+        });
+
+        table.on('select', function (e, dt, type, indexes) {
+            if (type === 'row') {
+                var rows = table.rows(indexes).nodes().to$();
+                $.each(rows, function () {
+                    if ($(this).hasClass('ignoreme')) table.row($(this)).deselect();
+                })
+            }
+        });
     });
 
-    function getSelected() {
-        var strUIDs = "";
-        var selectedIds = table.columns().checkboxes.selected()[0];
-        selectedIds.forEach(function (selectedId) {
-            strUIDs += selectedId.ID + ",";
-        });
-        var newstrUIDs = strUIDs.substring(0, strUIDs.length - 1);
-        alert(newstrUIDs);
-    }
 </script>
 @*END------------SCRIPT FOR DATATABLES*@
 <form>
     <div class="form-row" style="margin-top : 1rem">
         <div class="col">
             <h4>Người dùng hiện thời</h4>
+            @if (Request.Params["DeleteSuccess"] == "true")
+            {
+                <h5 style="text-align: center; color:green;">Xóa người dùng thành công!</h5>
+            }
+
+            @if (Request.Params["DeleteSuccess"] == "false")
+            {
+                <h5 style="text-align: center;color:red;">Xóa người dùng thất bại!</h5>
+            }
         </div>
         <div class="col">
             <h4>Thông tin chi tiết</h4>
@@ -93,25 +111,25 @@
             <button type="button" class="btn btn-danger" onclick="getSelected()">Xóa</button>
         </div>
         <div class="col">
-            <div class="form-group row" style="padding-right : 3rem">
+            <div class="form-row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Họ tên</label>
                 <input type="text" class="form-control col" value="@Model.Name" id="txtName">
                 <div class="invalid-feedback">
                     Vui lòng nhập Họ tên
                 </div>
             </div>
-            <div class="form-group row" style="padding-right : 3rem">
+            <div class="form-row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Tên đăng nhập</label>
                 <input type="text" class="form-control col" value="@Model.Username" id="txtUsername">
                 <div class="invalid-feedback">
                     Vui lòng nhập Tên đăng nhập
                 </div>
             </div>
-            <div class="form-group row" style="padding-right : 3rem">
+            <div class="form-row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Địa chỉ mail</label>
-                @if (Model.SYS_USER_GOOGLE_ACCOUNT.Count() > 0)
+                @if (ViewBag.GoogleAccount != null)
                 {
-                    <input type="email" class="form-control col" value="@Model.SYS_USER_GOOGLE_ACCOUNT.First().Email" id="txtEmail">
+                    <input type="email" class="form-control col" value="@ViewBag.GoogleAccount.Email" id="txtEmail">
                 }
                 else
                 {
@@ -121,20 +139,159 @@
                     Vui lòng nhập Email
                 </div>
             </div>
-            <div class="form-group row" style="padding-right : 3rem">
+            <div class="form-row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Mật khẩu</label>
                 <input type="password" class="form-control col" id="txtPassword">
                 <div class="invalid-feedback">
                     Vui lòng nhập Mật khẩu
                 </div>
             </div>
-            <div class="form-group row" style="padding-right : 3rem">
+            <div class="form-row" style="padding-right : 3rem">
                 <label class="control-label col-3 align-self-center text-right">Gõ lại mật khẩu</label>
                 <input type="password" class="form-control col" id="txtRepeatPassword">
                 <div class="invalid-feedback">
                     Mật khẩu không khớp
                 </div>
             </div>
+
+            <h5>Quyền truy cập vào các phân hệ</h5>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Biên mục</label></div>
+                <div class="col">
+                    <select class="form-control">
+                        <option value="0">Không</option>
+                        @if (@Model.CatModule)
+                        {
+                            <option value="1" selected>Có</option>
+                        }
+                        else
+                        {
+                            <option value="1">Có</option>
+                        }
+                    </select>
+                </div>
+                <div class="col"><a href="#" onclick="ShowRight('CatModule')">Các quyền</a></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Bạn đọc</label></div>
+                <div class="col">
+                    <select class="form-control">
+                        <option value="0">Không</option>
+                        @if (@Model.PatModule)
+                        {
+                            <option value="1" selected>Có</option>
+                        }
+                        else
+                        {
+                            <option value="1">Có</option>
+                        }
+                    </select>
+                </div>
+                <div class="col"><a href="#" onclick="ShowRight('PatModule')">Các quyền</a></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Mượn trả</label></div>
+                <div class="col">
+                    <select class="form-control">
+                        <option value="0">Không</option>
+                        @if (@Model.CirModule)
+                        {
+                            <option value="1" selected>Có</option>
+                        }
+                        else
+                        {
+                            <option value="1">Có</option>
+                        }
+                    </select>
+                </div>
+                <div class="col"><a href="#" onclick="ShowRight('CirModule')">Các quyền</a></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Bổ sung</label></div>
+                <div class="col">
+                    <select class="form-control">
+                        <option value="0">Không</option>
+                        @if (@Model.AcqModule)
+                        {
+                            <option value="1" selected>Có</option>
+                        }
+                        else
+                        {
+                            <option value="1">Có</option>
+                        }
+                    </select>
+                </div>
+                <div class="col"><a href="#" onclick="ShowRight('AcqModule')">Các quyền</a></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Ấn phẩm định kỳ</label></div>
+                <div class="col">
+                    <select class="form-control">
+                        <option value="0">Không</option>
+                        @if (@Model.SerModule)
+                        {
+                            <option value="1" selected>Có</option>
+                        }
+                        else
+                        {
+                            <option value="1">Có</option>
+                        }
+                    </select>
+                </div>
+                <div class="col"><a href="#" onclick="ShowRight('SerModule')">Các quyền</a></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">ILL</label></div>
+                <div class="col">
+                    <select class="form-control">
+                        <option value="0">Không</option>
+                        @if (@Model.ILLModule)
+                        {
+                            <option value="1" selected>Có</option>
+                        }
+                        else
+                        {
+                            <option value="1">Có</option>
+                        }
+                    </select>
+                </div>
+                <div class="col"><a href="#" onclick="ShowRight('ILLModule')">Các quyền</a></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Sưu tập số</label></div>
+                <div class="col">
+                    <select class="form-control">
+                        <option value="0">Không</option>
+                        @if (@Model.DelModule)
+                        {
+                            <option value="1" selected>Có</option>
+                        }
+                        else
+                        {
+                            <option value="1">Có</option>
+                        }
+                    </select>
+                </div>
+                <div class="col"><a href="#" onclick="ShowRight('DelModule')">Các quyền</a></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Quản trị</label></div>
+                <div class="col">
+                    <select class="form-control">
+                        <option value="0">Không</option>
+                        @if (@Model.AdmModule)
+                        {
+                            <option value="1" selected>Có</option>
+                        }
+                        else
+                        {
+                            <option value="1">Có</option>
+                        }
+                    </select>
+                </div>
+                <div class="col"><a href="#" onclick="ShowRight('AdmModule')">Các quyền</a></div>
+            </div>
+
             <div class="form-group row" style="padding-right : 3rem">
                 <div class="col">
                     @if (Model.ID > 0)
@@ -152,6 +309,8 @@
 
 
             </div>
+
+
         </div>
     </div>
     <input type="hidden" id="txtID" value="@Model.ID" />
@@ -191,6 +350,74 @@
             </div>
         </div>
     </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalNotifyDelete">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Thông tin tài khoản</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p style="color:red;">Bạn chắc chắn muốn xóa người dùng </p><strong id="notifyMessageDelete"></strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="DeleteUser()">Xóa</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalRight">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleRight">Các quyền trong Phân hệ</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col text-center"><label class="col-form-label"><strong>Các quyền cấp</strong></label></div>
+                        <div class="col-1"></div>
+                        <div class="col text-center"><label class="col-form-label"><strong>Các quyền không cấp</strong></label></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-row">
+                                <div class="col">
+                                    <select class="form-control" multiple>
+                                        <option value="12">This is item 1</option>
+                                        <option value="13">This is item 2</option>
+                                        <option value="14">This is item 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-1 text-center" style="margin-top: auto;margin-bottom:auto;"><button class="btn btn-primary" type="button" style="margin-bottom: 1rem;">&lt;&lt;&lt;</button><button class="btn btn-primary" type="button">&gt;&gt;&gt;</button></div>
+                        <div class="col">
+                            <div class="form-row">
+                                <div class="col">
+                                    <select class="form-control" multiple>
+                                        <option value="12">This is item 1</option>
+                                        <option value="13">This is item 2</option>
+                                        <option value="14">This is item 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="@Model.ID" id="UserID"/>
 </form>
 
 
@@ -208,7 +435,7 @@
             Email: document.getElementById("txtEmail").value,
             Password: document.getElementById("txtPassword").value,
             RepeatPassword: document.getElementById("txtRepeatPassword").value
-            
+
         }
         $.ajax({
             url: "/Management/UpdateUser",
@@ -261,5 +488,93 @@
 
     function reloadUpdate() {
         window.location.href = "/Management/Account"
+    }
+
+    var newstrUIDs = "";
+
+    function getSelected() {
+        var strUIDs = "";
+        var users = "";
+        var selectedIds = table.columns().checkboxes.selected()[0];
+        selectedIds.forEach(function (selectedId) {
+            strUIDs += selectedId.ID + ",";
+            users += selectedId.Username + ",";
+        });
+        newstrUIDs = strUIDs.substring(0, strUIDs.length - 1);
+        users = users.substring(0, users.length - 1);
+        if (users != "") {
+            $("#modalNotifyDelete").modal();
+            document.getElementById("notifyMessageDelete").innerText = users;
+        }
+
+    }
+
+    function DeleteUser() {
+        var empObj = {
+            strUIDs: newstrUIDs
+        };
+        $.ajax({
+            url: "/Management/DeleteUser",
+            data: JSON.stringify(empObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                if (result != "") {
+                    window.location.href = "/Management/Account?DeleteSuccess=false";
+                } else {
+                    window.location.href = "/Management/Account?DeleteSuccess=true";
+                }
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+    function ShowRight(right) {
+        
+        if (right == "CatModule") {
+            document.getElementById("titleRight").innerText = "Các quyền trong Phân hệ Biên mục";
+            var empObj = {
+                module: 1,
+                UserID: document.getElementById("UserID").value
+            };
+            $.ajax({
+                url: "/Management/GetRightInModule",
+                data: JSON.stringify(empObj),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    
+                },
+                error: function (errormessage) {
+
+                }
+            });
+        }
+        if (right == "PatModule") {
+            document.getElementById("titleRight").innerText = "Các quyền trong Phân hệ Bạn đọc";
+        }
+        if (right == "CirModule") {
+            document.getElementById("titleRight").innerText = "Các quyền trong Phân hệ Mượn trả";
+        }
+        if (right == "AcqModule") {
+            document.getElementById("titleRight").innerText = "Các quyền trong Phân hệ Bổ sung";
+        }
+        if (right == "SerModule") {
+            document.getElementById("titleRight").innerText = "Các quyền trong Phân hệ Ấn phẩm định kỳ";
+        }
+        if (right == "ILLModule") {
+            document.getElementById("titleRight").innerText = "Các quyền trong Phân hệ ILL";
+        }
+        if (right == "DelModule") {
+            document.getElementById("titleRight").innerText = "Các quyền trong Phân hệ Sưu tập số";
+        }
+        if (right == "AdmModule") {
+            document.getElementById("titleRight").innerText = "Các quyền trong Phân hệ Quản trị";
+        }
+        $("#modalRight").modal();
     }
 </script>

@@ -17,3 +17,7 @@ Libol/Libol/obj/Debug/edmxResourcesToEmbed/Models/Libol.ssdl
 Libol/Libol/obj/Debug/edmxResourcesToEmbed/Models/Libol.msl
 Libol/Libol/obj/Debug/edmxResourcesToEmbed/Models/Libol.csdl
 *.ide
+Libol/.vs/Libol/v15/.suo
+Libol/.vs/Libol/v15/Server/sqlite3/storage.ide
+Libol/.vs/Libol/v15/Server/sqlite3/storage.ide-shm
+Libol/.vs/Libol/v15/Server/sqlite3/storage.ide-wal
