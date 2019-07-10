@@ -9852,14 +9852,6 @@
     <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_INSERT" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_INSERT" />
     <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_UPDATE" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_UPDATE" />
     <FunctionImportMapping FunctionImportName="TESTCAI" FunctionName="LibolModel.Store.TESTCAI" />
-    <EntitySetMapping Name="SYS_USER_GOOGLE_ACCOUNT">
-      <EntityTypeMapping TypeName="LibolModel.SYS_USER_GOOGLE_ACCOUNT">
-        <MappingFragment StoreEntitySet="SYS_USER_GOOGLE_ACCOUNT">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="Email" ColumnName="Email" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="DemoGetMarcForm" FunctionName="LibolModel.Store.SP_CATA_GET_MARC_FORM" />
     <FunctionImportMapping FunctionImportName="FPT_SP_ILL_SEARCH_PATRON" FunctionName="LibolModel.Store.FPT_SP_ILL_SEARCH_PATRON" />
     <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE">
@@ -9931,5 +9923,13 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <EntitySetMapping Name="SYS_USER_GOOGLE_ACCOUNT">
+      <EntityTypeMapping TypeName="LibolModel.SYS_USER_GOOGLE_ACCOUNT">
+        <MappingFragment StoreEntitySet="SYS_USER_GOOGLE_ACCOUNT">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

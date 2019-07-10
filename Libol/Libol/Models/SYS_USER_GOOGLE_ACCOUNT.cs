@@ -15,8 +15,6 @@ namespace Libol.Models
     public partial class SYS_USER_GOOGLE_ACCOUNT
     {
         public string Email { get; set; }
-        public Nullable<int> ID { get; set; }
-    
-        public virtual SYS_USER SYS_USER { get; set; }
+        public int ID { get; set; }
     }
 }

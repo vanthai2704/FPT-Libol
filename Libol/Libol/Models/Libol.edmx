@@ -2772,7 +2772,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <PropertyRef Name="Email" />
           </Key>
           <Property Name="Email" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="ID" Type="int" />
+          <Property Name="ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SYS_USER_LOCATION">
           <Key>
@@ -2885,18 +2885,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Principal>
             <Dependent Role="ITEM">
               <PropertyRef Name="MediumID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__SYS_USER_GOO__ID__610222F5">
-          <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="0..1" />
-          <End Role="SYS_USER_GOOGLE_ACCOUNT" Type="Self.SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SYS_USER">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
-              <PropertyRef Name="ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -11888,10 +11876,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
           </AssociationSet>
-          <AssociationSet Name="FK__SYS_USER_GOO__ID__610222F5" Association="Self.FK__SYS_USER_GOO__ID__610222F5">
-            <End Role="SYS_USER" EntitySet="SYS_USER" />
-            <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
-          </AssociationSet>
           <AssociationSet Name="FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET" Association="Self.FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET">
             <End Role="ACQ_BUDGET" EntitySet="ACQ_BUDGET" />
             <End Role="ACQ_BUDGET_ACCUMULATE" EntitySet="ACQ_BUDGET_ACCUMULATE" />
@@ -15228,7 +15212,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <NavigationProperty Name="HOLDING_LOCATION1" Relationship="Self.SYS_USER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
           <NavigationProperty Name="SYS_REFERENCE" Relationship="Self.SYS_USER_REFERENCE" FromRole="SYS_USER" ToRole="SYS_REFERENCE" />
           <NavigationProperty Name="HOLDING_LOCATION2" Relationship="Self.SYS_USER_SER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
-          <NavigationProperty Name="SYS_USER_GOOGLE_ACCOUNT" Relationship="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" FromRole="SYS_USER" ToRole="SYS_USER_GOOGLE_ACCOUNT" />
         </EntityType>
         <EntityType Name="SYS_USER_RIGHT">
           <Key>
@@ -24992,11 +24975,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="TESTCAI" />
-          <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" />
-          <AssociationSet Name="FK__SYS_USER_GOO__ID__600DFEBC" Association="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC">
-            <End Role="SYS_USER" EntitySet="SYS_USER" />
-            <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
-          </AssociationSet>
           <FunctionImport Name="DemoGetMarcForm">
             <Parameter Name="intFormID" Mode="In" Type="Int32" />
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
@@ -25038,6 +25016,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strItemIDs" Mode="In" Type="String" />
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" />
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -29649,26 +29628,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="COUNTRY" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="PROVINCE" Nullable="false" MaxLength="50" />
         </ComplexType>
-        <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
-          <Key>
-            <PropertyRef Name="Email" />
-          </Key>
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ID" Type="Int32" />
-          <NavigationProperty Name="SYS_USER" Relationship="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" FromRole="SYS_USER_GOOGLE_ACCOUNT" ToRole="SYS_USER" />
-        </EntityType>
-        <Association Name="FK__SYS_USER_GOO__ID__600DFEBC">
-          <End Type="LibolModel.SYS_USER" Role="SYS_USER" Multiplicity="0..1" />
-          <End Type="LibolModel.SYS_USER_GOOGLE_ACCOUNT" Role="SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SYS_USER">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
-              <PropertyRef Name="ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="SP_CATA_GET_MARC_FORM_2019_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
@@ -29721,6 +29680,13 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="Content" Nullable="true" MaxLength="1000" />
           <Property Type="String" Name="VietFieldName" Nullable="true" MaxLength="550" />
         </ComplexType>
+        <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
+          <Key>
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -39578,14 +39544,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_INSERT" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_INSERT" />
           <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_UPDATE" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_UPDATE" />
           <FunctionImportMapping FunctionImportName="TESTCAI" FunctionName="LibolModel.Store.TESTCAI" />
-          <EntitySetMapping Name="SYS_USER_GOOGLE_ACCOUNT">
-            <EntityTypeMapping TypeName="LibolModel.SYS_USER_GOOGLE_ACCOUNT">
-              <MappingFragment StoreEntitySet="SYS_USER_GOOGLE_ACCOUNT">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="DemoGetMarcForm" FunctionName="LibolModel.Store.SP_CATA_GET_MARC_FORM" />
           <FunctionImportMapping FunctionImportName="FPT_SP_ILL_SEARCH_PATRON" FunctionName="LibolModel.Store.FPT_SP_ILL_SEARCH_PATRON" />
            <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE">
@@ -39657,6 +39615,14 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="SYS_USER_GOOGLE_ACCOUNT">
+            <EntityTypeMapping TypeName="LibolModel.SYS_USER_GOOGLE_ACCOUNT">
+              <MappingFragment StoreEntitySet="SYS_USER_GOOGLE_ACCOUNT">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

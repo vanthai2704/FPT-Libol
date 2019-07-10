@@ -2767,7 +2767,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       <PropertyRef Name="Email" />
     </Key>
     <Property Name="Email" Type="varchar" MaxLength="500" Nullable="false" />
-    <Property Name="ID" Type="int" />
+    <Property Name="ID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="SYS_USER_LOCATION">
     <Key>
@@ -2880,18 +2880,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       </Principal>
       <Dependent Role="ITEM">
         <PropertyRef Name="MediumID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK__SYS_USER_GOO__ID__610222F5">
-    <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="0..1" />
-    <End Role="SYS_USER_GOOGLE_ACCOUNT" Type="Self.SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="SYS_USER">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
-        <PropertyRef Name="ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -11882,10 +11870,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <AssociationSet Name="CDMED_ITE_FK" Association="Self.CDMED_ITE_FK">
       <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
       <End Role="ITEM" EntitySet="ITEM" />
-    </AssociationSet>
-    <AssociationSet Name="FK__SYS_USER_GOO__ID__610222F5" Association="Self.FK__SYS_USER_GOO__ID__610222F5">
-      <End Role="SYS_USER" EntitySet="SYS_USER" />
-      <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
     </AssociationSet>
     <AssociationSet Name="FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET" Association="Self.FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET">
       <End Role="ACQ_BUDGET" EntitySet="ACQ_BUDGET" />

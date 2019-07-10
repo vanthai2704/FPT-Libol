@@ -155,19 +155,19 @@ namespace Libol.Controllers
                     user.Password = passEncrypt;
                 }
                 
-                if(user.SYS_USER_GOOGLE_ACCOUNT.Count() > 0)
-                {
-                    var userGoogleAccount = user.SYS_USER_GOOGLE_ACCOUNT.First();
-                    userGoogleAccount.Email = Email;
-                }
-                else
-                {
+                //if(user.SYS_USER_GOOGLE_ACCOUNT.Count() > 0)
+                //{
+                //    var userGoogleAccount = user.SYS_USER_GOOGLE_ACCOUNT.First();
+                //    userGoogleAccount.Email = Email;
+                //}
+                //else
+                //{
                     
                     var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
                     userGoogleAccount.ID = ID;
                     userGoogleAccount.Email = Email;
                     db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
-                }
+                //}
                 db.SaveChanges();
                 return Json(new Result()
                 {
