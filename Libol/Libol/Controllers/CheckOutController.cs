@@ -61,7 +61,10 @@ namespace Libol.Controllers
             }
             else
             {
-                strTransactionIDs = "0";
+                if (patroncode != strPatronCode)
+                {
+                    strTransactionIDs = "0";
+                }
             }
             getcurrentloandetail();
             patroncode = strPatronCode;
