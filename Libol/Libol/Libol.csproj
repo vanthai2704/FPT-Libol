@@ -511,6 +511,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FLibContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_ADMIN_GET_RIGHTS_ACCEPT_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ADMIN_GET_RIGHTS_DENY_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_EDU_COLLEGE_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>

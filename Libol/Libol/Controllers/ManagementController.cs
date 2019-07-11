@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -99,6 +100,87 @@ namespace Libol.Controllers
                 recordsFiltered = search.Count(),
                 data = result
             });
+        }
+
+        [HttpPost]
+        public JsonResult AddNewUser(string Name, string Username, string Email, string Password, string RepeatPassword,
+            int module1, int module2, int module3, int module4, int module5, int module8, int module9, int module6, string rights
+            )
+        {
+            if (db.SYS_USER.Where(a => a.Username == Username).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Người dùng với tên đăng nhập <strong style='color:black; '>" + Username + "</strong> đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.Email == Email).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Người dùng với email <strong style='color:black; '>" + Email + "</strong> đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            string InvalidFields = "";
+            if (String.IsNullOrEmpty(Name))
+            {
+                InvalidFields += "txtName-";
+            }
+            if (String.IsNullOrEmpty(Email))
+            {
+                InvalidFields += "txtEmail-";
+            }
+            if (String.IsNullOrEmpty(Username))
+            {
+                InvalidFields += "txtUsername-";
+            }
+            if (String.IsNullOrEmpty(Password))
+            {
+                InvalidFields += "txtPassword-";
+            }
+            if (!String.IsNullOrEmpty(Password) && Password != RepeatPassword)
+            {
+                InvalidFields += "txtRepeatPassword-";
+            }
+            if (InvalidFields != "")
+            {
+                return Json(new Result()
+                {
+                    CodeError = 1,
+                    Data = InvalidFields
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                string passEncrypt = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(Password, "pl");
+                var intNewUID = new ObjectParameter("intNewUID", typeof(int));
+                db.SP_ADMIN_ADD_USER(0,Name,Username, passEncrypt, module1, module2, module3, module4, module5, module8, module9, module6, 
+                    Int32.Parse(Session["UserID"].ToString()),null, intNewUID, new ObjectParameter("intOutVal", typeof(int)));
+                if((int) intNewUID.Value > 0)
+                {
+                    var rightsSplit = rights.Split(',');
+                    foreach(var r in rightsSplit)
+                    {
+                        db.SP_ADMIN_GRANT_RIGHTS((int)intNewUID.Value, Int32.Parse(r));
+                    }
+                    return Json(new Result()
+                    {
+                        CodeError = 0,
+                        Data = "Tài khoản <strong style='color:black;'>" + Username + " </strong> đã được thêm mới thành công cho <strong style='color:black;'>" + Name + "</strong>"
+                    }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new Result()
+                    {
+                        CodeError = 2,
+                        Data = "Có lỗi vui lòng kiểm tra lại!"
+                    }, JsonRequestBehavior.AllowGet);
+                }
+            }
+                
         }
 
         [HttpPost]
@@ -213,11 +295,127 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult GetRightInModule(int module, int UserID)
         {
-            Rights rights = new Rights();
-            
-            
+            var locRights = db.SP_GETUSERLOCATIONS(1, Int32.Parse(Session["UserID"].ToString())).ToList();
+            if (UserID > 0)
+            {
+                Rights rights = new Rights();
+                rights.Accept = db.FPT_ADMIN_GET_RIGHTS_ACCEPT(module, UserID).ToList();
+                rights.Deny = db.FPT_ADMIN_GET_RIGHTS_DENY(module, UserID, Int32.Parse(Session["UserID"].ToString())).ToList();
+                rights.AcceptLoc = new List<LocRight>();
+                rights.DenyLoc = new List<LocRight>();
 
-            return Json(rights, JsonRequestBehavior.AllowGet);
+                var strCirLocs = new ObjectParameter("strCirLocs", typeof(string));
+                var strAcqLocs = new ObjectParameter("strAcqLocs", typeof(string));
+                var strSerLocs = new ObjectParameter("strSerLocs", typeof(string));
+                db.SP_ADMIN_GET_LOCATION_INFOR(UserID, strCirLocs, strAcqLocs, strSerLocs);
+                if(module == 3)
+                {
+                    foreach (var r in locRights)
+                    {
+                        bool checkDeny = true;
+                        foreach (var l in strCirLocs.Value.ToString().Split(','))
+                        {
+                            if (l == r.ID.ToString())
+                            {
+                                checkDeny = false;
+                            }
+                        }
+                        if (checkDeny)
+                        {
+                            rights.DenyLoc.Add(new LocRight()
+                            {
+                                ID = r.ID,
+                                LocName = r.LOCNAME
+                            });
+                        }
+                        else
+                        {
+                            rights.AcceptLoc.Add(new LocRight()
+                            {
+                                ID = r.ID,
+                                LocName = r.LOCNAME
+                            });
+                        }
+                    }
+                }
+                if (module == 4)
+                {
+                    foreach (var r in locRights)
+                    {
+                        bool checkDeny = true;
+                        foreach (var l in strAcqLocs.Value.ToString().Split(','))
+                        {
+                            if (l == r.ID.ToString())
+                            {
+                                checkDeny = false;
+                            }
+                        }
+                        if (checkDeny)
+                        {
+                            rights.DenyLoc.Add(new LocRight()
+                            {
+                                ID = r.ID,
+                                LocName = r.LOCNAME
+                            });
+                        }
+                        else
+                        {
+                            rights.AcceptLoc.Add(new LocRight()
+                            {
+                                ID = r.ID,
+                                LocName = r.LOCNAME
+                            });
+                        }
+                    }
+                }
+                if (module == 5)
+                {
+                    foreach (var r in locRights)
+                    {
+                        bool checkDeny = true;
+                        foreach (var l in strSerLocs.Value.ToString().Split(','))
+                        {
+                            if (l == r.ID.ToString())
+                            {
+                                checkDeny = false;
+                            }
+                        }
+                        if (checkDeny)
+                        {
+                            rights.DenyLoc.Add(new LocRight()
+                            {
+                                ID = r.ID,
+                                LocName = r.LOCNAME
+                            });
+                        }
+                        else
+                        {
+                            rights.AcceptLoc.Add(new LocRight()
+                            {
+                                ID = r.ID,
+                                LocName = r.LOCNAME
+                            });
+                        }
+                    }
+                }
+                return Json(rights, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                RightsWhenCreate rights = new RightsWhenCreate();
+                rights.Accept = db.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE(module, Int32.Parse(Session["UserID"].ToString()),1).ToList();
+                rights.Deny = db.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE(module, Int32.Parse(Session["UserID"].ToString()), 0).ToList();
+                rights.AcceptLoc = new List<LocRight>();
+                rights.DenyLoc = new List<LocRight>();
+                foreach(var l in locRights)
+                {
+                    rights.DenyLoc.Add(new LocRight() {
+                        ID = l.ID,
+                        LocName = l.LOCNAME
+                    });
+                }
+                return Json(rights, JsonRequestBehavior.AllowGet);
+            }
         }
     }
     public class CustomUser
@@ -229,13 +427,23 @@ namespace Libol.Controllers
 
     public class Rights
     {
-        public List<UserRight> Accept { get; set; }
-        public List<UserRight> Deny { get; set; }
+        public List<FPT_ADMIN_GET_RIGHTS_ACCEPT_Result> Accept { get; set; }
+        public List<FPT_ADMIN_GET_RIGHTS_DENY_Result> Deny { get; set; }
+        public List<LocRight> AcceptLoc { get; set; }
+        public List<LocRight> DenyLoc { get; set; }
     }
 
-    public class UserRight
+    public class RightsWhenCreate
+    {
+        public List<FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result> Accept { get; set; }
+        public List<FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result> Deny { get; set; }
+        public List<LocRight> AcceptLoc { get; set; }
+        public List<LocRight> DenyLoc { get; set; }
+    }
+
+    public class LocRight
     {
         public int ID { get; set; }
-        public string Right { get; set; }
+        public string LocName { get; set; }
     }
 }
