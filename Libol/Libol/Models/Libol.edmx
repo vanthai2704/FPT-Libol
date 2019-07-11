@@ -5233,6 +5233,20 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strInput" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="FPT_ADMIN_GET_RIGHTS_ACCEPT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModuleID" Type="int" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ADMIN_GET_RIGHTS_DENY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModuleID" Type="int" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+          <Parameter Name="intUserParentID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ADMIN_GET_RIGHTS_WHEN_CREATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModuleID" Type="int" Mode="In" />
+          <Parameter Name="intParentID" Type="int" Mode="In" />
+          <Parameter Name="IsBasic" Type="int" Mode="In" />
+        </Function>
         <Function Name="FPT_EDU_ADD_COLLEGE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="College" Type="nvarchar" Mode="In" />
         </Function>
@@ -25017,6 +25031,20 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" />
+          <FunctionImport Name="FPT_ADMIN_GET_RIGHTS_ACCEPT" ReturnType="Collection(LibolModel.FPT_ADMIN_GET_RIGHTS_ACCEPT_Result)">
+            <Parameter Name="intModuleID" Mode="In" Type="Int32" />
+            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ADMIN_GET_RIGHTS_DENY" ReturnType="Collection(LibolModel.FPT_ADMIN_GET_RIGHTS_DENY_Result)">
+            <Parameter Name="intModuleID" Mode="In" Type="Int32" />
+            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+            <Parameter Name="intUserParentID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ADMIN_GET_RIGHTS_WHEN_CREATE" ReturnType="Collection(LibolModel.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result)">
+            <Parameter Name="intModuleID" Mode="In" Type="Int32" />
+            <Parameter Name="intParentID" Mode="In" Type="Int32" />
+            <Parameter Name="IsBasic" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -29687,6 +29715,18 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="ID" Type="Int32" Nullable="false" />
         </EntityType>
+        <ComplexType Name="FPT_ADMIN_GET_RIGHTS_ACCEPT_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Right" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FPT_ADMIN_GET_RIGHTS_DENY_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Right" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Right" Nullable="false" MaxLength="100" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -39623,6 +39663,30 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ADMIN_GET_RIGHTS_ACCEPT" FunctionName="LibolModel.Store.FPT_ADMIN_GET_RIGHTS_ACCEPT">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ADMIN_GET_RIGHTS_ACCEPT_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Right" ColumnName="Right" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ADMIN_GET_RIGHTS_DENY" FunctionName="LibolModel.Store.FPT_ADMIN_GET_RIGHTS_DENY">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ADMIN_GET_RIGHTS_DENY_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Right" ColumnName="Right" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ADMIN_GET_RIGHTS_WHEN_CREATE" FunctionName="LibolModel.Store.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Right" ColumnName="Right" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

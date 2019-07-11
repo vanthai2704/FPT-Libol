@@ -21455,5 +21455,52 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result>("FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM", strItemIDsParameter, intIsAuthorityParameter);
         }
+    
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_ACCEPT_Result> FPT_ADMIN_GET_RIGHTS_ACCEPT(Nullable<int> intModuleID, Nullable<int> intUserID)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_ACCEPT_Result>("FPT_ADMIN_GET_RIGHTS_ACCEPT", intModuleIDParameter, intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_DENY_Result> FPT_ADMIN_GET_RIGHTS_DENY(Nullable<int> intModuleID, Nullable<int> intUserID, Nullable<int> intUserParentID)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intUserParentIDParameter = intUserParentID.HasValue ?
+                new ObjectParameter("intUserParentID", intUserParentID) :
+                new ObjectParameter("intUserParentID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_DENY_Result>("FPT_ADMIN_GET_RIGHTS_DENY", intModuleIDParameter, intUserIDParameter, intUserParentIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result> FPT_ADMIN_GET_RIGHTS_WHEN_CREATE(Nullable<int> intModuleID, Nullable<int> intParentID, Nullable<int> isBasic)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            var intParentIDParameter = intParentID.HasValue ?
+                new ObjectParameter("intParentID", intParentID) :
+                new ObjectParameter("intParentID", typeof(int));
+    
+            var isBasicParameter = isBasic.HasValue ?
+                new ObjectParameter("IsBasic", isBasic) :
+                new ObjectParameter("IsBasic", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result>("FPT_ADMIN_GET_RIGHTS_WHEN_CREATE", intModuleIDParameter, intParentIDParameter, isBasicParameter);
+        }
     }
 }
