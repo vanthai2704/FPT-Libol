@@ -21,10 +21,10 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public ActionResult SearchToRenew(int intUserID, Byte intType, string strCodeVal)
+        public PartialViewResult SearchToRenew(int intUserID, Byte intType, string strCodeVal)
         {
             ViewBag.ContentRenew = renewBusiness.SP_CIR_GET_RENEW(intUserID, intType, strCodeVal);
-            return View();
+            return PartialView("_searchToRenew");
         }
     }
 }

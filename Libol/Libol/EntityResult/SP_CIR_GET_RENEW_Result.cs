@@ -14,12 +14,12 @@ namespace Libol.EntityResult
         public string Code { get; set; }
         public int ID { get; set; }
         public int LoanTypeID { get; set; }
-        public int LoanMode { get; set; }
+        public byte LoanMode { get; set; }
         public string CopyNumber { get; set; }
         public DateTime CheckOutDate { get; set; }
         public DateTime DueDate { get; set; }
         public string Note { get; set; }
-        public int RenewCount { get; set; }
+        public Int16 RenewCount { get; set; }
         public int PatronID { get; set; }
         public int ItemID { get; set; }
         public Nullable<System.DateTime> RecallDate { get; set; }

@@ -2353,6 +2353,7 @@
     <Content Include="Uploads\Mẫu import user libol...xls" />
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
     <Content Include="Views\Renew\Renew.cshtml" />
+    <Content Include="Views\Renew\_searchToRenew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

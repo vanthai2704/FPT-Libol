@@ -5641,6 +5641,11 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCreator" Type="nvarchar" Mode="In" />
           <Parameter Name="intIsAuthority" Type="int" Mode="In" />
         </Function>
+        <Function Name="FPT_SP_CIR_GET_RENEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+          <Parameter Name="intType" Type="smallint" Mode="In" />
+          <Parameter Name="strCodeVal" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="FPT_SP_CIR_LIB_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intUserID" Type="int" Mode="In" />
         </Function>
@@ -5729,9 +5734,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="SEARCH_CODE_TITLE_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strIDs" Type="varchar" Mode="In" />
           <Parameter Name="smintCHECKJAVASCRIPT" Type="smallint" Mode="In" />
-        </Function>
-        <Function Name="SearchAllTables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="SearchStr" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="SONDP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strACQIDs" Type="varchar" Mode="In" />
@@ -25388,7 +25390,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_JOIN_ISBN" ReturnType="Collection(LibolModel.FPT_JOIN_ISBN_Result)">
-            <Parameter Name="itemid" Mode="In" Type="Int32" />
+          <Parameter Name="itemid" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result)">
             <Parameter Name="LibID" Mode="In" Type="Int32" />
@@ -25397,6 +25399,11 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="StartDate" Mode="In" Type="DateTime" />
             <Parameter Name="EndDate" Mode="In" Type="DateTime" />
             <Parameter Name="OrderBy" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_CIR_GET_RENEW">
+            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+            <Parameter Name="intType" Mode="In" Type="Int16" />
+            <Parameter Name="strCodeVal" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
@@ -33424,7 +33431,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SEARCH_CODE_TITLE_SEL" FunctionName="LibolModel.Store.SEARCH_CODE_TITLE_SEL" />
-          <FunctionImportMapping FunctionImportName="SearchAllTables" FunctionName="LibolModel.Store.SearchAllTables" />
           <FunctionImportMapping FunctionImportName="SONDP" FunctionName="LibolModel.Store.SONDP" />
           <FunctionImportMapping FunctionImportName="SP_ABC" FunctionName="LibolModel.Store.SP_ABC" />
           <FunctionImportMapping FunctionImportName="SP_ACQ_ACCUMULATE_UPDATE" FunctionName="LibolModel.Store.SP_ACQ_ACCUMULATE_UPDATE" />
@@ -40280,6 +40286,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_CIR_GET_RENEW" FunctionName="LibolModel.Store.FPT_SP_CIR_GET_RENEW" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
