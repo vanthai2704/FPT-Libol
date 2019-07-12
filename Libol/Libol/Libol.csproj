@@ -170,6 +170,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PrintBarcodeController.cs" />
     <Compile Include="Controllers\PrintLabelController.cs" />
+    <Compile Include="Controllers\RenewController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
     <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
     <Compile Include="EntityResult\SP_CATA_GET_MODIFIED_FIELDS_Result.cs" />
@@ -2226,6 +2227,7 @@
     <Content Include="Views\Patron\_SearchPatronDetail.cshtml" />
     <Content Include="Uploads\Mẫu import user libol...xls" />
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
+    <Content Include="Views\Renew\Renew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
