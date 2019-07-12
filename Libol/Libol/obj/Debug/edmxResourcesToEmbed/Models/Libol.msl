@@ -9851,6 +9851,412 @@
     <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_DELETE" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_DELETE" />
     <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_INSERT" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_INSERT" />
     <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_UPDATE" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_UPDATE" />
-    <FunctionImportMapping FunctionImportName="TESTCAI" FunctionName="LibolModel.Store.TESTCAI" />
+    <FunctionImportMapping FunctionImportName="FPT_CHECK_ITEMID_AND_ACQUIREDATE" FunctionName="LibolModel.Store.FPT_CHECK_ITEMID_AND_ACQUIREDATE" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BYLOC" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BYLOC">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BYLOC_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BYLOC_TIME" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BYLOC_TIME">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BYLOC_TIME_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BYLOC2" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BYLOC2">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BYLOC2_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SP_GET_HOLDING_BYLOC" FunctionName="LibolModel.Store.SP_GET_HOLDING_BYLOC">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.SP_GET_HOLDING_BYLOC_Result">
+          <ScalarProperty Name="RECORDNUMBER" ColumnName="RECORDNUMBER" />
+          <ScalarProperty Name="RECEIPTEDDATE" ColumnName="RECEIPTEDDATE" />
+          <ScalarProperty Name="PO" ColumnName="PO" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="ACQDATE" ColumnName="ACQDATE" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SP_HOLDING_LIBLOCUSER_SEL" FunctionName="LibolModel.Store.SP_HOLDING_LIBLOCUSER_SEL">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.SP_HOLDING_LIBLOCUSER_SEL_Result">
+          <ScalarProperty Name="LOCNAME" ColumnName="LOCNAME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="LibID" ColumnName="LibID" />
+          <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_LOCATIONID" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_LOCATIONID">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE" FunctionName="LibolModel.Store.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result">
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_POID" FunctionName="LibolModel.Store.FPT_SP_GET_POID">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_POID_Result">
+          <ScalarProperty Name="POID" ColumnName="POID" />
+          <ScalarProperty Name="ValidDate" ColumnName="ValidDate" />
+          <ScalarProperty Name="ReceivedCopies" ColumnName="ReceivedCopies" />
+          <ScalarProperty Name="RequestedCopies" ColumnName="RequestedCopies" />
+          <ScalarProperty Name="FilledDate" ColumnName="FilledDate" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="NXB" ColumnName="NXB" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_POID_NEW1" FunctionName="LibolModel.Store.FPT_SP_GET_POID_NEW">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_POID_NEW1_Result">
+          <ScalarProperty Name="POID" ColumnName="POID" />
+          <ScalarProperty Name="ValidDate" ColumnName="ValidDate" />
+          <ScalarProperty Name="FilledDate" ColumnName="FilledDate" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="NXB" ColumnName="NXB" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SP_ACQ_GET_ACQYEAR_NEW" FunctionName="LibolModel.Store.SP_ACQ_GET_ACQYEAR_NEW" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_ACQ_STATYEAR_NEW" FunctionName="LibolModel.Store.FPT_SP_ACQ_STATYEAR_NEW">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_ACQ_STATYEAR_NEW_Result">
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="BooksTotal" ColumnName="BooksTotal" />
+          <ScalarProperty Name="CopiesTotal" ColumnName="CopiesTotal" />
+          <ScalarProperty Name="MoneyTotal" ColumnName="MoneyTotal" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_ACQ_STATMONTH_NEW" FunctionName="LibolModel.Store.FPT_SP_ACQ_STATMONTH_NEW">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_ACQ_STATMONTH_NEW_Result">
+          <ScalarProperty Name="Month" ColumnName="Month" />
+          <ScalarProperty Name="BooksTotal" ColumnName="BooksTotal" />
+          <ScalarProperty Name="CopiesTotal" ColumnName="CopiesTotal" />
+          <ScalarProperty Name="MoneyTotal" ColumnName="MoneyTotal" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="SYS_USER_GOOGLE_ACCOUNT">
+      <EntityTypeMapping TypeName="LibolModel.SYS_USER_GOOGLE_ACCOUNT">
+        <MappingFragment StoreEntitySet="SYS_USER_GOOGLE_ACCOUNT">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_STAT_PATRONMAX_NEW1" FunctionName="LibolModel.Store.FPT_SP_STAT_PATRONMAX_NEW1" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_CIR_GET_LOAN_HISTORY" FunctionName="LibolModel.Store.FPT_SP_CIR_GET_LOAN_HISTORY">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CIR_GET_LOAN_HISTORY_Result">
+          <ScalarProperty Name="TITLE" ColumnName="TITLE" />
+          <ScalarProperty Name="COPYNUMBER" ColumnName="COPYNUMBER" />
+          <ScalarProperty Name="PATRONID" ColumnName="PATRONID" />
+          <ScalarProperty Name="PATRONINFO" ColumnName="PATRONINFO" />
+          <ScalarProperty Name="CHECKOUTDATE" ColumnName="CHECKOUTDATE" />
+          <ScalarProperty Name="CHECKINDATE" ColumnName="CHECKINDATE" />
+          <ScalarProperty Name="OVERDUEDAYS" ColumnName="OVERDUEDAYS" />
+          <ScalarProperty Name="OVERDUEFINE" ColumnName="OVERDUEFINE" />
+          <ScalarProperty Name="LOANTYPEID" ColumnName="LOANTYPEID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_CIR_GET_PATRON_LOANINFOR" FunctionName="LibolModel.Store.FPT_CIR_GET_PATRON_LOANINFOR" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_CIR_GET_LOAN_HISTORY_NEW1" FunctionName="LibolModel.Store.FPT_SP_CIR_GET_LOAN_HISTORY_NEW" />
+    <FunctionImportMapping FunctionImportName="FPT_SELECT_USECOUNT2" FunctionName="LibolModel.Store.FPT_SELECT_USECOUNT2" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="POID" ColumnName="POID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="POID" ColumnName="POID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GET_PATRON_ONLOANINFOR_TEST1" FunctionName="LibolModel.Store.GET_PATRON_ONLOANINFOR_TEST1" />
+    <FunctionImportMapping FunctionImportName="GET_PATRON_RENEW_ONLOAN_INFOR" FunctionName="LibolModel.Store.GET_PATRON_RENEW_ONLOAN_INFOR" />
+    <FunctionImportMapping FunctionImportName="FPT_GET_LOCLIBUSER_SEL" FunctionName="LibolModel.Store.FPT_GET_LOCLIBUSER_SEL" />
+    <FunctionImportMapping FunctionImportName="FPT_GET_LOCFULLNAME_LIBUSER_SEL" FunctionName="LibolModel.Store.FPT_GET_LOCFULLNAME_LIBUSER_SEL">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result">
+          <ScalarProperty Name="LOCNAME" ColumnName="LOCNAME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="LibID" ColumnName="LibID" />
+          <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_LOANINFOR" FunctionName="LibolModel.Store.FPT_GET_PATRON_LOANINFOR" />
+    <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_ONLOANINFOR" FunctionName="LibolModel.Store.FPT_GET_PATRON_ONLOANINFOR" />
+    <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_RENEW_LOAN_INFOR" FunctionName="LibolModel.Store.FPT_GET_PATRON_RENEW_LOAN_INFOR" />
+    <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_RENEW_ONLOAN_INFOR" FunctionName="LibolModel.Store.FPT_GET_PATRON_RENEW_ONLOAN_INFOR" />
+    <FunctionImportMapping FunctionImportName="FPT_GET_LIQUIDBOOKS" FunctionName="LibolModel.Store.FPT_GET_LIQUIDBOOKS" />
+    <FunctionImportMapping FunctionImportName="FPT_CIR_YEAR_STATISTIC" FunctionName="LibolModel.Store.FPT_CIR_YEAR_STATISTIC" />
+    <FunctionImportMapping FunctionImportName="FPT_CIR_MONTH_STATISTIC" FunctionName="LibolModel.Store.FPT_CIR_MONTH_STATISTIC" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_CIR_LIB_SEL" FunctionName="LibolModel.Store.FPT_SP_CIR_LIB_SEL">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CIR_LIB_SEL_Result">
+          <ScalarProperty Name="LibName" ColumnName="LibName" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_CIR_LIBLOCUSER_SEL" FunctionName="LibolModel.Store.FPT_SP_CIR_LIBLOCUSER_SEL">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CIR_LIBLOCUSER_SEL_Result">
+          <ScalarProperty Name="LOCNAME" ColumnName="LOCNAME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="LibID" ColumnName="LibID" />
+          <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL" FunctionName="LibolModel.Store.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL_Result">
+          <ScalarProperty Name="LOCNAME" ColumnName="LOCNAME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="LibID" ColumnName="LibID" />
+          <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL" FunctionName="LibolModel.Store.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL" />
+    <FunctionImportMapping FunctionImportName="FPT_BORROWNUMBER" FunctionName="LibolModel.Store.FPT_BORROWNUMBER" />
+    <FunctionImportMapping FunctionImportName="FPT_CIR_GET_LOCKEDPATRONS" FunctionName="LibolModel.Store.FPT_CIR_GET_LOCKEDPATRONS" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_COPYNUMBER_STRING" FunctionName="LibolModel.Store.FPT_SP_GET_COPYNUMBER_STRING">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_COPYNUMBER_STRING_Result">
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_COPYNUMBER_TO_STRING" FunctionName="LibolModel.Store.FPT_SP_GET_COPYNUMBER_TO_STRING">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_COPYNUMBER_TO_STRING_Result">
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="POID" ColumnName="POID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_RECOMMEND" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_RECOMMEND">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMEND_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="POID" ColumnName="POID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="REID" ColumnName="REID" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SP_ACQ_STATYEAR_NEW" FunctionName="LibolModel.Store.SP_ACQ_STATYEAR_NEW">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.SP_ACQ_STATYEAR_NEW_Result">
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="BooksTotal" ColumnName="BooksTotal" />
+          <ScalarProperty Name="CopiesTotal" ColumnName="CopiesTotal" />
+          <ScalarProperty Name="MoneyTotal" ColumnName="MoneyTotal" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_STAT_ITEMMAX" FunctionName="LibolModel.Store.FPT_SP_STAT_ITEMMAX" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_STAT_PATRONGROUP" FunctionName="LibolModel.Store.FPT_SP_STAT_PATRONGROUP" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_STAT_PATRONMAX" FunctionName="LibolModel.Store.FPT_SP_STAT_PATRONMAX" />
+    <FunctionImportMapping FunctionImportName="FPT_JOIN_ISBN" FunctionName="LibolModel.Store.FPT_JOIN_ISBN">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_JOIN_ISBN_Result">
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result">
+          <ScalarProperty Name="SoChungTu" ColumnName="SoChungTu" />
+          <ScalarProperty Name="NhanDe" ColumnName="NhanDe" />
+          <ScalarProperty Name="NgayChungTu" ColumnName="NgayChungTu" />
+          <ScalarProperty Name="DKCB" ColumnName="DKCB" />
+          <ScalarProperty Name="NgayBoSung" ColumnName="NgayBoSung" />
+          <ScalarProperty Name="POID" ColumnName="POID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="REID" ColumnName="REID" />
+          <ScalarProperty Name="NamXuatBan" ColumnName="NamXuatBan" />
+          <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+          <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
+          <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_MONTH_STATISTIC" FunctionName="LibolModel.Store.FPT_ACQ_MONTH_STATISTIC" />
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_YEAR_STATISTIC" FunctionName="LibolModel.Store.FPT_ACQ_YEAR_STATISTIC" />
   </EntityContainerMapping>
 </Mapping>

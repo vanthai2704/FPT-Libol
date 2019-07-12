@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "LockPatronStats";
+}
+
+<head>
+    <style>
+        textarea {
+            width: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+            resize: none;
+            -webkit-box-sizing: border-box; /* <=iOS4, <= Android  2.3 */
+            -moz-box-sizing: border-box; /* FF1+ */
+            box-sizing: border-box; /* Chrome, IE8, Opera, Safari 5.1*/
+        }
+
+        table, th, td {
+            position: relative;
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css">
+</head>
+
+<div id="Main">
+    <table class="table">
+        <thead>
+            <tr></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td class="text-right">Số thẻ</td>
+                <td><input id="PatronCode" name="PatronCode" type="text" /></td>
+                <td class="text-right">Ghi chú</td>
+                <td rowspan="3"><textarea id="Note" name="Note"></textarea></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="text-right">Ngày bắt đầu</td>
+                <td><input id="StartedDate" name="StartedDate" type="date" /></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="text-right">Số ngày</td>
+                <td><input id="LockedDays" name="LockedDays" type="number" /></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="submit" id="Lock" name="Lock" />
+    <table class="table">
+        <thead>
+            <tr></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-right">Số thẻ</td>
+                <td><input id="PatronCodeFilter" name="PatronCodeFilter" type="text" /></td>
+                <td class="text-right">Ngày khóa từ</td>
+                <td><input id="LockDateFrom" name="LockDateFrom" type="date" /></td>
+                <td class="text-right">Đến</td>
+                <td><input id="LockDateTo" name="LockDateTo" type="date" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <button id="Find" type="submit">Lọc</button>
+    <div id="ContentStatLockPatron"></div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    document.getElementById("Find").onclick = function () {
+        var empObj = {
+            //strLibID: document.getElementById("Library").value,
+            strPatronCode: document.getElementById("PatronCodeFilter").value,
+            strLockDateFrom: document.getElementById("LockDateFrom").value,
+            strLockDateTo: document.getElementById("LockDateTo").value,
+        };
+
+        $.ajax({
+            url: "GetLockPatronStats",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            beforeSend: function () {
+                $("#ContentStatLockPatron").html("<h4>Loading...</h4>");
+            },
+            success: function (result) {
+                $("#ContentStatLockPatron").html(result)
+            },
+            error: function (errormessage) {
+                console.log("error");
+            }
+        });
+    };
+
+</script>
+

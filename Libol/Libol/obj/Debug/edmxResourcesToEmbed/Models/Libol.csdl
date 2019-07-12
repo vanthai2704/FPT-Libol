@@ -2603,6 +2603,7 @@
     <NavigationProperty Name="HOLDING_LOCATION1" Relationship="Self.SYS_USER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
     <NavigationProperty Name="SYS_REFERENCE" Relationship="Self.SYS_USER_REFERENCE" FromRole="SYS_USER" ToRole="SYS_REFERENCE" />
     <NavigationProperty Name="HOLDING_LOCATION2" Relationship="Self.SYS_USER_SER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
+    <NavigationProperty Name="SYS_USER_GOOGLE_ACCOUNT" Relationship="LibolModel.FK__SYS_USER_GOO__ID__40955363" FromRole="SYS_USER" ToRole="SYS_USER_GOOGLE_ACCOUNT" />
   </EntityType>
   <EntityType Name="SYS_USER_RIGHT">
     <Key>
@@ -6461,6 +6462,7 @@
       <Parameter Name="strPatronCode" Mode="In" Type="String" />
       <Parameter Name="strItemCode" Mode="In" Type="String" />
       <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
       <Parameter Name="intLocationID" Mode="In" Type="Int32" />
       <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
@@ -6473,6 +6475,7 @@
       <Parameter Name="strPatronCode" Mode="In" Type="String" />
       <Parameter Name="strItemCode" Mode="In" Type="String" />
       <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
       <Parameter Name="intLocationID" Mode="In" Type="Int32" />
       <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
@@ -6485,12 +6488,12 @@
       <Parameter Name="strPatronCode" Mode="In" Type="String" />
       <Parameter Name="strItemCode" Mode="In" Type="String" />
       <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
       <Parameter Name="intLocationID" Mode="In" Type="Int32" />
       <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
       <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
       <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
-      <Parameter Name="intLoan" Mode="In" Type="Int32" />
       <Parameter Name="intUserID" Mode="In" Type="Int32" />
     </FunctionImport>
     <FunctionImport Name="ILL_GET_OUT_RESPONSE_INFOR" ReturnType="Collection(LibolModel.ILL_GET_OUT_RESPONSE_INFOR_Result)">
@@ -12366,6 +12369,471 @@
       <Parameter Name="intLocationID" Mode="In" Type="Int32" />
     </FunctionImport>
     <FunctionImport Name="TESTCAI" />
+    <FunctionImport Name="FPT_CHECK_ITEMID" ReturnType="Collection(Int32)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="CDate" Mode="In" Type="DateTime" />
+      <Parameter Name="itemId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_CHECK_ITEMID_AND_ACQUIREDATE" ReturnType="Collection(Int32)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="CDate" Mode="In" Type="DateTime" />
+      <Parameter Name="itemId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BYLOC" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BYLOC_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BYLOC_TIME" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BYLOC_TIME_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BYLOC2" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BYLOC2_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BYLOCID" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BYLOCID_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SP_GET_HOLDING_BYLOC" ReturnType="Collection(LibolModel.SP_GET_HOLDING_BYLOC_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="RecordNumber" Mode="In" Type="String" />
+      <Parameter Name="StartDate" Mode="In" Type="String" />
+      <Parameter Name="EndDate" Mode="In" Type="String" />
+      <Parameter Name="SortBy" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="SP_GET_HOLDING_BYLOC_DOI" ReturnType="Collection(LibolModel.SP_GET_HOLDING_BYLOC_DOI_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="RecordNumber" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="SP_HOLDING_LIBLOCUSER_SEL" ReturnType="Collection(LibolModel.SP_HOLDING_LIBLOCUSER_SEL_Result)">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="intLibID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE" ReturnType="Collection(LibolModel.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result)">
+      <Parameter Name="ItemID" Mode="In" Type="Int32" />
+      <Parameter Name="AcqDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_POID_NEW" ReturnType="Collection(LibolModel.FPT_SP_GET_POID_NEW_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_CHECK_ITEMID1" ReturnType="Collection(Int32)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="CDate" Mode="In" Type="DateTime" />
+      <Parameter Name="itemId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST2" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST2_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW2" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW2_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BYLOCID1" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BYLOCID1_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_POID" ReturnType="Collection(LibolModel.FPT_SP_GET_POID_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SP_GET_HOLDING_BYLOC_DOI1" ReturnType="Collection(LibolModel.SP_GET_HOLDING_BYLOC_DOI1_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="RecordNumber" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_POID_NEW1" ReturnType="Collection(LibolModel.FPT_SP_GET_POID_NEW1_Result)">
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SP_ACQ_GET_ACQYEAR_NEW" ReturnType="Collection(String)" />
+    <FunctionImport Name="FPT_SP_ACQ_STATYEAR_NEW" ReturnType="Collection(LibolModel.FPT_SP_ACQ_STATYEAR_NEW_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="FromYear" Mode="In" Type="Int32" />
+      <Parameter Name="ToYear" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_ACQ_STATMONTH_NEW" ReturnType="Collection(LibolModel.FPT_SP_ACQ_STATMONTH_NEW_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="InYear" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" />
+    <AssociationSet Name="FK__SYS_USER_GOO__ID__40955363" Association="LibolModel.FK__SYS_USER_GOO__ID__40955363">
+      <End Role="SYS_USER" EntitySet="SYS_USER" />
+      <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
+    </AssociationSet>
+    <FunctionImport Name="FPT_SP_STAT_PATRONMAX_NEW1">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="intTopNum" Mode="In" Type="Int32" />
+      <Parameter Name="intMinLoan" Mode="In" Type="Int32" />
+      <Parameter Name="OptItemID" Mode="In" Type="Int32" />
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_CIR_GET_LOAN_HISTORY" ReturnType="Collection(LibolModel.FPT_SP_CIR_GET_LOAN_HISTORY_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="CheckOutDateFrom" Mode="In" Type="DateTime" />
+      <Parameter Name="CheckOutDateTo" Mode="In" Type="DateTime" />
+      <Parameter Name="CheckInDateFrom" Mode="In" Type="DateTime" />
+      <Parameter Name="CheckInDateTo" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_CIR_GET_PATRON_LOANINFOR">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
+      <Parameter Name="strSerial" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_CIR_GET_LOAN_HISTORY_NEW">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
+      <Parameter Name="strSerial" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_CIR_GET_LOAN_HISTORY_NEW1">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
+      <Parameter Name="strSerial" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SELECT_USECOUNT2" ReturnType="Collection(Int32)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="itemID" Mode="In" Type="Int32" />
+      <Parameter Name="cDate" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="GET_PATRON_ONLOANINFOR_TEST1">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strDueDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strDueDateTo" Mode="In" Type="String" />
+      <Parameter Name="strSerial" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="GET_PATRON_RENEW_ONLOAN_INFOR">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_GET_LOCLIBUSER_SEL" ReturnType="Collection(String)">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="intLibID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_GET_LOCFULLNAME_LIBUSER_SEL" ReturnType="Collection(LibolModel.FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result)">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="intLibID" Mode="In" Type="Int32" />
+      <Parameter Name="strLocPrefix" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_GET_PATRON_LOANINFOR">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
+      <Parameter Name="strSerial" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_GET_PATRON_ONLOANINFOR">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strDueDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strDueDateTo" Mode="In" Type="String" />
+      <Parameter Name="strSerial" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_GET_PATRON_RENEW_LOAN_INFOR">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_GET_PATRON_RENEW_ONLOAN_INFOR">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strItemCode" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_GET_LIQUIDBOOKS">
+      <Parameter Name="strLiquidCode" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strDateTo" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_CIR_YEAR_STATISTIC">
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="intType" Mode="In" Type="Int32" />
+      <Parameter Name="intStatus" Mode="In" Type="Int32" />
+      <Parameter Name="strFromYear" Mode="In" Type="String" />
+      <Parameter Name="strToYear" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_CIR_MONTH_STATISTIC">
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="intType" Mode="In" Type="Int32" />
+      <Parameter Name="intStatus" Mode="In" Type="Int32" />
+      <Parameter Name="strInYear" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_CIR_LIB_SEL" ReturnType="Collection(LibolModel.FPT_SP_CIR_LIB_SEL_Result)">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_CIR_LIBLOCUSER_SEL" ReturnType="Collection(LibolModel.FPT_SP_CIR_LIBLOCUSER_SEL_Result)">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="intLibID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL" ReturnType="Collection(LibolModel.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL_Result)">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="intLibID" Mode="In" Type="Int32" />
+      <Parameter Name="strLocPrefix" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL" ReturnType="Collection(String)">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="intLibID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_BORROWNUMBER" ReturnType="Collection(Int32)">
+      <Parameter Name="itemID" Mode="In" Type="Int32" />
+      <Parameter Name="price" Mode="In" Type="Single" />
+      <Parameter Name="acqdate" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_CIR_GET_LOCKEDPATRONS">
+      <Parameter Name="strPatronCode" Mode="In" Type="String" />
+      <Parameter Name="strLockDateTo" Mode="In" Type="String" />
+      <Parameter Name="strLockDateFrom" Mode="In" Type="String" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_COPYNUMBER_STRING" ReturnType="Collection(LibolModel.FPT_SP_GET_COPYNUMBER_STRING_Result)">
+      <Parameter Name="libid" Mode="In" Type="Int32" />
+      <Parameter Name="acqdate" Mode="In" Type="String" />
+      <Parameter Name="price" Mode="In" Type="Single" />
+      <Parameter Name="itemid" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_COPYNUMBER_TO_STRING" ReturnType="Collection(LibolModel.FPT_SP_GET_COPYNUMBER_TO_STRING_Result)">
+      <Parameter Name="libid" Mode="In" Type="Int32" />
+      <Parameter Name="acqdate" Mode="In" Type="DateTime" />
+      <Parameter Name="price" Mode="In" Type="Single" />
+      <Parameter Name="itemid" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="POID" Mode="In" Type="Int32" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_RECOMMEND" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMEND_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="reid" Mode="In" Type="String" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="SP_ACQ_STATYEAR_NEW" ReturnType="Collection(LibolModel.SP_ACQ_STATYEAR_NEW_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="FromYear" Mode="In" Type="Int32" />
+      <Parameter Name="ToYear" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_STAT_ITEMMAX">
+      <Parameter Name="intUserID" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="intTopNum" Mode="In" Type="String" />
+      <Parameter Name="intMinLoan" Mode="In" Type="String" />
+      <Parameter Name="libid" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_STAT_PATRONGROUP">
+      <Parameter Name="intUserID" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="OptItemID" Mode="In" Type="String" />
+      <Parameter Name="intHistory" Mode="In" Type="String" />
+      <Parameter Name="LibID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_STAT_PATRONMAX">
+      <Parameter Name="intUserID" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="intTopNum" Mode="In" Type="String" />
+      <Parameter Name="intMinLoan" Mode="In" Type="String" />
+      <Parameter Name="OptItemID" Mode="In" Type="String" />
+      <Parameter Name="LocID" Mode="In" Type="String" />
+      <Parameter Name="LibID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_JOIN_ISBN" ReturnType="Collection(LibolModel.FPT_JOIN_ISBN_Result)">
+      <Parameter Name="itemid" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result)">
+      <Parameter Name="LibID" Mode="In" Type="Int32" />
+      <Parameter Name="LocID" Mode="In" Type="Int32" />
+      <Parameter Name="reid" Mode="In" Type="String" />
+      <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+      <Parameter Name="OrderBy" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_ACQ_MONTH_STATISTIC">
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strInYear" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_ACQ_YEAR_STATISTIC">
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strFromYear" Mode="In" Type="String" />
+      <Parameter Name="strToYear" Mode="In" Type="String" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -16976,5 +17444,407 @@
     <Property Type="Boolean" Name="X12ENABLE" Nullable="true" />
     <Property Type="String" Name="COUNTRY" Nullable="false" MaxLength="100" />
     <Property Type="String" Name="PROVINCE" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BYLOC_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" Precision="23" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BYLOC_TIME_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="false" MaxLength="50" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" Precision="23" />
+    <Property Type="String" Name="DKCB" Nullable="false" MaxLength="33" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" Precision="23" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BYLOC2_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" Precision="23" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BYLOCID_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" Precision="23" />
+    <Property Type="String" Name="DKCB" Nullable="false" MaxLength="33" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" Precision="23" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="SP_GET_HOLDING_BYLOC_Result">
+    <Property Type="String" Name="RECORDNUMBER" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="RECEIPTEDDATE" Nullable="true" Precision="23" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="DKCB" Nullable="false" MaxLength="33" />
+    <Property Type="DateTime" Name="ACQDATE" Nullable="true" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="SP_GET_HOLDING_BYLOC_DOI_Result">
+    <Property Type="String" Name="RECORDNUMBER" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="RECEIPTEDDATE" Nullable="true" Precision="23" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="DKCB" Nullable="false" MaxLength="33" />
+    <Property Type="DateTime" Name="ACQDATE" Nullable="true" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="SP_HOLDING_LIBLOCUSER_SEL_Result">
+    <Property Type="String" Name="LOCNAME" Nullable="false" MaxLength="83" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="GroupID" Nullable="true" MaxLength="8000" />
+    <Property Type="Int32" Name="LibID" Nullable="false" />
+    <Property Type="String" Name="Symbol" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result">
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_POID_NEW_Result">
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="DateTime" Name="ValidDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="FilledDate" Nullable="true" Precision="23" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NamXuatBan" Nullable="true" MaxLength="10" />
+    <Property Type="Decimal" Name="UnitPrice" Nullable="true" Precision="19" />
+    <Property Type="String" Name="NXB" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="150" />
+    <Property Type="Int32" Name="ItemID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST_Result">
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="DateTime" Name="ValidDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="FilledDate" Nullable="true" Precision="23" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NamXuatBan" Nullable="true" MaxLength="10" />
+    <Property Type="Decimal" Name="UnitPrice" Nullable="true" Precision="19" />
+    <Property Type="String" Name="NXB" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="150" />
+    <Property Type="Int32" Name="ItemID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST2_Result">
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="DateTime" Name="ValidDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="FilledDate" Nullable="true" Precision="23" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NamXuatBan" Nullable="true" MaxLength="10" />
+    <Property Type="Decimal" Name="UnitPrice" Nullable="true" Precision="19" />
+    <Property Type="String" Name="NXB" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="150" />
+    <Property Type="Int32" Name="ItemID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW2_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BYLOCID1_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" Precision="23" />
+    <Property Type="String" Name="DKCB" Nullable="false" MaxLength="33" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" Precision="23" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_POID_Result">
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="DateTime" Name="ValidDate" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="ReceivedCopies" Nullable="true" />
+    <Property Type="Int32" Name="RequestedCopies" Nullable="true" />
+    <Property Type="DateTime" Name="FilledDate" Nullable="true" Precision="23" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NamXuatBan" Nullable="true" MaxLength="10" />
+    <Property Type="Decimal" Name="UnitPrice" Nullable="true" Precision="19" />
+    <Property Type="String" Name="NXB" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="150" />
+    <Property Type="Int32" Name="ItemID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="SP_GET_HOLDING_BYLOC_DOI1_Result">
+    <Property Type="String" Name="RECORDNUMBER" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="RECEIPTEDDATE" Nullable="true" Precision="23" />
+    <Property Type="String" Name="PO" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="DKCB" Nullable="false" MaxLength="33" />
+    <Property Type="DateTime" Name="ACQDATE" Nullable="true" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_POID_NEW1_Result">
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="DateTime" Name="ValidDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="FilledDate" Nullable="true" Precision="23" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="ISBN" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NamXuatBan" Nullable="true" MaxLength="10" />
+    <Property Type="Decimal" Name="UnitPrice" Nullable="true" Precision="19" />
+    <Property Type="String" Name="NXB" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="150" />
+    <Property Type="Int32" Name="ItemID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_ACQ_STATYEAR_NEW_Result">
+    <Property Type="Int32" Name="Year" Nullable="true" />
+    <Property Type="Int32" Name="BooksTotal" Nullable="true" />
+    <Property Type="Int32" Name="CopiesTotal" Nullable="true" />
+    <Property Type="Double" Name="MoneyTotal" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_ACQ_STATMONTH_NEW_Result">
+    <Property Type="Int32" Name="Month" Nullable="true" />
+    <Property Type="Int32" Name="BooksTotal" Nullable="true" />
+    <Property Type="Int32" Name="CopiesTotal" Nullable="true" />
+    <Property Type="Double" Name="MoneyTotal" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
+    <Key>
+      <PropertyRef Name="Email" />
+    </Key>
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="ID" Type="Int32" />
+    <NavigationProperty Name="SYS_USER" Relationship="LibolModel.FK__SYS_USER_GOO__ID__40955363" FromRole="SYS_USER_GOOGLE_ACCOUNT" ToRole="SYS_USER" />
+  </EntityType>
+  <Association Name="FK__SYS_USER_GOO__ID__40955363">
+    <End Type="LibolModel.SYS_USER" Role="SYS_USER" Multiplicity="0..1" />
+    <End Type="LibolModel.SYS_USER_GOOGLE_ACCOUNT" Role="SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SYS_USER">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="FPT_SP_CIR_GET_LOAN_HISTORY_Result">
+    <Property Type="String" Name="TITLE" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="COPYNUMBER" Nullable="false" MaxLength="32" />
+    <Property Type="Int32" Name="PATRONID" Nullable="true" />
+    <Property Type="String" Name="PATRONINFO" Nullable="false" MaxLength="105" />
+    <Property Type="DateTime" Name="CHECKOUTDATE" Nullable="true" />
+    <Property Type="DateTime" Name="CHECKINDATE" Nullable="true" />
+    <Property Type="Int32" Name="OVERDUEDAYS" Nullable="false" />
+    <Property Type="Decimal" Name="OVERDUEFINE" Nullable="false" Precision="19" />
+    <Property Type="Int32" Name="LOANTYPEID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="Int32" Name="LocationID" Nullable="false" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="Int32" Name="LocationID" Nullable="false" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result">
+    <Property Type="String" Name="LOCNAME" Nullable="false" MaxLength="83" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="GroupID" Nullable="true" MaxLength="8000" />
+    <Property Type="Int32" Name="LibID" Nullable="false" />
+    <Property Type="String" Name="Symbol" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_CIR_LIB_SEL_Result">
+    <Property Type="String" Name="LibName" Nullable="true" MaxLength="134" />
+    <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_CIR_LIBLOCUSER_SEL_Result">
+    <Property Type="String" Name="LOCNAME" Nullable="false" MaxLength="83" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="GroupID" Nullable="true" MaxLength="8000" />
+    <Property Type="Int32" Name="LibID" Nullable="false" />
+    <Property Type="String" Name="Symbol" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
+  </ComplexType>
+  <ComplexType Name="FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL_Result">
+    <Property Type="String" Name="LOCNAME" Nullable="false" MaxLength="83" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="GroupID" Nullable="true" MaxLength="8000" />
+    <Property Type="Int32" Name="LibID" Nullable="false" />
+    <Property Type="String" Name="Symbol" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_COPYNUMBER_STRING_Result">
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_COPYNUMBER_TO_STRING_Result">
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="Int32" Name="LocationID" Nullable="false" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="8000" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_RECOMMEND_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="Int32" Name="LocationID" Nullable="false" />
+    <Property Type="String" Name="REID" Nullable="false" MaxLength="30" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="8000" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="SP_ACQ_STATYEAR_NEW_Result">
+    <Property Type="Int32" Name="Year" Nullable="true" />
+    <Property Type="Int32" Name="BooksTotal" Nullable="true" />
+    <Property Type="Int32" Name="CopiesTotal" Nullable="true" />
+    <Property Type="Double" Name="MoneyTotal" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_JOIN_ISBN_Result">
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
+    <Property Type="String" Name="ISBN" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result">
+    <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
+    <Property Type="DateTime" Name="NgayChungTu" Nullable="true" />
+    <Property Type="String" Name="DKCB" Nullable="true" />
+    <Property Type="DateTime" Name="NgayBoSung" Nullable="true" />
+    <Property Type="Int32" Name="POID" Nullable="true" />
+    <Property Type="Int32" Name="LocationID" Nullable="false" />
+    <Property Type="String" Name="REID" Nullable="false" MaxLength="30" />
+    <Property Type="String" Name="NamXuatBan" Nullable="false" MaxLength="16" />
+    <Property Type="Single" Name="DonGia" Nullable="true" />
+    <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="8000" />
+    <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
+    <Property Type="Int32" Name="ItemID" Nullable="false" />
   </ComplexType>
 </Schema>

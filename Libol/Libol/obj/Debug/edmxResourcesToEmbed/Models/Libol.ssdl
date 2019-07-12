@@ -522,16 +522,6 @@ warning 6002: The table/view 'Libol.dbo.CAT_DIC_NUMBER' does not have a primary 
     <Property Name="ParentID" Type="int" />
     <Property Name="DicItemID" Type="int" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.CAT_DIC_SUBJBROWSE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="CAT_DIC_SUBJBROWSE">
-          <Property Name="F0" Type="nvarchar" MaxLength="5" />
-          <Property Name="F1" Type="nvarchar" MaxLength="5" />
-          <Property Name="F2" Type="nvarchar" MaxLength="5" />
-          <Property Name="F3" Type="nvarchar" MaxLength="5" />
-          <Property Name="F4" Type="nvarchar" MaxLength="5" />
-          <Property Name="F5" Type="nvarchar" MaxLength="5" />
-        </EntityType>-->
   <EntityType Name="CAT_DIC_THESIS_LEVEL">
     <Key>
       <PropertyRef Name="ID" />
@@ -720,12 +710,6 @@ warning 6002: The table/view 'Libol.dbo.CAT_QUEUE' does not have a primary key d
     <Property Name="ITEMID" Type="int" Nullable="false" />
     <Property Name="REVIEWED" Type="tinyint" Nullable="false" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.CIR_CALENDAR' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="CIR_CALENDAR">
-          <Property Name="OffDay" Type="datetime" />
-          <Property Name="LocationID" Type="int" />
-        </EntityType>-->
   <EntityType Name="CIR_DIC_COLLEGE">
     <Key>
       <PropertyRef Name="ID" />
@@ -2304,11 +2288,6 @@ warning 6002: The table/view 'Libol.dbo.ITEM_UDC' does not have a primary key de
     <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="tmpValue" Type="int" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.lenta' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="lenta">
-          <Property Name="Title" Type="nvarchar" MaxLength="4000" />
-        </EntityType>-->
   <EntityType Name="MARC_AUTHORITY_BLOCK">
     <Key>
       <PropertyRef Name="ID" />
@@ -2665,12 +2644,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Property Name="ID" Type="int" Nullable="false" />
     <Property Name="Subject" Type="nvarchar" MaxLength="200" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SYS_DOWNLOAD_FILE">
-          <Property Name="FileName" Type="varchar" MaxLength="20" />
-          <Property Name="CreatedDate" Type="datetime" />
-        </EntityType>-->
   <EntityType Name="SYS_EVENT_GROUP">
     <Key>
       <PropertyRef Name="ID" />
@@ -2789,6 +2762,13 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
     <Property Name="UserID" Type="int" Nullable="false" />
     <Property Name="LocationID" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
+    <Key>
+      <PropertyRef Name="Email" />
+    </Key>
+    <Property Name="Email" Type="varchar" MaxLength="500" Nullable="false" />
+    <Property Name="ID" Type="int" />
+  </EntityType>
   <EntityType Name="SYS_USER_LOCATION">
     <Key>
       <PropertyRef Name="USERID" />
@@ -2900,6 +2880,18 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
       </Principal>
       <Dependent Role="ITEM">
         <PropertyRef Name="MediumID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SYS_USER_GOO__ID__40955363">
+    <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="0..1" />
+    <End Role="SYS_USER_GOOGLE_ACCOUNT" Type="Self.SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SYS_USER">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
+        <PropertyRef Name="ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -3299,9 +3291,6 @@ warning 6013: The table/view 'Libol.dbo.SYS_DOWNLOAD_FILE' does not have a prima
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <!--Errors Found During Generation:
-error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, but cannot be found.
-        <Association Name="FK_CIR_CALENDAR_HOLDING_LOCATION" />-->
   <Association Name="FK_CIR_FINE_ACQ_CURRENCY">
     <End Role="ACQ_CURRENCY" Type="Self.ACQ_CURRENCY" Multiplicity="1" />
     <End Role="CIR_FINE" Type="Self.CIR_FINE" Multiplicity="*" />
@@ -5251,6 +5240,74 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <Parameter Name="strInput" Type="nvarchar" Mode="In" />
   </Function>
   <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="FPT_ACQ_MONTH_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strInYear" Type="varchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_ACQ_YEAR_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strFromYear" Type="varchar" Mode="In" />
+    <Parameter Name="strToYear" Type="varchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_BORROWNUMBER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="itemID" Type="int" Mode="In" />
+    <Parameter Name="price" Type="real" Mode="In" />
+    <Parameter Name="acqdate" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_CHECK_ITEMID_AND_ACQUIREDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="CDate" Type="date" Mode="In" />
+    <Parameter Name="itemId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+    <Parameter Name="intLibID" Type="int" Mode="In" />
+    <Parameter Name="strLocPrefix" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_CIR_GET_LOCKEDPATRONS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strLockDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strLockDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+    <Parameter Name="intLibID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_CIR_GET_PATRON_LOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_CIR_MONTH_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="intType" Type="int" Mode="In" />
+    <Parameter Name="intStatus" Type="int" Mode="In" />
+    <Parameter Name="strInYear" Type="varchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_CIR_YEAR_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="intType" Type="int" Mode="In" />
+    <Parameter Name="intStatus" Type="int" Mode="In" />
+    <Parameter Name="strFromYear" Type="varchar" Mode="In" />
+    <Parameter Name="strToYear" Type="varchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
   <Function Name="FPT_EDU_ADD_COLLEGE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="College" Type="nvarchar" Mode="In" />
   </Function>
@@ -5472,15 +5529,278 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
   <Function Name="FPT_EDU_SP_RENEW_ITEM_BY_ALL_ID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strFixedID" Type="varchar" Mode="In" />
   </Function>
+  <Function Name="FPT_GET_LIQUIDBOOKS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strLiquidCode" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_GET_LOCFULLNAME_LIBUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+    <Parameter Name="intLibID" Type="int" Mode="In" />
+    <Parameter Name="strLocPrefix" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_GET_LOCLIBUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+    <Parameter Name="intLibID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_GET_PATRON_LOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_GET_PATRON_ONLOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strDueDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strDueDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_GET_PATRON_RENEW_LOAN_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_GET_PATRON_RENEW_ONLOAN_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_JOIN_ISBN" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="itemid" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_SELECT_USECOUNT2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="itemID" Type="int" Mode="In" />
+    <Parameter Name="cDate" Type="date" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_ACQ_STATMONTH_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="InYear" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_ACQ_STATYEAR_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="FromYear" Type="int" Mode="In" />
+    <Parameter Name="ToYear" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_CIR_GET_LOAN_HISTORY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="CheckOutDateFrom" Type="date" Mode="In" />
+    <Parameter Name="CheckOutDateTo" Type="date" Mode="In" />
+    <Parameter Name="CheckInDateFrom" Type="date" Mode="In" />
+    <Parameter Name="CheckInDateTo" Type="date" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_CIR_GET_LOAN_HISTORY_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_CIR_LIB_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_CIR_LIBLOCUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+    <Parameter Name="intLibID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_COPYNUMBER_STRING" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="libid" Type="int" Mode="In" />
+    <Parameter Name="acqdate" Type="varchar" Mode="In" />
+    <Parameter Name="price" Type="real" Mode="In" />
+    <Parameter Name="itemid" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_COPYNUMBER_TO_STRING" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="libid" Type="int" Mode="In" />
+    <Parameter Name="acqdate" Type="date" Mode="In" />
+    <Parameter Name="price" Type="real" Mode="In" />
+    <Parameter Name="itemid" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BY_LOCATIONID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BY_RECOMMEND" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="reid" Type="varchar" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="reid" Type="varchar" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BYLOC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BYLOC_TIME" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_HOLDING_BYLOC2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_POID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_GET_POID_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="POID" Type="int" Mode="In" />
+    <Parameter Name="StartDate" Type="date" Mode="In" />
+    <Parameter Name="EndDate" Type="date" Mode="In" />
+    <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+  </Function>
   <Function Name="FPT_SP_GET_STAT_BOOK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
     <Parameter Name="strLocationID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ItemID" Type="int" Mode="In" />
+    <Parameter Name="AcqDate" Type="date" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_STAT_ITEMMAX" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="intTopNum" Type="varchar" Mode="In" />
+    <Parameter Name="intMinLoan" Type="varchar" Mode="In" />
+    <Parameter Name="libid" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_STAT_PATRONGROUP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="OptItemID" Type="varchar" Mode="In" />
+    <Parameter Name="intHistory" Type="varchar" Mode="In" />
+    <Parameter Name="LibID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_STAT_PATRONMAX" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="intTopNum" Type="varchar" Mode="In" />
+    <Parameter Name="intMinLoan" Type="varchar" Mode="In" />
+    <Parameter Name="OptItemID" Type="varchar" Mode="In" />
+    <Parameter Name="LocID" Type="varchar" Mode="In" />
+    <Parameter Name="LibID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_STAT_PATRONMAX_NEW1" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="intTopNum" Type="int" Mode="In" />
+    <Parameter Name="intMinLoan" Type="int" Mode="In" />
+    <Parameter Name="OptItemID" Type="int" Mode="In" />
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="LibID" Type="int" Mode="In" />
   </Function>
   <Function Name="GET_BLACK_PATRON_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="GET_PATRON_LOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
     <Parameter Name="strItemCode" Type="varchar" Mode="In" />
     <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
     <Parameter Name="intLocationID" Type="int" Mode="In" />
     <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
     <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
@@ -5493,6 +5813,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
     <Parameter Name="strItemCode" Type="varchar" Mode="In" />
     <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
     <Parameter Name="intLocationID" Type="int" Mode="In" />
     <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
     <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
@@ -5501,16 +5822,39 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
     <Parameter Name="intUserID" Type="int" Mode="In" />
   </Function>
-  <Function Name="GET_PATRON_RENEW_LOAN_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+  <Function Name="GET_PATRON_ONLOANINFOR_TEST1" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
     <Parameter Name="strItemCode" Type="varchar" Mode="In" />
     <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
     <Parameter Name="intLocationID" Type="int" Mode="In" />
     <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
     <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strDueDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strDueDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="GET_PATRON_RENEW_LOAN_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
     <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
     <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
-    <Parameter Name="intLoan" Type="int" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="GET_PATRON_RENEW_ONLOAN_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+    <Parameter Name="intLibraryID" Type="int" Mode="In" />
+    <Parameter Name="intLocationID" Type="int" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
     <Parameter Name="intUserID" Type="int" Mode="In" />
   </Function>
   <Function Name="ILL_GET_OUT_RESPONSE_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -5815,6 +6159,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <Parameter Name="strPOIDs" Type="varchar" Mode="In" />
   </Function>
   <Function Name="SP_ACQ_GET_ACQYEAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="SP_ACQ_GET_ACQYEAR_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="SP_ACQ_GET_BUDGET_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intBudID" Type="int" Mode="In" />
     <Parameter Name="intFromPO" Type="int" Mode="In" />
@@ -6191,6 +6536,11 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
   <Function Name="SP_ACQ_STATUS_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="SP_ACQ_STATYEAR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strTypeSelect" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="SP_ACQ_STATYEAR_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LibID" Type="int" Mode="In" />
+    <Parameter Name="FromYear" Type="int" Mode="In" />
+    <Parameter Name="ToYear" Type="int" Mode="In" />
   </Function>
   <Function Name="SP_ACQ_STO_SCHEMA_DELETE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intLocID" Type="int" Mode="In" />
@@ -8181,6 +8531,13 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <Parameter Name="strShelf" Type="nvarchar" Mode="In" />
     <Parameter Name="intMode" Type="int" Mode="In" />
   </Function>
+  <Function Name="SP_GET_HOLDING_BYLOC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="LocID" Type="int" Mode="In" />
+    <Parameter Name="RecordNumber" Type="varchar" Mode="In" />
+    <Parameter Name="StartDate" Type="varchar" Mode="In" />
+    <Parameter Name="EndDate" Type="varchar" Mode="In" />
+    <Parameter Name="SortBy" Type="int" Mode="In" />
+  </Function>
   <Function Name="SP_GET_HOLDING_HOL_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intLibID" Type="int" Mode="In" />
     <Parameter Name="intLocID" Type="int" Mode="In" />
@@ -8740,6 +9097,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
   </Function>
   <Function Name="SP_HOLDING_LIBLOC_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="SP_HOLDING_LIBLOCUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+    <Parameter Name="intLibID" Type="int" Mode="In" />
   </Function>
   <Function Name="SP_HOLDING_LIBRARY_INS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strAddress" Type="nvarchar" Mode="In" />
@@ -11389,7 +11750,6 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <Parameter Name="strIDSource" Type="int" Mode="In" />
     <Parameter Name="intLocationID" Type="int" Mode="In" />
   </Function>
-  <Function Name="TESTCAI" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <EntityContainer Name="LibolModelStoreContainer">
     <EntitySet Name="ACQ_ACQUIRE_SOURCE" EntityType="Self.ACQ_ACQUIRE_SOURCE" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ACQ_BUDGET" EntityType="Self.ACQ_BUDGET" Schema="dbo" store:Type="Tables" />
@@ -11569,6 +11929,7 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <EntitySet Name="SYS_TEMPLATE" EntityType="Self.SYS_TEMPLATE" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER" EntityType="Self.SYS_USER" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER_CIR_LOCATION" EntityType="Self.SYS_USER_CIR_LOCATION" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="Self.SYS_USER_GOOGLE_ACCOUNT" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER_LOCATION" EntityType="Self.SYS_USER_LOCATION" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER_REFERENCE" EntityType="Self.SYS_USER_REFERENCE" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SYS_USER_RIGHT" EntityType="Self.SYS_USER_RIGHT" Schema="dbo" store:Type="Tables" />
@@ -11856,6 +12217,10 @@ error 6004: The table 'Libol.dbo.CIR_CALENDAR' is referenced by a relationship, 
     <AssociationSet Name="CDMED_ITE_FK" Association="Self.CDMED_ITE_FK">
       <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
       <End Role="ITEM" EntitySet="ITEM" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SYS_USER_GOO__ID__40955363" Association="Self.FK__SYS_USER_GOO__ID__40955363">
+      <End Role="SYS_USER" EntitySet="SYS_USER" />
+      <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
     </AssociationSet>
     <AssociationSet Name="FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET" Association="Self.FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET">
       <End Role="ACQ_BUDGET" EntitySet="ACQ_BUDGET" />

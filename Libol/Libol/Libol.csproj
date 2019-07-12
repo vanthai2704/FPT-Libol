@@ -54,7 +54,16 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -120,6 +129,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="XCrypt, Version=2.0.4922.41601, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XCrypt.2.0.0\lib\XCrypt.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Diagnostics.DiagnosticSource">
@@ -157,13 +169,16 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AcquireReportController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CirculationController.cs" />
     <Compile Include="Controllers\CIR_PATRONController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\TesrController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AcquisitionBusiness.cs" />
     <Compile Include="Models\ACQ_ACQUIRE_SOURCE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -332,6 +347,7 @@
     <Compile Include="Models\CAT_QUEUE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CIRCULATION.cs" />
     <Compile Include="Models\CIR_DIC_COLLEGE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -404,6 +420,50 @@
     <Compile Include="Models\CIR_SERIAL_COUNT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CirculationBusiness.cs" />
+    <Compile Include="Models\FPT_ACQ_MONTH_STATISTIC_Result.cs" />
+    <Compile Include="Models\FPT_ACQ_YEAR_STATISTIC_Result.cs" />
+    <Compile Include="Models\FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_CIR_MONTH_STATISTIC_Result.cs" />
+    <Compile Include="Models\FPT_CIR_YEAR_STATISTIC_Result.cs" />
+    <Compile Include="Models\FPT_GET_LIQUIDBOOKS_Result.cs" />
+    <Compile Include="Models\FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_JOIN_ISBN_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CIR_LIBLOCUSER_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CIR_LIB_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_COPYNUMBER_STRING_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_COPYNUMBER_TO_STRING_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMEND_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_STAT_PATRONMAX_Result.cs" />
+    <Compile Include="Models\GET_PATRON_LOANINFOR_Result.cs" />
     <Compile Include="Models\CLASSIFICATION.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -536,9 +596,72 @@
     <Compile Include="Models\FPT_EDU_SP_GETLOANTYPES_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_SP_ACQ_STATMONTH_NEW_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_ACQ_STATYEAR_NEW_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CIR_GET_LOAN_HISTORY_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOC2_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOCID1_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOCID_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOC_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOC_TIME_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW2_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST2_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_POID_NEW1_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_POID_NEW_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_POID_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GET_BLACK_PATRON_INFOR_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GET_PATRON_ONLOANINFOR_Result.cs" />
+    <Compile Include="Models\GET_PATRON_RENEW_LOAN_INFOR_Result.cs" />
+    <Compile Include="Models\GET_PATRON_RENEW_ONLOAN_INFOR_Result.cs" />
     <Compile Include="Models\HELP_CAT_DIC.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -671,6 +794,7 @@
     <Compile Include="Models\ItemCode.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ITEMMAX.cs" />
     <Compile Include="Models\ITEM_AUTHOR.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -818,6 +942,8 @@
     <Compile Include="Models\OPAC_SUBJECT_DDC.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PatronBusiness.cs" />
+    <Compile Include="Models\PATRON_GROUP.cs" />
     <Compile Include="Models\REGULARITY_OUT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -999,6 +1125,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_ACQ_STATUS_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_ACQ_STATYEAR_NEW_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_ACQ_STATYEAR_Result.cs">
@@ -1349,6 +1478,15 @@
     <Compile Include="Models\SP_GET_GEN_ISSUE_ITEM_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SP_GET_HOLDING_BYLOC_DOI1_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_GET_HOLDING_BYLOC_DOI_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_GET_HOLDING_BYLOC_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SP_GET_HOLDING_HOL_INFOR1_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1427,6 +1565,7 @@
     <Compile Include="Models\SP_GET_LOANNING_INFOR_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SP_GET_LOCKEDPATRONS_Result.cs" />
     <Compile Include="Models\SP_GET_MEDIUMS_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1545,6 +1684,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_HOLDING_ITEM_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_HOLDING_LIBLOCUSER_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_HOLDING_LIBLOC_SEL_Result.cs">
@@ -1964,6 +2106,9 @@
     <Compile Include="Models\SYS_USER.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SYS_USER_GOOGLE_ACCOUNT.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SYS_USER_RIGHT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1973,6 +2118,7 @@
     <Compile Include="Models\SYS_VIEW.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Temper.cs" />
     <Compile Include="Models\test.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1988,7 +2134,69 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\CustomJS\buttons.bootstrap4.min.js" />
+    <Content Include="Content\CustomJS\buttons.colVis.min.js" />
+    <Content Include="Content\CustomJS\buttons.html5.min.js" />
+    <Content Include="Content\CustomJS\buttons.print.min.js" />
+    <Content Include="Content\CustomJS\dataTables.bootstrap4.min.js" />
+    <Content Include="Content\CustomJS\dataTables.buttons.min.js" />
+    <Content Include="Content\CustomJS\jquery-3.3.1.js" />
+    <Content Include="Content\CustomJS\jstree.min.js" />
+    <Content Include="Content\CustomJS\range_dates.js" />
+    <Content Include="Content\CustomJS\jquery.dataTables.min.js" />
+    <Content Include="Content\CustomJS\jszip.min.js" />
+    <Content Include="Content\CustomJS\pdfmake.min.js" />
+    <Content Include="Content\CustomJS\vfs_fonts.js" />
+    <Content Include="Content\datatables.css" />
+    <Content Include="Content\datatables.min.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.bootstrap.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.bootstrap.min.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.bootstrap4.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.bootstrap4.min.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.dataTables.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.dataTables.min.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.foundation.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.foundation.min.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.jqueryui.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.jqueryui.min.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.semanticui.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\buttons.semanticui.min.css" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.bootstrap.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.bootstrap.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.bootstrap4.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.bootstrap4.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.colVis.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.colVis.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.flash.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.flash.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.foundation.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.foundation.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.html5.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.html5.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.jqueryui.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.jqueryui.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.print.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.print.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.semanticui.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\buttons.semanticui.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\dataTables.buttons.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\js\dataTables.buttons.min.js" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\swf\flashExport.swf" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\css\dataTables.bootstrap4.css" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\images\sort_asc.png" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\images\sort_asc_disabled.png" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\images\sort_both.png" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\images\sort_desc.png" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\images\sort_desc_disabled.png" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\js\dataTables.bootstrap4.js" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\js\jquery.dataTables.js" />
+    <Content Include="Content\DataTables\Select-1.3.0\css\select.bootstrap4.css" />
+    <Content Include="Content\DataTables\Select-1.3.0\js\dataTables.select.js" />
     <Content Include="Content\Images\Logo.png" />
+    <Content Include="Content\multiselect.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\PagingStyle.css" />
+    <Content Include="Content\TableOrientation.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -2009,6 +2217,8 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\datatables.js" />
+    <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -2034,7 +2244,12 @@
     <Content Include="Models\Libol.edmx.diagram">
       <DependentUpon>Libol.edmx</DependentUpon>
     </Content>
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
+    <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\ExportToExcel.js" />
+    <Content Include="Scripts\ExportToWord.js" />
+    <Content Include="Scripts\GoodleDrawingChart.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -2044,15 +2259,20 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\load.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\multiselect.min.js" />
+    <Content Include="Scripts\Paging.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\TotalMoneyToWords.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\AcquireReport\GetYearStats.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2085,10 +2305,45 @@
     <Content Include="Views\CIR_PATRON\Edit.cshtml" />
     <Content Include="Views\CIR_PATRON\Index.cshtml" />
     <Content Include="Views\CIR_PATRON\PatronProfile.cshtml" />
+    <Content Include="Views\Circulation\Index.cshtml" />
+    <Content Include="Views\Circulation\Reports.cshtml" />
+    <Content Include="Views\Circulation\ReportOnLoanCopy.cshtml" />
+    <Content Include="Views\Circulation\ReportLoanCopy.cshtml" />
+    <Content Include="Views\Circulation\StatisticAnnual.cshtml" />
+    <Content Include="Views\Circulation\StatisticMonth.cshtml" />
+    <Content Include="Views\Circulation\StatisticPatronGroup.cshtml" />
+    <Content Include="Views\Circulation\StatisticTopCopy.cshtml" />
+    <Content Include="Views\Circulation\StatisticTopPatron.cshtml" />
+    <Content Include="Views\AcquireReport\BaoCaoBoSung_New.cshtml" />
+    <Content Include="Views\AcquireReport\Index.cshtml" />
+    <Content Include="Views\AcquireReport\LanguageStat.cshtml" />
+    <Content Include="Views\AcquireReport\StatisticYear.cshtml" />
+    <Content Include="Views\AcquireReport\GetMonthStats.cshtml" />
+    <Content Include="Views\AcquireReport\AcquireStatisticIndex.cshtml" />
+    <Content Include="Views\Login\Logout.cshtml" />
+    <Content Include="Views\Circulation\GetLoanStats.cshtml" />
+    <Content Include="Views\Circulation\GetFilteredLoanStats.cshtml" />
+    <Content Include="Views\Circulation\GetOnLoanStats.cshtml" />
+    <Content Include="Views\Circulation\GetFilteredOnLoanStats.cshtml" />
+    <Content Include="Views\AcquireReport\LiquidationStats.cshtml" />
+    <Content Include="Views\AcquireReport\GetLiquidationStats.cshtml" />
+    <Content Include="Views\Circulation\DemoDataTableEport.cshtml" />
+    <Content Include="Views\Circulation\GetYearStats.cshtml" />
+    <Content Include="Views\Circulation\GetMonthStats.cshtml" />
+    <Content Include="Views\Circulation\LockPatronStats.cshtml" />
+    <Content Include="Views\Circulation\GetLockPatronStats.cshtml" />
+    <Content Include="Views\AcquireReport\AcquisitionIndex.cshtml" />
+    <Content Include="Views\AcquireReport\RecomendReport.cshtml" />
+    <Content Include="Views\AcquireReport\GetRecomendReport.cshtml" />
+    <Content Include="Views\Circulation\StatisticYear.cshtml" />
+    <Content Include="Views\AcquireReport\StatisticMonth.cshtml" />
+    <Content Include="Views\Circulation\DisplayPatronGroup.cshtml" />
+    <Content Include="Views\Circulation\DisplayTopPatron.cshtml" />
+    <Content Include="Views\Circulation\DisplayTopCopy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Tesr\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

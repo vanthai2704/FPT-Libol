@@ -4,27 +4,79 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - FPT Libol</title>
+
+    @Scripts.Render("~/Content/CustomJS/jquery-3.3.1.js")
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="971697194004-a3705bandc8uaqv5r0b64adm3ggcqu91.apps.googleusercontent.com">
     <style>
-        .navbar{
+
+        .navbar {
             padding: 0 !important;
         }
+
+        #footer {
+            position: fixed;
+            left: 0;
+            line-height: 20px;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background-color: #f05123;
+            color: white;
+        }
+
         a.nav-link {
             color: white !important;
             padding: 1rem !important;
         }
+
         .navbar-dark .navbar-brand {
             padding-left: 1rem;
         }
+
         .navbar-dark .navbar-nav .show > .nav-link, .navbar-dark .navbar-nav .active > .nav-link, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .nav-link.active {
             background-color: #d8491f !important;
         }
+
         a.nav-link:hover {
             background-color: #d8491f;
         }
-        
     </style>
+    @*START------------SCRIPT FOR LOGIN FUNCTION*@
+    <script>
+        $(document).ready(function () {
+            $(document).ajaxError(function (xhr, props) {
+                if (props.status === 401) {
+                    window.open("/Login");
+                }
+            });
+        });
+
+        function logout() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                //console.log('User signed out.');
+            });
+
+            $.ajax({
+                url: "/Login/Logout",
+                data: null,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    window.location.href = "/Home";
+                },
+                error: function (errormessage) {
+
+                }
+            });
+        }
+
+/**/</script>
+    @*END------------SCRIPT FOR LOGIN FUNCTION*@
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -34,7 +86,7 @@
                 <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Quản lý</a>
+                            <a class="nav-link" href="#">Quản lý</a>
                         </li>
                         <li class="nav-item dropdown" onclick="dodajAktywne(this)">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bạn Đọc</a>
@@ -46,32 +98,55 @@
                             </div>
                         </li>
                         <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Biên mục</a>
+                            <a class="nav-link" href="#">Biên mục</a>
                         </li>
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Mượn trả</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown03">
+                                <a class="dropdown-item" href="/Circulation/Index">Báo cáo</a>
+                                @*<div class="dropdown-item dropright dropdown-toggle" data-toggle="dropdown">
+                                    <a>Báo cáo</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/Circulation/ReportLoanCopy">Từng mượn</a>
+                                        <a class="dropdown-item" href="/Circulation/ReportOnLoanCopy">Đang mượn</a>
+                                        <a class="dropdown-item" href="#">Submenu</a>
+                                        <a class="dropdown-item" href="#">Submenu0</a>
+                                    </div>
+                                </div>*@
+                                <a class="dropdown-item" href="/Circulation/LockPatronStats">Chính sách</a>
+                                <a class="dropdown-item" href="#">Ghi trả</a>
+                                <a class="dropdown-item" href="#">Gia hạn</a>
+                            </div>
                         </li>
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Bổ sung</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bổ sung</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown04">
+                                <a class="dropdown-item" href="/AcquireReport/AcquisitionIndex">Bổ sung</a>
+                                <a class="dropdown-item" href="/AcquireReport/AcquireStatisticIndex">Thống kê</a>
+                                <a class="dropdown-item" href="#">Kho</a>
+                                <a class="dropdown-item" href="#">In mã vạch</a>
+                                <a class="dropdown-item" href="#">In nhãn</a>
+                            </div>
                         </li>
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link"  href="#">Thiết đặt</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Thiết đặt</a>
                         </li>
                     </ul>
-                    <a class="nav-link"  href="#">Đăng xuất</a>
+                    <a class="nav-link" href="#" onclick="logout();">Đăng xuất</a>
                 </div>
             </nav>
-
-
         </div>
     </div>
-    <div class="body-content">
+    <div class="body-content" style="min-height: 610px">
         @RenderBody()
+    </div>
+    <div style="bottom: 0;">
         <hr />
-        <footer>
+        <footer style="margin-left: 15px;">
             <p>&copy; @DateTime.Now.Year - FPT Libol Group</p>
         </footer>
     </div>
+    <div class="g-signin2" data-onsuccess="onSignIn" style="display:none;"></div>
 
     <script>
         function dodajAktywne(elem) {
@@ -86,9 +161,19 @@
             elem.classList.add('active');
         }
     </script>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Content/CustomJS/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/CustomJS/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/CustomJS/dataTables.buttons.min.js")
+    @Scripts.Render("~/Content/CustomJS/buttons.bootstrap4.min.js")
+    @Scripts.Render("~/Content/CustomJS/jszip.min.js")
+    @Scripts.Render("~/Content/CustomJS/pdfmake.min.js")
+    @Scripts.Render("~/Content/CustomJS/vfs_fonts.js")
+    @Scripts.Render("~/Content/CustomJS/buttons.html5.min.js")
+    @Scripts.Render("~/Content/CustomJS/buttons.print.min.js")
+    @Scripts.Render("~/Content/CustomJS/buttons.colVis.min.js")
+    @Scripts.Render("~/Content/CustomJS/jstree.min.js")
     @RenderSection("scripts", required: false)
 </body>
 </html>
