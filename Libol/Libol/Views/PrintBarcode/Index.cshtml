@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "In mã vạch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h4 style="margin : 1rem">In mã vạch</h4>
+<form>
+    <div class="form-row">
+        <div class="col-2">
+            <div class="form-group">
+                <label>Thư viện</label>
+                <select class="form-control" style="width:80% !important"><option value="12" selected>This is item 1</option><option value="13">This is item 2</option><option value="14">This is item 3</option></select>
+            </div>
+            <div class="form-group">
+                <label>Kho</label>
+                <select class="form-control" style="width:80% !important"><option value="12" selected>This is item 1</option><option value="13">This is item 2</option><option value="14">This is item 3</option></select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-row">
+                <div class="col-3">
+                    <div class="form-check"><input type="radio" class="form-check-input" id="formCheck-1" /><label class="form-check-label" for="formCheck-1">Mã tài liệu</label></div>
+                </div>
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col-4"><label class="col-form-label">Từ Mã tài liệu</label></div>
+                        <div class="col"><input type="text" class="form-control" /></div>
+                        <div class="col-1"><a href="#">Tìm</a></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-4"><label class="col-form-label">Tới Mã tài liệu</label></div>
+                        <div class="col"><input type="text" class="form-control" /></div>
+                        <div class="col-1"><a href="#">Tìm</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-3">
+                    <div class="form-check"><input type="radio" class="form-check-input" id="formCheck-1" /><label class="form-check-label" for="formCheck-1">Mã xếp giá</label></div>
+                </div>
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col-4"><label class="col-form-label">Từ ĐKCB</label></div>
+                        <div class="col"><input type="text" class="form-control" /></div>
+                        <div class="col-1"><a href="#">Tìm</a></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-4"><label class="col-form-label">Tới ĐKCB</label></div>
+                        <div class="col"><input type="text" class="form-control" /></div>
+                        <div class="col-1"><a href="#">Tìm</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-check"><input type="radio" class="form-check-input" id="formCheck-2" /><label class="form-check-label" for="formCheck-2">In theo mã Đăng ký cá biệt nhập dưới đây<br /></label></div><textarea class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Kiểu Barcode<br /></label></div>
+                <div class="col"><select class="form-control"><option value="12" selected>Code 39</option><option value="13">This is item 2</option><option value="14">This is item 3</option></select></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Chiều cao</label></div>
+                <div class="col"><input type="text" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Chiều rộng</label></div>
+                <div class="col"><input type="text" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Kiểu ảnh</label></div>
+                <div class="col"><select class="form-control"><option value="12" selected>JPG</option><option value="13">This is item 2</option><option value="14">This is item 3</option></select></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Hướng quay</label></div>
+                <div class="col"><select class="form-control"><option value="12" selected>Không quay</option><option value="13">This is item 2</option><option value="14">This is item 3</option></select></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Khoảng cách giữa hàng</label></div>
+                <div class="col"><input type="text" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Khoảng cách giữa cột</label></div>
+                <div class="col"><input type="text" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Số ảnh/dòng</label></div>
+                <div class="col"><input type="text" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Số ảnh/trang</label></div>
+                <div class="col"><input type="text" class="form-control" /></div>
+            </div>
+            <div class="form-row">
+                <div class="col"><label class="col-form-label float-right">Mẫu</label></div>
+                <div class="col"><select class="form-control"><option value="12" selected>FPT_HL_GODEX</option><option value="13">This is item 2</option><option value="14">This is item 3</option></select></div>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+    <div class="form-row" style="margin-top:1rem;margin-left: 30%;">
+        <div><button class="btn btn-primary" type="button">In ra máy in Barcode</button></div>
+        <div style="margin-left:1rem"><button class="btn btn-primary" type="button">In ra máy in Lazer</button></div>
+        <div style="margin-left:1rem"><button class="btn btn-primary" type="button">Đặt lại</button></div>
+    </div>
+</form>

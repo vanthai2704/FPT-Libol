@@ -129,8 +129,8 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="XCrypt, Version=2.0.4922.41601, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\XCrypt.2.0.0\lib\XCrypt.dll</HintPath>
+    <Reference Include="XCrypt">
+      <HintPath>..\..\..\..\Users\ngqua\Downloads\Libol60_Updated\Code\Libol60\bin\XCrypt.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -170,11 +170,23 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AcquireReportController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CirculationController.cs" />
-    <Compile Include="Controllers\CIR_PATRONController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CatalogueController.cs" />
+    <Compile Include="Controllers\CheckInController.cs" />
+    <Compile Include="Controllers\CheckOutController.cs" />
+    <Compile Include="Controllers\ManagementController.cs" />
+    <Compile Include="Controllers\PatronController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\PrintBarcodeController.cs" />
+    <Compile Include="Controllers\PrintLabelController.cs" />
+    <Compile Include="Controllers\ShelfController.cs" />
+    <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
+    <Compile Include="EntityResult\SP_CATA_GET_MODIFIED_FIELDS_Result.cs" />
+    <Compile Include="EntityResult\SP_GET_CURRENT_CHECKIN_INFOR_Result.cs" />
+    <Compile Include="EntityResult\SP_HOLDING_LIBRARY_SELECT_Result.cs" />
+    <Compile Include="EntityResult\SP_HOLDING_LOCATION_GET_INFO_Result.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -224,6 +236,7 @@
     <Compile Include="Models\Book_code.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CatalogueBusiness.cs" />
     <Compile Include="Models\CAT_AUTHORITY.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -348,6 +361,7 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CIRCULATION.cs" />
+    <Compile Include="Models\CheckOutBusiness.cs" />
     <Compile Include="Models\CIR_DIC_COLLEGE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -464,6 +478,7 @@
     </Compile>
     <Compile Include="Models\FPT_SP_STAT_PATRONMAX_Result.cs" />
     <Compile Include="Models\GET_PATRON_LOANINFOR_Result.cs" />
+    <Compile Include="EntityResult\GET_CATALOGUE_FIELDS_Result.cs" />
     <Compile Include="Models\CLASSIFICATION.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -548,6 +563,20 @@
     <Compile Include="Models\FIELD_AUTHORITY.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FLibContext.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FLibContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ADMIN_GET_RIGHTS_ACCEPT_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ADMIN_GET_RIGHTS_DENY_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_EDU_COLLEGE_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -585,6 +614,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_EDU_GET_PATRON_ONLOAN_INCOMMING_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_EDU_GET_SHELF_CONTENT_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_EDU_GET_VALUEFROMID_BOOK_Result.cs">
@@ -654,6 +686,10 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result.cs">
+    <Compile Include="Models\FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GET_BLACK_PATRON_INFOR_Result.cs">
@@ -947,6 +983,7 @@
     <Compile Include="Models\REGULARITY_OUT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SearchPatronBusiness.cs" />
     <Compile Include="Models\SER_ARTICLE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -971,6 +1008,7 @@
     <Compile Include="Models\SER_SUBJECT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ShelfBusiness.cs" />
     <Compile Include="Models\SP_ACQ_ACQUIRE_SOURCE_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1218,6 +1256,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_CATA_GET_LINKTYPES_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_CATA_GET_MARC_FORM_2019_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_CATA_GET_PICKED_FIELDVIEW_Result.cs">
@@ -2125,7 +2166,18 @@
     <Compile Include="Models\usertest.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_SP_CATA_CHECK_EXIST_TITLE_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CATA_GET_MARC_FORM_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CATA_GETFIELDS_OF_FORM_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SupportClass\DataTableAjaxPostModel.cs" />
+    <Compile Include="SupportClass\Wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -2197,11 +2249,26 @@
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\PagingStyle.css" />
     <Content Include="Content\TableOrientation.css" />
+    <Content Include="Content\DataTables\dataTables.checkboxes.css" />
+    <Content Include="Content\DataTables\dataTables.checkboxes.min.js" />
+    <Content Include="Content\DataTables\Select-1.3.0\css\select.bootstrap4.css" />
+    <Content Include="Content\DataTables\Select-1.3.0\js\dataTables.select.js" />
+    <Content Include="Content\ImagePatron\NoImage.png" />
+    <Content Include="Content\Images\9280-200.png" />
+    <Content Include="Content\Images\book.png" />
+    <Content Include="Content\Images\btn_google_signin_light_normal_web%402x.png" />
+    <Content Include="Content\Images\images.png" />
+    <Content Include="Content\Images\Logo.png" />
+    <Content Include="Content\Images\NoImage.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Models\FLibContext.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FLibContext.cs</LastGenOutput>
     </Content>
     <Content Include="Models\Libol.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -2219,6 +2286,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\datatables.js" />
     <Content Include="Scripts\datatables.min.js" />
+    <Content Include="Scripts\bs-animation.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -2246,15 +2314,16 @@
     </Content>
     <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
     <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
-    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\ExportToExcel.js" />
-    <Content Include="Scripts\ExportToWord.js" />
-    <Content Include="Scripts\GoodleDrawingChart.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.blockUI.js" />
+    <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -2268,6 +2337,7 @@
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\TotalMoneyToWords.js" />
+    <Content Include="Scripts\script.min.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
@@ -2286,8 +2356,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
@@ -2298,13 +2366,6 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Login\Index.cshtml" />
-    <Content Include="Views\CIR_PATRON\Create.cshtml" />
-    <Content Include="Views\CIR_PATRON\Delete.cshtml" />
-    <Content Include="Views\CIR_PATRON\Details.cshtml" />
-    <Content Include="Views\CIR_PATRON\Edit.cshtml" />
-    <Content Include="Views\CIR_PATRON\Index.cshtml" />
-    <Content Include="Views\CIR_PATRON\PatronProfile.cshtml" />
     <Content Include="Views\Circulation\Index.cshtml" />
     <Content Include="Views\Circulation\Reports.cshtml" />
     <Content Include="Views\Circulation\ReportOnLoanCopy.cshtml" />
@@ -2320,7 +2381,6 @@
     <Content Include="Views\AcquireReport\StatisticYear.cshtml" />
     <Content Include="Views\AcquireReport\GetMonthStats.cshtml" />
     <Content Include="Views\AcquireReport\AcquireStatisticIndex.cshtml" />
-    <Content Include="Views\Login\Logout.cshtml" />
     <Content Include="Views\Circulation\GetLoanStats.cshtml" />
     <Content Include="Views\Circulation\GetFilteredLoanStats.cshtml" />
     <Content Include="Views\Circulation\GetOnLoanStats.cshtml" />
@@ -2340,6 +2400,32 @@
     <Content Include="Views\Circulation\DisplayPatronGroup.cshtml" />
     <Content Include="Views\Circulation\DisplayTopPatron.cshtml" />
     <Content Include="Views\Circulation\DisplayTopCopy.cshtml" />
+    <Content Include="Views\Patron\Create.cshtml" />
+    <Content Include="Views\Patron\PatronProfile.cshtml" />
+    <Content Include="Views\Catalogue\MainTab.cshtml" />
+    <Content Include="Views\Catalogue\AddNewCatalogue.cshtml" />
+    <Content Include="Views\Catalogue\SearchCodeNumber.cshtml" />
+    <Content Include="Views\PrintBarcode\Index.cshtml" />
+    <Content Include="Views\PrintLabel\Index.cshtml" />
+    <Content Include="Views\CheckIn\Index.cshtml" />
+    <Content Include="Views\CheckOut\Index.cshtml" />
+    <Content Include="Views\Shelf\Index.cshtml" />
+    <Content Include="Views\Login\Logout.cshtml" />
+    <Content Include="Views\CheckIn\_checkinByCardNumber.cshtml" />
+    <Content Include="Views\CheckIn\_checkinByDKCB.cshtml" />
+    <Content Include="Views\CheckIn\_findByCardNumber.cshtml" />
+    <Content Include="Views\CheckOut\Giahan.cshtml" />
+    <Content Include="Views\CheckOut\_checkoutSuccess.cshtml" />
+    <Content Include="Views\CheckOut\_showPatronInfo.cshtml" />
+    <Content Include="Views\Management\Account.cshtml" />
+    <Content Include="Views\Patron\AddPatronByFile.cshtml" />
+    <Content Include="Views\Patron\PreviewPatronFile.cshtml" />
+    <Content Include="Views\Patron\InsertFileToDB.cshtml" />
+    <Content Include="Views\Patron\SearchPatron.cshtml" />
+    <Content Include="Views\Catalogue\AddNewCatalogueDetail.cshtml" />
+    <Content Include="Views\Patron\_SearchPatronDetail.cshtml" />
+    <Content Include="Uploads\Mẫu import user libol...xls" />
+    <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2347,8 +2433,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
@@ -2360,6 +2444,9 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />

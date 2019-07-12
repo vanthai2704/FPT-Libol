@@ -66,7 +66,8 @@
     @Scripts.Render("~/bundles/jquery")
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="971697194004-a3705bandc8uaqv5r0b64adm3ggcqu91.apps.googleusercontent.com">
-    <script>function onSignIn(googleUser) {
+    <script>
+        function onSignIn(googleUser) {
             var profile = googleUser.getBasicProfile();
             //console.log('ID: ' + profile.getId());
             //console.log('Name: ' + profile.getName());
@@ -99,7 +100,10 @@
 
                 }
             });
-        }</script>
+        }
+
+
+    </script>
 </head>
 <body>
     <div style="margin: auto">

@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - FPT Libol</title>
 
@@ -10,8 +11,10 @@
     @Scripts.Render("~/bundles/modernizr")
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="971697194004-a3705bandc8uaqv5r0b64adm3ggcqu91.apps.googleusercontent.com">
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
     <style>
-
         .navbar {
             padding: 0 !important;
         }
@@ -74,31 +77,34 @@
                 }
             });
         }
-
-/**/</script>
+    </script>
     @*END------------SCRIPT FOR LOGIN FUNCTION*@
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="background-color:#f05123 !important">
-                <a class="navbar-brand" href="#">FPT Libol</a>
+                <a class="navbar-brand" href="/Home">FPT Libol</a>
                 <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link" href="#">Quản lý</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown00" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quản lý</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown00">
+                                <a class="dropdown-item" href="/Management/Account">Quản lý tài khoản</a>
+                            </div>
                         </li>
-                        <li class="nav-item dropdown" onclick="dodajAktywne(this)">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bạn Đọc</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bạn đọc</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item" href="#">@Html.ActionLink("Hồ sơ", "PatronProfile", "CIR_PATRON") </a>
+
+                                <a class="dropdown-item" href="/Patron/PatronProfile">Hồ sơ</a>
+
                                 <a class="dropdown-item" href="#">Thẻ</a>
-                                <a class="dropdown-item" href="#">Xử lý lô</a>
                                 <a class="dropdown-item" href="#">Thống kê</a>
                             </div>
                         </li>
                         <li class="nav-item" onclick="dodajAktywne(this)">
-                            <a class="nav-link" href="#">Biên mục</a>
+                            <a class="nav-link" href="/Catalogue/MainTab">Biên mục</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
@@ -114,8 +120,9 @@
                                     </div>
                                 </div>*@
                                 <a class="dropdown-item" href="/Circulation/LockPatronStats">Chính sách</a>
-                                <a class="dropdown-item" href="#">Ghi trả</a>
-                                <a class="dropdown-item" href="#">Gia hạn</a>
+                                <a class="dropdown-item" href="/CheckOut">Ghi mượn</a>
+                                <a class="dropdown-item" href="/CheckIn">Ghi trả</a>
+                                <a class="dropdown-item" href="/CheckOut/Giahan">Gia hạn</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -124,8 +131,8 @@
                                 <a class="dropdown-item" href="/AcquireReport/AcquisitionIndex">Bổ sung</a>
                                 <a class="dropdown-item" href="/AcquireReport/AcquireStatisticIndex">Thống kê</a>
                                 <a class="dropdown-item" href="#">Kho</a>
-                                <a class="dropdown-item" href="#">In mã vạch</a>
-                                <a class="dropdown-item" href="#">In nhãn</a>
+                                <a class="dropdown-item" href="/PrintBarcode">In mã vạch</a>
+                                <a class="dropdown-item" href="/PrintLabel">In nhãn</a>
                             </div>
                         </li>
                         <li class="nav-item">
@@ -147,20 +154,6 @@
         </footer>
     </div>
     <div class="g-signin2" data-onsuccess="onSignIn" style="display:none;"></div>
-
-    <script>
-        function dodajAktywne(elem) {
-            // get all 'a' elements
-            var a = document.getElementsByTagName('li');
-            // loop through all 'a' elements
-            for (i = 0; i < a.length; i++) {
-                // Remove the class 'active' if it exists
-                a[i].classList.remove('active')
-            }
-            // add 'active' classs to the element that was clicked
-            elem.classList.add('active');
-        }
-    </script>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Content/CustomJS/jquery.dataTables.min.js")

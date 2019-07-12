@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Giahan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4 style="margin-top : 1rem">Gia hạn</h4>
+<form>
+    <div class="form-row" style="padding-top:10px;">
+        <div class="col-1">
+            <label class="col-form-label">Mã số: </label>
+        </div>
+        <div class="col-2">
+            <input class="form-control" type="text" />
+        </div>
+        <div class="col-1">
+            <div class="form-check">
+                <label class="form-check-label col-form-label">
+                    <input type="radio" class="form-check-input" name="optradio" checked>ĐKCB
+                </label>
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="form-check">
+                <label class="form-check-label col-form-label">
+                    <input type="radio" class="form-check-input" name="optradio">Số thẻ
+                </label>
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="form-check">
+                <label class="form-check-label col-form-label">
+                    <input type="radio" class="form-check-input" name="optradio">Mã tài liệu
+                </label>
+            </div>
+        </div>
+        <div class="col-1">
+            <button class="btn btn-primary" type="button">Lọc</button>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-2">
+            <label class="col-form-label">Ngày ra hạn cụ thể: </label>
+        </div>
+        <div class="col-2">
+            <input class="form-control" type="date" />
+        </div>
+
+    </div>
+</form>
+

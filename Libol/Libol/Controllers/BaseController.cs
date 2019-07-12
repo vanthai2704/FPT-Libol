@@ -12,7 +12,7 @@ namespace Libol.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var session = Session["UserID"];
-            if (session == null)
+            if(session == null)
             {
                 if (filterContext.HttpContext.Request.IsAjaxRequest())
                 {
