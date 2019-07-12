@@ -449,6 +449,9 @@
     <Compile Include="Models\FPT_JOIN_ISBN_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_RECOMMEND.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_SP_CIR_LIBLOCUSER_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -458,22 +461,13 @@
     <Compile Include="Models\FPT_SP_GET_COPYNUMBER_STRING_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_SP_GET_COPYNUMBER_TO_STRING_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_lan10_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_lan7_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMEND_Result.cs">
+    <Compile Include="Models\FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_STAT_PATRONMAX_Result.cs" />
@@ -628,64 +622,6 @@
     <Compile Include="Models\FPT_EDU_SP_GETLOANTYPES_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_SP_ACQ_STATMONTH_NEW_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_ACQ_STATYEAR_NEW_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_CIR_GET_LOAN_HISTORY_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOC2_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOCID1_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOCID_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOC_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BYLOC_TIME_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_CHUAN_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW2_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW3_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST2_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_NEW_TEST_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_POID_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_LOCATIONID_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_POID_NEW1_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_POID_NEW_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_GET_POID_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result.cs">
     <Compile Include="Models\FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1165,9 +1101,6 @@
     <Compile Include="Models\SP_ACQ_STATUS_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SP_ACQ_STATYEAR_NEW_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SP_ACQ_STATYEAR_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1517,15 +1450,6 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_GET_GEN_ISSUE_ITEM_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SP_GET_HOLDING_BYLOC_DOI1_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SP_GET_HOLDING_BYLOC_DOI_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SP_GET_HOLDING_BYLOC_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_GET_HOLDING_HOL_INFOR1_Result.cs">
