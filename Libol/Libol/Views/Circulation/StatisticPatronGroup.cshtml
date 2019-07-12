@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "StatisticPatronGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2><span style="font-size:18px">Thông tin ấn phẩm đã được mượn theo nhóm bạn đọc</span></h2>
+
+<table class="table">
+    <tr>
+        <td style="margin-left:10%">
+            Thư viện:
+        </td>
+        <td>
+            @Html.DropDownList("Library", ViewBag.list_lib as List<SelectListItem>)
+        </td>
+        <td style="margin-left:20px">
+            Từ ngày:
+            <input type="date" value="" name="date_from" id="date_from" />
+        </td>
+        <td style="padding-left:20px">
+            Đến ngày:
+            <input type="date" value="" name="date_to" id="date_to" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="radio" name="type" id="theo_dau_an_pham" value="0" />
+            <label for="theo_dau_an_pham">Theo đầu ấn phẩm</label>
+        </td>
+        <td>
+            <input type="radio" name="type" id="theo_ban_an_pham" value="1" />
+            <label for="theo_ban_an_pham">Theo bản ấn phẩm</label>
+        </td>
+
+        <td>
+            <input type="submit" value="Thống kê" id="stat" style="background-color:dodgerblue; color:white" />
+        </td>
+        <td>
+            <input type="reset" value="Đặt lại" style="background-color:dodgerblue; color:white" />
+        </td>
+    </tr>
+</table>
+
+
+<div id="result">
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        document.getElementById("stat").onclick = function () {
+            var empObj = {
+                strLibID: $("#Library").val(),
+                strDateFrom: $("#date_from").val(),
+                strDateTo: $("#date_to").val(),
+                strType: $("input[name='type']:checked").val()
+            };
+
+            console.log(empObj)
+            $.ajax({
+                url: "DisplayPatronGroup",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                success: function (result) {
+                    $("#result").html(result)
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        };
+
+        $("#Library").change(function () {
+            $("#Location").empty();
+            $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetLocations")', // we are calling json method
+            dataType: 'json',
+            data: { id: $("#Library").val() },
+            success: function (locs) {
+                $.each(locs, function (i, loc) {
+                    $("#Location").append('<option value="' + loc.Value + '">' +
+                    loc.Text + '</option>');
+                });
+            }
+            //error: function (ex) {
+            //    alert('Failed to retrieve states.' + ex);
+            //}
+            });
+            return false;
+        });
+
+    });
+</script>
