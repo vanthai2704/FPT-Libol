@@ -863,6 +863,7 @@
     <Compile Include="Models\REGULARITY_OUT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RenewBusiness.cs" />
     <Compile Include="Models\SearchPatronBusiness.cs" />
     <Compile Include="Models\SER_ARTICLE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
@@ -1198,6 +1199,7 @@
     <Compile Include="Models\SP_CIR_FACULTY_SELECT_BYCID_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityResult\SP_CIR_GET_RENEW_Result.cs" />
     <Compile Include="Models\SP_CIR_HOLDING_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -2215,7 +2217,6 @@
     <Content Include="Views\CheckIn\_checkinByCardNumber.cshtml" />
     <Content Include="Views\CheckIn\_checkinByDKCB.cshtml" />
     <Content Include="Views\CheckIn\_findByCardNumber.cshtml" />
-    <Content Include="Views\CheckOut\Giahan.cshtml" />
     <Content Include="Views\CheckOut\_checkoutSuccess.cshtml" />
     <Content Include="Views\CheckOut\_showPatronInfo.cshtml" />
     <Content Include="Views\Management\Account.cshtml" />

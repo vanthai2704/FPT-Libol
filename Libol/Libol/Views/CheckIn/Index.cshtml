@@ -114,20 +114,6 @@
 </body>
 
 <script type="text/javascript">
-    document.getElementById("myButton").onclick = function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: "CheckIn/CheckInByDKCB",
-            type: "Get",
-            data: $(this).serialize(),
-            success: function (Response) {
-                $("#contentcheckin").html(Response)
-            },
-            error: function (jXHR, textStatus, errorThrown) {
-                alert(errorThrown);
-            }
-        });
-    };
 
     function findByCardNumber() {
         $.ajax({

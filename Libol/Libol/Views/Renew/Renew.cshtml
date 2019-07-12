@@ -4,18 +4,83 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@*START------------SCRIPT FOR DATATABLES*@
+<link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
+<link rel="stylesheet" type="text/css" href="~/Content/DataTables/Select-1.3.0/css/select.bootstrap4.css">
+<link rel="stylesheet" type="text/css" href="~/Content/DataTables/dataTables.checkboxes.css">
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/dataTables.checkboxes.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var table = $('#table_loadrenew').DataTable({
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'multi'
+            },
+            order: [[1, 'asc']],
+            orderCellsTop: true,
+
+        });
+
+        $('#table_loaninfo').on('click', '#select_all', function () {
+            if ($('#select_all:checked').val() === 'on') {
+                table.rows({ search: 'applied' }).select();
+            }
+            else {
+                table.rows().deselect();
+            }
+        });
+    });
+</script>
+@*END------------SCRIPT FOR DATATABLES*@
+
 <h2>Gia hạn</h2>
 <div class="row">
     <div class="col">
-        <label>Mã số:</label><input type="text">
-        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3"><label class="form-check-label" for="formCheck-3">ĐKCB</label></div>
-        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3"><label class="form-check-label" for="formCheck-3">Số thẻ</label></div>
-        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3"><label class="form-check-label" for="formCheck-3">Mã tài liệu</label></div>
-        <button class="btn btn-primary" type="button">Lọc</button>
+        <label>Mã số:</label><input type="text" id="fieldsearch">
+        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3" name="groupradio" value="3"><label class="form-check-label" for="formCheck-3">ĐKCB</label></div>
+        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3" name="groupradio" value="1"><label class="form-check-label" for="formCheck-3">Số thẻ</label></div>
+        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3" name="groupradio" value="2"><label class="form-check-label" for="formCheck-3">Mã tài liệu</label></div>
+        <button class="btn btn-primary" type="button" onclick="getrenewtable()">Lọc</button>
     </div>
 </div>
-<div class="row">
-
+<div id="content">
+    @if (ViewBag.ContentRenew.Count > 0)
+    {
+        <table id="table_loadrenew" class="table table-striped table-bordered datatables">
+            <thead>
+                <tr>
+                    <th style="text-align: center;"><input type="checkbox" id="select_all" /></th>
+                    <th>Nhan đề</th>
+                    <th>Thời gian mượn</th>
+                    <th>Bạn đọc</th>
+                    <th>Đã gia hạn</th>
+                    <th>Số lượt gia hạn tối đa</th>
+                    <th>Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.ContentRenew)
+                {
+                <tr>
+                    <td></td>
+                    <td>@item.Title (@item.Copynumber)</td>
+                    <td>@item.CheckOutDate</td>
+                    <td>@item.FullName (@item.Code)</td>
+                    <td>@item.RenewCount</td>
+                    <td>@item.Renewals</td>
+                    <td>@item.Note</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
 <div class="row">
     <div class="col">
@@ -24,3 +89,25 @@
     </div>
 </div>
 
+<script>
+    function getrenewtable() {
+        var xInt = $('.form-check input:radio:checked').val();
+        var empObj = {
+            intUserID: 43,
+            intType: parseInt(xInt, 10),
+            strCodeVal: document.getElementById("fieldsearch").value
+        };
+        $.ajax({
+            url: "/Renew/SearchToRenew",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#content").html(result);
+            },
+            error: function (errormessage) {
+                console.log("abcssd");
+            }
+        });
+    }
+</script>
