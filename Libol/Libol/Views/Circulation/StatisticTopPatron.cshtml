@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = "StatisticTopPatron";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p style="font-size:18px; margin-top:10px" />
+<span>Thống kê số lần mượn theo bạn đọc</span>
+
+<table class="table">
+    <tr class="">
+        <td>
+            <label>Thư viện:</label>
+        </td>
+        <td>
+            @Html.DropDownList("Library", ViewBag.list_lib as List<SelectListItem>)
+        </td>
+        <td>
+            <p>Từ Ngày</p>
+        </td>
+        <td>
+            <input id="date_from" type="date" name="date_from" />
+        </td>
+        <td>
+            <p>  Tới Ngày</p>
+        </td>
+        <td>
+            <input id="date_to" type="date" name="date_to" />
+        </td>
+    </tr>
+
+    <tr class="col-md-12">
+        <td>
+            <label>Kho:</label>
+        </td>
+        <td id="">
+            @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"), "Tất cả các kho")
+        </td>
+        <td>
+            <p> Lọc ra: </p>
+        </td>
+        <td>
+            <input id="number_patron" type="text" value="12" name="number_patron" />
+        </td>
+        <td>
+            <p>Bạn đọc dẫn đầu với tối thiểu: </p>
+        </td>
+        <td>
+            <input id="hire_times" type="text" value="" name="hire_times" />  Lượt mượn
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <input type="radio" name="type" value="0" id="theo_dau_an_pham" /><label for="theo_dau_an_pham">Theo đầu ấn phẩm</label>
+
+        </td>
+        <td>
+
+            <input type="radio" name="type" value="1" id="theo_ban_an_pham" /><label for="theo_ban_an_pham">Theo bản ấn phẩm</label>
+        </td>
+        <td>
+            <input type="submit" value="Thống kê" id="stat" style="background-color:dodgerblue; color:white" />
+        </td>
+        <td>
+            <input type="reset" value="Đặt lại" style="background-color:dodgerblue; color:white" />
+        </td>
+        <td></td>
+    </tr>
+</table>
+
+<div id="result">
+
+
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        document.getElementById("stat").onclick = function () {
+            var empObj = {
+                strLibID: $("#Library").val(),
+                strLocID: $("#Location").val(),
+                strDateFrom: $("#date_from").val(),
+                strDateTo: $("#date_to").val(),
+                strNumPatron: $("#number_patron").val(),
+                strHireTimes: $("#hire_times").val(),
+                strType: $("input[name='type']:checked").val()
+            };
+
+            console.log(empObj)
+            $.ajax({
+                url: "DisplayTopPatron",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                success: function (result) {
+                    $("#result").html(result)
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        };
+
+        $("#Library").change(function () {
+            $("#Location").empty();
+            $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetLocations")', // we are calling json method
+            dataType: 'json',
+            data: { id: $("#Library").val() },
+            success: function (locs) {
+                $.each(locs, function (i, loc) {
+                    $("#Location").append('<option value="' + loc.Value + '">' +
+                    loc.Text + '</option>');
+                });
+            }
+            //error: function (ex) {
+            //    alert('Failed to retrieve states.' + ex);
+            //}
+            });
+            return false;
+        });
+
+    });
+</script>

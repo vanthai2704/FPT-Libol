@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "AcquireStatisticIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Thống kê ấn phẩm</h1>
+
+<table class="table">
+    <thead style="background-color:deepskyblue; color: white; ">
+        <tr style="font-size: 20px;">
+            <th>Thông tin quản lý</th>
+            <th>Thời gian</th>
+            <th>Thuộc tính ấn phẩm</th>
+        </tr>
+    </thead>
+    <tbody style="font-weight:bold; color: dodgerblue;">
+        <tr>
+            <td>Dạng tài liệu</td>
+            <td><a href="StatisticYear">Hàng năm</a></td>
+            <td>Chỉ số phân loại (đầu ấn phẩm)</td>
+        </tr>
+        <tr>
+            <td>Vật mang tin</td>
+            <td><a href="StatisticMonth">Hàng tháng</a></td>
+            <td>Chỉ số phân loại (bản ấn phẩm)</td>
+        </tr>
+        <tr>
+            <td>Địa điểm lưu trữ</td>
+            <td>Hàng ngày</td>
+            <td>Ngôn ngữ</td>
+        </tr>
+        <tr>
+            <td>Nguồn bổ sung</td>
+            <td>Thống kê danh mục sách</td>
+            <td>Nước xuất bản</td>
+        </tr>
+        <tr>
+            <td><a href="RecomendReport">Báo cáo bổ sung NEW</a></td>
+            <td></td>
+            <td>Top 20</td>
+        </tr>
+    </tbody>
+</table>
