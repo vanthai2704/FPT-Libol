@@ -10,8 +10,8 @@
 <div class="row">
     <div class="col">
         <label>Mã số:</label><input type="text" id="fieldsearch">
-        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3" name="groupradio" value="3"><label class="form-check-label" for="formCheck-3">ĐKCB</label></div>
-        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3" name="groupradio" value="1"><label class="form-check-label" for="formCheck-3">Số thẻ</label></div>
+        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-1" name="groupradio" value="3"><label class="form-check-label" for="formCheck-1">ĐKCB</label></div>
+        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-2" name="groupradio" value="1"><label class="form-check-label" for="formCheck-2">Số thẻ</label></div>
         <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3" name="groupradio" value="2"><label class="form-check-label" for="formCheck-3">Mã tài liệu</label></div>
         <button class="btn btn-primary" type="button" onclick="getrenewtable()">Lọc</button>
     </div>
@@ -21,8 +21,8 @@
 </div>
 <div class="row">
     <div class="col">
-        <label>Ngày ra hạn cụ thể:</label><input type="text">
-        <button class="btn btn-primary" type="button">Gia hạn</button>
+        <label>Ngày ra hạn cụ thể:</label><input type="date" id="strFixedDueDate">
+        <button class="btn btn-primary" type="button" onclick="renew()">Gia hạn</button>
     </div>
 </div>
 
@@ -36,6 +36,45 @@
         };
         $.ajax({
             url: "/Renew/SearchToRenew",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#content").html(result);
+            },
+            error: function (errormessage) {
+                console.log("abcssd");
+            }
+        });
+    }
+
+    function renew() {
+        var rows = $('.selected');
+        var ids = [];
+        var times = [];
+        var range = [];
+        var dates= [];
+        for (var i = 0; i < rows.length; i++) {
+            var x = $(rows[i]).children('td:nth-child(2)').text();
+            var t = $(rows[i]).children('td:nth-child(3)').text();
+            var y = $(rows[i]).children('td:nth-child(7)').text();
+            var z = $(rows[i]).children('td:nth-child(8)').text();
+            ids.push(x);
+            dates.push(t);
+            times.push(y);
+            range.push(z);
+        }
+        var empObj = {
+            intLoanID: ids,
+            intAddTime: 7,
+            intTimeUnit: 1,
+            strFixedDueDate: document.getElementById("strFixedDueDate").value,
+            duedates: dates,
+            inttimes: times,
+            intrange: range
+        };
+        $.ajax({
+            url: "/Renew/Renew",
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",

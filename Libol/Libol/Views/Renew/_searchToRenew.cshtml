@@ -13,7 +13,18 @@
                 orderable: false,
                 className: 'select-checkbox',
                 targets: 0
-            }],
+            }
+            //    ,
+            //    {
+            //    targets: 1,
+            //    visible: false,
+            //    searchable: false
+            //}, {
+            //    targets: 2,
+            //    visible: false,
+            //    searchable: false
+            //    }
+            ],
             select: {
                 style: 'multi'
             },
@@ -40,12 +51,14 @@
         <thead>
             <tr>
                 <th style="text-align: center;"><input type="checkbox" id="select_all" /></th>
+                <th>ID</th>
+                <th>Giá trị thẻ</th>
                 <th>Nhan đề</th>
                 <th>Thời gian mượn</th>
                 <th>Bạn đọc</th>
                 <th>Đã gia hạn</th>
                 <th>Số lượt gia hạn tối đa</th>
-                <th>Ghi chú</th>
+                <th>Số ngày quá hạn</th>
             </tr>
         </thead>
         <tbody>
@@ -53,12 +66,14 @@
             {
                 <tr>
                     <td></td>
+                    <td>@item.ID</td>
+                    <td>@item.DueDate</td>
                     <td>@item.Content</td>
-                    <td>@item.CheckOutDate</td>
+                    <td>@item.DateRange</td>
                     <td>@item.FullName</td>
                     <td>@item.RenewCount</td>
                     <td>@item.Renewals</td>
-                    <td>@item.Note</td>
+                    <td style="color:red">@item.Note</td>
                 </tr>
             }
         </tbody>

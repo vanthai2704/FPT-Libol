@@ -109,7 +109,7 @@ namespace Libol.Controllers
         public void getpatrondetail(string strPatronCode)
         {
             SP_GET_PATRON_INFOR_Result patroninfo =
-               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("dd/MM/yyyy")).First();
+               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("MM/dd/yyyy")).First();
             CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
             ViewBag.PatronDetail = new CustomPatron
             {

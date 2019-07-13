@@ -92,9 +92,9 @@ namespace Libol.Controllers
         public void getpatrondetail(string strPatronCode)
         {
             SP_GET_PATRON_INFOR_Result patroninfo =
-               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("dd/MM/yyyy")).First();
+               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("MM/dd/yyyy")).First();
             CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
-            ViewBag.PatronDetail = new CustomPatron
+            ViewBag.PatronDetail = new DetailPatron
             {
                 ID = patron.ID,
                 strCode = patron.Code,
@@ -120,43 +120,9 @@ namespace Libol.Controllers
             };
         }
 
-        public class CustomPatron
+        public string gettitle(string title)
         {
-            public int ID { get; set; }
-            public string strCode { get; set; }
-            public string Name { get; set; }
-            public string strDOB { get; set; }
-            public string strValidDate { get; set; }
-            public string strExpiredDate { get; set; }
-            public string Sex { get; set; }
-            public string intEthnicID { get; set; }
-            public string intCollegeID { get; set; }
-            public string intFacultyID { get; set; }
-            public string strEducationlevel { get; set; }
-            public string strWorkPlace { get; set; }
-            public string strGrade { get; set; }
-            public string strClass { get; set; }
-            public string strAddress { get; set; }
-            public string strTelephone { get; set; }
-            public string strMobile { get; set; }
-            public string strEmail { get; set; }
-            public string strNote { get; set; }
-            public string intOccupationID { get; set; }
-            public string intPatronGroupID { get; set; }
-        }
-
-        public class OnLoan
-        {
-            public string Title { get; set; }
-            public string Copynumber { get; set; }
-            public string CheckoutDate { get; set; }
-            public string DueDate { get; set; }
-            public string Note { get; set; }
-        }
-
-        public string getcopynumber(string copynumber)
-        {
-            string validate = copynumber.Replace("$a", "");
+            string validate = title.Replace("$a", "");
             validate = validate.Replace("$b", "");
             validate = validate.Replace("$c", "");
             validate = validate.Replace("=$b", "");
@@ -178,7 +144,7 @@ namespace Libol.Controllers
             {
                 onLoans.Add(new OnLoan
                 {
-                    Title = getcopynumber(a.TITLE),
+                    Title = gettitle(a.TITLE),
                     Copynumber = a.COPYNUMBER,
                     CheckoutDate = a.CHECKOUTDATE.ToString("dd/MM/yyyy"),
                     DueDate = a.DUEDATE.Value.ToString("dd/MM/yyyy"),
@@ -187,5 +153,38 @@ namespace Libol.Controllers
             }
             ViewBag.patronloaninfo = onLoans;
         }
+    }
+    public class OnLoan
+    {
+        public string Title { get; set; }
+        public string Copynumber { get; set; }
+        public string CheckoutDate { get; set; }
+        public string DueDate { get; set; }
+        public string Note { get; set; }
+    }
+
+    public class DetailPatron
+    {
+        public int ID { get; set; }
+        public string strCode { get; set; }
+        public string Name { get; set; }
+        public string strDOB { get; set; }
+        public string strValidDate { get; set; }
+        public string strExpiredDate { get; set; }
+        public string Sex { get; set; }
+        public string intEthnicID { get; set; }
+        public string intCollegeID { get; set; }
+        public string intFacultyID { get; set; }
+        public string strEducationlevel { get; set; }
+        public string strWorkPlace { get; set; }
+        public string strGrade { get; set; }
+        public string strClass { get; set; }
+        public string strAddress { get; set; }
+        public string strTelephone { get; set; }
+        public string strMobile { get; set; }
+        public string strEmail { get; set; }
+        public string strNote { get; set; }
+        public string intOccupationID { get; set; }
+        public string intPatronGroupID { get; set; }
     }
 }
