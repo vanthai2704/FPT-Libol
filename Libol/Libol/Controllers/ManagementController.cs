@@ -10,10 +10,11 @@ using XCrypt;
 
 namespace Libol.Controllers
 {
-    public class ManagementController : BaseController
+    public class ManagementController : Controller
     {
         private LibolEntities db = new LibolEntities();
-        // GET: Management
+
+        [AuthAttribute(ModuleID = 6, RightID = 0)]
         public ActionResult Account(string username)
         {
             if (!String.IsNullOrEmpty(username))
@@ -37,6 +38,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 6, RightID = 0)]
         public JsonResult Account(DataTableAjaxPostModel model)
         {
             var users = db.SYS_USER;
@@ -103,9 +105,10 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 6, RightID = 0)]
         public JsonResult AddNewUser(string Name, string Username, string Email, string Password, string RepeatPassword,
-            int module1, int module2, int module3, int module4, int module5, int module8, int module9, int module6, string rights
-            )
+            int module1, int module2, int module3, int module4, int module5, int module8, int module9, int module6, string rights,
+            string locRights1, string locRights2, string locRights3)
         {
             if (db.SYS_USER.Where(a => a.Username == Username).Count() > 0)
             {
@@ -158,13 +161,51 @@ namespace Libol.Controllers
                 var intNewUID = new ObjectParameter("intNewUID", typeof(int));
                 db.SP_ADMIN_ADD_USER(0,Name,Username, passEncrypt, module1, module2, module3, module4, module5, module8, module9, module6, 
                     Int32.Parse(Session["UserID"].ToString()),null, intNewUID, new ObjectParameter("intOutVal", typeof(int)));
-                if((int) intNewUID.Value > 0)
+                int ID = (int)intNewUID.Value;
+                if (ID > 0)
                 {
                     var rightsSplit = rights.Split(',');
                     foreach(var r in rightsSplit)
                     {
-                        db.SP_ADMIN_GRANT_RIGHTS((int)intNewUID.Value, Int32.Parse(r));
+                        if (!String.IsNullOrEmpty(r))
+                        {
+                            db.SP_ADMIN_GRANT_RIGHTS(ID, Int32.Parse(r));
+                        }
+                        
                     }
+                    var locRights1Split = locRights1.Split(',');
+                    foreach (var r in locRights1Split)
+                    {
+                        if (!String.IsNullOrEmpty(r))
+                        {
+                            db.SP_ADMIN_GRANT_LOCATIONS(ID, Int32.Parse(r), 1);
+                        }
+                        
+                    }
+                    var locRights2Split = locRights2.Split(',');
+                    foreach (var r in locRights2Split)
+                    {
+                        if (!String.IsNullOrEmpty(r))
+                        {
+                            db.SP_ADMIN_GRANT_LOCATIONS(ID, Int32.Parse(r), 2);
+                        }
+                        
+                    }
+                    var locRights3Split = locRights3.Split(',');
+                    foreach (var r in locRights3Split)
+                    {
+                        if (!String.IsNullOrEmpty(r))
+                        {
+                            db.SP_ADMIN_GRANT_LOCATIONS(ID, Int32.Parse(r), 3);
+                        }
+                        
+                    }
+                    db.SaveChanges();
+                    var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
+                    userGoogleAccount.ID = ID;
+                    userGoogleAccount.Email = Email;
+                    db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
+                    
                     return Json(new Result()
                     {
                         CodeError = 0,
@@ -184,7 +225,10 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateUser(int ID, string Name, string Username, string Email, string Password, string RepeatPassword)
+        [AuthAttribute(ModuleID = 6, RightID = 0)]
+        public JsonResult UpdateUser(int ID, string Name, string Username, string Email, string Password, string RepeatPassword,
+            int module1, int module2, int module3, int module4, int module5, int module8, int module9, int module6, string rights,
+            string locRights1, string locRights2, string locRights3)
         {
             if (db.SYS_USER.Where(a => a.ID != ID).Where(a => a.Username == Username).Count() > 0)
             {
@@ -229,15 +273,50 @@ namespace Libol.Controllers
             }
             else
             {
-                var user = db.SYS_USER.Where(a => a.ID == ID).First();
-                user.Name = Name;
-                user.Username = Username;
+                string passEncrypt = "";
                 if (!String.IsNullOrEmpty(Password))
                 {
-                    string passEncrypt = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(Password, "pl");
-                    user.Password = passEncrypt;
+                    passEncrypt = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(Password, "pl");
                 }
-
+                var intOutVal = new ObjectParameter("intOutVal", typeof(int));
+                db.SP_ADMIN_UPDATE_USER(ID, 0, Name, Username, passEncrypt, module1, module2, module3, module4, module5, module8, module9, module6,
+                    Int32.Parse(Session["UserID"].ToString()), intOutVal);
+                var rightsSplit = rights.Split(',');
+                foreach (var r in rightsSplit)
+                {
+                    if (!String.IsNullOrEmpty(r))
+                    {
+                        db.SP_ADMIN_GRANT_RIGHTS(ID, Int32.Parse(r));
+                    }
+                    
+                }
+                var locRights1Split = locRights1.Split(',');
+                foreach (var r in locRights1Split)
+                {
+                    if (!String.IsNullOrEmpty(r))
+                    {
+                        db.SP_ADMIN_GRANT_LOCATIONS(ID, Int32.Parse(r), 1);
+                    }
+                    
+                }
+                var locRights2Split = locRights2.Split(',');
+                foreach (var r in locRights2Split)
+                {
+                    if (!String.IsNullOrEmpty(r))
+                    {
+                        db.SP_ADMIN_GRANT_LOCATIONS(ID, Int32.Parse(r), 2);
+                    }
+                    
+                }
+                var locRights3Split = locRights3.Split(',');
+                foreach (var r in locRights3Split)
+                {
+                    if (!String.IsNullOrEmpty(r))
+                    {
+                        db.SP_ADMIN_GRANT_LOCATIONS(ID, Int32.Parse(r), 3);
+                    }
+                    
+                }
                 if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).Count() > 0)
                 {
                     var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).First();
@@ -261,6 +340,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 6, RightID = 0)]
         public JsonResult DeleteUser(string strUIDs)
         {
             try
@@ -293,6 +373,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 6, RightID = 0)]
         public JsonResult GetRightInModule(int module, int UserID)
         {
             var locRights = db.SP_GETUSERLOCATIONS(1, Int32.Parse(Session["UserID"].ToString())).ToList();

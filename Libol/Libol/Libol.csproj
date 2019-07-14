@@ -2105,6 +2105,7 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SupportClass\AuthAttribute.cs" />
     <Compile Include="SupportClass\DataTableAjaxPostModel.cs" />
     <Compile Include="SupportClass\Wrapper.cs" />
   </ItemGroup>
@@ -2355,12 +2356,12 @@
     <Content Include="Uploads\Mẫu import user libol...xls" />
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
     <Content Include="Views\Renew\Renew.cshtml" />
+    <Content Include="Views\Shared\Permisssion.cshtml" />
     <Content Include="Views\Renew\_searchToRenew.cshtml" />
     <Content Include="Views\OverdueList\OverdueList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
