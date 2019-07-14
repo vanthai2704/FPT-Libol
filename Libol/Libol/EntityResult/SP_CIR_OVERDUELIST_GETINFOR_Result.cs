@@ -11,19 +11,13 @@ namespace Libol.EntityResult
         public int LOANID { get; set; }
         public int LibID { get; set; }
         public int LocID { get; set; }
-        //can null
         public string College { get; set; }
-        //can null
         public string Faculty { get; set; }
-        //can null
         public string Grade { get; set; }
-        //can null
         public string Class { get; set; }
-        //can null
         public Nullable<int> FacultyID { get; set; }
-        public int CollegeID { get; set; }
+        public Nullable<int> CollegeID { get; set; }
         public int PatronGroupID { get; set; }
-        //can null
         public Nullable<int> LocationID { get; set; }
         public System.DateTime CheckOutDate { get; set; }
         public Nullable<System.DateTime> CheckInDate { get; set; }
@@ -33,7 +27,7 @@ namespace Libol.EntityResult
         public string Name { get; set; }
         public string Email { get; set; }
         public int OverdueDate { get; set; }
-        public long Penati { get; set; }
+        public Decimal Penati { get; set; }
         public string PatronCode { get; set; }
         public string Code { get; set; }
         public string ItemCode { get; set; }
