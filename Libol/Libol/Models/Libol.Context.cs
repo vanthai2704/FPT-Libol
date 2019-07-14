@@ -22078,5 +22078,22 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result>("FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter, orderByParameter);
         }
+    
+        public virtual int FPT_SP_CIR_GET_RENEW(Nullable<int> intUserID, Nullable<short> intType, string strCodeVal)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(short));
+    
+            var strCodeValParameter = strCodeVal != null ?
+                new ObjectParameter("strCodeVal", strCodeVal) :
+                new ObjectParameter("strCodeVal", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_CIR_GET_RENEW", intUserIDParameter, intTypeParameter, strCodeValParameter);
+        }
     }
 }
