@@ -157,23 +157,27 @@
             </div>
 
             <h5>Quyền truy cập vào các phân hệ</h5>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Biên mục</label></div>
-                <div class="col">
-                    <select class="form-control" id="module1">
-                        <option value="0">Không</option>
-                        @if (@Model.CatModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            @if (((List<Int32>)Session["RightIDs"]).Contains(199))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Biên mục</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module1">
+                            <option value="0">Không</option>
+                            @if (@Model.CatModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(1)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(1)">Các quyền</a></div>
-            </div>
+            }
+
             <div class="form-row">
                 <div class="col"><label class="col-form-label float-right">Bạn đọc</label></div>
                 <div class="col">
@@ -474,7 +478,9 @@
             GetAcceptRights(right8) +
             GetAcceptRights(right9) +
             GetAcceptRights(right6);
-
+        var locRights1 = GetAcceptLocRights(right3);
+        var locRights2 = GetAcceptLocRights(right4);
+        var locRights3 = GetAcceptLocRights(right5);
         var empObj = {
             Name: document.getElementById("txtName").value,
             Username: document.getElementById("txtUsername").value,
@@ -489,7 +495,10 @@
             module8: module8,
             module9: module9,
             module6: module6,
-            rights: rights.substring(0, rights.length - 1)
+            rights: rights.substring(0, rights.length - 1),
+            locRights1: locRights1,
+            locRights2: locRights2,
+            locRights3: locRights3,
         }
         $.ajax({
             url: "/Management/AddNewUser",
@@ -524,14 +533,49 @@
     }
     function UpdateUser() {
         hideInvalid();
+        if (right1 == null || right2 == null || right3 == null || right4 == null || right5 == null || right8 == null || right9 == null || right6 == null) {
+
+            document.getElementById("notifyMessage").innerHTML = "Vui lòng chờ!";
+            $("#modalNotify").modal();
+        }
+        var module1 = $('#module1').val();
+        var module2 = $('#module2').val();
+        var module3 = $('#module3').val();
+        var module4 = $('#module4').val();
+        var module5 = $('#module5').val();
+        var module8 = $('#module8').val();
+        var module9 = $('#module9').val();
+        var module6 = $('#module6').val();
+        var rights = GetAcceptRights(right1) +
+            GetAcceptRights(right2) +
+            GetAcceptRights(right3) +
+            GetAcceptRights(right4) +
+            GetAcceptRights(right5) +
+            GetAcceptRights(right8) +
+            GetAcceptRights(right9) +
+            GetAcceptRights(right6);
+        var locRights1 = GetAcceptLocRights(right3);
+        var locRights2 = GetAcceptLocRights(right4);
+        var locRights3 = GetAcceptLocRights(right5);
         var empObj = {
             ID: document.getElementById("txtID").value,
             Name: document.getElementById("txtName").value,
             Username: document.getElementById("txtUsername").value,
             Email: document.getElementById("txtEmail").value,
             Password: document.getElementById("txtPassword").value,
-            RepeatPassword: document.getElementById("txtRepeatPassword").value
-
+            RepeatPassword: document.getElementById("txtRepeatPassword").value,
+            module1: module1,
+            module2: module2,
+            module3: module3,
+            module4: module4,
+            module5: module5,
+            module8: module8,
+            module9: module9,
+            module6: module6,
+            rights: rights.substring(0, rights.length - 1),
+            locRights1: locRights1,
+            locRights2: locRights2,
+            locRights3: locRights3,
         }
         $.ajax({
             url: "/Management/UpdateUser",
@@ -635,6 +679,9 @@
     var right8 = null;
     var right9 = null;
     var right6 = null;
+    var rightLoc1 = null;
+    var rightLoc2 = null;
+    var rightLoc3 = null;
 
     function ShowRight(moduleID) {
         HideLocRights();
@@ -863,6 +910,15 @@
         return rights;
     }
 
+    function GetAcceptLocRights(right) {
+        var locRights = "";
+        var accept = right.AcceptLoc;
+        for (var i in accept) {
+            locRights += accept[i].ID + ",";
+        }
+        return locRights;
+    }
+
     function Accept() {
         var denyRightsID = $('#denyRights').val();
         var denyRights = $("#denyRights :selected").toArray();
@@ -1028,7 +1084,7 @@
                 case '1':
                     right1.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right1.Deny.push(item);
@@ -1036,7 +1092,7 @@
                 case '2':
                     right2.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right2.Deny.push(item);
@@ -1044,7 +1100,7 @@
                 case '3':
                     right3.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right3.Deny.push(item);
@@ -1052,7 +1108,7 @@
                 case '4':
                     right4.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right4.Deny.push(item);
@@ -1060,7 +1116,7 @@
                 case '5':
                     right5.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right5.Deny.push(item);
@@ -1068,7 +1124,7 @@
                 case '8':
                     right8.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right8.Deny.push(item);
@@ -1076,7 +1132,7 @@
                 case '9':
                     right9.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right9.Deny.push(item);
@@ -1084,7 +1140,7 @@
                 case '6':
                     right6.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right6.Deny.push(item);
@@ -1106,7 +1162,7 @@
                 case '1':
                     right1.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right1.DenyLoc.push(item);
@@ -1114,7 +1170,7 @@
                 case '2':
                     right2.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right2.DenyLoc.push(item);
@@ -1122,7 +1178,7 @@
                 case '3':
                     right3.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right3.DenyLoc.push(item);
@@ -1130,7 +1186,7 @@
                 case '4':
                     right4.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right4.DenyLoc.push(item);
@@ -1138,7 +1194,7 @@
                 case '5':
                     right5.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right5.DenyLoc.push(item);
@@ -1146,7 +1202,7 @@
                 case '8':
                     right8.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right8.DenyLoc.push(item);
@@ -1154,7 +1210,7 @@
                 case '9':
                     right9.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right9.DenyLoc.push(item);
@@ -1162,7 +1218,7 @@
                 case '6':
                     right6.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right6.DenyLoc.push(item);

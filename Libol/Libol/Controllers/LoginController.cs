@@ -25,11 +25,55 @@ namespace Libol.Controllers
         public ActionResult Index(string username, string password)
         {
             string passEncrypt = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(password, "pl");
-            List<SP_SYS_USER_LOGIN_Result> checkUser = db.SP_SYS_USER_LOGIN(username, passEncrypt).ToList();
-            if (checkUser != null && checkUser.Count > 0)
+            var checkUser = db.SP_SYS_USER_LOGIN(username, passEncrypt).ToList();
+            if (checkUser.Count > 0)
             {
-                Session["UserID"] = checkUser[0].ID;
+                int UserID = checkUser[0].ID;
+                Session["UserID"] = UserID;
                 Session["FullName"] = checkUser[0].Name;
+                List<Int32> RightIDs = new List<Int32>();
+                List<Int32> ModuleIDs = new List<Int32>();
+                var userRight = db.SYS_USER_RIGHT_DETAIL.Where(a => a.UserID == UserID).ToList();
+                foreach (var right in userRight)
+                {
+                    RightIDs.Add(right.RightID);
+                }
+                var user = db.SYS_USER.Where(a => a.ID == UserID).First();
+
+                if (user.CatModule)
+                {
+                    ModuleIDs.Add(1);
+                }
+                if (user.PatModule)
+                {
+                    ModuleIDs.Add(2);
+                }
+                if (user.CirModule)
+                {
+                    ModuleIDs.Add(3);
+                }
+                if (user.AcqModule)
+                {
+                    ModuleIDs.Add(4);
+                }
+                if (user.SerModule)
+                {
+                    ModuleIDs.Add(5);
+                }
+                if (user.ILLModule)
+                {
+                    ModuleIDs.Add(8);
+                }
+                if (user.DelModule)
+                {
+                    ModuleIDs.Add(9);
+                }
+                if (user.AdmModule)
+                {
+                    ModuleIDs.Add(6);
+                }
+                Session["RightIDs"] = RightIDs;
+                Session["ModuleIDs"] = ModuleIDs;
                 return RedirectToAction("Index", "Home");
             }
             else
