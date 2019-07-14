@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewBag.Title = "OverdueList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    label {
+        text-align: right;
+    }
+
+    .form-control {
+        font-size: 0.8rem !important;
+</style>
+<form>
+    <label style="margin-top:10px; text-align: right ; color:red"><h5>Thông tin thẻ bạn đọc quá hạn</h5></label>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group row col-12">
+                <label class="control-label col-md-6 align-self-center">Số thẻ : </label>
+                <input type="text" class="form-control col-md-3" id="inputEmail3">
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-6 align-self-center">Tên bạn đọc : </label>
+                <input type="text" class="form-control col-md-3" id="inputEmail3">
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-6 align-self-center">Nhóm bạn đọc : </label>
+                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                    <option value="-1">----- Chọn -----</option>
+                </select>
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-6 align-self-center">Trường : </label>
+                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                    <option value="-1">----- Chọn -----</option>
+                </select>
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-6 align-self-center">Khoa : </label>
+                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                    <option value="-1">----- Chọn -----</option>
+                </select>
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-6 align-self-center">Khóa học : </label>
+                <input type="text" class="form-control col-md-3" id="inputEmail3">
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-6 align-self-center">Lớp học : </label>
+                <input type="text" class="form-control col-md-3" id="inputEmail3">
+            </div>
+            <div class="form-group row col-12">
+                <div class="form-group row col-4">
+
+                </div>
+                <div class="form-group row col-8">
+                    <div class="form-group row col-5">
+                        <div style="margin : auto">
+                            <button type="submit" class="btn btn-primary form-control">Tìm kiếm</button>
+                        </div>
+                    </div>
+                    <div class="form-group row col-3">
+                        <div style="margin : auto">
+                            <button type="submit" class="btn btn-primary form-control">Đặt lại</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-6">
+            <div class="form-group row col-12">
+                <label class="control-label col-md-2 align-self-center">Thư viện : </label>
+                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                    <option value="-1">----- Chọn -----</option>
+                </select>
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-2 align-self-center">Kho : </label>
+                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                    <option value="-1">----- Chọn -----</option>
+                </select>
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-2 align-self-center">Tên tài liệu : </label>
+                <input type="text" class="form-control col-md-3" id="inputEmail3">
+            </div>
+            <div class="form-group row col-12">
+                <label class="control-label col-md-2 align-self-center">Số DKCB : </label>
+                <input type="text" class="form-control col-md-3" id="inputEmail3">
+            </div>
+            <div class="form-group row col-12">
+                <div class="form-group row col-6">
+                    <label class="control-label col-md-6 align-self-center">Ngày mượn Từ : </label>
+                    <div class="form-group col-md-6"><input class="form-control " type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+                </div>
+                <div class="form-group row col-6">
+                    <label class="control-label col-md-6 align-self-center">Đến: </label>
+                    <div class="form-group col-md-6"><input class="form-control " type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+                </div>
+            </div>
+            <div class="form-group row col-12">
+                <div class="form-group row col-6">
+                    <label class="control-label col-md-6 align-self-center">Ngày phải trả Từ : </label>
+                    <div class="form-group col-md-6"><input class="form-control " type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+                </div>
+                <div class="form-group row col-6">
+                    <label class="control-label col-md-6 align-self-center">Đến: </label>
+                    <div class="form-group col-md-6"><input class="form-control " type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
+                </div>
+            </div>
+            <div class="form-group row col-12">
+                <div class="form-group row col-7">
+                    <label class="control-label col-md-6 align-self-center">Số ngày quá hạn Từ : </label>
+                    <input type="text" class="form-control col-md-4" id="inputEmail3">
+                </div>
+                <div class="form-group row col-5">
+                    <label class="control-label col-md-6 align-self-center">Đến: </label>
+                    <input type="text" class="form-control col-md-4" id="inputEmail3"> Ngày
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <label style="margin-top:10px; text-align: right ; color:blue"><h5>Danh sách những thẻ quá hạn</h5></label>
+
+    <table id="table_patron_lock" class="table table-striped table-bordered datatables" style="width:100% !important; font-size: 0.8rem !important;">
+        <thead>
+            <tr>
+                <th style="text-align: center;"><input type="checkbox" id="select_all" /></th>
+                <th>Bạn đọc</th>
+                <th>Số thẻ</th>
+                <th>Nhan Đề</th>
+                <th>Ngày mượn</th>
+                <th>Ngày trả</th>
+                <th>DKCB</th>
+                <th>Quá hạn(ngày)</th>
+            </tr>
+            @*<tr>
+                    <th><input type="checkbox" /></th>
+                    <th><input class="form-control" type="text" /></th>
+                    <th><input class="form-control" type="text" /></th>
+                    <th><input class="form-control" type="text" /></th>
+                    <th><input class="form-control" type="text" /></th>
+                    <th><input class="form-control" type="text" /></th>
+                    <th><input class="form-control" type="text" /></th>
+                    <th><input class="form-control" type="text" /></th>
+                </tr>*@
+        </thead>
+    </table>
+</form>
+
+
+
