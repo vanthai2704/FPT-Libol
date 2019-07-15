@@ -24,14 +24,16 @@
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
-<script type="text/javascript" charset="utf8" src="~/Content/DataTables/dataTables.checkboxes.min.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/dataTables.checkboxesCustomForAccount.min.js"></script>
 <script>
     var table;
     $(document).ready(function () {
         table = $('#table_account').DataTable({
             columnDefs: [{
                 targets: 0,
-                'checkboxes': {
+                data: "ID",
+
+                checkboxes: {
                     'selectRow': true
                 }
             },
@@ -65,16 +67,32 @@
             ],
             order: [[1, 'asc']],
             orderCellsTop: true,
+
+            drawCallback: function (settings, json) {
+                var colIdx = 1;
+                var table = $('#table_account').DataTable();
+                var IDs = table.column(colIdx).data();
+
+                $(IDs).each(function (index, value) {
+                    if (value === 1) {
+                        $(table.row(index).node()).addClass('not-selectable');
+                        $(table.row(index).node()).children('td').children('input').remove();
+                    }
+                });
+
+                // Deselect unselectable rows (that can still be selected by using the shift key)...
+                table.on('select', function (e, dt, type, indexes) {
+                    if (type === 'row') {
+                        var rows = table.rows(indexes).nodes();
+
+                        $.each($(rows), function () {
+                            if ($(this).hasClass('not-selectable')) table.row($(this)).deselect();
+                        })
+                    }
+                });
+            },
         });
 
-        table.on('select', function (e, dt, type, indexes) {
-            if (type === 'row') {
-                var rows = table.rows(indexes).nodes().to$();
-                $.each(rows, function () {
-                    if ($(this).hasClass('ignoreme')) table.row($(this)).deselect();
-                })
-            }
-        });
     });
 
 </script>
@@ -110,7 +128,11 @@
                 </thead>
 
             </table>
-            <button type="button" class="btn btn-danger" onclick="getSelected()">Xóa</button>
+            @if (((Int32)Session["UserID"]) == 1)
+            {
+                <button type="button" class="btn btn-danger" onclick="getSelected()">Xóa</button>
+            }
+
         </div>
         <div class="col">
             <div class="form-row" style="padding-right : 3rem">
