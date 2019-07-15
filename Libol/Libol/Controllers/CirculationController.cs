@@ -7,7 +7,7 @@ using Libol.Models;
 using System.Text.RegularExpressions;
 
 namespace Libol.Controllers
-{    
+{
     public class CirculationController : BaseController
     {
         LibolEntities le = new LibolEntities();
@@ -191,15 +191,15 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
             List<GET_PATRON_RENEW_LOAN_INFOR_Result> result = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, UserID);
-               
+
             foreach (var item in result)
             {
-                item.Content = GetContent(item.Content);               
-                if((item.CheckInDate-item.OverDueDateNew).Days>item.OverdueDays)
+                item.Content = GetContent(item.Content);
+                if ((item.CheckInDate - item.OverDueDateNew).Days > item.OverdueDays)
                 {
                     item.OverdueDays = 0;
                     item.OverdueFine = 0;
-                }     
+                }
 
             }
             ViewBag.Result = result;
@@ -268,7 +268,7 @@ namespace Libol.Controllers
             int Type = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            if (!String.IsNullOrEmpty(strType)) Type = Convert.ToInt32(strType);            
+            if (!String.IsNullOrEmpty(strType)) Type = Convert.ToInt32(strType);
             if (Type == 3)
             {
                 ViewBag.TypeName = "bạn đọc";
@@ -326,14 +326,41 @@ namespace Libol.Controllers
 
         public ActionResult LockPatronStats()
         {
+            List<SelectListItem> lib = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            };
+            foreach (var l in le.HOLDING_LIBRARY.ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
             //FPT_CIR_GET_LOCKEDPATRONS(PatronCode, LockDateTo, LockDateFrom, LibraryID, UserID)
             //ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(null, null, null);
+            string LibraryFilter = Request.Form["LibraryFilter"];
+            string PatronCodeFilter = Request.Form["PatronCodeFilter"];
+            string LockDateFromFilter = Request.Form["LockDateFromFilter"];
+            string LockDateToFilter = Request.Form["LockDateToFilter"];
+            int CollegeID = 0;
+            if (!String.IsNullOrEmpty(LibraryFilter)) CollegeID = Convert.ToInt32(LibraryFilter);
+            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCodeFilter, LockDateFromFilter, LockDateToFilter, CollegeID);
             return View();
         }
 
-        public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom)
+        public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom, string strCollegeID)
         {
-            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo);
+            int CollegeID = 0;
+            if (!String.IsNullOrEmpty(strCollegeID)) CollegeID = Convert.ToInt32(strCollegeID);
+            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo, CollegeID);
+            List<SelectListItem> lib = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            };
+            foreach (var l in le.HOLDING_LIBRARY.ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
             return PartialView("GetLockPatronStats");
         }
 
