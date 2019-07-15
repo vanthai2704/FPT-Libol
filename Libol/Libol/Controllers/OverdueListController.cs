@@ -14,7 +14,7 @@ namespace Libol.Controllers
         // GET: OverdueList
         public ActionResult OverdueList()
         {
-            ViewBag.listLockPatron = GET_LIST_OVERDUELIST_GETINFOR(65, "3770", "").ToList();
+            ViewBag.listOverdue = GET_LIST_OVERDUELIST_GETINFOR(65, "3770", "").ToList();
             return View();
         }
 
