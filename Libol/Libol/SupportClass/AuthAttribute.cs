@@ -10,7 +10,7 @@ namespace Libol.SupportClass
     public class AuthAttribute : ActionFilterAttribute, IAuthorizationFilter
     {
         public int ModuleID { get; set; }
-        public int RightID { get; set; }        
+        public string RightID { get; set; }        
 
         public void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -25,11 +25,17 @@ namespace Libol.SupportClass
                 List<Int32> ModuleIDs = (List<Int32>)filterContext.HttpContext.Session["ModuleIDs"];
                 List<Int32> RightIDs = (List<Int32>)filterContext.HttpContext.Session["RightIDs"];
                 RightIDs.Add(0);
-                if (ModuleIDs.Contains(ModuleID) && RightIDs.Contains(RightID))
+                var Right = RightID.Split(',');
+                bool Check = false;
+                foreach(var r in RightID.Split(','))
                 {
-                    // Do nothing
+                    if (ModuleIDs.Contains(ModuleID) && RightIDs.Contains(Int32.Parse(r)))
+                    {
+                        Check = true;
+                        break;
+                    }
                 }
-                else
+                if (!Check)
                 {
                     filterContext.Result = new ViewResult() { ViewName = "Permisssion" };
                 }

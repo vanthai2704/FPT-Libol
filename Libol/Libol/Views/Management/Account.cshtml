@@ -177,126 +177,147 @@
                     <div class="col"><a href="#" onclick="ShowRight(1)">Các quyền</a></div>
                 </div>
             }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(200))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Bạn đọc</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module2">
+                            <option value="0">Không</option>
+                            @if (@Model.PatModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(2)">Các quyền</a></div>
+                </div>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(201))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Mượn trả</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module3">
+                            <option value="0">Không</option>
+                            @if (@Model.CirModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(3)">Các quyền</a></div>
+                </div>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(202))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Bổ sung</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module4">
+                            <option value="0">Không</option>
+                            @if (@Model.AcqModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(4)">Các quyền</a></div>
+                </div>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(203))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Ấn phẩm định kỳ</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module5">
+                            <option value="0">Không</option>
+                            @if (@Model.SerModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(5)">Các quyền</a></div>
+                </div>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(204))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">ILL</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module8">
+                            <option value="0">Không</option>
+                            @if (@Model.ILLModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(8)">Các quyền</a></div>
+                </div>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(205))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Sưu tập số</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module9">
+                            <option value="0">Không</option>
+                            @if (@Model.DelModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(9)">Các quyền</a></div>
+                </div>
+            }
+            @if (((Int32)Session["UserID"]) == 1)
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Quản trị</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module6">
+                            <option value="0">Không</option>
+                            @if (@Model.AdmModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(6)">Các quyền</a></div>
+                </div>
+            }
 
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Bạn đọc</label></div>
-                <div class="col">
-                    <select class="form-control" id="module2">
-                        <option value="0">Không</option>
-                        @if (@Model.PatModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
-                </div>
-                <div class="col"><a href="#" onclick="ShowRight(2)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Mượn trả</label></div>
-                <div class="col">
-                    <select class="form-control" id="module3">
-                        <option value="0">Không</option>
-                        @if (@Model.CirModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
-                </div>
-                <div class="col"><a href="#" onclick="ShowRight(3)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Bổ sung</label></div>
-                <div class="col">
-                    <select class="form-control" id="module4">
-                        <option value="0">Không</option>
-                        @if (@Model.AcqModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
-                </div>
-                <div class="col"><a href="#" onclick="ShowRight(4)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Ấn phẩm định kỳ</label></div>
-                <div class="col">
-                    <select class="form-control" id="module5">
-                        <option value="0">Không</option>
-                        @if (@Model.SerModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
-                </div>
-                <div class="col"><a href="#" onclick="ShowRight(5)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">ILL</label></div>
-                <div class="col">
-                    <select class="form-control" id="module8">
-                        <option value="0">Không</option>
-                        @if (@Model.ILLModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
-                </div>
-                <div class="col"><a href="#" onclick="ShowRight(8)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Sưu tập số</label></div>
-                <div class="col">
-                    <select class="form-control" id="module9">
-                        <option value="0">Không</option>
-                        @if (@Model.DelModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
-                </div>
-                <div class="col"><a href="#" onclick="ShowRight(9)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Quản trị</label></div>
-                <div class="col">
-                    <select class="form-control" id="module6">
-                        <option value="0">Không</option>
-                        @if (@Model.AdmModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
-                </div>
-                <div class="col"><a href="#" onclick="ShowRight(6)">Các quyền</a></div>
-            </div>
 
             <div class="form-group row" style="padding-right : 3rem">
                 <div class="col">
