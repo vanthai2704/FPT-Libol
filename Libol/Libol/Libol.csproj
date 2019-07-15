@@ -2360,6 +2360,7 @@
     <Content Include="Views\Shared\Permisssion.cshtml" />
     <Content Include="Views\Renew\_searchToRenew.cshtml" />
     <Content Include="Views\OverdueList\OverdueList.cshtml" />
+    <Content Include="Views\OverdueList\_OverdueListResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
