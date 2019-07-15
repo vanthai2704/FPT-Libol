@@ -14,7 +14,7 @@ namespace Libol.Controllers
     {
         private LibolEntities db = new LibolEntities();
 
-        [AuthAttribute(ModuleID = 6, RightID = 0)]
+        [AuthAttribute(ModuleID = 6, RightID = "0")]
         public ActionResult Account(string username)
         {
             if (!String.IsNullOrEmpty(username))
@@ -38,7 +38,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 6, RightID = 0)]
+        [AuthAttribute(ModuleID = 6, RightID = "0")]
         public JsonResult Account(DataTableAjaxPostModel model)
         {
             var users = db.SYS_USER;
@@ -105,7 +105,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 6, RightID = 0)]
+        [AuthAttribute(ModuleID = 6, RightID = "0")]
         public JsonResult AddNewUser(string Name, string Username, string Email, string Password, string RepeatPassword,
             int module1, int module2, int module3, int module4, int module5, int module8, int module9, int module6, string rights,
             string locRights1, string locRights2, string locRights3)
@@ -225,7 +225,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 6, RightID = 0)]
+        [AuthAttribute(ModuleID = 6, RightID = "0")]
         public JsonResult UpdateUser(int ID, string Name, string Username, string Email, string Password, string RepeatPassword,
             int module1, int module2, int module3, int module4, int module5, int module8, int module9, int module6, string rights,
             string locRights1, string locRights2, string locRights3)
@@ -340,7 +340,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 6, RightID = 0)]
+        [AuthAttribute(ModuleID = 6, RightID = "0")]
         public JsonResult DeleteUser(string strUIDs)
         {
             try
@@ -373,7 +373,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 6, RightID = 0)]
+        [AuthAttribute(ModuleID = 6, RightID = "0")]
         public JsonResult GetRightInModule(int module, int UserID)
         {
             var locRights = db.SP_GETUSERLOCATIONS(1, Int32.Parse(Session["UserID"].ToString())).ToList();
