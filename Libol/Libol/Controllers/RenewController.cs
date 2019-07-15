@@ -19,7 +19,6 @@ namespace Libol.Controllers
         // GET: Renew
         public ActionResult Renew()
         {
-            ViewBag.ContentRenew = new List<SP_CIR_GET_RENEW_Result>();
             return View();
         }
 
