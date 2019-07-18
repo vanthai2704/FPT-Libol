@@ -48,17 +48,28 @@
         });
     }
 
+    function getSelected() {
+        var IDs = "";
+        var selectedIds = table.columns().checkboxes.selected()[0];
+        selectedIds.forEach(function (selectedId) {
+            IDs += selectedId.ID + ",";
+        });
+        newIDs = IDs.substring(0, IDs.length - 1);
+        alert(IDs);
+    }
+
     function renew() {
         var rows = $('#table_loadrenew .selected');
+        var selectedIds = table.columns().checkboxes.selected()[0];
         var ids = [];
         var times = [];
         var range = [];
         var dates= [];
-        for (var i = 0; i < rows.length; i++) {
-            var x = $(rows[i]).children('td:nth-child(2)').text();
-            var t = $(rows[i]).children('td:nth-child(3)').text();
-            var y = $(rows[i]).children('td:nth-child(7)').text();
-            var z = $(rows[i]).children('td:nth-child(8)').text();
+        for (var i = 0; i < selectedIds.length; i++) {
+            var x = selectedIds[i].ID;
+            var t = selectedIds[i].DueDate;
+            var y = selectedIds[i].RenewCount;
+            var z = selectedIds[i].Renewals;
             ids.push(x);
             dates.push(t);
             times.push(y);

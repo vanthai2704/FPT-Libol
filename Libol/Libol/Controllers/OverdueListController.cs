@@ -5,18 +5,38 @@ using System.Web;
 using System.Web.Mvc;
 using Libol.EntityResult;
 using Libol.Models;
+using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
-    public class OverdueListController : Controller
+    public class OverdueListController : BaseController
     {
         private LibolEntities db = new LibolEntities();
+        FormatHoldingTitle f = new FormatHoldingTitle();
+
         // GET: OverdueList
         public ActionResult OverdueList()
         {
-            //ViewBag.listOverdue = GET_LIST_OVERDUELIST_GETINFOR(43, "", "").ToList();
+            ViewBag.College = db.SP_PAT_GET_COLLEGE().ToList();
             return View();
         }
+
+        //[HttpPost]
+        //public JsonResult OnchangeCollege(int CollegeID)
+        //{
+        //    ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
+        //    List<CIR_DIC_FACULTY> list = new List<CIR_DIC_FACULTY>();
+        //    foreach (var f in ViewBag.Faculty)
+        //    {
+        //        list.Add(new CIR_DIC_FACULTY()
+        //        {
+        //            ID = f.ID,
+        //            Faculty = f.Faculty,
+        //            CollegeID = f.CollegeID
+        //        });
+        //    }
+        //    return Json(list, JsonRequestBehavior.AllowGet);
+        //}
 
         [HttpPost]
         public PartialViewResult OverdueListResult(Nullable<int> intUserID, string strPatronIDs,string txtSoThe, string txtTenBanDoc, int ddlNhomBanDoc, int ddlTruong, int ddlKhoa, string txtKhoaHoc, string txtLopHoc, int ddlLib, int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)
@@ -26,12 +46,47 @@ namespace Libol.Controllers
             return PartialView("_OverdueListResult");
         }
 
-        // trinhlv1
         public List<SP_CIR_OVERDUELIST_GETINFOR_Result> GET_LIST_OVERDUELIST_GETINFOR(Nullable<int> intUserID, string strPatronIDs, string whereCondition)
         {
             List<SP_CIR_OVERDUELIST_GETINFOR_Result> list = db.Database.SqlQuery<SP_CIR_OVERDUELIST_GETINFOR_Result>("SP_CIR_OVERDUELIST_GETINFOR {0}, {1}, {2}",
                 new object[] { intUserID, strPatronIDs, whereCondition }).ToList();
-            return list;
+            List<SP_CIR_OVERDUELIST_GETINFOR_Result> sP_CIR_OVERDUELISTs = new List<SP_CIR_OVERDUELIST_GETINFOR_Result>();
+            foreach(SP_CIR_OVERDUELIST_GETINFOR_Result item in list)
+            {
+                sP_CIR_OVERDUELISTs.Add(new SP_CIR_OVERDUELIST_GETINFOR_Result
+                {
+                    CheckInDate = item.CheckInDate,
+                    CheckOutDate = item.CheckOutDate,
+                    Class = item.Class,
+                    Code = item.Code,
+                    College = item.College,
+                    CollegeID = item.CollegeID,
+                    CopyNumber = item.CopyNumber,
+                    Email = item.Email,
+                    Faculty = item.Faculty,
+                    FacultyID = item.FacultyID,
+                    Grade = item.Grade,
+                    ItemCode = item.ItemCode,
+                    LibCode = item.LibCode,
+                    LibID = item.LibID,
+                    LOANID = item.LOANID,
+                    LocationID = item.LocationID,
+                    LocCode = item.LocCode,
+                    LocID = item.LocID,
+                    MainTitle = f.OnFormatHoldingTitle(item.MainTitle),
+                    Name = item.Name,
+                    OverdueDate = item.OverdueDate,
+                    PatronCode = item.PatronCode,
+                    PatronGroupID = item.PatronGroupID,
+                    PatronID = item.PatronID,
+                    Penati = item.Penati
+                });
+            }
+            return sP_CIR_OVERDUELISTs;
+        }
+
+        private void GetlistOverdue(int intUserID,string patronids, string whereCondition) {
+
         }
 
         private string ProcessCondition(string txtSoThe, string txtTenBanDoc,int ddlNhomBanDoc,int ddlTruong,int ddlKhoa, string txtKhoaHoc, string txtLopHoc,int ddlLib,int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)

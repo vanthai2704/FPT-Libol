@@ -6,6 +6,7 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
@@ -13,6 +14,7 @@ namespace Libol.Controllers
     {
         private LibolEntities db = new LibolEntities();
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
+        FormatHoldingTitle f = new FormatHoldingTitle();
         // GET: CheckIn
         public ActionResult Index()
         {
@@ -22,6 +24,18 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult CheckInByCardNumber(string strFullName, string strPatronCode, string strFixDueDate)
         {
+            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Where(a => a.isLocked == 1).Count() == 0)
+            {
+                ViewBag.active = 1;
+            }
+            else
+            {
+                ViewBag.active = 0;
+                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).First().Note;
+                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().StartedDate;
+                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().LockedDays);
+            }
+
             getpatrondetail(strPatronCode);
             int id2 = ViewBag.PatronDetail.ID;
             getonloandetail(id2);
@@ -120,21 +134,6 @@ namespace Libol.Controllers
             };
         }
 
-        public string gettitle(string title)
-        {
-            string validate = title.Replace("$a", "");
-            validate = validate.Replace("$b", "");
-            validate = validate.Replace("$c", "");
-            validate = validate.Replace("=$b", "");
-            validate = validate.Replace(":$b", "");
-            validate = validate.Replace("/$c", "");
-            validate = validate.Replace(".$n", "");
-            validate = validate.Replace(":$p", "");
-            validate = validate.Replace(";$c", "");
-            validate = validate.Replace("+$e", "");
-            return validate;
-        }
-
         public void getonloandetail(int id)
         {
             List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
@@ -144,7 +143,7 @@ namespace Libol.Controllers
             {
                 onLoans.Add(new OnLoan
                 {
-                    Title = gettitle(a.TITLE),
+                    Title = f.OnFormatHoldingTitle(a.TITLE),
                     Copynumber = a.COPYNUMBER,
                     CheckoutDate = a.CHECKOUTDATE.ToString("dd/MM/yyyy"),
                     DueDate = a.DUEDATE.Value.ToString("dd/MM/yyyy"),

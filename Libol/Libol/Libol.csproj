@@ -2108,6 +2108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SupportClass\AuthAttribute.cs" />
     <Compile Include="SupportClass\DataTableAjaxPostModel.cs" />
+    <Compile Include="SupportClass\FormatHoldingTitle.cs" />
     <Compile Include="SupportClass\Wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2361,6 +2362,7 @@
     <Content Include="Views\Renew\_searchToRenew.cshtml" />
     <Content Include="Views\OverdueList\OverdueList.cshtml" />
     <Content Include="Views\OverdueList\_OverdueListResult.cshtml" />
+    <Content Include="Views\CheckOut\_findByCardNumber.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
