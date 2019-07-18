@@ -3,9 +3,15 @@ using Libol.Models;
 using Libol.SupportClass;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using ZXing;
+using ZXing.Common;
 
 namespace Libol.Controllers
 {
@@ -30,6 +36,179 @@ namespace Libol.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
-        
+        [AuthAttribute(ModuleID = 4, RightID = "104")]
+        public ActionResult Print(int intSelMode,
+            int intLibID,
+            int intLocID,
+            string strFromItemCode,
+            string strToItemCode,
+            string strFromCopyNumber,
+            string strToCopyNumber,
+            string strElse,
+            int ddlType,
+            int txtHeight,
+            int txtWidth,
+            int ddlImageType,
+            int ddlRotation,
+            int txtRowSpace,
+            int txtColSpace,
+            int txtColImageNumber,
+            int txtPageImageNumber,
+            int TemplateID,
+            int Page)
+        {
+            var selectCopyNumber = db.HOLDINGs.Where(a => true);
+            switch (intSelMode)
+            {
+                case 0:
+                    selectCopyNumber = selectCopyNumber
+                        .Where(a => db.ITEMs.Where(i => i.Code.CompareTo(strFromItemCode) >= 0 && i.Code.CompareTo(strToItemCode) <= 0).Select(i => i.ID).Contains(a.ItemID));
+                    break;
+                case 1:
+                    selectCopyNumber = selectCopyNumber.Where(a => string.Compare(a.CopyNumber, strFromCopyNumber) >= 0 &&
+                                                                   string.Compare(a.CopyNumber, strToCopyNumber) <= 0);
+                    if (intLibID > 0)
+                    {
+                        selectCopyNumber = selectCopyNumber.Where(a => a.LibID == intLibID);
+                    }
+                    if (intLocID > 0)
+                    {
+                        selectCopyNumber = selectCopyNumber.Where(a => a.LocationID == intLocID);
+                    }
+                    
+                    break;
+                case 2:
+                    selectCopyNumber = selectCopyNumber.Where(a => strElse.Contains(a.CopyNumber));
+                    if (intLibID > 0)
+                    {
+                        selectCopyNumber = selectCopyNumber.Where(a => a.LibID == intLibID);
+                    }
+                    if (intLocID > 0)
+                    {
+                        selectCopyNumber = selectCopyNumber.Where(a => a.LocationID == intLocID);
+                    }
+                    
+                    break;
+            }
+
+            double TotalItem = selectCopyNumber.Count();
+            double TotalItemPerPage = txtPageImageNumber;
+            double TotalPage = Math.Ceiling(TotalItem / TotalItemPerPage);
+            ViewBag.CurrentPage = Page;
+            ViewBag.TotalPage = TotalPage;
+            var CurrentItemInPage = selectCopyNumber.OrderBy(a => a.ItemID).Skip((int)TotalItemPerPage * (Page - 1)).Take((int)TotalItemPerPage).ToArray();
+            string Data = "<table>";
+            int Count = 0;
+            for(int i = 0; i < Math.Ceiling((double)txtPageImageNumber/txtColImageNumber); i++)
+            {
+                Data += "<tr>";
+                for (int j = 0; j < txtColImageNumber; j++)
+                {                    
+                    if (Count < CurrentItemInPage.Length)
+                    {
+                        var writer = new BarcodeWriter
+                        {
+                            Format = BarcodeFormat.CODE_39,
+                            Options = new EncodingOptions
+                            {
+                                Height = 60,
+                                Width = 300
+                            }
+                        };
+
+                        var bitmap = writer.Write(CurrentItemInPage[Count].CopyNumber);
+                        MemoryStream ms = new MemoryStream();
+                        bitmap.Save(ms, ImageFormat.Bmp);
+                        byte[] byteImage = ms.ToArray();
+                        var SigBase64 = Convert.ToBase64String(byteImage);
+                        Data += "<td>";
+                        Data += "<img src='data:image/png;base64,"+ SigBase64 + "'/>";
+                        Data += "</td>";                        
+                        Count++;
+                    }                    
+                }
+                Data += "</tr>";
+            }
+            Data += "</table>";
+            ViewBag.Data = Data;
+            return View();
+        }
+
+        [AuthAttribute(ModuleID = 4, RightID = "104")]
+        public FileStreamResult PrintBarcode(int intSelMode,
+            int intLibID,
+            int intLocID,
+            string strFromItemCode,
+            string strToItemCode,
+            string strFromCopyNumber,
+            string strToCopyNumber,
+            string strElse,
+            int ddlType,
+            int txtHeight,
+            int txtWidth,
+            int ddlImageType,
+            int ddlRotation,
+            int txtRowSpace,
+            int txtColSpace,
+            int txtColImageNumber,
+            int txtPageImageNumber,
+            int TemplateID,
+            int Page)
+        {
+            var selectCopyNumber = db.HOLDINGs.Where(a => true);
+            switch (intSelMode)
+            {
+                case 0:
+                    selectCopyNumber = selectCopyNumber
+                        .Where(a => db.ITEMs.Where(i => i.Code.CompareTo(strFromItemCode) >= 0 && i.Code.CompareTo(strToItemCode) <= 0).Select(i => i.ID).Contains(a.ItemID));
+                    break;
+                case 1:
+                    selectCopyNumber = selectCopyNumber.Where(a => string.Compare(a.CopyNumber, strFromCopyNumber) >= 0 &&
+                                                                   string.Compare(a.CopyNumber, strToCopyNumber) <= 0);
+                    if (intLibID > 0)
+                    {
+                        selectCopyNumber = selectCopyNumber.Where(a => a.LibID == intLibID);
+                    }
+                    if (intLocID > 0)
+                    {
+                        selectCopyNumber = selectCopyNumber.Where(a => a.LocationID == intLocID);
+                    }
+
+                    break;
+                case 2:
+                    selectCopyNumber = selectCopyNumber.Where(a => strElse.Contains(a.CopyNumber));
+                    if (intLibID > 0)
+                    {
+                        selectCopyNumber = selectCopyNumber.Where(a => a.LibID == intLibID);
+                    }
+                    if (intLocID > 0)
+                    {
+                        selectCopyNumber = selectCopyNumber.Where(a => a.LocationID == intLocID);
+                    }
+
+                    break;
+            }
+
+            string Data = "";
+            var Items = selectCopyNumber.OrderBy(a => a.ItemID).ToArray();
+            string Template = db.SYS_TEMPLATE.Where(a => a.ID == TemplateID).First().Content;
+            for(int i = 0; i < Math.Ceiling((double)Items.Length / 2); i++)
+            {
+                if(i*2 + 1== Items.Length)
+                {
+                    Data += Template.Replace("<$copynumber1$>", Items[i * 2].CopyNumber).Replace("<$copynumber2$>", Items[i * 2].CopyNumber);
+                }
+                else
+                {
+                    Data += Template.Replace("<$copynumber1$>", Items[i * 2].CopyNumber).Replace("<$copynumber2$>", Items[i * 2 + 1].CopyNumber);
+                }
+            }
+            
+            var string_with_your_data = Data;
+            var byteArray = Encoding.ASCII.GetBytes(string_with_your_data);
+            var stream = new MemoryStream(byteArray);
+            return File(stream, "text/plain", "file_to_print.txt");
+        }
+
     }
 }
