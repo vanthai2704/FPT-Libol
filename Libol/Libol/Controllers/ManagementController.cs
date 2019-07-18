@@ -43,6 +43,11 @@ namespace Libol.Controllers
         {
             var users = db.SYS_USER;
             var search = users.Where(a => true);
+            int CurrentUser = (int)Session["UserID"];
+            if(CurrentUser != 1)
+            {
+                search = search.Where(a => a.ID != 1);
+            }
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
@@ -380,8 +385,50 @@ namespace Libol.Controllers
             if (UserID > 0)
             {
                 Rights rights = new Rights();
-                rights.Accept = db.FPT_ADMIN_GET_RIGHTS_ACCEPT(module, UserID).ToList();
-                rights.Deny = db.FPT_ADMIN_GET_RIGHTS_DENY(module, UserID, Int32.Parse(Session["UserID"].ToString())).ToList();
+
+                rights.Accept = new List<FunctionRight>();
+                rights.Deny = new List<FunctionRight>();
+
+                if(UserID == 1)
+                {
+                    foreach (var r in db.FPT_ADMIN_GET_RIGHTS_ACCEPT(module, UserID).ToList())
+                    {
+                        rights.Accept.Add(new FunctionRight()
+                        {
+                            ID = r.ID,
+                            Right = r.Right
+                        });
+                    }
+                    foreach (var r in db.FPT_ADMIN_GET_RIGHTS_DENY_ADMIN(module).ToList())
+                    {
+                        rights.Deny.Add(new FunctionRight()
+                        {
+                            ID = r.ID,
+                            Right = r.Right
+                        });
+                    }
+                }
+                else
+                {
+                    foreach (var r in db.FPT_ADMIN_GET_RIGHTS_ACCEPT(module, UserID).ToList())
+                    {
+                        rights.Accept.Add(new FunctionRight()
+                        {
+                            ID = r.ID,
+                            Right = r.Right
+                        });
+                    }
+                    foreach (var r in db.FPT_ADMIN_GET_RIGHTS_DENY(module, UserID, Int32.Parse(Session["UserID"].ToString())).ToList())
+                    {
+                        rights.Deny.Add(new FunctionRight()
+                        {
+                            ID = r.ID,
+                            Right = r.Right
+                        });
+                    }
+                }
+                
+
                 rights.AcceptLoc = new List<LocRight>();
                 rights.DenyLoc = new List<LocRight>();
 
@@ -484,8 +531,25 @@ namespace Libol.Controllers
             else
             {
                 RightsWhenCreate rights = new RightsWhenCreate();
-                rights.Accept = db.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE(module, Int32.Parse(Session["UserID"].ToString()),1).ToList();
-                rights.Deny = db.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE(module, Int32.Parse(Session["UserID"].ToString()), 0).ToList();
+                rights.Accept = new List<FunctionRight>();
+                rights.Deny = new List<FunctionRight>();
+
+                foreach(var r in db.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE(module, Int32.Parse(Session["UserID"].ToString()), 1).ToList())
+                {
+                    rights.Accept.Add(new FunctionRight()
+                    {
+                        ID = r.ID,
+                        Right = r.Right
+                    });
+                }
+                foreach (var r in db.FPT_ADMIN_GET_RIGHTS_WHEN_CREATE(module, Int32.Parse(Session["UserID"].ToString()), 0).ToList())
+                {
+                    rights.Deny.Add(new FunctionRight()
+                    {
+                        ID = r.ID,
+                        Right = r.Right
+                    });
+                }
                 rights.AcceptLoc = new List<LocRight>();
                 rights.DenyLoc = new List<LocRight>();
                 foreach(var l in locRights)
@@ -508,18 +572,24 @@ namespace Libol.Controllers
 
     public class Rights
     {
-        public List<FPT_ADMIN_GET_RIGHTS_ACCEPT_Result> Accept { get; set; }
-        public List<FPT_ADMIN_GET_RIGHTS_DENY_Result> Deny { get; set; }
+        public List<FunctionRight> Accept { get; set; }
+        public List<FunctionRight> Deny { get; set; }
         public List<LocRight> AcceptLoc { get; set; }
         public List<LocRight> DenyLoc { get; set; }
     }
 
     public class RightsWhenCreate
     {
-        public List<FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result> Accept { get; set; }
-        public List<FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result> Deny { get; set; }
+        public List<FunctionRight> Accept { get; set; }
+        public List<FunctionRight> Deny { get; set; }
         public List<LocRight> AcceptLoc { get; set; }
         public List<LocRight> DenyLoc { get; set; }
+    }
+
+    public class FunctionRight
+    {
+        public int ID { get; set; }
+        public string Right { get; set; }
     }
 
     public class LocRight
@@ -527,4 +597,5 @@ namespace Libol.Controllers
         public int ID { get; set; }
         public string LocName { get; set; }
     }
+    
 }

@@ -5275,6 +5275,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="intUserID" Type="int" Mode="In" />
           <Parameter Name="intUserParentID" Type="int" Mode="In" />
         </Function>
+        <Function Name="FPT_ADMIN_GET_RIGHTS_DENY_ADMIN" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModuleID" Type="int" Mode="In" />
+        </Function>
         <Function Name="FPT_ADMIN_GET_RIGHTS_WHEN_CREATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intModuleID" Type="int" Mode="In" />
           <Parameter Name="intParentID" Type="int" Mode="In" />
@@ -25405,6 +25408,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intType" Mode="In" Type="Int16" />
             <Parameter Name="strCodeVal" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="FPT_ADMIN_GET_RIGHTS_DENY_ADMIN" ReturnType="Collection(LibolModel.FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result)">
+            <Parameter Name="intModuleID" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -30186,6 +30192,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="8000" />
           <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
           <Property Type="Int32" Name="ItemID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Right" Nullable="false" MaxLength="100" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -40287,6 +40297,14 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="FPT_SP_CIR_GET_RENEW" FunctionName="LibolModel.Store.FPT_SP_CIR_GET_RENEW" />
+          <FunctionImportMapping FunctionImportName="FPT_ADMIN_GET_RIGHTS_DENY_ADMIN" FunctionName="LibolModel.Store.FPT_ADMIN_GET_RIGHTS_DENY_ADMIN">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Right" ColumnName="Right" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

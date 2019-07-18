@@ -2980,6 +2980,19 @@ AS
 	WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocID AND C.UserID = @intUserID AND B.LibID = @intLibID
 	ORDER BY B.LibID, B.Symbol
 
+go
+/******/
+CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_DENY_ADMIN]
+	@intModuleID int
+AS
+
+SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT R 
+WHERE R.ModuleID = @intModuleID AND R.ID 
+NOT IN (
+	SELECT U.ID FROM SYS_USER_RIGHT_DETAIL D JOIN SYS_USER_RIGHT U ON D.RightID = U.ID
+	WHERE D.UserID = 1 AND U.ModuleID = @intModuleID
+)
+
 
 GO
 /****** Object:  StoredProcedure [dbo].[FPT_GET_PATRON_LOCK_STATISTIC]    Script Date: 07/15/2019 09:39:04 ******/
@@ -3033,3 +3046,4 @@ AS
 	SET @strSql = @strSql + @strJoinSQL + ' WHERE ' +@strLikeSQL
 	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) + ' ORDER BY CPL.StartedDate DESC'
 EXEC (@stRSql)
+
