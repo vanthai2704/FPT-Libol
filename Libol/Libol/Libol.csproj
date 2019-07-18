@@ -2365,6 +2365,8 @@
     <Content Include="Views\Renew\_searchToRenew.cshtml" />
     <Content Include="Views\OverdueList\OverdueList.cshtml" />
     <Content Include="Views\OverdueList\_OverdueListResult.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\PrintLabel\Print.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
