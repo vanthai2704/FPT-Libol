@@ -25,7 +25,7 @@
         display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 1; /* Sit on top */
-        padding-top: 100px; /* Location of the box */
+        padding-top: 70px; /* Location of the box */
         left: 0;
         top: 0;
         width: 100%; /* Full width */
@@ -106,10 +106,9 @@
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Scripts/bootstrap-table.min.js"></script>
 
-
-
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
 <form>
     @{
         List<ACQ_ACQUIRE_SOURCE> listNBS = ViewData["ListNBS"] as List<ACQ_ACQUIRE_SOURCE>; // list NBS
@@ -117,23 +116,23 @@
         List<ACQ_CURRENCY> listCurrency = ViewData["ListCurrency"] as List<ACQ_CURRENCY>; // ListCurrency
         List<HOLDING_LIBRARY> listHoldingLibrary = ViewData["listLibs"] as List<HOLDING_LIBRARY>; // listHoldingLibrary
         List<HOLDING_LOCATION> listHoldingLocation = ViewData["listLocs"] as List<HOLDING_LOCATION>; // list KTL
-                                                                                                     //List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentFields = ViewData["listContentResult"] as List<FPT_EDU_GET_SHELF_CONTENT_Result>;
+        List<SP_HOLDING_REMOVE_REASON_SEL_Result> listDeleteReason = ViewData["ListDeleteReason"] as List<SP_HOLDING_REMOVE_REASON_SEL_Result>; // list Delete reason
 
     }
     <label class="col-md-12" style="color:red" AutoSize="true">@ViewBag.content</label>
-    
+
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12">
             <div class="form-group col-md-6">
                 <label class="col-md-6">Mã Tài Liệu</label>
-                <input type="email" class="form-control" id="txtCode">@Request.QueryString["Code"]
-                <button type="button" id="btnCodeFind" class="btn btn-primary form-control" data-toggle="modal" data-target="#exampleModal">Tìm</button>
+                <input type="text" class="form-control" id="txtCode" value="@Request.QueryString["Code"]">
+                <button type="button" id="btnCodeFind" class="btn btn-primary form-control" onclick="ShowSearchCodeForm()">Tìm</button>
 
             </div>
             <div class="form-group col-md-6">
                 <label class="col-md-6">Mã Đề Nghị</label>
-                <input type="email" class="form-control" id="txtCodePO" placeholder="">
-                <button type="submit" id="btnCodePOFind" class="btn btn-primary form-control">Tìm</button>
+                <input type="text" class="form-control" id="txtRecommendID" placeholder="">
+
             </div>
 
         </div>
@@ -174,7 +173,15 @@
                     @{
                         foreach (ACQ_CURRENCY item in listCurrency)
                         {
-                            <option value="@item.Rate">@item.CurrencyCode</option>
+                            if (item.CurrencyCode.Trim().Equals("VND"))
+                            {
+                                <option value="@item.Rate" selected>@item.CurrencyCode</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Rate">@item.CurrencyCode</option>
+                            }
+
                         }
                     }
                 </select>
@@ -192,16 +199,6 @@
                 <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" id="receiptedDate" /></div>
             </div>
         </div>
-        <div class="form-row col-md-12 form-inline">
-            <div class="form-group col-md-4">
-                <label class="col-md-6">Tên Đề Nghị</label>
-                <input type="text" class="form-control" id="txtSCT" placeholder="1234">
-            </div>
-            <div class="form-group col-md-8">
-                <label class="col-md-3">Ngày Đề Nghị</label>
-                <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
-            </div>
-        </div>
 
         <label style="margin-top:10px"><h5>Thông tin vị trí xếp giá</h5></label>
         <div class="form-row col-md-12 form-inline">
@@ -212,14 +209,7 @@
                     @{
                         foreach (HOLDING_LIBRARY item in listHoldingLibrary)
                         {
-                            if (@item.AccessEntry.Equals("VND"))
-                            {
-                                <option selected value="@item.ID">@item.AccessEntry</option>
-                            }
-                            else
-                            {
-                                <option value="@item.ID">@item.AccessEntry</option>
-                            }
+                            <option value="@item.ID">@item.AccessEntry</option>
                         }
                     }
                 </select>
@@ -254,76 +244,37 @@
         <label style="margin-top:10px"><h5>Thông tin xếp giá hiện thời</h5></label>
         <div class="form-row col-md-12">
             <label class="control-label col-md-5">Tổng số ĐKCB : </label>
-            <label class="col-md-7 text-left">11</label>
+            <label class="col-md-7 text-left" id="labNumberOfRecord" style="color: red">11</label>
         </div>
         <div class="form-row col-md-12">
             <label class="control-label col-md-5">Dữ liệu ĐKCB tổng hợp : </label>
-            <label class="col-md-7 text-left"><b></b>FSE-HL /TK/XHHL//TK/XHHL003661-71</b></label>
+            <label class="col-md-7 text-left" style="color: red;" id="lblCopyDataVal"></label>
         </div>
         <div class="form-row col-md-12">
             <label class="control-label col-md-5">Tổng số bản rỗi : </label>
-            <label class="control-label col-md-7">11</label>
+            <label class="control-label col-md-7" id="lblSumFreeCopy" style="color: red">0</label>
         </div>
 
         <div class="form-row col-md-12 text-center">
             <div style="margin : auto">
-                <button type="submit" class="btn btn-primary form-control">In mã vạch(v)</button>
-                <button type="submit" class="btn btn-primary form-control">In nhãn gáy(g)</button>
+                <button type="button" class="btn btn-primary form-control">In mã vạch(v)</button>
+                <button type="button" class="btn btn-primary form-control">In nhãn gáy(g)</button>
             </div>
         </div>
 
     </div>
 </form>
-<form>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tìm kiếm biểu ghi biên mục</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
 
-                    <div class="form-row">
-                        <label class="col-form-label">Nhan đề chính </label>
-                        <input type="text" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-form-label">Mã xếp giá </label>
-                        <input type="text" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-form-label">Tác giả </label>
-                        <input type="text" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-form-label">Nhà xuất bản </label>
-                        <input type="text" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-form-label">Năm xuất bản </label>
-                        <input type="text" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-form-label">ISBN </label>
-                        <input type="text" class="form-control" id="recipient-name">
-                    </div>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Tìm(r)</button>
-                    <button type="button" class="btn btn-primary">Đặt lại(r)</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng(r)</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
 
 <script>
+
+    var input = document.getElementById("txtCode");
+    input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            window.location.href = "/Shelf/Index?Code=" + input.value;
+        }
+    });
     function selectCurrency() {
         var item = $("#currencyList :selected").val();
         $('#itemRate').text(item);
@@ -387,11 +338,16 @@
         var acquiredDate = document.getElementById("acquiredDate").value;
         var receiptedDate = document.getElementById("receiptedDate").value;
         var recordNumber = document.getElementById("txtSCT").value;
+        var recommendID = document.getElementById("txtRecommendID").value;
+        var itemID = -1;
+        if ('@ViewBag.itemID' != '') {
+            itemID = '@ViewBag.itemID';
+        }
 
         var data = {
             holding: {
                 // getItemID
-                ItemID: @Request.QueryString["ItemID"],
+                ItemID: itemID,
                 LocationID: locID,
                 LibID: libID,
                 Price: price,
@@ -405,7 +361,8 @@
                 RecordNumber: recordNumber,
                 CopyNumber: copyNumber
             },
-            numberOfCN: numberOfCopyNumber
+            numberOfCN: numberOfCopyNumber,
+            recommendID: recommendID,
         };
 
 
@@ -445,11 +402,19 @@
                 "url": "/Shelf/LoadTableHolding",
                 "type": "POST",
                 "datatype": "json",
+                async: false,
                 "data": {
                     "code": code,
+                },
+                dataSrc: function (data) {
+                    console.log(data.numberOfFreeCopies);
+                    $("#lblSumFreeCopy").text("" + data.numberOfFreeCopies);
+                    $("#lblCopyDataVal").append(data.compositeHolding);
+                    $("#labNumberOfRecord").text("" + data.numberRecord);
+                    return data.data; //access the data variable from the returned JSON
                 }
             },
-           
+
 
             "columnDefs": [{
                 orderable: false,
@@ -516,7 +481,6 @@
                             "'" + full.Currency + "'," +
                             "'" + full.RecordNumber + "'," +
                             "'" + full.Price + "'," +
-                     
                             "'" + full.ReceiptedDate + "'," +
                             "'" + full.AcquiredDate + "'," +
                             "'" + full.AcquiredSource + "'," +
@@ -527,7 +491,7 @@
 
             ],
             "order": [
-                [7, 'asc']
+                [9, 'asc']
             ],
         });
 
@@ -541,30 +505,33 @@
         });
 
 
+        //$('#labNumberOfRecord').text(table.rows().count());
+
     });
 
     function delete_holdings() {
 
-        var data = $('#table_holdinglist').DataTable().rows('.selected').data();
+        var selectedRows = $('#table_holdinglist').DataTable().rows('.selected').data();
         var copynumberList = new Array();
-        for (var i = 0; i < data.length; i++) {
-            copynumberList.push(data[i]["ID"]);
+        for (var i = 0; i < selectedRows.length; i++) {
+            copynumberList.push(selectedRows[i]["ID"]);
         }
+        var deleteReasonID = $('#deleteReasonList').find(":selected").val();
+
+        var data = {
+            CopynumberList: copynumberList,
+            DeleteReasonID: deleteReasonID
+        };
 
         $.ajax({
             url: "/Shelf/DeleteHolding",
             type: "POST",
-            data: JSON.stringify(copynumberList),
+            data: JSON.stringify(data),
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (message) {
-                if (message["Message"] === "") {
-                    alert("Xóa thành công");
-                    $('#table_holdinglist').DataTable().ajax.reload(null, false);
-                } else {
                     alert(message["Message"]);
-                }
-
+                    $('#table_holdinglist').DataTable().ajax.reload(null, false);
             },
             error: function (error) {
                 alert(error);
@@ -623,6 +590,8 @@
     var AcquiredSource_Update;
     var Note_Update;
 
+
+
     function ShowUpdateForm(ID,
         LibID,
         LocID,
@@ -660,7 +629,25 @@
         AcquiredSource_Update = AcquiredSource;
         Note_Update = Note;
 
-        document.getElementById("txtShelf2").value = Shelf;
+        if (Shelf == "null") {
+            Shelf = "";
+        }
+        if (Volume == "null") {
+            Volume = "";
+        }
+        if (CallNumber == "null") {
+            CallNumber = "";
+        }
+        if (RecordNumber == "null") {
+            RecordNumber = "";
+        }
+        if (Price == "null") {
+            Price = "";
+        }
+        if (Note == "null") {
+            Note = "";
+        }
+        document.getElementById("txtShelf2").value = Shelf ;
         document.getElementById("txtVolume2").value = Volume;
         document.getElementById("txtPrice2").value = Price;
         document.getElementById("txtCallNumber2").value = CallNumber;
@@ -668,22 +655,21 @@
         document.getElementById("txtAcquiredDate2").value = AcquiredDate;
         document.getElementById("txtNote2").value = Note;
 
-
-
         var currency = Currency.replace(/\s/g, '');
-        var indexCurrentcy = document.getElementById(currency).index;
+        var row = document.getElementById(currency);
+        var indexCurrentcy = row.index;
         document.getElementById("currencyList2").selectedIndex = indexCurrentcy;
-        document.getElementById("myModal").style.display = "block";
+        document.getElementById("EditPopup").style.display = "block";
 
     }
     function CancelUpdate() {
-        document.getElementById("myModal").style.display = "none";
+        document.getElementById("EditPopup").style.display = "none";
     }
     function Save() {
-        
+
         Volume_Update = document.getElementById("txtVolume2").value ;
         CallNumber_Update = document.getElementById("txtCallNumber2").value ;
-        
+
         Shelf_Update = document.getElementById("txtShelf2").value;
         Currency_Update = $("#currencyList2 :selected").text();
         RecordNumber_Update = document.getElementById("txtRecordNumber2").value ;
@@ -723,14 +709,77 @@
             success: function (result) {
                 alert(result["Message"]);
                 $('#table_holdinglist').DataTable().ajax.reload(null, false);
-                document.getElementById("myModal").style.display = "none";
+                document.getElementById("EditPopup").style.display = "none";
             },
             error: function (error) {
                 alert(error);
             }
 
-        }); 
+        });
     }
+
+    function ShowSearchCodeForm(){
+        document.getElementById("SearchCodePopup").style.display = "block";
+    }
+    function CloseSearchCodeForm() {
+        document.getElementById("SearchCodePopup").style.display = "none";
+    }
+
+    function SearchItem() {
+
+
+        var title = document.getElementById("txtTitle2").value;
+        var  copynumber= document.getElementById("txtCopyNumber2").value;
+        var   author= document.getElementById("txtAuthor2").value;
+        var   publisher= document.getElementById("txtPublisher2").value;
+        var   year= document.getElementById("txtYear2").value;
+        var   isbn= document.getElementById("txtISBN2").value;
+
+        var table = $("#table").DataTable({
+
+            "processing": true,
+            "serverSide": true,
+            "filter": true,
+            "paging": true,
+            "searching": true,
+
+            ajax: {
+                url: "/Shelf/SearchItem",
+                type: "POST",
+                async: false,
+                datatype: "json",
+                data: {
+                    "title": title,
+                    "copynumber": copynumber,
+                    "author": author,
+                    "publisher": publisher,
+                    "year": year,
+                    "isbn": isbn,
+                },
+                dataSrc: function (data) {
+                    if (data.Message != "") {
+                        alert(data.Message);
+                    }
+                    return data.data; //access the data variable from the returned JSON
+                }
+            },
+
+            columns: [
+                { "data": "Title", "name": "Title" },
+                {
+                    "render": function (data, type, full, meta) {
+                        return '<a href="/shelf/Index?Code=' + full.Code + '">' + full.Code+'</a>';
+                    }
+                },
+
+            ],
+        });
+        $('#numberOfCode').text(table.rows().count());
+        document.getElementById("result-search-table").style.display = "block";
+
+        table.destroy();
+    }
+
 </script>
 
 <table id="table_holdinglist" class="table table-striped table-bordered datatables">
@@ -761,62 +810,72 @@
 
 <div>
     <label class="control-label">Lý do loại bỏ</label>
-    <select>
-        <option>Quà tặng</option>
+    <select name="deleteReasonList" id="deleteReasonList">
+        @{
+            foreach (SP_HOLDING_REMOVE_REASON_SEL_Result item in listDeleteReason)
+            {
+                <option value="@item.ID">@item.REASON</option>
+            }
+        }
     </select>
     <button type="button" class="btn btn-danger" onclick="delete_holdings()">Loại bỏ</button>
     <button type="button" class="btn btn-success" onclick="receiveUnlock()">Kiểm nhận/ Mở khóa</button>
 </div>
 
 <!-- The Modal -->
-<div id="myModal" class="modal">
+<div id="EditPopup" class="modal">
 
     <!-- Modal content -->
     <div class="modal-content">
         <div class="modal-header">
             <span class="close">&times;</span>
-            <h2 style="float: left">Modal Header</h2>
+            <h4 style="text-align: center">Cập nhật xếp giá</h4>
         </div>
         <div class="modal-body">
-            <div class="form-group">
-                <label for="txtPrice2">Giá tiền:</label>
-                <input type="text" class="form-control col-md-3" id="txtPrice2">
-                <select class="form-control" name="ktlList" id="currencyList2">
-                    
-                    @{
-                        foreach (ACQ_CURRENCY item in listCurrency)
-                        {
-                            <option value="@item.Rate" id="@item.CurrencyCode.Trim()">@item.CurrencyCode</option>
-                        }
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="txtVolume2">Tập:</label>
-                <input type="text" class="form-control" id="txtVolume2">
-            </div>
-            <div class="form-group">
-                <label for="txtCallNumber2">Số định danh:</label>
-                <input type="text" class="form-control" id="txtCallNumber2">
-            </div>
-            <div class="form-group">
-                <label for="txtShelf2">Giá sách:</label>
-                <input type="text" class="form-control" id="txtShelf2">
-            </div>
-            <div class="form-group">
-                <label for="txtAcquiredDate2">Ngày chứng từ:</label>
-                <input type="text" class="form-control" id="txtAcquiredDate2">
-            </div>
-            <div class="form-group">
-                <label for="txtRecordNumber2">Số chứng từ:</label>
-                <input type="text" class="form-control" id="txtRecordNumber2">
-            </div>
-            <div class="form-group">
-                <label for="txtNote2">Ghi chú: </label>
-                <input type="text" class="form-control" id="txtNote2">
-            </div>
+
+            <table style="width: 100%">
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtPrice2">Giá tiền:</label></td>
+                    <td style="width: 30%"><input type="text" class="form-control" id="txtPrice2"></td>
+                    <td style="" >
+                        <select class="form-control" name="ktlList" id="currencyList2" style="width: 40%">
+                            @{
+                                foreach (ACQ_CURRENCY item in listCurrency)
+                                {
+                                    <option value="@item.Rate" id="@System.Text.RegularExpressions.Regex.Replace(@item.CurrencyCode, @"\s+", "")">@item.CurrencyCode</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtVolume2">Tập:</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtVolume2"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtCallNumber2">Số định danh:</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtCallNumber2"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtShelf2">Giá sách:</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtShelf2"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtAcquiredDate2">Ngày chứng từ:</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtAcquiredDate2"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtRecordNumber2">Số chứng từ:</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtRecordNumber2"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtNote2">Ghi chú: </label></td>
+                    <td style=""><input type="text" class="form-control" id="txtNote2"></td>
+                </tr>
+            </table>
         </div>
-        <div class="modal-footer">
+
+        <div class="modal-footer" style="text-align: center">
             <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="Save()">Lưu</button>
             <button class="btn btn-danger" style="float: right" onclick="CancelUpdate()">Hủy bỏ</button>
         </div>
@@ -824,3 +883,61 @@
 
 </div>
 
+<div id="SearchCodePopup" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h4 style="text-align: center">Tìm kiếm biểu ghi biên mục</h4>
+        </div>
+        <div class="modal-body">
+
+            <table style="width: 100%">
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtTitle2">Nhan đề chính</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtTitle2" style="width: 300px;margin-left: 20px;"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtCopyNumber2">Đăng ký cá biệt</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtCopyNumber2" style="width: 300px;margin-left: 20px;"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtAuthor2">Tác giả</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtAuthor2" style="width: 300px;margin-left: 20px;"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtPublisher2">Nhà xuất bản</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtPublisher2" style="width: 300px;margin-left: 20px;"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtYear2">Năm xuẩt bản</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtYear2" style="width: 300px;margin-left: 20px;"></td>
+                </tr>
+                <tr>
+                    <td style="width: 38%;text-align: right"><label for="txtISBN2">ISBN</label></td>
+                    <td style=""><input type="text" class="form-control" id="txtISBN2" style="width: 300px;margin-left: 20px;"></td>
+                </tr>
+            </table>
+
+        </div>
+        <div style="text-align: center; border-top: 1px solid rgb(222, 226, 230);border-bottom: 2px solid black;padding:10px 0 10px 0;margin:10px 0 10px 0">
+            <button class="btn btn-success " onclick="SearchItem()">Tìm</button>
+            <button class="btn btn-primary" onclick="CancelUpdate()">Đặt lại</button>
+            <button class="btn btn-danger" onclick="CloseSearchCodeForm()">Đóng</button>
+        </div>
+
+        <div id="result-search-table" style="display: none">
+            <div style="background-color: lightgray;width: 100%;text-align:center">Tìm thấy <span id="numberOfCode" style="color: red">0</span> bản ghi biên mục</div>
+            <table id="table" class="table table-striped table-bordered datatables">
+                <thead>
+                    <tr>
+                        <th>Nội dung</th>
+                        <th>Mã tài liệu</th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+    </div>
+
+</div>

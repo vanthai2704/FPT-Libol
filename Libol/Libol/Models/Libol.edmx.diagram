@@ -401,6 +401,8 @@
         <AssociationConnector Association="LibolModel.SYS_USER_SER_LOCATION" ManuallyRouted="false" />
         <EntityTypeShape EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" Width="1.5" PointX="12.5" PointY="148.75" />
         <AssociationConnector Association="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" />
+        <EntityTypeShape EntityType="LibolModel.FPT_RECOMMEND" Width="1.5" PointX="5.375" PointY="27.875" />
+        <AssociationConnector Association="LibolModel.FPT_RECOMMEND_ITEM" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

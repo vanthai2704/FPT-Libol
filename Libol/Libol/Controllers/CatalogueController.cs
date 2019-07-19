@@ -48,17 +48,20 @@ namespace Libol.Controllers
             //catalogueBusiness.CheckExistNumber("9781184", "020$a");
             //string fieldCode = GetFieldByID(intIsAuthority,"", intFormID);
             //strTitle = "N'" + strTitle +"'";
-            List<FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result> titleList = db.FPT_SP_CATA_CHECK_EXIST_TITLE_2019(strTitle, strItemType).ToList();
-            return Json(titleList, JsonRequestBehavior.AllowGet);
+            // comment tại đây:
+            //List<FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result> titleList = db.FPT_SP_CATA_CHECK_EXIST_TITLE_2019(strTitle, strItemType).ToList();
+            //return Json(titleList, JsonRequestBehavior.AllowGet);
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
         //Check ISBN
         [HttpPost]
         public JsonResult CheckItemNumber(string strFieldValue, string strFieldCode)
         {
-            ObjectParameter Output = new ObjectParameter("lngItemID", typeof(Int32));
-            db.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(strFieldValue, strFieldCode, Output);
-            return Json(Output.Value, JsonRequestBehavior.AllowGet);
+            //ObjectParameter Output = new ObjectParameter("lngItemID", typeof(Int32));
+            //db.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(strFieldValue, strFieldCode, Output);
+            //return Json(Output.Value, JsonRequestBehavior.AllowGet);
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
 

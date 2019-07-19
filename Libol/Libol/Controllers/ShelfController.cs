@@ -23,16 +23,24 @@ namespace Libol.Controllers
             //Cấp thư mục
             ViewData["listKTL"] = db.CIR_LOAN_TYPE.ToList();
             ViewData["ListCurrency"] = db.ACQ_CURRENCY.OrderBy(d => d.CurrencyCode).ToList();
+            ViewData["ListDeleteReason"] = db.SP_HOLDING_REMOVE_REASON_SEL(0).ToList();
 
             // Cần sửa userID = 49 thành userID đang đăng nhập. đây là dữ liệu sử dụng để test
             List<SP_HOLDING_LIBRARY_SELECT_Result> listLibsResult = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, 49, 1);
             List<HOLDING_LIBRARY> libs = SP_HOLDING_LIBRARY_SELECT_Result.ConvertToHoldingLibrary(listLibsResult);
             ViewData["listLibs"] = libs;
 
-            //List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentResult = libol.FPT_EDU_GET_SHELF_CONTENT("FPT070013581");
-            //List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentResult = getContentShelf();
-            ViewBag.content = getContentShelf();
 
+            string code = Request.QueryString["Code"];
+
+
+            if (!string.IsNullOrEmpty(code))
+            {
+                ViewBag.content = getContentShelf(code);
+                int itemID = db.ITEMs.Where(i => i.Code.Equals(code)).Single().ID;
+                ViewBag.itemID = itemID;
+                
+            }
 
             return View();
 
@@ -46,9 +54,9 @@ namespace Libol.Controllers
             ViewData["listLocs"] = locs;
             return Json(locs, JsonRequestBehavior.AllowGet);
         }
-        public string getContentShelf()
+        public string getContentShelf(string idMTL)
         {
-            string idMTL = Request.QueryString["Code"];
+
             List<FPT_EDU_GET_SHELF_CONTENT_Result> listContentResult = db.FPT_EDU_GET_SHELF_CONTENT(idMTL).ToList();
             string contentOutput = "";
             string fieldCode = "";
@@ -64,22 +72,23 @@ namespace Libol.Controllers
             string field520 = "";
             foreach (FPT_EDU_GET_SHELF_CONTENT_Result item in listContentResult)
             {
+                
                 fieldCode = item.FieldCode;
                 if (fieldCode.Equals("020"))
                 {
-                    field020 = ".-" + getcontent(item.Content);
+                    field020 = ".-" + shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("022"))
                 {
-                    field022 = "=" + getcontent(item.Content);
+                    field022 = "=" + shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("100"))
                 {
-                    field100 = getcontent(item.Content);
+                    field100 = shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("110"))
                 {
-                    field110 = getcontent(item.Content);
+                    field110 = shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("245"))
                 {
@@ -111,7 +120,7 @@ namespace Libol.Controllers
                 }
                 if (fieldCode.Equals("250"))
                 {
-                    field250 = ".-" + getcontent(item.Content);
+                    field250 = ".-" + shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("260"))
                 {
@@ -151,11 +160,11 @@ namespace Libol.Controllers
                 }
                 if (fieldCode.Equals("490"))
                 {
-                    field490 = ".-" + getcontent(item.Content);
+                    field490 = ".-" + shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("520"))
                 {
-                    field520 = getcontent(item.Content);
+                    field520 = shelfBusiness.GetContent(item.Content);
                 }
                 contentOutput = field020 + field022 + field100 + field110 + field245 + field250 + field260 + field300 + field490 + "\n\t" + field520;
             }
@@ -175,9 +184,9 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public JsonResult InsertHolding(HOLDING holding, int numberOfCN)
+        public JsonResult InsertHolding(HOLDING holding, int numberOfCN,string recommendID)
         {
-            string message = shelfBusiness.InsertHolding(holding, numberOfCN);
+            string message = shelfBusiness.InsertHolding(holding, numberOfCN,recommendID);
             return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
         }
 
@@ -189,22 +198,16 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public JsonResult DeleteHolding(int[] holdingIDList)
+        public JsonResult DeleteHolding(int[] CopynumberList,int DeleteReasonID)
         {
 
-            if (holdingIDList == null || holdingIDList.Length <= 0)
+            if (CopynumberList == null || CopynumberList.Length <= 0)
             {
                 return Json(new { Message = "Hãy chọn bản ghi" }, JsonRequestBehavior.AllowGet);
             }
-            for (int i = 0; i < holdingIDList.Length; i++)
-            {
-                //  db.SP_HOLDING_REMOVED_PROC(""+holdingIDList[i], holdingIDList[i]);
-                var id = holdingIDList[i];
-                var currentHolding = db.HOLDINGs.Where(h => h.ID == id).Single();
-                db.HOLDINGs.Remove(currentHolding);
-            }
-            db.SaveChanges();
-            return Json(new { Message = "" }, JsonRequestBehavior.AllowGet);
+            string holdingIDs = string.Join(",", CopynumberList);
+            int result = db.SP_HOLDING_REMOVED_PROC(DeleteReasonID, holdingIDs);
+            return Json(new { Message = "Xóa thành công" }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -223,9 +226,11 @@ namespace Libol.Controllers
             }
             return Json(new { Message = "Kiểm nhận và mở khóa thành công!" }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public JsonResult LoadTableHolding(string code)
         {
+            string message ="";
 
             var draw = Request.Form.GetValues("draw").FirstOrDefault();
             var start = Request.Form.GetValues("start").FirstOrDefault();
@@ -243,9 +248,33 @@ namespace Libol.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int RecordsTotal = 0;
             // Getting all holding data    
-            int itemID = db.ITEMs.Where(i => i.Code.Equals(code)).Select(i => i.ID).FirstOrDefault();
+            var item = db.ITEMs.Where(i => i.Code.Equals(code)).FirstOrDefault();
+            int itemID = 0;
+            if (item != null)
+            {
+                itemID = db.ITEMs.Where(i => i.Code.Equals(code)).Select(i => i.ID).FirstOrDefault();
+            }
+            else
+            {
+                message = "Mã tài liệu không tồn tại";
+                return Json(new { draw = draw, recordsFiltered = 0, recordsTotal = 0, numberOfFreeCopies = 0,data= new HoldingTable(), compositeHolding = 0, numberRecord = 0, Message = message });
+            }
+            
+
 
             var holdings = new List<HOLDING>();
+            holdings = db.HOLDINGs.Where(h => h.ItemID == itemID).OrderBy(h => h.ID).ToList();
+
+            // thông tin tổng hợp về mã tài liệu
+            int numberFreeCopies = holdings.Where(h => h.InUsed == false).Count();
+            string compositeHoldingData = shelfBusiness.GenerateCompositeHoldings(itemID);
+            if (Convert.ToInt32(draw) > 1)
+            {
+                compositeHoldingData = "";
+            }
+            
+            int numberOfRecord = holdings.Count(); 
+
             //Sorting    
             if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDir))
             {
@@ -412,21 +441,21 @@ namespace Libol.Controllers
                 else
                     holdings = db.HOLDINGs.SqlQuery("Select * from HOLDING where ItemID=" + itemID + " order by " + sortColumn + " " + sortColumnDir).ToList();
             }
-            else
-            {
-                holdings = db.HOLDINGs.Where(h => h.ItemID == itemID).OrderBy(h => h.ID).ToList();
-            }
+            
             //Search    
             if (!string.IsNullOrEmpty(searchValue))
             {
                 holdings = holdings.Where(m => m.CopyNumber.Contains(searchValue)).ToList();
             }
 
+            
+
             //total number of rows count     
             RecordsTotal = holdings.Count();
             //Paging     
             var data = holdings.Skip(skip).Take(pageSize).ToList();
             List<HoldingTable> holdingTables = new List<HoldingTable>();
+          
             foreach (var holding in data)
             {
                 holdingTables.Add(new HoldingTable()
@@ -444,7 +473,7 @@ namespace Libol.Controllers
                     Volume = holding.Volume,
                     Note = holding.Note,
                     Price = holding.Price,
-                    ReceiptedDate = holding.ReceiptedDate.Value.ToString("dd/MM/yyyy"),
+                    ReceiptedDate = holding.ReceiptedDate != null ? holding.ReceiptedDate.Value.ToString("dd/MM/yyyy"): "" ,
                     RecordNumber = holding.RecordNumber,
                     Shelf = holding.Shelf,
                     Status = shelfBusiness.GetHoldingStatus(holding.InUsed, holding.InCirculation.Value, holding.Acquired),
@@ -452,27 +481,18 @@ namespace Libol.Controllers
             }
 
             //Returning Json Data    
-            return Json(new { draw = draw, recordsFiltered = RecordsTotal, recordsTotal = RecordsTotal, data = holdingTables });
+            return Json(new { draw = draw, recordsFiltered = RecordsTotal, recordsTotal = RecordsTotal, data = holdingTables, numberOfFreeCopies = numberFreeCopies, compositeHolding = compositeHoldingData, numberRecord= numberOfRecord, Message = message });
         }
 
-        public string getcontent(string copynumber)
+        
+
+        [HttpPost]
+        public JsonResult SearchItem(string title,string copynumber, string author,string publisher,string year,string isbn)
         {
-            string validate = copynumber.Replace("$a", "");
-            validate = validate.Replace("$b", "");
-            validate = validate.Replace("$c", "");
-            validate = validate.Replace(",$c ", "");
-            validate = validate.Replace("=$b", "");
-            validate = validate.Replace(":$b", "");
-            validate = validate.Replace("/$c", "");
-            validate = validate.Replace(".$n", "");
-            validate = validate.Replace(":$p", "");
-            validate = validate.Replace(";$c", "");
-            validate = validate.Replace("+$e", "");
-            validate = validate.Replace("$e", "");
-
-            return validate;
+            List<SP_GET_TITLES_Result> data= null;
+            string message = shelfBusiness.SearchItem(title, copynumber, author, publisher, year, isbn, ref data);
+            return Json(new { Message = message, data = data }, JsonRequestBehavior.AllowGet);
         }
-
 
     }
 
@@ -510,7 +530,7 @@ namespace Libol.Controllers
     }
 
 
-        
+
 
 
 }

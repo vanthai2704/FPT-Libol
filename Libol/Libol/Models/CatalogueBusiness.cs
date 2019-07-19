@@ -27,6 +27,7 @@ namespace Libol.Models
             int mediumId = item.MediumID;
             int typeId = item.TypeID;
             string bibLevel = item.BibLevel;
+            string callNumber = item.CallNumber;
 
             // check FormID,RecordType,... 
             if (!db.MARC_WORKSHEET.Any(m => m.ID == formId)
@@ -66,6 +67,7 @@ namespace Libol.Models
                 Cataloguer = cataloguer,
                 Reviewer = "",
                 CoverPicture = "",
+                CallNumber = callNumber,
                 ID = id
 
             };
@@ -146,6 +148,7 @@ namespace Libol.Models
                     byte accessLevel =0;
                     int typeId = 1, mediumId = 3, formId = 13;
                     string coverPicture="", bibLevel="", recordType="";
+                    string callNumber="";
                     // insert item 
                    if (listFieldsName.Contains("926"))
                     {
@@ -198,7 +201,11 @@ namespace Libol.Models
                         listFieldsName.RemoveAt(index);
                         listFieldsValue.RemoveAt(index);
                     }
-                  
+                    if (listFieldsName.Contains("090"))
+                    {
+                        int index = listFieldsName.IndexOf("090");
+                        callNumber = listFieldsValue[index].Replace("$a","").Replace("$b"," ");
+                    }
                     ITEM item = new ITEM()
                     {
                         AccessLevel = accessLevel,
@@ -207,7 +214,8 @@ namespace Libol.Models
                         CoverPicture = coverPicture,
                         FormID = formId,
                         RecordType = recordType,
-                        BibLevel = bibLevel
+                        BibLevel = bibLevel,
+                        CallNumber = callNumber
                     };
                     InsertItem(ref item);
                     code = item.Code;

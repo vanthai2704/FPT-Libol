@@ -244,6 +244,7 @@ namespace Libol.Models
         public virtual DbSet<MARC_AUTHORITY_WS_DETAIL> MARC_AUTHORITY_WS_DETAIL { get; set; }
         public virtual DbSet<MARC_BIB_WS_DETAIL> MARC_BIB_WS_DETAIL { get; set; }
         public virtual DbSet<SYS_USER_GOOGLE_ACCOUNT> SYS_USER_GOOGLE_ACCOUNT { get; set; }
+        public virtual DbSet<FPT_RECOMMEND> FPT_RECOMMEND { get; set; }
     
         public virtual ObjectResult<CAT_DIC_LIST_SEL_Result> CAT_DIC_LIST_SEL()
         {

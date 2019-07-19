@@ -1319,6 +1319,20 @@ warning 6002: The table/view 'Libol.dbo.CIR_SERIAL_COUNT' does not have a primar
           <Property Name="Ind1" Type="char" MaxLength="1" />
           <Property Name="Ind2" Type="char" MaxLength="1" />
         </EntityType>
+        <EntityType Name="FPT_RECOMMEND">
+          <Key>
+            <PropertyRef Name="RecommendID" />
+          </Key>
+          <Property Name="RecommendID" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FPT_RECOMMEND_ITEM">
+          <Key>
+            <PropertyRef Name="RecommendID" />
+            <PropertyRef Name="ItemID" />
+          </Key>
+          <Property Name="RecommendID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ItemID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="HELP_CAT_DIC">
           <Key>
             <PropertyRef Name="ID" />
@@ -2888,7 +2902,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SYS_USER_GOO__ID__610222F5">
+        <Association Name="FK__SYS_USER_GOO__ID__06FDAEAB">
           <End Role="SYS_USER" Type="Self.SYS_USER" Multiplicity="0..1" />
           <End Role="SYS_USER_GOOGLE_ACCOUNT" Type="Self.SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
           <ReferentialConstraint>
@@ -4712,6 +4726,30 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Recommend_Item_FPT_RECOMMEND">
+          <End Role="FPT_RECOMMEND" Type="Self.FPT_RECOMMEND" Multiplicity="1" />
+          <End Role="FPT_RECOMMEND_ITEM" Type="Self.FPT_RECOMMEND_ITEM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FPT_RECOMMEND">
+              <PropertyRef Name="RecommendID" />
+            </Principal>
+            <Dependent Role="FPT_RECOMMEND_ITEM">
+              <PropertyRef Name="RecommendID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recommend_Item_ITEM">
+          <End Role="ITEM" Type="Self.ITEM" Multiplicity="1" />
+          <End Role="FPT_RECOMMEND_ITEM" Type="Self.FPT_RECOMMEND_ITEM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ITEM">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FPT_RECOMMEND_ITEM">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SER_COPY_SER_ISSUE">
           <End Role="SER_ISSUE" Type="Self.SER_ISSUE" Multiplicity="1" />
           <End Role="SER_COPY" Type="Self.SER_COPY" Multiplicity="*" />
@@ -5469,22 +5507,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="FPT_EDU_SP_RENEW_ITEM_BY_ALL_ID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strFixedID" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="strFieldValue" Type="varchar" Mode="In" />
-          <Parameter Name="strFieldCode" Type="varchar" Mode="In" />
-          <Parameter Name="lngItemID" Type="int" Mode="InOut" />
-        </Function>
         <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
           <Parameter Name="strItemType" Type="varchar" Mode="In" />
-        </Function>
-        <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
-          <Parameter Name="strItemType" Type="varchar" Mode="In" />
-        </Function>
-        <Function Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
-          <Parameter Name="intIsAuthority" Type="int" Mode="In" />
         </Function>
         <Function Name="FPT_SP_CATA_GET_MARC_FORM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intFormID" Type="int" Mode="In" />
@@ -5498,10 +5523,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="FPT_SP_GET_STAT_BOOK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
           <Parameter Name="strLocationID" Type="nvarchar" Mode="In" />
-        </Function>
-        <Function Name="FPT_SP_ILL_SEARCH_PATRON" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="strPatronName" Type="nvarchar" Mode="In" />
-          <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
         </Function>
         <Function Name="GET_BLACK_PATRON_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GET_PATRON_LOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -11417,9 +11438,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="intLocationID" Type="int" Mode="In" />
         </Function>
         <Function Name="TESTCAI" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
-        <Function Name="ufn_removeMark" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
-          <Parameter Name="text" Type="nvarchar(max)" Mode="In" />
-        </Function>
         <EntityContainer Name="LibolModelStoreContainer">
           <EntitySet Name="ACQ_ACQUIRE_SOURCE" EntityType="Self.ACQ_ACQUIRE_SOURCE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ACQ_BUDGET" EntityType="Self.ACQ_BUDGET" Schema="dbo" store:Type="Tables" />
@@ -11518,6 +11536,8 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <EntitySet Name="FIELD700S" EntityType="Self.FIELD700S" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FIELD800S" EntityType="Self.FIELD800S" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FIELD900S" EntityType="Self.FIELD900S" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FPT_RECOMMEND" EntityType="Self.FPT_RECOMMEND" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FPT_RECOMMEND_ITEM" EntityType="Self.FPT_RECOMMEND_ITEM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HELP_CAT_DIC" EntityType="Self.HELP_CAT_DIC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HELP_CAT_FILE" EntityType="Self.HELP_CAT_FILE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HELP_DIC_ITEM" EntityType="Self.HELP_DIC_ITEM" Schema="dbo" store:Type="Tables" />
@@ -11888,7 +11908,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
           </AssociationSet>
-          <AssociationSet Name="FK__SYS_USER_GOO__ID__610222F5" Association="Self.FK__SYS_USER_GOO__ID__610222F5">
+          <AssociationSet Name="FK__SYS_USER_GOO__ID__06FDAEAB" Association="Self.FK__SYS_USER_GOO__ID__06FDAEAB">
             <End Role="SYS_USER" EntitySet="SYS_USER" />
             <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
           </AssociationSet>
@@ -12495,6 +12515,14 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <AssociationSet Name="FK_OPAC_SUBJECT_DDC_OPAC_SUBJECT_DDC" Association="Self.FK_OPAC_SUBJECT_DDC_OPAC_SUBJECT_DDC">
             <End Role="OPAC_SUBJECT_DDC" EntitySet="OPAC_SUBJECT_DDC" />
             <End Role="OPAC_SUBJECT_DDC1" EntitySet="OPAC_SUBJECT_DDC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recommend_Item_FPT_RECOMMEND" Association="Self.FK_Recommend_Item_FPT_RECOMMEND">
+            <End Role="FPT_RECOMMEND" EntitySet="FPT_RECOMMEND" />
+            <End Role="FPT_RECOMMEND_ITEM" EntitySet="FPT_RECOMMEND_ITEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recommend_Item_ITEM" Association="Self.FK_Recommend_Item_ITEM">
+            <End Role="ITEM" EntitySet="ITEM" />
+            <End Role="FPT_RECOMMEND_ITEM" EntitySet="FPT_RECOMMEND_ITEM" />
           </AssociationSet>
           <AssociationSet Name="FK_SER_COPY_SER_ISSUE" Association="Self.FK_SER_COPY_SER_ISSUE">
             <End Role="SER_ISSUE" EntitySet="SER_ISSUE" />
@@ -14711,6 +14739,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <NavigationProperty Name="SER_ISSUE" Relationship="Self.ITE_SISS_FK" FromRole="ITEM" ToRole="SER_ISSUE" />
           <NavigationProperty Name="MARC_WORKSHEET" Relationship="Self.MWOR_ITE_FK" FromRole="ITEM" ToRole="MARC_WORKSHEET" />
           <NavigationProperty Name="ACQ_PO" Relationship="Self.ACQ_PO_ITEM" FromRole="ITEM" ToRole="ACQ_PO" />
+          <NavigationProperty Name="FPT_RECOMMEND" Relationship="LibolModel.FPT_RECOMMEND_ITEM" FromRole="ITEM" ToRole="FPT_RECOMMEND" />
         </EntityType>
         <EntityType Name="ITEM_FULLTEXT">
           <Key>
@@ -25038,6 +25067,11 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strItemIDs" Mode="In" Type="String" />
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="FPT_RECOMMEND" EntityType="LibolModel.FPT_RECOMMEND" />
+          <AssociationSet Name="FPT_RECOMMEND_ITEM" Association="LibolModel.FPT_RECOMMEND_ITEM">
+            <End Role="FPT_RECOMMEND" EntitySet="FPT_RECOMMEND" />
+            <End Role="ITEM" EntitySet="ITEMs" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -29721,6 +29755,17 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="Content" Nullable="true" MaxLength="1000" />
           <Property Type="String" Name="VietFieldName" Nullable="true" MaxLength="550" />
         </ComplexType>
+        <EntityType Name="FPT_RECOMMEND">
+          <Key>
+            <PropertyRef Name="RecommendID" />
+          </Key>
+          <Property Name="RecommendID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ITEMs" Relationship="LibolModel.FPT_RECOMMEND_ITEM" FromRole="FPT_RECOMMEND" ToRole="ITEM" />
+        </EntityType>
+        <Association Name="FPT_RECOMMEND_ITEM">
+          <End Type="LibolModel.FPT_RECOMMEND" Role="FPT_RECOMMEND" Multiplicity="*" />
+          <End Type="LibolModel.ITEM" Role="ITEM" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -39587,7 +39632,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="DemoGetMarcForm" FunctionName="LibolModel.Store.SP_CATA_GET_MARC_FORM" />
-          <FunctionImportMapping FunctionImportName="FPT_SP_ILL_SEARCH_PATRON" FunctionName="LibolModel.Store.FPT_SP_ILL_SEARCH_PATRON" />
            <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE">
             <ResultMapping>
               <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_Result">
@@ -39634,29 +39678,21 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" />
-          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE_2019">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result">
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result">
-                <ScalarProperty Name="VietIndicators" ColumnName="VietIndicators" />
-                <ScalarProperty Name="Indicators" ColumnName="Indicators" />
-                <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-                <ScalarProperty Name="Ind1" ColumnName="Ind1" />
-                <ScalarProperty Name="Ind2" ColumnName="Ind2" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="VietFieldName" ColumnName="VietFieldName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
+          <EntitySetMapping Name="FPT_RECOMMEND">
+            <EntityTypeMapping TypeName="LibolModel.FPT_RECOMMEND">
+              <MappingFragment StoreEntitySet="FPT_RECOMMEND">
+                <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FPT_RECOMMEND_ITEM" TypeName="LibolModel.FPT_RECOMMEND_ITEM" StoreEntitySet="FPT_RECOMMEND_ITEM">
+            <EndProperty Name="ITEM">
+              <ScalarProperty Name="ID" ColumnName="ItemID" />
+            </EndProperty>
+            <EndProperty Name="FPT_RECOMMEND">
+              <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

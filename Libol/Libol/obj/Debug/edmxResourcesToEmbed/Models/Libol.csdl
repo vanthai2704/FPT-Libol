@@ -2086,6 +2086,7 @@
     <NavigationProperty Name="SER_ISSUE" Relationship="Self.ITE_SISS_FK" FromRole="ITEM" ToRole="SER_ISSUE" />
     <NavigationProperty Name="MARC_WORKSHEET" Relationship="Self.MWOR_ITE_FK" FromRole="ITEM" ToRole="MARC_WORKSHEET" />
     <NavigationProperty Name="ACQ_PO" Relationship="Self.ACQ_PO_ITEM" FromRole="ITEM" ToRole="ACQ_PO" />
+    <NavigationProperty Name="FPT_RECOMMEND" Relationship="LibolModel.FPT_RECOMMEND_ITEM" FromRole="ITEM" ToRole="FPT_RECOMMEND" />
   </EntityType>
   <EntityType Name="ITEM_FULLTEXT">
     <Key>
@@ -12413,6 +12414,11 @@
       <Parameter Name="strItemIDs" Mode="In" Type="String" />
       <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
     </FunctionImport>
+    <EntitySet Name="FPT_RECOMMEND" EntityType="LibolModel.FPT_RECOMMEND" />
+    <AssociationSet Name="FPT_RECOMMEND_ITEM" Association="LibolModel.FPT_RECOMMEND_ITEM">
+      <End Role="FPT_RECOMMEND" EntitySet="FPT_RECOMMEND" />
+      <End Role="ITEM" EntitySet="ITEMs" />
+    </AssociationSet>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -17096,4 +17102,15 @@
     <Property Type="String" Name="Content" Nullable="true" MaxLength="1000" />
     <Property Type="String" Name="VietFieldName" Nullable="true" MaxLength="550" />
   </ComplexType>
+  <EntityType Name="FPT_RECOMMEND">
+    <Key>
+      <PropertyRef Name="RecommendID" />
+    </Key>
+    <Property Name="RecommendID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="ITEMs" Relationship="LibolModel.FPT_RECOMMEND_ITEM" FromRole="FPT_RECOMMEND" ToRole="ITEM" />
+  </EntityType>
+  <Association Name="FPT_RECOMMEND_ITEM">
+    <End Type="LibolModel.FPT_RECOMMEND" Role="FPT_RECOMMEND" Multiplicity="*" />
+    <End Type="LibolModel.ITEM" Role="ITEM" Multiplicity="*" />
+  </Association>
 </Schema>
