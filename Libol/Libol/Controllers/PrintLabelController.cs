@@ -24,7 +24,6 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 4, RightID = "104")]
         public JsonResult OnchangeLibrary(int LibID)
         {
             List<SP_HOLDING_LOCATION_GET_INFO_Result> list = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(LibID, (int)Session["UserID"], 0, -1);
@@ -193,8 +192,7 @@ namespace Libol.Controllers
                 result.Add(new SearchItemCodeResult
                 {
                     Code = s.Code,
-                    Title = s.FIELD200S.Where(t => t.FieldCode.Equals("245")).First().Content.Split('/')[0]
-                    .Split(new string[] { ":$" }, StringSplitOptions.None)[0].Split(new string[] { "$a" }, StringSplitOptions.None)[1],
+                    Title = new FormatHoldingTitle().OnFormatHoldingTitle( s.FIELD200S.Where(t => t.FieldCode.Equals("245")).First().Content),
                 });
             };
             return Json(new

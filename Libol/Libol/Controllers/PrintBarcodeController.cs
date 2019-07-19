@@ -29,7 +29,6 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 4, RightID = "103")]
         public JsonResult OnchangeLibrary(int LibID)
         {
             List<SP_HOLDING_LOCATION_GET_INFO_Result> list = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(LibID, (int)Session["UserID"], 0, -1);
