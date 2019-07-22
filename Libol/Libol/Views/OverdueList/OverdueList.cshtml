@@ -16,6 +16,7 @@
 
     .form-control {
         font-size: 0.8rem !important;
+    }
 </style>
 
 <label style="margin-top:10px; text-align: right ; color:red">Thông tin thẻ bạn đọc quá hạn</label>
@@ -31,31 +32,27 @@
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-6 align-self-center">Nhóm bạn đọc: </label>
-            <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+            <select class="form-control col-md-4" id="intPatronGroupID">
                 <option value="-1">----- Chọn -----</option>
+                @foreach (var item in ViewBag.PatronGroup)
+                {
+                        <option value="@item.ID">@item.Name</option>
+                }
             </select>
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-6 align-self-center">Trường: </label>
             <select class="form-control col-md-4" onchange="OnchangeCollege()" id="college">
                 <option value="-1">----- Chọn -----</option>
-                @*@foreach (var item in ViewBag.College)
+                @foreach (var item in ViewBag.College)
                 {
-                    if (Model.CIR_PATRON_UNIVERSITY != null && Model.CIR_PATRON_UNIVERSITY.CollegeID == item.ID)
-                    {
-                        <option value="@item.ID" selected>@item.College</option>
-                    }
-                    else
-                    {
-                        <option value="@item.ID">@item.College</option>
-                    }
-
-                }*@
+                    <option value="@item.ID">@item.College</option>
+                }
             </select>
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-6 align-self-center">Khoa: </label>
-            <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+            <select class="form-control col-md-4" id="faculty">
                 <option value="-1">----- Chọn -----</option>
             </select>
         </div>
@@ -89,13 +86,17 @@
     <div class="col-6">
         <div class="form-group row col-12">
             <label class="control-label col-md-3 align-self-center">Thư viện: </label>
-            <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+            <select class="form-control col-md-4" style="width:80% !important" onchange="OnchangeLibrary()" id="intLibID" name="intLibID">
                 <option value="-1">----- Chọn -----</option>
+                @foreach (var item in ViewBag.Library)
+                {
+                    <option value="@item.ID">@item.Code</option>
+                }
             </select>
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-3 align-self-center">Kho: </label>
-            <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+            <select class="form-control col-md-4" name="libraryList" id="intLocID" >
                 <option value="-1">----- Chọn -----</option>
             </select>
         </div>
@@ -135,45 +136,75 @@
 
 <script>
 
-    //function OnchangeCollege() {
-    //    var e = document.getElementById("college");
-    //    var id = e.options[e.selectedIndex].value;
-    //    var empObj = {
-    //        CollegeID: id
-    //    };
-    //    $.ajax({
-    //        url: "/Overdue/OnchangeCollege",
-    //        data: JSON.stringify(empObj),
-    //        type: "POST",
-    //        contentType: "application/json;charset=utf-8",
-    //        dataType: "json",
-    //        success: function (result) {
-    //            var html = "<option value='-1'>----- Chọn -----</option>"
-    //            for (r in result) {
-    //                html = html + "<option value=" + result[r].ID + ">" + result[r].Faculty + "</option>"
-    //            }
-    //            document.getElementById("faculty").innerHTML = html;
+    function OnchangeCollege() {
+        var e = document.getElementById("college");
+        var id = e.options[e.selectedIndex].value;
+        var empObj = {
+            CollegeID: id
+        };
+        $.ajax({
+            url: "/OverdueList/OnchangeCollege",
+            data: JSON.stringify(empObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = "<option value='-1'>----- Chọn -----</option>"
+                for (r in result) {
+                    html = html + "<option value=" + result[r].ID + ">" + result[r].Faculty + "</option>"
+                }
+                document.getElementById("faculty").innerHTML = html;
 
-    //        },
-    //        error: function (errormessage) {
+            },
+            error: function (errormessage) {
 
-    //        }
-    //    });
-    //}
+            }
+        });
+    }
+
+    function OnchangeLibrary() {
+        var e = document.getElementById("intLibID");
+        var id = e.options[e.selectedIndex].value;
+        var empObj = {
+            LibID: id
+        };
+        $.ajax({
+            url: "/OverdueList/OnchangeLibrary",
+            data: JSON.stringify(empObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var html = "<option value='-1'>----- Chọn -----</option>"
+                for (r in result) {
+                    html = html + "<option value=" + result[r].ID + ">" + result[r].Symbol + "</option>"
+                }
+                document.getElementById("intLocID").innerHTML = html;
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
 
     function getOverduelist() {
+        var intPatronGroupIDElement = document.getElementById("intPatronGroupID");
+        var intCollegeIDElement = document.getElementById("college");
+        var intFacultyIDElement = document.getElementById("faculty");
+        var intLibIDElement = document.getElementById("intLibID");
+        var intLocIDElement = document.getElementById("intLocID");
         var empObj = {
-            intUserID: 43,
             strPatronIDs: "",
             txtSoThe: document.getElementById("txtSoThe").value,
             txtTenBanDoc: document.getElementById("txtTenBanDoc").value,
-            ddlNhomBanDoc: -1,
-            ddlTruong: -1,
-            ddlKhoa: -1,
+            ddlNhomBanDoc: intPatronGroupIDElement.options[intPatronGroupIDElement.selectedIndex].value,
+            ddlTruong: intCollegeIDElement.options[intCollegeIDElement.selectedIndex].value,
+            ddlKhoa: intFacultyIDElement.options[intFacultyIDElement.selectedIndex].value,
             txtKhoaHoc: document.getElementById("txtKhoaHoc").value,
             txtLopHoc: document.getElementById("txtLopHoc").value,
-            ddlLib: -1,
-            ddlLoc: -1,
+            ddlLib: intLibIDElement.options[intLibIDElement.selectedIndex].value,
+            ddlLoc: intLocIDElement.options[intLocIDElement.selectedIndex].value,
             txtTenTaiLieu: document.getElementById("txtTenTaiLieu").value,
             txtSDKCB: document.getElementById("txtSDKCB").value,
             txtNgayMuonTu: document.getElementById("txtNgayMuonTu").value,

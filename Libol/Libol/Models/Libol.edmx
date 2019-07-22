@@ -5570,6 +5570,12 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
           <Parameter Name="intUserID" Type="int" Mode="In" />
         </Function>
+        <Function Name="FPT_GET_PATRON_LOCK_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+          <Parameter Name="strLockDateFrom" Type="varchar" Mode="In" />
+          <Parameter Name="strLockDateTo" Type="varchar" Mode="In" />
+          <Parameter Name="intCollegeID" Type="int" Mode="In" />
+        </Function>
         <Function Name="FPT_GET_PATRON_ONLOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
           <Parameter Name="strItemCode" Type="varchar" Mode="In" />
@@ -5689,6 +5695,11 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ItemID" Type="int" Mode="In" />
           <Parameter Name="AcqDate" Type="date" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_UPDATE_UNLOCK_PATRON_CARD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+          <Parameter Name="lockedDay" Type="int" Mode="In" />
+          <Parameter Name="Note" Type="varchar" Mode="In" />
         </Function>
         <Function Name="GET_BLACK_PATRON_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GET_PATRON_LOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -25409,7 +25420,18 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strCodeVal" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_ADMIN_GET_RIGHTS_DENY_ADMIN" ReturnType="Collection(LibolModel.FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result)">
-            <Parameter Name="intModuleID" Mode="In" Type="Int32" />
+          <Parameter Name="intModuleID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_GET_PATRON_LOCK_STATISTIC">
+            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+            <Parameter Name="strLockDateFrom" Mode="In" Type="String" />
+            <Parameter Name="strLockDateTo" Mode="In" Type="String" />
+            <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_UPDATE_UNLOCK_PATRON_CARD">
+            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+            <Parameter Name="lockedDay" Mode="In" Type="Int32" />
+            <Parameter Name="Note" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
@@ -40305,6 +40327,8 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_LOCK_STATISTIC" FunctionName="LibolModel.Store.FPT_GET_PATRON_LOCK_STATISTIC" />
+          <FunctionImportMapping FunctionImportName="FPT_SP_UPDATE_UNLOCK_PATRON_CARD" FunctionName="LibolModel.Store.FPT_SP_UPDATE_UNLOCK_PATRON_CARD" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

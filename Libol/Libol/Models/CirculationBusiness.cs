@@ -50,5 +50,29 @@ namespace Libol.Models
                 new object[] { PatronCode, LockDateFrom, LockDateTo, CollegeID }).ToList();
             return list;
         }
+        public List<SP_LOCK_PATRON_CARD_Result> GET_SP_LOCK_PATRON_CARD_LIST(string strPatronCode, Nullable<int> intLockedDays, string strStartedDate, string strNote)
+        {
+            List<SP_LOCK_PATRON_CARD_Result> list = db.Database.SqlQuery<SP_LOCK_PATRON_CARD_Result>("SP_LOCK_PATRON_CARD {0}, {1}, {2}, {3}",
+                new object[] { strPatronCode, intLockedDays, strStartedDate, strNote }).ToList();
+            return list;
+        }
+        public List<SP_UNLOCK_PATRON_CARD_Result> FPT_SP_UNLOCK_PATRON_CARD_LIST(string PatronCode)
+        {
+            List<SP_UNLOCK_PATRON_CARD_Result> list = db.Database.SqlQuery<SP_UNLOCK_PATRON_CARD_Result>("SP_UNLOCK_PATRON_CARD {0}",
+                new object[] { PatronCode }).ToList();
+            return list;
+        }
+        public List<SP_GET_LOCKEDPATRONS_Result2> GET_SP_GET_LOCKEDPATRONS_LIST2(string PatronCode, string LockDateFrom, string LockDateTo, int CollegeID)
+        {
+            List<SP_GET_LOCKEDPATRONS_Result2> list = db.Database.SqlQuery<SP_GET_LOCKEDPATRONS_Result2>("FPT_GET_PATRON_LOCK_STATISTIC {0}, {1}, {2}, {3}",
+                new object[] { PatronCode, LockDateFrom, LockDateTo, CollegeID }).ToList();
+            return list;
+        }
+        public List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> FPT_SP_UPDATE_UNLOCK_PATRON_CARD(string PatronCode, Nullable<int> intLockedDays, string strNote)
+        {
+            List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> list = db.Database.SqlQuery<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result>("FPT_SP_UPDATE_UNLOCK_PATRON_CARD {0}, {1}, {2}",
+                new object[] { PatronCode, intLockedDays, strNote}).ToList();
+            return list;
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace Libol.SupportClass
             {
                 List<Int32> ModuleIDs = (List<Int32>)filterContext.HttpContext.Session["ModuleIDs"];
                 List<Int32> RightIDs = (List<Int32>)filterContext.HttpContext.Session["RightIDs"];
+                ModuleIDs.Add(0);
                 RightIDs.Add(0);
                 var Right = RightID.Split(',');
                 bool Check = false;

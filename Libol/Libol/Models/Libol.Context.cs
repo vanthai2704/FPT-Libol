@@ -22104,5 +22104,43 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result>("FPT_ADMIN_GET_RIGHTS_DENY_ADMIN", intModuleIDParameter);
         }
+    
+        public virtual int FPT_GET_PATRON_LOCK_STATISTIC(string strPatronCode, string strLockDateFrom, string strLockDateTo, Nullable<int> intCollegeID)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var strLockDateFromParameter = strLockDateFrom != null ?
+                new ObjectParameter("strLockDateFrom", strLockDateFrom) :
+                new ObjectParameter("strLockDateFrom", typeof(string));
+    
+            var strLockDateToParameter = strLockDateTo != null ?
+                new ObjectParameter("strLockDateTo", strLockDateTo) :
+                new ObjectParameter("strLockDateTo", typeof(string));
+    
+            var intCollegeIDParameter = intCollegeID.HasValue ?
+                new ObjectParameter("intCollegeID", intCollegeID) :
+                new ObjectParameter("intCollegeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC", strPatronCodeParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
+        }
+    
+        public virtual int FPT_SP_UPDATE_UNLOCK_PATRON_CARD(string strPatronCode, Nullable<int> lockedDay, string note)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var lockedDayParameter = lockedDay.HasValue ?
+                new ObjectParameter("lockedDay", lockedDay) :
+                new ObjectParameter("lockedDay", typeof(int));
+    
+            var noteParameter = note != null ?
+                new ObjectParameter("Note", note) :
+                new ObjectParameter("Note", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_UPDATE_UNLOCK_PATRON_CARD", strPatronCodeParameter, lockedDayParameter, noteParameter);
+        }
     }
 }
