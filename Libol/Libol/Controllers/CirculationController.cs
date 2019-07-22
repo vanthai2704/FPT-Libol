@@ -5,10 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
 using System.Text.RegularExpressions;
+using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
-    public class CirculationController : BaseController
+    public class CirculationController : Controller
     {
         LibolEntities le = new LibolEntities();
         CirculationBusiness cb = new CirculationBusiness();
@@ -346,6 +347,37 @@ namespace Libol.Controllers
             ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCodeFilter, LockDateFromFilter, LockDateToFilter, CollegeID);
             return View();
         }
+        // trinhlv1 LockCard()
+        [HttpPost]
+        public JsonResult LockCardPatron(string cardNumber,string startDate,int lockDays, string note)
+        {
+           // List<SP_UNLOCK_PATRON_CARD_Result> listResult1 = cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("''SE05062''");
+            List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cardNumber, lockDays, startDate, note);
+            ViewData["listResult"] = listResult;
+            return Json(listResult, JsonRequestBehavior.AllowGet);
+
+        }
+        // trinhlv1 UnLockCard()
+        [HttpPost]
+        public JsonResult UnLockCardPatron(List<string> patroncodeList)
+        {
+            try
+            {
+                foreach (var item in patroncodeList)
+                {
+                    cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("'" + item+ "'"); ;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Json(new { Message = "Mở Khóa thành công!" }, JsonRequestBehavior.AllowGet);
+            //List<SP_UNLOCK_PATRON_CARD_Result> listResult = cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("'"+patroncode+"'");
+            //ViewData["listResult"] = listResult;
+            //return Json(listResult, JsonRequestBehavior.AllowGet);
+
+        }
 
         public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom, string strCollegeID)
         {
@@ -460,5 +492,55 @@ namespace Libol.Controllers
             //le.SP_HOLDING_LIBLOCUSER_SEL(UserID, id).ToList();
             return View();
         }
+        // get list lock patron in datatable
+        // trinhlv
+        [HttpPost]
+        public JsonResult GetLockPatron(DataTableAjaxPostModel model ,string PatronCode,string Note,string StartedDate,string FinishDate)
+        {
+            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode, "", "", 0);
+            var search = lockedpatron.Where(a => true);
+            if (!String.IsNullOrEmpty(Note))
+            {
+                search = search.Where(a => a.Note.Contains(Note));
+            }
+            if (!String.IsNullOrEmpty(StartedDate))
+            {
+                search = search.Where(a => a.Note.Contains(StartedDate));
+            }
+            if (!String.IsNullOrEmpty(FinishDate))
+            {
+                search = search.Where(a => a.Note.Contains(FinishDate));
+            }
+            var paging = search.Skip(model.start).Take(model.length).ToList();
+            var result = paging.ToList();
+            List<SP_GET_LOCKEDPATRONS_Result2> list = new List<SP_GET_LOCKEDPATRONS_Result2>();
+            foreach (var i in result)
+            {
+                list.Add(new SP_GET_LOCKEDPATRONS_Result2()
+                {
+                    PatronCode = i.PatronCode,
+                    StartedDate = i.StartedDate.ToString("dd/MM/yyyy"),
+                    Note = i.Note,
+                    FullName = i.FullName,
+                    FinishDate = i.FinishDate.ToString("dd/MM/yyyy"),
+                    LockedDays = i.LockedDays
+
+                });
+            }
+
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = lockedpatron.Count(),
+                recordsFiltered = search.Count(),
+                data = list
+            });
+        }
+
+        public class LockCardStatus
+        {
+            public string PatronCode { get; set; }
+        }
+
     }
 }

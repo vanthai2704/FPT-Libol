@@ -188,6 +188,8 @@
     <Compile Include="EntityResult\SP_CATA_GET_MODIFIED_FIELDS_Result.cs" />
     <Compile Include="EntityResult\SP_CIR_OVERDUELIST_GETINFOR_Result.cs" />
     <Compile Include="EntityResult\SP_GET_CURRENT_CHECKIN_INFOR_Result.cs" />
+    <Compile Include="Models\SP_GET_LOCKEDPATRONS_Result2.cs" />
+    <Compile Include="Models\SP_UNLOCK_PATRON_CARD_Result.cs" />
     <Compile Include="EntityResult\SP_GET_LOCKEDPATRONS_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LIBRARY_SELECT_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LOCATION_GET_INFO_Result.cs" />
@@ -1801,6 +1803,7 @@
     <Compile Include="Models\SP_ITEM_SELECT_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SP_LOCK_PATRON_CARD_Result.cs" />
     <Compile Include="Models\SP_MARC_BLOCK_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -2242,6 +2245,7 @@
     </EntityDeploy>
     <Content Include="Models\Libol.edmx.diagram">
       <DependentUpon>Libol.edmx</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
     <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
