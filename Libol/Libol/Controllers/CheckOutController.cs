@@ -97,7 +97,7 @@ namespace Libol.Controllers
         //thu hoi 1 an pham
         public PartialViewResult Rollbackacheckout (string strCopyNumbers)
         {
-            db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("dd/MM/yyyy"),
+            db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("MM/dd/yyyy"),
                new ObjectParameter("strTransIDs", typeof(string)),
                new ObjectParameter("strPatronCode", typeof(string)),
                new ObjectParameter("intError", typeof(int)));

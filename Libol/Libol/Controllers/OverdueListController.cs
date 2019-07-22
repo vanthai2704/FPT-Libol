@@ -13,36 +13,55 @@ namespace Libol.Controllers
     {
         private LibolEntities db = new LibolEntities();
         FormatHoldingTitle f = new FormatHoldingTitle();
+        ShelfBusiness shelfBusiness = new ShelfBusiness();
 
         // GET: OverdueList
         public ActionResult OverdueList()
         {
+            ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
+            ViewBag.PatronGroup = db.SP_PAT_GET_PATRONGROUP().ToList();
+            ViewBag.Education = db.SP_PAT_GET_EDUCATION().ToList();
+            ViewBag.Occupation = db.SP_PAT_GET_OCCUPATION().ToList();
             ViewBag.College = db.SP_PAT_GET_COLLEGE().ToList();
+            int CollegeID = db.SP_PAT_GET_COLLEGE().ToList()[0].ID;
+            ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
+            ViewBag.Province = db.CIR_DIC_PROVINCE.ToList();
+            ViewBag.Countries = db.SP_GET_COUNTRIES().ToList();
+            ViewBag.Library = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, (int)Session["UserID"], 1);
+            ViewBag.ItemTypes = db.SP_GET_ITEMTYPES().ToList();
+            ViewBag.Template = db.SP_SYS_GET_TEMPLATE(0, 4).ToList();
             return View();
         }
 
-        //[HttpPost]
-        //public JsonResult OnchangeCollege(int CollegeID)
-        //{
-        //    ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
-        //    List<CIR_DIC_FACULTY> list = new List<CIR_DIC_FACULTY>();
-        //    foreach (var f in ViewBag.Faculty)
-        //    {
-        //        list.Add(new CIR_DIC_FACULTY()
-        //        {
-        //            ID = f.ID,
-        //            Faculty = f.Faculty,
-        //            CollegeID = f.CollegeID
-        //        });
-        //    }
-        //    return Json(list, JsonRequestBehavior.AllowGet);
-        //}
+        [HttpPost]
+        public JsonResult OnchangeCollege(int CollegeID)
+        {
+            ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
+            List<CIR_DIC_FACULTY> list = new List<CIR_DIC_FACULTY>();
+            foreach (var f in ViewBag.Faculty)
+            {
+                list.Add(new CIR_DIC_FACULTY()
+                {
+                    ID = f.ID,
+                    Faculty = f.Faculty,
+                    CollegeID = f.CollegeID
+                });
+            }
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
-        public PartialViewResult OverdueListResult(Nullable<int> intUserID, string strPatronIDs,string txtSoThe, string txtTenBanDoc, int ddlNhomBanDoc, int ddlTruong, int ddlKhoa, string txtKhoaHoc, string txtLopHoc, int ddlLib, int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)
+        public JsonResult OnchangeLibrary(int LibID)
+        {
+            List<SP_HOLDING_LOCATION_GET_INFO_Result> list = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(LibID, 43, 0, -1);
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public PartialViewResult OverdueListResult(string strPatronIDs,string txtSoThe, string txtTenBanDoc, int ddlNhomBanDoc, int ddlTruong, int ddlKhoa, string txtKhoaHoc, string txtLopHoc, int ddlLib, int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)
         {
             string whereCondition = ProcessCondition( txtSoThe,  txtTenBanDoc,  ddlNhomBanDoc,  ddlTruong,  ddlKhoa,  txtKhoaHoc,  txtLopHoc,  ddlLib,  ddlLoc,  txtTenTaiLieu,  txtSDKCB,  txtNgayMuonTu,  txtNgayMuonDen,  txtNgayTraTu,  txtNgayTraDen,  txtSoNgayQuaHan,  txtSoNgayQuaHanDen);
-            ViewBag.listOverdue = GET_LIST_OVERDUELIST_GETINFOR(intUserID, "", whereCondition).ToList();
+            ViewBag.listOverdue = GET_LIST_OVERDUELIST_GETINFOR((int)Session["UserID"], "", whereCondition).ToList();
             return PartialView("_OverdueListResult");
         }
 

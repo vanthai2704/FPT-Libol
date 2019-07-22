@@ -12,7 +12,6 @@ namespace Libol.Controllers
     {
         private LibolEntities db = new LibolEntities();
         RenewBusiness renewBusiness = new RenewBusiness();
-        private static int UserID = 0;
         private static Byte Type = 0;
         private static string CodeVal = "";
 
@@ -23,10 +22,9 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult SearchToRenew(int intUserID, Byte intType, string strCodeVal)
+        public PartialViewResult SearchToRenew(Byte intType, string strCodeVal)
         {
-            getcontentrenew(intUserID, intType, strCodeVal);
-            UserID = intUserID;
+            getcontentrenew((int)Session["UserID"], intType, strCodeVal);
             Type = intType;
             CodeVal = strCodeVal;
             return PartialView("_searchToRenew");
@@ -39,20 +37,18 @@ namespace Libol.Controllers
             {
                 if(inttimes[i] >= intrange[i])
                 {
-                    int a = 1;
                 }
                 else if (Equals(strFixedDueDate,""))
                 {
 
                 }
                 else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[i])) < 0) {
-                    int b = 2;
                 }
                 else{
                     db.SP_RENEW_ITEM(intLoanID[i], intAddTime, intTimeUnit, strFixedDueDate);
                 }
             }
-            getcontentrenew(UserID,Type,CodeVal);
+            getcontentrenew((int)Session["UserID"], Type,CodeVal);
             return PartialView("_searchToRenew");
         }
 

@@ -56,8 +56,8 @@
                 <td>@item.Name</td>
                 <td>@item.Code</td>
                 <td>@item.MainTitle</td>
-                <td>@item.CheckOutDate</td>
-                <td>@item.CheckInDate</td>
+                <td>@string.Format("{0:dd-MM-yyyy}", @item.CheckOutDate)</td>
+                <td>@string.Format("{0:dd-MM-yyyy}", @item.CheckInDate)</td>
                 <td>@item.CopyNumber</td>
                 <td style="color:red">@item.OverdueDate</td>
             </tr>

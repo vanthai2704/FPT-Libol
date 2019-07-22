@@ -176,6 +176,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AcquireReportController.cs" />
+    <Compile Include="Controllers\AcquisitionController.cs" />
     <Compile Include="Controllers\CirculationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CatalogueController.cs" />
@@ -2377,6 +2378,7 @@
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\PrintLabel\Print.cshtml" />
     <Content Include="Views\PrintBarcode\Print.cshtml" />
+    <Content Include="Views\Acquisition\HoldingLocRemove.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
