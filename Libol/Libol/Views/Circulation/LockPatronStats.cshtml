@@ -39,6 +39,7 @@
     <script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
     <script>
         var table;
+        
         $(document).ready(function () {
             table = $('#table').DataTable({
                 "processing": true,
@@ -52,10 +53,13 @@
                             //"Note": document.getElementById("Note").value
                             //"StartedDate": document.getElementById("StartedDate").value,
                             //"FinishDate": document.getElementById("FinishDate").value
-                            d.PatronCode = document.getElementById("PatronCodeFilter").value,
-                            d.Note = document.getElementById("NoteFilter").value,
-                            d.StartedDate = document.getElementById("LockDateFromFilter").value,
-                            d.FinishDate = document.getElementById("LockDateToFilter").value
+                        var LibraryFilter = document.getElementById("LibraryFilter");
+                        var libraryID = LibraryFilter.options[LibraryFilter.selectedIndex].value;
+                        d.libraryID = libraryID;
+                        d.PatronCode = document.getElementById("PatronCodeFilter").value,
+                        d.Note = document.getElementById("NoteFilter").value,
+                        d.StartedDate = document.getElementById("LockDateFromFilter").value,
+                        d.FinishDate = document.getElementById("LockDateToFilter").value
 
                         //});
                     }
@@ -104,7 +108,6 @@
                     'colvis'
                 ],
 
-
                 order: false,
             });
 
@@ -116,27 +119,6 @@
                     table.rows().deselect();
                 }
             });
-
-            //$('#table-select-all').on('click', function () {
-            //    // Get all rows with search applied
-            //    var rows = table.rows({ 'search': 'applied' }).nodes();
-            //    // Check/uncheck checkboxes for all rows in the table
-            //    $('input[type="checkbox"]', rows).prop('checked', this.checked);
-            //});
-
-            //// Handle click on checkbox to set state of "Select all" control
-            //$('#table tbody').on('change', 'input[type="checkbox"]', function () {
-            //    // If checkbox is not checked
-            //    if (!this.checked) {
-            //        var el = $('#table-select-all').get(0);
-            //        // If "Select all" control is checked and has 'indeterminate' property
-            //        if (el && el.checked && ('indeterminate' in el)) {
-            //            // Set visual state of "Select all" control
-            //            // as 'indeterminate'
-            //            el.indeterminate = true;
-            //        }
-            //    }
-            //});
 
             $("#ExportReporttoExcel").on("click", function () {
                 table.button('.buttons-excel').trigger();
@@ -153,6 +135,7 @@
             var startDate = document.getElementById("StartedDate").value;
             var lockDays = document.getElementById("LockedDays").value;
             var note = document.getElementById("Note").value;
+            
             $.ajax({
                 url: "/Circulation/LockCardPatron",
                 data: JSON.stringify({ cardNumber: cardNumber, startDate: startDate, lockDays: lockDays, note: note }),
@@ -230,6 +213,26 @@
         function CancelUpdate() {
             document.getElementById("myModal").style.display = "none";
         }
+        function Save() {
+            var patronCode = document.getElementById("txtPatronCode").value;
+            var lockDays = document.getElementById("txtLockedDay").value;
+            var note = document.getElementById("txtNote").value;
+            $.ajax({
+                url: "/Circulation/UpdatedLockCardPatron",
+                data: JSON.stringify({ patronCode: patronCode, lockDays: lockDays, note: note }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    alert('Bạn đã Update trạng thái khóa thẻ thành công');
+                    $('#table').DataTable().ajax.reload(null, false);
+                },
+                error: function () {
+                    alert('Update trạng thái khóa thẻ không thành công');
+                }
+
+            });
+        }
 
 
     </script>
@@ -270,7 +273,14 @@
         <div class="form-row">
             <div class="form-group col-sm">
                 <label for="Library">Thư viện trường</label>
-                @Html.DropDownList("LibraryFilter", ViewData["lib"] as List<SelectListItem>, new { @class = "form-control" })
+                <select class="form-control" id="LibraryFilter">
+                    <option value="-1"> ----- Chọn ----- </option>
+                    @foreach (var item in ViewBag.Library)
+                    {
+                        <option value="@item.ID">@item.Code</option>
+                    }
+                </select>
+                
             </div>
             <div class="form-group col-sm">
                 <label for="PatronCodeFilter">Thẻ bạn đọc</label>
@@ -282,11 +292,11 @@
             </div>
             <div class="form-group col-sm">
                 <label for="LockDateFromFilter">Thời gian khóa Từ</label>
-                <input type="text" class="form-control" id="LockDateFromFilter" name="LockDateFromFilter">
+                <input type="date" class="form-control" id="LockDateFromFilter" name="LockDateFromFilter" value="@Request.Form["LockDateFromFilter"]">
             </div>
             <div class="form-group col-sm">
                 <label for="LockDateToFilter">Đến</label>
-                <input type="date" class="form-control" id="LockDateToFilter" name="LockDateToFilter">
+                <input type="date" class="form-control" id="LockDateToFilter" name="LockDateToFilter" value="@Request.Form["LockDateToFilter"]">
             </div>
         </div>
         <button id="Find" type="submit" class="btn btn-primary">Lọc</button>
@@ -320,36 +330,36 @@
         </div>
     </div>
 
-    <div id="myModal" class="modal face">
+    <div id="myModal" class="modal face" role="dialog">
 
         <!-- Modal content -->
-        <div class="modal-content">
+        <div class="modal-content col-6" role="dialog">
             <div class="modal-header">
                 <span class="close">&times;</span>
                 <h2 class=""modal-title">Sửa thông tin thẻ bị khóa</h2>
             </div>
             <div class="modal-body">
-                <div class="form-group">
+                <div class="form-group ">
                     <label for="txtFullName">Full Name:</label>
-                    <input type="text" class="form-control" id="txtFullName">
+                    <input type="text" class="form-control" id="txtFullName" disabled>
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
                     <label for="txtPatronCode">Số thẻ bạn đọc:</label>
-                    <input type="text" class="form-control" id="txtPatronCode">
+                    <input type="text" class="form-control" id="txtPatronCode" disabled>
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
                     <label for="txtStartdate">Từ ngày:</label>
-                    <input type="text" class="form-control" id="txtStartdate">
+                    <input type="text" class="form-control" id="txtStartdate" disabled>
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
                     <label for="txtFinishdate">Đến ngày:</label>
-                    <input type="text" class="form-control" id="txtFinishdate">
+                    <input type="text" class="form-control" id="txtFinishdate" disabled>
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
                     <label for="txtLockedDay">Số ngày:</label>
                     <input type="text" class="form-control" id="txtLockedDay">
                 </div>
-                <div class="form-group">
+                <div class="form-group ">
                     <label for="txtNote">Lý do: </label>
                     <input type="text" class="form-control" id="txtNote">
                 </div>
@@ -362,35 +372,3 @@
 
     </div>
 }
-
-
-
-
-@*<script type="text/javascript">
-        document.getElementById("Find").onclick = function () {
-            var empObj = {
-                strPatronCode: document.getElementById("PatronCodeFilter").value,
-                strLockDateFrom: document.getElementById("LockDateFromFilter").value,
-                strLockDateTo: document.getElementById("LockDateToFilter").value,
-                strCollegeID: document.getElementById("LibraryFilter").value
-            };
-
-            $.ajax({
-                url: "GetLockPatronStats",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                beforeSend: function () {
-                    $("#ContentStatLockPatron").html("<h4>Loading...</h4>");
-                },
-                success: function (result) {
-                    $("#ContentStatLockPatron").html(result)
-                },
-                error: function (errormessage) {
-                    console.log("error");
-                }
-            });
-        };
-
-    </script>*@
-

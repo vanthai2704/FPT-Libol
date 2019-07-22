@@ -345,6 +345,8 @@ namespace Libol.Controllers
             int CollegeID = 0;
             if (!String.IsNullOrEmpty(LibraryFilter)) CollegeID = Convert.ToInt32(LibraryFilter);
             ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCodeFilter, LockDateFromFilter, LockDateToFilter, CollegeID);
+            ShelfBusiness shelfBusiness = new ShelfBusiness();
+            ViewBag.Library = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, Int32.Parse(Session["UserID"].ToString()), 1);
             return View();
         }
         // trinhlv1 LockCard()
@@ -353,6 +355,15 @@ namespace Libol.Controllers
         {
            // List<SP_UNLOCK_PATRON_CARD_Result> listResult1 = cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("''SE05062''");
             List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cardNumber, lockDays, startDate, note);
+            ViewData["listResult"] = listResult;
+            return Json(listResult, JsonRequestBehavior.AllowGet);
+
+        }
+        // Edit LockCard()
+        [HttpPost]
+        public JsonResult UpdatedLockCardPatron(string patronCode, int lockDays, string note)
+        {
+            List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> listResult = cb.FPT_SP_UPDATE_UNLOCK_PATRON_CARD(patronCode, lockDays, note);
             ViewData["listResult"] = listResult;
             return Json(listResult, JsonRequestBehavior.AllowGet);
 
@@ -495,21 +506,25 @@ namespace Libol.Controllers
         // get list lock patron in datatable
         // trinhlv
         [HttpPost]
-        public JsonResult GetLockPatron(DataTableAjaxPostModel model ,string PatronCode,string Note,string StartedDate,string FinishDate)
+        public JsonResult GetLockPatron(DataTableAjaxPostModel model ,int libraryID, string PatronCode,string Note,string StartedDate,string FinishDate)
         {
             var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode, "", "", 0);
             var search = lockedpatron.Where(a => true);
+            if(libraryID != -1)
+            {
+                // Tim theo thu vien
+            }
             if (!String.IsNullOrEmpty(Note))
             {
                 search = search.Where(a => a.Note.Contains(Note));
             }
             if (!String.IsNullOrEmpty(StartedDate))
             {
-                search = search.Where(a => a.Note.Contains(StartedDate));
+                search = search.Where(a => a.StartedDate.ToString("yyyy-MM-dd").CompareTo(StartedDate) >= 0);
             }
             if (!String.IsNullOrEmpty(FinishDate))
             {
-                search = search.Where(a => a.Note.Contains(FinishDate));
+                search = search.Where(a => a.FinishDate.ToString("yyyy-MM-dd").CompareTo(FinishDate)<=0);
             }
             var paging = search.Skip(model.start).Take(model.length).ToList();
             var result = paging.ToList();
