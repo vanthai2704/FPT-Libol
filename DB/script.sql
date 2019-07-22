@@ -3047,3 +3047,167 @@ AS
 	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) + ' ORDER BY CPL.StartedDate DESC'
 EXEC (@stRSql)
 
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_CIR_LIB_SEL]    Script Date: 07/10/2019 23:47:09 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[FPT_SP_CIR_LIB_SEL]
+	@intUserID  int
+AS	
+	SELECT Code + ': ' + Name as LibName, Code, ID 
+	FROM HOLDING_LIBRARY 
+	WHERE LocalLib = 1 AND ID IN (SELECT LibID FROM HOLDING_LOCATION, SYS_USER_CIR_LOCATION WHERE SYS_USER_CIR_LOCATION.LocationID = HOLDING_LOCATION.ID AND UserID = @intUserID) ORDER BY Code
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_CATA_CHECK_EXIST_TITLE_2019]    Script Date: 7/1/2019 2:59:39 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+	CREATE PROCEDURE [dbo].[FPT_SP_CATA_CHECK_EXIST_TITLE_2019]
+-- ---------   ------  -------------------------------------------
+	@strTitle	nvarchar(200),
+	@strItemType	varchar(5)
+   -- Declare program variables as shown above
+AS
+	DECLARE @strSelectStatement	nvarchar(500)
+	IF NOT @strItemType = ''
+	-- Forming SelectStatement
+		SELECT ItemID, Content FROM FIELD200S WHERE FieldCode = '245' AND Content LIKE N'$a' + @strTitle + '%' AND ItemID IN (SELECT TOP 50 A.TypeID FROM ITEM A, CAT_DIC_ITEM_TYPE B WHERE A.TypeID = B.ID AND UPPER(B.TypeCode) = UPPER('' + RTRIM(@strItemType) + ''))
+	ELSE
+		SELECT ItemID, Content FROM FIELD200S WHERE FieldCode = '245' AND Content LIKE N'$a' + @strTitle + '%'
+	-- Execute
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER]    Script Date: 7/1/2019 3:03:10 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER]
+-- Purpose: Check exist item by ISBN or ISSN
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- Oanhtn      090305  Create
+-- ---------   ------  -------------------------------------------
+	@strFieldValue	varchar(50),
+	@strFieldCode	varchar(5),
+	@lngItemID	int OUT
+
+AS
+	SELECT @lngItemID = ItemID FROM CAT_DIC_NUMBER WHERE FieldCode = @strFieldCode AND Number = @strFieldValue
+	IF @lngItemID IS NULL SET @lngItemID = 0
+	RETURN @lngItemID
+
+
+
+/******/
+GO
+CREATE  PROCEDURE [dbo].[FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM]  
+-- Purpose: get all detail information of item (field's values)  
+-- MODIFICATION HISTORY  
+-- Person      Date    Comments  
+-- DOANHDQ    04/07/2019    get all detail information of item (field's values)  
+-- ---------   ------  -------------------------------------------  
+@strItemIDs VARCHAR(2000),  
+@intIsAuthority INT  
+-- Declare program variables as shown above  
+AS  
+DECLARE @strSQL VARCHAR(8000)  
+	IF @intIsAuthority = 0  
+	BEGIN  
+		SET @strItemIDs=REPLACE(@strItemIDs,'','')  
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD000s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD000s WHERE FIELD000s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD000s.FieldCode UNION   
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD100s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD100s WHERE FIELD100s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD100s.FieldCode UNION  
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD200s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD200s WHERE FIELD200s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD200s.FieldCode UNION   
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD300s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD300s WHERE FIELD300s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD300s.FieldCode UNION   
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD400s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD400s WHERE FIELD400s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD400s.FieldCode UNION  
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD500s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD500s WHERE FIELD500s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD500s.FieldCode UNION   
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD600s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD600s WHERE FIELD600s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD600s.FieldCode UNION   
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD700s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD700s WHERE FIELD700s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD700s.FieldCode UNION   
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD800s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD800s WHERE FIELD800s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD800s.FieldCode UNION  
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, FIELD900s.ItemID AS ItemID, Ind1, Ind2, Content, VietFieldName  FROM MARC_BIB_FIELD, FIELD900s WHERE FIELD900s.ItemID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = FIELD900s.FieldCode UNION 
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, Item.ID AS ItemID, '' Ind1, '' Ind2, CAST(Item.NewRecord as varchar(5)) as Content, VietFieldName  FROM MARC_BIB_FIELD, ITEM WHERE Item.ID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = '900' UNION 
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, Item.ID AS ItemID, '' Ind1, '' Ind2, Item.CoverPicture as Content, VietFieldName  FROM MARC_BIB_FIELD, ITEM WHERE Item.ID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = '907' AND CoverPicture IS NOT NULL AND CoverPicture <>'' UNION 
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, Item.ID AS ItemID, '' Ind1, '' Ind2, Item.Cataloguer as Content, VietFieldName  FROM MARC_BIB_FIELD, ITEM WHERE Item.ID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = '911' AND  Cataloguer  IS NOT NULL AND Cataloguer <> '' UNION 
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, Item.ID AS ItemID, '' Ind1, '' Ind2, Item.Code as Content, VietFieldName  FROM MARC_BIB_FIELD, ITEM WHERE Item.ID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = '001' AND  Code  IS NOT NULL AND Code <> '' UNION 
+		SELECT VietIndicators, Indicators, MARC_BIB_FIELD.FieldCode, Item.ID AS ItemID, '' Ind1, '' Ind2, Item.Reviewer as Content, VietFieldName  FROM MARC_BIB_FIELD, ITEM WHERE Item.ID IN (@strItemIDs) AND MARC_BIB_FIELD.FieldCode = '912' AND Reviewer IS NOT NULL AND Reviewer <> ''       
+         ORDER BY ItemID, MARC_BIB_FIELD.FieldCode		
+		
+	END  
+	ELSE SELECT NULL AS VietIndicators, NULL AS Indicators, FieldCode, AuthorityID AS ItemID, Ind1, Ind2, Content, '' as VietFieldName  FROM FIELD_AUTHORITY  WHERE AuthorityID IN( @strItemIDs ) ORDER BY AuthorityID, FieldCode
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_UPDATE_UNLOCK_PATRON_CARD]  Script Date: 7/22/2019 7:22:16 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[FPT_SP_UPDATE_UNLOCK_PATRON_CARD]
+-- Purpose: Update Unlock Locked PatronCard
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- Trinhlv      300804  Create
+-- ---------   ------  -------------------------------------------       
+	@strPatronCode varchar(500),
+	@lockedDay int,
+	@Note varchar(1000)
+AS
+	UPDATE [CIR_PATRON_LOCK] SET LockedDays = @lockedDay, Note = @Note WHERE PatronCode = @strPatronCode
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_GET_PATRON_LOCK_STATISTIC]    Script Date: 7/22/2019 5:39:35 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[FPT_GET_PATRON_LOCK_STATISTIC]
+-- Purpose: Get patron lock statistic
+-- Created AnNXT
+-- Date 14/07/2019
+-- ModifyDate:
+	@strPatronCode  varchar(50),
+	--@strNote nvarchar(200),
+	@strLockDateFrom varchar(30),
+	@strLockDateTo varchar(30),
+	@intCollegeID int
+AS
+	DECLARE @strSql varchar(1000)
+	DECLARE @strJoinSQL varchar(1000)
+	DECLARE @strLikeSql varchar(1000)
+	
+	SET @strSql = 'SELECT CPL.PatronCode, CPL.StartedDate, CPL.Note, CP.FirstName + '' '' + CP.MiddleName + '' '' + CP.LastName as FullName, CPL.StartedDate + CPL.LockedDays as FinishDate, CPL.LockedDays '
+	SET @strLikeSql = '1 =1 AND '
+	SET @strJoinSQL = ''
+
+	SET @strJoinSQL = @strJoinSQL + ' FROM CIR_PATRON_LOCK CPL, CIR_PATRON CP'
+	SET @strLikeSql = @strLikeSql + ' UPPER(CPL.PatronCode)=UPPER(CP.Code) AND'
+	
+	IF NOT @strPatronCode = ''
+		SET @strLikeSql = @strLikeSql + ' UPPER(CPL.PatronCode)=''' + UPPER(@strPatronCode) + ''' AND'
+	
+	IF NOT @intCollegeID = 0
+		BEGIN
+			SET @strSql = @strSql + ', CDC.COLLEGE'
+			SET @strJoinSQL = @strJoinSQL + ', CIR_PATRON_UNIVERSITY CPU, CIR_DIC_COLLEGE CDC'
+			SET @strLikeSql = @strLikeSql + ' CP.ID = CPU.PATRONID AND CPU.COLLEGEID = CDC.ID AND CPU.COLLEGEID = ' + CAST(@intCollegeID AS VARCHAR(20)) + ' AND'
+		END
+	
+	--IF NOT @strNote = ''	
+	--	BEGIN
+	--		SET @strNote = UPPER(@strNote)
+	--		SET @strLikeSQL = @strLikeSQL + ' UPPER(CPL.Note)=N'''+ @strNote +''' AND'
+	--	END
+	
+	IF NOT @strLockDateFrom = ''
+		SET @strLikeSql = @strLikeSql + ' CPL.StartedDate >= ''' + @strLockDateFrom + ''' AND'
+	IF NOT @strLockDateTo = ''
+		SET @strLikeSql = @strLikeSql + ' CPL.StartedDate <= ''' + @strLockDateTo + ''' AND'
+	
+	SET @strSql = @strSql + @strJoinSQL + ' WHERE ' +@strLikeSQL
+	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) + ' ORDER BY CPL.StartedDate DESC'
+EXEC (@stRSql)
+
