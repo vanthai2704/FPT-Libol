@@ -393,7 +393,7 @@ namespace Libol.Controllers
                                         patronFile.Line = j + 2;
                                         patronFile.strCode = ds.Tables[0].Rows[j].Field<string>("Mã Sinh viên");
                                         patronFile.FullName = ds.Tables[0].Rows[j].Field<string>("Họ và tên");
-                                        patronFile.blnSex = ds.Tables[0].Rows[j].Field<string>("Giới tính ");
+                                        patronFile.blnSex = ds.Tables[0].Rows[j].Field<string>("Giới tính");
                                         
                                         patronFile.strEmail = ds.Tables[0].Rows[j].Field<string>("Email");
                                         patronFile.strAddress = ds.Tables[0].Rows[j].Field<string>("Địa chỉ thường trú");
