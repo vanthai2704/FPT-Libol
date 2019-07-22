@@ -98,7 +98,7 @@
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
                         <div class="col"><input class="form-control" type="text" id="strCopyNumber" onkeypress="checkin(event)" /></div>
-                        <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
+                        <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
                         <div class="col"><button class="btn btn-primary" type="button" onclick="checkinbyDKCB()">Ghi trả</button></div>
@@ -193,25 +193,24 @@
             }
         });
     }
-    function Searchpatronbyname(e) {
+
+    function Searchpatronbyname() {
         var empObj = {
             strFullName: document.getElementById("searchpatronbyname").value
         };
-        if (e.keyCode == 13) {
-            $.ajax({
-                url: "/CheckIn/FindByName",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    $("#contentcheckin").html(result);
-                    console.log('ýes');
-                },
-                error: function (errormessage) {
-                    console.log('error')
-                }
-            });
-        }
+        $.ajax({
+            url: "/CheckIn/FindByName",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#contentcheckin").html(result);
+                console.log('ýes');
+            },
+            error: function (errormessage) {
+                console.log('error')
+            }
+        });
     }
     function btnsearchpatron() {
         var empObj = {

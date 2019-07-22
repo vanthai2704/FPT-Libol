@@ -1,5 +1,6 @@
 ﻿
 @{
+                /**/
 }
 
 <head>
@@ -101,17 +102,18 @@
                 <label class="col-form-label">
                     Tình trạng: @if (ViewBag.active == 1)
                     {
-                    <script>
-                        document.getElementById("strCopyNumber").disabled = false;
-                    </script>
+                        <script>
+                            document.getElementById("strCopyNumber").disabled = false;
+                        </script>
                         <strong>Thẻ mở</strong>
                     }
                     else
-                    { 
+                    {
                         <script>
                             document.getElementById("strCopyNumber").disabled = true;
                         </script>
-                        <strong style="color:red;">Thẻ khóa</strong> <a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal3">Chi tiết</a>}
+                        <strong style="color:red;">Thẻ khóa</strong> <a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal3">Chi tiết</a>            
+                    }
                 </label>
             </div>
         </div>
@@ -292,7 +294,7 @@
 {
     <!-- The Modal Black Patron Detail -->
     <div class="modal" id="myModal3">
-        <div class="modal-dialog" >
+        <div class="modal-dialog">
             <div class="modal-content">
 
                 <!-- Modal Header -->
@@ -340,6 +342,4 @@
     </div>
 }
 
-<script>
 
-</script>

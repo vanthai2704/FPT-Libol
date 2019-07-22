@@ -22095,5 +22095,14 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_CIR_GET_RENEW", intUserIDParameter, intTypeParameter, strCodeValParameter);
         }
+    
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result> FPT_ADMIN_GET_RIGHTS_DENY_ADMIN(Nullable<int> intModuleID)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result>("FPT_ADMIN_GET_RIGHTS_DENY_ADMIN", intModuleIDParameter);
+        }
     }
 }

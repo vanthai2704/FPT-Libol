@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Libol.Controllers
 {
-    public class RenewController : Controller
+    public class RenewController : BaseController
     {
         private LibolEntities db = new LibolEntities();
         RenewBusiness renewBusiness = new RenewBusiness();
@@ -19,7 +19,6 @@ namespace Libol.Controllers
         // GET: Renew
         public ActionResult Renew()
         {
-            ViewBag.ContentRenew = new List<SP_CIR_GET_RENEW_Result>();
             return View();
         }
 
@@ -40,10 +39,14 @@ namespace Libol.Controllers
             {
                 if(inttimes[i] >= intrange[i])
                 {
-                    
+                    int a = 1;
+                }
+                else if (Equals(strFixedDueDate,""))
+                {
+
                 }
                 else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[i])) < 0) {
-
+                    int b = 2;
                 }
                 else{
                     db.SP_RENEW_ITEM(intLoanID[i], intAddTime, intTimeUnit, strFixedDueDate);

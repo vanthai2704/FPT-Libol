@@ -1,45 +1,13 @@
-﻿
+﻿@model Libol.Models.CIR_PATRON
+@using Libol.Models;
 @{
+    /**/
+
     ViewBag.Title = "OverdueList";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*START------------SCRIPT FOR DATATABLES*@
-<link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
-<link rel="stylesheet" type="text/css" href="~/Content/DataTables/Select-1.3.0/css/select.bootstrap4.css">
-<link rel="stylesheet" type="text/css" href="~/Content/DataTables/dataTables.checkboxes.css">
-<script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
-<script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
-<script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
-<script type="text/javascript" charset="utf8" src="~/Content/DataTables/dataTables.checkboxes.min.js"></script>
-<script>
-    $(document).ready(function () {
-        var table = $('#table_overdueList').DataTable({
-            columnDefs: [{
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0
-            }
-            ],
-            select: {
-                style: 'multi'
-            },
-            order: [[1, 'asc']],
-            orderCellsTop: true,
 
-        });
-
-        $('#table_overdueList').on('click', '#select_all', function () {
-            if ($('#select_all:checked').val() === 'on') {
-                table.rows({ search: 'applied' }).select();
-            }
-            else {
-                table.rows().deselect();
-            }
-        });
-    });
-</script>
-@*END------------SCRIPT FOR DATATABLES*@
 
 <style>
     label {
@@ -49,149 +17,186 @@
     .form-control {
         font-size: 0.8rem !important;
 </style>
-<form>
-    <label style="margin-top:10px; text-align: right ; color:red"><h5>Thông tin thẻ bạn đọc quá hạn</h5></label>
-    <div class="row">
-        <div class="col-6">
-            <div class="form-group row col-12">
-                <label class="control-label col-md-6 align-self-center">Số thẻ : </label>
-                <input type="text" class="form-control col-md-3" id="inputEmail3">
-            </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-6 align-self-center">Tên bạn đọc : </label>
-                <input type="text" class="form-control col-md-3" id="inputEmail3">
-            </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-6 align-self-center">Nhóm bạn đọc : </label>
-                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
-                    <option value="-1">----- Chọn -----</option>
-                </select>
-            </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-6 align-self-center">Trường : </label>
-                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
-                    <option value="-1">----- Chọn -----</option>
-                </select>
-            </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-6 align-self-center">Khoa : </label>
-                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
-                    <option value="-1">----- Chọn -----</option>
-                </select>
-            </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-6 align-self-center">Khóa học : </label>
-                <input type="text" class="form-control col-md-3" id="inputEmail3">
-            </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-6 align-self-center">Lớp học : </label>
-                <input type="text" class="form-control col-md-3" id="inputEmail3">
-            </div>
-            <div class="form-group row col-12">
-                <div class="form-group row col-4">
 
-                </div>
-                <div class="form-group row col-8">
-                    <div class="form-group row col-5">
-                        <div style="margin : auto">
-                            <button type="submit" class="btn btn-primary form-control">Tìm kiếm</button>
-                        </div>
-                    </div>
-                    <div class="form-group row col-3">
-                        <div style="margin : auto">
-                            <button type="submit" class="btn btn-primary form-control">Đặt lại</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+<label style="margin-top:10px; text-align: right ; color:red">Thông tin thẻ bạn đọc quá hạn</label>
+<div class="row">
+    <div class="col-6">
+        <div class="form-group row col-12">
+            <label class="control-label col-md-6 align-self-center">Số thẻ: </label>
+            <input type="text" class="form-control col-md-3" id="txtSoThe">
         </div>
-        <div class="col-6">
-            <div class="form-group row col-12">
-                <label class="control-label col-md-2 align-self-center">Thư viện : </label>
-                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
-                    <option value="-1">----- Chọn -----</option>
-                </select>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-6 align-self-center">Tên bạn đọc: </label>
+            <input type="text" class="form-control col-md-3" id="txtTenBanDoc">
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-6 align-self-center">Nhóm bạn đọc: </label>
+            <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                <option value="-1">----- Chọn -----</option>
+            </select>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-6 align-self-center">Trường: </label>
+            <select class="form-control col-md-4" onchange="OnchangeCollege()" id="college">
+                <option value="-1">----- Chọn -----</option>
+                @*@foreach (var item in ViewBag.College)
+                {
+                    if (Model.CIR_PATRON_UNIVERSITY != null && Model.CIR_PATRON_UNIVERSITY.CollegeID == item.ID)
+                    {
+                        <option value="@item.ID" selected>@item.College</option>
+                    }
+                    else
+                    {
+                        <option value="@item.ID">@item.College</option>
+                    }
+
+                }*@
+            </select>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-6 align-self-center">Khoa: </label>
+            <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                <option value="-1">----- Chọn -----</option>
+            </select>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-6 align-self-center">Khóa học: </label>
+            <input type="text" class="form-control col-md-3" id="txtKhoaHoc">
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-6 align-self-center">Lớp học: </label>
+            <input type="text" class="form-control col-md-3" id="txtLopHoc">
+        </div>
+        <div class="form-group row col-12">
+            <div class="form-group row col-4">
+
             </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-2 align-self-center">Kho : </label>
-                <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
-                    <option value="-1">----- Chọn -----</option>
-                </select>
-            </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-2 align-self-center">Tên tài liệu : </label>
-                <input type="text" class="form-control col-md-3" id="inputEmail3">
-            </div>
-            <div class="form-group row col-12">
-                <label class="control-label col-md-2 align-self-center">Số DKCB : </label>
-                <input type="text" class="form-control col-md-3" id="inputEmail3">
-            </div>
-            <div class="form-group row col-12">
-                <div class="form-group row col-6">
-                    <label class="control-label col-md-6 align-self-center">Ngày mượn Từ : </label>
-                    <div class="form-group col-md-6"><input class="form-control " type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
-                </div>
-                <div class="form-group row col-6">
-                    <label class="control-label col-md-6 align-self-center">Đến: </label>
-                    <div class="form-group col-md-6"><input class="form-control " type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
-                </div>
-            </div>
-            <div class="form-group row col-12">
-                <div class="form-group row col-6">
-                    <label class="control-label col-md-6 align-self-center">Ngày phải trả Từ : </label>
-                    <div class="form-group col-md-6"><input class="form-control " type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
-                </div>
-                <div class="form-group row col-6">
-                    <label class="control-label col-md-6 align-self-center">Đến: </label>
-                    <div class="form-group col-md-6"><input class="form-control " type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" /></div>
-                </div>
-            </div>
-            <div class="form-group row col-12">
-                <div class="form-group row col-7">
-                    <label class="control-label col-md-6 align-self-center">Số ngày quá hạn Từ : </label>
-                    <input type="text" class="form-control col-md-4" id="inputEmail3">
-                </div>
+            <div class="form-group row col-8">
                 <div class="form-group row col-5">
-                    <label class="control-label col-md-6 align-self-center">Đến: </label>
-                    <input type="text" class="form-control col-md-4" id="inputEmail3"> Ngày
+                    <div style="margin : auto">
+                        <button class="btn btn-primary form-control" onclick="getOverduelist()">Tìm kiếm</button>
+                    </div>
+                </div>
+                <div class="form-group row col-3">
+                    <div style="margin : auto">
+                        <button class="btn btn-primary form-control">Đặt lại</button>
+                    </div>
                 </div>
             </div>
+        </div>
+
+    </div>
+    <div class="col-6">
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Thư viện: </label>
+            <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                <option value="-1">----- Chọn -----</option>
+            </select>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Kho: </label>
+            <select class="form-control col-md-4" name="libraryList" id="libraryList" onchange="SelectHolding();">
+                <option value="-1">----- Chọn -----</option>
+            </select>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Tên tài liệu: </label>
+            <input type="text" class="form-control col-md-3" id="txtTenTaiLieu">
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Số DKCB: </label>
+            <input type="text" class="form-control col-md-3" id="txtSDKCB">
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Ngày mượn từ: </label>
+            <input class="form-control col-md-3" type="date" id="txtNgayMuonTu" />
+            <label class="control-label col-md-2 align-self-center">Đến: </label>
+            <input class="form-control col-md-3" type="date" id="txtNgayMuonDen" />
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Ngày phải trả từ: </label>
+            <input class="form-control col-md-3" type="date" id="txtNgayTraTu" />
+            <label class="control-label col-md-2 align-self-center">Đến: </label>
+            <input class="form-control col-md-3" type="date" id="txtNgayTraDen" />
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Số ngày quá hạn từ: </label>
+            <input type="number" class="form-control col-md-3" id="txtSoNgayQuaHan">
+            <label class="control-label col-md-2 align-self-center">Đến: </label>
+            <input type="number" class="form-control col-md-3" id="txtSoNgayQuaHanDen">
         </div>
     </div>
+</div>
 
-    <label style="margin-top:10px; text-align: right ; color:blue"><h5>Danh sách những thẻ quá hạn</h5></label>
+<label style="margin-top:10px; text-align: right ; color:blue">Danh sách những thẻ quá hạn</label>
 
-    <table id="table_overdueList" class="table table-striped table-bordered datatables" style="width:100% !important; font-size: 0.8rem !important;">
-        <thead>
-            <tr>
-                <th style="text-align: center;"><input type="checkbox" id="select_all" /></th>
-                <th>Bạn đọc</th>
-                <th>Số thẻ</th>
-                <th>Nhan Đề</th>
-                <th>Ngày mượn</th>
-                <th>Ngày trả</th>
-                <th>DKCB</th>
-                <th>Quá hạn(ngày)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in ViewBag.listOverdue)
-            {
-                <tr>
-                    <td></td>
-                    <td>@item.Name</td>
-                    <td>@item.Code</td>
-                    <td>@item.MainTitle</td>
-                    <td>@item.CheckOutDate</td>
-                    <td>@item.CheckInDate</td>
-                    <td>@item.CopyNumber</td>
-                    <td>@item.OverdueDate</td>
-                </tr>
+<div id="content"></div>
+
+
+<script>
+
+    //function OnchangeCollege() {
+    //    var e = document.getElementById("college");
+    //    var id = e.options[e.selectedIndex].value;
+    //    var empObj = {
+    //        CollegeID: id
+    //    };
+    //    $.ajax({
+    //        url: "/Overdue/OnchangeCollege",
+    //        data: JSON.stringify(empObj),
+    //        type: "POST",
+    //        contentType: "application/json;charset=utf-8",
+    //        dataType: "json",
+    //        success: function (result) {
+    //            var html = "<option value='-1'>----- Chọn -----</option>"
+    //            for (r in result) {
+    //                html = html + "<option value=" + result[r].ID + ">" + result[r].Faculty + "</option>"
+    //            }
+    //            document.getElementById("faculty").innerHTML = html;
+
+    //        },
+    //        error: function (errormessage) {
+
+    //        }
+    //    });
+    //}
+
+    function getOverduelist() {
+        var empObj = {
+            intUserID: 43,
+            strPatronIDs: "",
+            txtSoThe: document.getElementById("txtSoThe").value,
+            txtTenBanDoc: document.getElementById("txtTenBanDoc").value,
+            ddlNhomBanDoc: -1,
+            ddlTruong: -1,
+            ddlKhoa: -1,
+            txtKhoaHoc: document.getElementById("txtKhoaHoc").value,
+            txtLopHoc: document.getElementById("txtLopHoc").value,
+            ddlLib: -1,
+            ddlLoc: -1,
+            txtTenTaiLieu: document.getElementById("txtTenTaiLieu").value,
+            txtSDKCB: document.getElementById("txtSDKCB").value,
+            txtNgayMuonTu: document.getElementById("txtNgayMuonTu").value,
+            txtNgayMuonDen: document.getElementById("txtNgayMuonDen").value,
+            txtNgayTraTu: document.getElementById("txtNgayTraTu").value,
+            txtNgayTraDen: document.getElementById("txtNgayTraDen").value,
+            txtSoNgayQuaHan: document.getElementById("txtSoNgayQuaHan").value,
+            txtSoNgayQuaHanDen: document.getElementById("txtSoNgayQuaHanDen").value
+        };
+        $.ajax({
+            url: "/OverdueList/OverdueListResult",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#content").html(result);
+            },
+            error: function (errormessage) {
+                console.log("abcssd");
             }
-            </tbody>
-    </table>
-</form>
+        });
+    }
+</script>
 
 
 

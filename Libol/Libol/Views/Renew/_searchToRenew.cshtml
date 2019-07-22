@@ -7,23 +7,41 @@
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/dataTables.checkboxes.min.js"></script>
 <script>
+    var table;
     $(document).ready(function () {
-        var table = $('#table_loadrenew').DataTable({
-            columnDefs: [{
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0
-            }
-            //    ,
-            //    {
-            //    targets: 1,
-            //    visible: false,
-            //    searchable: false
-            //}, {
-            //    targets: 2,
-            //    visible: false,
-            //    searchable: false
-            //    }
+        table = $('#table_loadrenew').DataTable({
+            columnDefs: [
+                {
+                    targets: 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                }
+
+                ,
+                {
+                    targets: 1,
+                    visible: false,
+                    searchable: false
+                }, {
+                    targets: 2,
+                    visible: false,
+                    searchable: false
+                }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "defaultContent": ""
+                },
+                { "data": "ID" },
+                { "data": "DueDate" },
+                { "data": "2" },
+                { "data": "3" },
+                { "data": "4" },
+                { "data": "RenewCount" },
+                { "data": "Renewals" },
+                { "data": "7" },
             ],
             select: {
                 style: 'multi'
@@ -31,15 +49,6 @@
             order: [[1, 'asc']],
             orderCellsTop: true,
 
-        });
-
-        $('#table_loaninfo').on('click', '#select_all', function () {
-            if ($('#select_all:checked').val() === 'on') {
-                table.rows({ search: 'applied' }).select();
-            }
-            else {
-                table.rows().deselect();
-            }
         });
     });
 </script>

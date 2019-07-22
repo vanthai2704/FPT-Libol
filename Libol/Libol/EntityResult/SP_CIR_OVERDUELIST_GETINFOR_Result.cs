@@ -7,7 +7,6 @@ namespace Libol.EntityResult
 {
     public class SP_CIR_OVERDUELIST_GETINFOR_Result
     {
-        //trinhlv1
         public int LOANID { get; set; }
         public int LibID { get; set; }
         public int LocID { get; set; }
