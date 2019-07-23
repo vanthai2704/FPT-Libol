@@ -15,6 +15,7 @@ namespace Libol.Controllers
         private LibolEntities db = new LibolEntities();
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
         FormatHoldingTitle f = new FormatHoldingTitle();
+        private static string fullname = "";
         [AuthAttribute(ModuleID = 3, RightID = "58")]
         public ActionResult Index()
         {
@@ -99,7 +100,8 @@ namespace Libol.Controllers
             }
             else
             {
-                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").Take(50).ToList();
+                fullname = strFullName;
+                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(fullname, "").Where(a => a.DOB != null).ToList();
             }
                 
             return PartialView("_findByCardNumber");
@@ -108,6 +110,14 @@ namespace Libol.Controllers
         public PartialViewResult FindByCardNumber()
         {
             ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
+            ViewBag.PatronDetail = null;
+            return PartialView("_findByCardNumber");
+        }
+
+        public PartialViewResult GetPatronSearchDetail(string code)
+        {
+            getpatrondetail(code);
+            ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(fullname, "").Where(a => a.DOB != null).ToList();
             return PartialView("_findByCardNumber");
         }
 

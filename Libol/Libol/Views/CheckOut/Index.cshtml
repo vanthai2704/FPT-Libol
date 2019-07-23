@@ -169,7 +169,6 @@
                 });
             },
             complete: function (request, json) {
-
             },
             url: "/CheckOut/CheckOutCardInfo",
             data: JSON.stringify(empObj),
@@ -189,10 +188,8 @@
             type: "GET",
             success: function (result) {
                 $("#contentcheckout").html(result);
-                console.log('ýes');
             },
             error: function (errormessage) {
-                console.log('error')
             }
         });
     }
@@ -206,12 +203,27 @@
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+            },
             success: function (result) {
                 $("#contentcheckout").html(result);
-                console.log('ýes');
+                $.unblockUI()
             },
             error: function (errormessage) {
-                console.log('error')
+                $.unblockUI()
             }
         });
     }
@@ -224,12 +236,27 @@
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+            },
             success: function (result) {
                 $("#contentcheckout").html(result);
-                console.log('ýes');
+                $.unblockUI()
             },
             error: function (errormessage) {
-                console.log('error')
+                $.unblockUI()
             }
         });
 

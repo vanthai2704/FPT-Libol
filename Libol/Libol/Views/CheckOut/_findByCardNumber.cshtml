@@ -17,6 +17,19 @@
                 select: {
                     style: 'os',
                 },
+                columns: [
+                    { "data": "FullName" },
+                    {
+                        "data": "Code",
+                        "render": function (data, type, row, meta) {
+                            data = '<a href="#" onclick="getPatronInfo(' + "'" + data + "'" + ')">' + data + '</a>';
+                            return data;
+                        }
+                    },
+                    { "data": "DOB" },
+                    { "data": "ValidDate" },
+                    { "data": "ExpiredDate" },
+                ],
                 order: [[1, 'asc']],
                 orderCellsTop: true,
 
@@ -31,6 +44,24 @@
                 }
             });
         });
+
+        function getPatronInfo(Code) {
+            var empObj = {
+                code: Code,
+            };
+            $.ajax({
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                url: "/CheckOut/GetPatronSearchDetail",
+                data: JSON.stringify(empObj),
+                success: function (result) {
+                    $("#contentcheckout").html(result);
+                    $("#myModal4").modal("show");
+                },
+                error: function (errormessage) {
+                }
+            });
+        }
     </script>
 </head>
 
@@ -89,4 +120,120 @@
     </div>
 }
 
+@if (@ViewBag.PatronDetail != null)
+{
+    <!-- The Modal -->
+    <div class="modal" id="myModal4">
+        <div class="modal-dialog" style="max-width: 550px;">
+            <div class="modal-content">
 
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Thông tin chi tiết của bạn đọc</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <h5>
+                        Thông tin cơ bản
+                    </h5>
+                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                        <table>
+                            <tr>
+                                <td class="columnleft">Họ tên: </td>
+                                <td><strong>@ViewBag.PatronDetail.Name</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Dân tộc: </td>
+                                <td><strong>@ViewBag.PatronDetail.intEthnicID</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Ngày sinh: </td>
+                                <td><strong>@ViewBag.PatronDetail.strDOB</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Giới tính: </td>
+                                <td>
+                                    <strong>@ViewBag.PatronDetail.Sex</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Trình độ văn hóa </td>
+                                <td><strong>@ViewBag.PatronDetail.strEducationlevel</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Số thẻ: </td>
+                                <td><strong>@ViewBag.PatronDetail.strCode</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Ngày cấy thẻ: </td>
+                                <td><strong>@ViewBag.PatronDetail.strValidDate</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Ngày hết hạn thẻ: </td>
+                                <td><strong>@ViewBag.PatronDetail.strExpiredDate</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">nhóm bạn đọc: </td>
+                                <td><strong>@ViewBag.PatronDetail.intPatronGroupID</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h5>
+                        Nghề nghiệp
+                    </h5>
+                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                        <table>
+                            <tr>
+                                <td class="columnleft">Khoa: </td>
+                                <td><strong>@ViewBag.PatronDetail.intFacultyID</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Nhóm nghề nghiệp: </td>
+                                <td><strong>@ViewBag.PatronDetail.intOccupationID</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Trường: </td>
+                                <td><strong>@ViewBag.PatronDetail.intCollegeID</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Địa chỉ nơi làm việc: </td>
+                                <td><strong>@ViewBag.PatronDetail.strWorkPlace</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h5>
+                        Thông tin liên lạc
+                    </h5>
+                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                        <table>
+                            <tr>
+                                <td class="columnleft">Địa chỉ: </td>
+                                <td><strong>@ViewBag.PatronDetail.strAddress</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">SĐT cố định: </td>
+                                <td><strong>@ViewBag.PatronDetail.strTelephone</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">SĐT di động: </td>
+                                <td><strong>@ViewBag.PatronDetail.strMobile</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Email: </td>
+                                <td><strong>@ViewBag.PatronDetail.strEmail</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

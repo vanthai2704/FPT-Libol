@@ -18,6 +18,7 @@ namespace Libol.Controllers
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
         private static string strTransactionIDs = "";
         private static string patroncode = "0";
+        private static string fullname = "";
         FormatHoldingTitle f = new FormatHoldingTitle();
 
         [AuthAttribute(ModuleID = 3, RightID = "57")]
@@ -121,7 +122,8 @@ namespace Libol.Controllers
             }
             else
             {
-                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").Take(50).ToList();
+                fullname = strFullName;
+                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").Where(a => a.DOB != null).ToList();
             }
             
             return PartialView("_findByCardNumber");
@@ -131,6 +133,12 @@ namespace Libol.Controllers
         {
             ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
             return PartialView("_findByCardNumber");
+        }
+
+        public JsonResult GetPatronSearchDetail(string code)
+        {
+            getpatrondetail(code);
+            return Json(ViewBag.PatronDetail, JsonRequestBehavior.AllowGet);
         }
 
         public void getpatrondetail(string strPatronCode)
