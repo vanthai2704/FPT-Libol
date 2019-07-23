@@ -2038,6 +2038,8 @@
     <Compile Include="SupportClass\Wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\dataTables.checkboxes.min.js" />
+    <Content Include="App_Data\datatables.min.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -2084,6 +2086,7 @@
     <Content Include="Content\DataTables\DataTables-1.10.18\images\sort_desc.png" />
     <Content Include="Content\DataTables\DataTables-1.10.18\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\DataTables-1.10.18\js\dataTables.bootstrap4.js" />
+    <Content Include="Content\DataTables\DataTables-1.10.18\js\dataTables.checkboxes.min.js" />
     <Content Include="Content\DataTables\DataTables-1.10.18\js\jquery.dataTables.js" />
     <Content Include="Content\DataTables\Select-1.3.0\css\select.bootstrap4.css" />
     <Content Include="Content\DataTables\Select-1.3.0\js\dataTables.select.js" />
@@ -2223,7 +2226,6 @@
     <Content Include="Views\Acquired\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Views\Base\" />
     <Folder Include="Views\Default\" />
   </ItemGroup>
