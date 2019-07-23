@@ -102,6 +102,16 @@ namespace Libol.Controllers
             return PartialView("_checkoutSuccess");
         }
 
+        //thay đổi ghi chú
+        public PartialViewResult ChangeNote(string strCopyNumber, string strNote, string strDueDate)
+        {
+            int lngTransactionID = db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumber).First().ID;
+            db.SP_UPDATE_CURRENT_LOAN(lngTransactionID, strNote,"");
+            getcurrentloandetail();
+            getpatrondetail(patroncode);
+            return PartialView("_checkoutSuccess");
+        }
+
         [HttpPost]
         public PartialViewResult FindByName(string strFullName)
         {

@@ -17,9 +17,10 @@
         $(document).ready(function () {
             var table = $('#table_loaninfo').DataTable({
                 columnDefs: [{
-                    orderable: false,
-                    className: 'select-checkbox',
-                    targets: 0
+                    targets: 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
                 }],
                 select: {
                     style: 'multi'
@@ -29,14 +30,7 @@
 
             });
 
-            $('#table_loaninfo').on('click', '#select_all', function () {
-                if ($('#select_all:checked').val() === 'on') {
-                    table.rows({ search: 'applied' }).select();
-                }
-                else {
-                    table.rows().deselect();
-                }
-            });
+
         });
     </script>
 </head>
