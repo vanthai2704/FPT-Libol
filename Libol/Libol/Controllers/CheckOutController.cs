@@ -20,16 +20,10 @@ namespace Libol.Controllers
         private static string patroncode = "0";
         FormatHoldingTitle f = new FormatHoldingTitle();
 
-        // GET: CheckOut
+        [AuthAttribute(ModuleID = 3, RightID = "57")]
         public ActionResult Index()
         {
             patroncode = "0";
-            return View();
-        }
-
-        // GET: Giahan
-        public ActionResult Giahan()
-        {
             return View();
         }
 
@@ -94,7 +88,7 @@ namespace Libol.Controllers
             return PartialView("_showPatronInfo");
         }
 
-        //thu hoi 1 an pham
+        //thu hồi 1 ấn phẩm vừa mượn
         public PartialViewResult Rollbackacheckout (string strCopyNumbers)
         {
             db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("MM/dd/yyyy"),
@@ -108,16 +102,34 @@ namespace Libol.Controllers
             return PartialView("_checkoutSuccess");
         }
 
+        //thay đổi ghi chú của ấn phẩm đang mượn
+        public PartialViewResult ChangeNote(string strCopyNumber, string strNote, string strDueDate)
+        {
+            int lngTransactionID = db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumber).First().ID;
+            db.SP_UPDATE_CURRENT_LOAN(lngTransactionID, strNote,"");
+            getcurrentloandetail();
+            getpatrondetail(patroncode);
+            return PartialView("_checkoutSuccess");
+        }
+
         [HttpPost]
         public PartialViewResult FindByName(string strFullName)
         {
-            ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").ToList().Take(50).ToList();
+            if (String.IsNullOrEmpty(strFullName))
+            {
+                ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
+            }
+            else
+            {
+                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").Take(50).ToList();
+            }
+            
             return PartialView("_findByCardNumber");
         }
         [HttpGet]
         public PartialViewResult FindByCardNumber()
         {
-            ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs("", "").ToList().Take(0).ToList();
+            ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
             return PartialView("_findByCardNumber");
         }
 

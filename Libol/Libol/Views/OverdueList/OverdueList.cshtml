@@ -3,7 +3,7 @@
 @{
     /**/
 
-    ViewBag.Title = "OverdueList";
+    ViewBag.Title = "Quá hạn";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -18,8 +18,8 @@
         font-size: 0.8rem !important;
     }
 </style>
+<h4 style="margin-top: 20px;margin-bottom: 20px;">Thông tin thẻ bạn đọc quá hạn</h4>
 
-<label style="margin-top:10px; text-align: right ; color:red">Thông tin thẻ bạn đọc quá hạn</label>
 <div class="row">
     <div class="col-6">
         <div class="form-group row col-12">
@@ -36,7 +36,7 @@
                 <option value="-1">----- Chọn -----</option>
                 @foreach (var item in ViewBag.PatronGroup)
                 {
-                        <option value="@item.ID">@item.Name</option>
+                    <option value="@item.ID">@item.Name</option>
                 }
             </select>
         </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="form-group row col-3">
                     <div style="margin : auto">
-                        <button class="btn btn-primary form-control">Đặt lại</button>
+                        <button class="btn btn-primary form-control" onclick="ResetFields()">Đặt lại</button>
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
     <div class="col-6">
         <div class="form-group row col-12">
             <label class="control-label col-md-3 align-self-center">Thư viện: </label>
-            <select class="form-control col-md-4" style="width:80% !important" onchange="OnchangeLibrary()" id="intLibID" name="intLibID">
+            <select class="form-control col-md-4" style="width:80% !important" onchange="OnchangeLibrary()" id="intLibID">
                 <option value="-1">----- Chọn -----</option>
                 @foreach (var item in ViewBag.Library)
                 {
@@ -96,7 +96,7 @@
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-3 align-self-center">Kho: </label>
-            <select class="form-control col-md-4" name="libraryList" id="intLocID" >
+            <select class="form-control col-md-4" name="libraryList" id="intLocID">
                 <option value="-1">----- Chọn -----</option>
             </select>
         </div>
@@ -135,6 +135,7 @@
 
 
 <script>
+
 
     function OnchangeCollege() {
         var e = document.getElementById("college");
@@ -227,6 +228,27 @@
             }
         });
     }
+
+    function ResetFields() {
+        document.getElementById("txtSoThe").value = "";
+        document.getElementById("txtTenBanDoc").value = "";
+        document.getElementById("txtKhoaHoc").value = "";
+        document.getElementById("txtLopHoc").value = "";
+        document.getElementById("txtTenTaiLieu").value = "";
+        document.getElementById("txtSDKCB").value = "";
+        document.getElementById("txtNgayMuonTu").value = "mm/dd/yyyy";
+        document.getElementById("txtNgayMuonDen").value = "mm/dd/yyyy";
+        document.getElementById("txtNgayTraTu").value = "mm/dd/yyyy";
+        document.getElementById("txtNgayTraDen").value = "mm/dd/yyyy";
+        document.getElementById("txtSoNgayQuaHan").value = "";
+        document.getElementById("txtSoNgayQuaHanDen").value = "";
+        document.getElementById("intPatronGroupID").innerHTML = "<option value='-1'>----- Chọn -----</option>";
+        document.getElementById("college").innerHTML = "<option value='-1'>----- Chọn -----</option>";
+        document.getElementById("intLibID").innerHTML = "<option value='-1'>----- Chọn -----</option>";
+        document.getElementById("faculty").innerHTML = "<option value='-1'>----- Chọn -----</option>";
+        document.getElementById("intLocID").innerHTML = "<option value='-1'>----- Chọn -----</option>";
+    }
+    
 </script>
 
 

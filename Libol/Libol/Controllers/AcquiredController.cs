@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Libol.SupportClass;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,7 +9,7 @@ namespace Libol.Controllers
 {
     public class AcquiredController : Controller
     {
-        // GET: Acquired
+        [AuthAttribute(ModuleID = 0, RightID = "0")]
         public ActionResult Index()
         {
             return View();

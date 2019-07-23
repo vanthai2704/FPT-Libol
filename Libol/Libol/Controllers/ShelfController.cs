@@ -14,7 +14,8 @@ namespace Libol.Controllers
     {
         LibolEntities db = new LibolEntities();
         ShelfBusiness shelfBusiness = new ShelfBusiness();
-        // GET: Shelf
+
+        [AuthAttribute(ModuleID = 4, RightID = "44")]
         public ActionResult Index()
         {
 
@@ -25,8 +26,7 @@ namespace Libol.Controllers
             ViewData["ListCurrency"] = db.ACQ_CURRENCY.OrderBy(d => d.CurrencyCode).ToList();
             ViewData["ListDeleteReason"] = db.SP_HOLDING_REMOVE_REASON_SEL(0).ToList();
 
-            // Cần sửa userID = 49 thành userID đang đăng nhập. đây là dữ liệu sử dụng để test
-            List<SP_HOLDING_LIBRARY_SELECT_Result> listLibsResult = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, 49, 1);
+            List<SP_HOLDING_LIBRARY_SELECT_Result> listLibsResult = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, (int)Session["UserID"], 1);
             List<HOLDING_LIBRARY> libs = SP_HOLDING_LIBRARY_SELECT_Result.ConvertToHoldingLibrary(listLibsResult);
             ViewData["listLibs"] = libs;
 
@@ -55,7 +55,7 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult SelectHolding(int libID)
         {
-            List<SP_HOLDING_LOCATION_GET_INFO_Result> listLocsResult = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(libID, 49, 0, -1);
+            List<SP_HOLDING_LOCATION_GET_INFO_Result> listLocsResult = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(libID, (int)Session["UserID"], 0, -1);
             List<HOLDING_LOCATION> locs = SP_HOLDING_LOCATION_GET_INFO_Result.ConvertToHoldingLocation(listLocsResult);
             ViewData["listLocs"] = locs;
             return Json(locs, JsonRequestBehavior.AllowGet);

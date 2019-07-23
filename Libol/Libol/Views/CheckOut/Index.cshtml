@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Ghi mượn";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <head>
@@ -179,24 +179,6 @@
             },
             error: function (errormessage) {
                 $.unblockUI()
-            }
-        });
-    }
-
-
-    function rollbackacheckout(copyNumber) {
-        var empObj = {
-            strCopyNumbers: copyNumber,
-        };
-        $.ajax({
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            url: "/CheckOut/Rollbackacheckout",
-            data: JSON.stringify(empObj),
-            success: function (result) {
-                $("#contentcheckout").html(result);
-            },
-            error: function (errormessage) {
             }
         });
     }

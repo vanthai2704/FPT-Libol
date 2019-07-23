@@ -1,11 +1,11 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Ghi trả";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <head>
-
+    <script src="~/Scripts/jquery.blockUI.js"></script>
 
     <style>
 
@@ -141,11 +141,29 @@
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
             success: function (result) {
                 $("#contentcheckin").html(result);
+                $.unblockUI()
             },
             error: function (errormessage) {
                 console.log("abcssd");
+                $.unblockUI()
             }
         });
     }
