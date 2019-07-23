@@ -120,8 +120,12 @@
         List<SP_HOLDING_REMOVE_REASON_SEL_Result> listDeleteReason = ViewData["ListDeleteReason"] as List<SP_HOLDING_REMOVE_REASON_SEL_Result>; // list Delete reason
 
     }
-    <label class="col-md-12" style="color:red" AutoSize="true">@ViewBag.content</label>
 
+    <label class="col-md-12" style="color:red" AutoSize="true">@ViewBag.content</label>
+    @if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
+    {
+        <span style="color:red">@ViewBag.AlertMessage</span>
+    }
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12">
             <div class="form-group col-md-6">
@@ -229,10 +233,10 @@
         <div class="form-row col-md-12 form-inline">
 
 
-            <div class="form-group col-md-3">
-                <label class="col-md-5">Đăng kí cá biệt</label>
-                <input type="text" class="form-control col-md-2" id="txtCopyNumber">
-                <button type="button" class="btn btn-primary form-control col-md-4" onclick="GenCopyNumber()">Sinh giá trị</button>
+            <div class="form-group col-md-4">
+                <label class="col-md-3">Đăng kí cá biệt</label>
+                <input type="text" class="form-control col-md-5" id="txtCopyNumber" readonly>
+                <button type="button" class="btn btn-primary form-control col-md-3" onclick="GenCopyNumber()">Sinh giá trị</button>
             </div>
             <div class="form-group col-md-4">
                 <label class="col-md-4">Số lượng</label>
@@ -418,7 +422,7 @@
 
 
             "columnDefs": [{
-                
+
                     'targets': 0,
                     'checkboxes': {
                         'selectRow': true
@@ -426,7 +430,7 @@
                     'render': function () {
                         return '';
                     }
-                
+
             },
             {
                 "targets": [1],
@@ -506,7 +510,7 @@
                 } else {
                     $('td:eq(0)', row).html('');
                     $(row).addClass('no-select');
-                    
+
                 }
             },
             "order": [
@@ -514,7 +518,7 @@
             ],
         });
 
-        
+
 
         $('#table_holdinglist').on('click', '#select_all', function () {
             if ($('#select_all:checked').val() === 'on') {
@@ -650,8 +654,12 @@
         Price_Update = Price;
         Currency_Update = Currency;
         ReceiptedDate_Update = ReceiptedDate;
+
+        var from = AcquiredDate.split("/");
+        var acquiredDate = from[2] + "-" + from[1] + "-" + from[0];
+
         AcquiredDate_Update = AcquiredDate;
-        AcquiredSource_Update = AcquiredSource;
+        AcquiredSource_Update = acquiredDate;
         Note_Update = Note;
 
         if (Shelf == "null") {
@@ -677,7 +685,7 @@
         document.getElementById("txtPrice2").value = Price;
         document.getElementById("txtCallNumber2").value = CallNumber;
         document.getElementById("txtRecordNumber2").value = RecordNumber;
-        document.getElementById("txtAcquiredDate2").value = AcquiredDate;
+        document.getElementById("txtAcquiredDate2").value = acquiredDate;
         document.getElementById("txtNote2").value = Note;
 
         var currency = Currency.replace(/\s/g, '');
@@ -862,7 +870,7 @@
                 <tr>
                     <td style="width: 38%;text-align: right"><label for="txtPrice2">Giá tiền:</label></td>
                     <td style="width: 30%"><input type="text" class="form-control" id="txtPrice2"></td>
-                    <td style="" >
+                    <td style="">
                         <select class="form-control" name="ktlList" id="currencyList2" style="width: 40%">
                             @{
                                 foreach (ACQ_CURRENCY item in listCurrency)
@@ -887,7 +895,7 @@
                 </tr>
                 <tr>
                     <td style="width: 38%;text-align: right"><label for="txtAcquiredDate2">Ngày chứng từ:</label></td>
-                    <td style=""><input type="text" class="form-control" id="txtAcquiredDate2"></td>
+                    <td style=""><input type="date" class="form-control" id="txtAcquiredDate2"></td>
                 </tr>
                 <tr>
                     <td style="width: 38%;text-align: right"><label for="txtRecordNumber2">Số chứng từ:</label></td>
@@ -917,7 +925,7 @@
         </div>
         <div class="modal-body">
 
-            <table style="width: 100%" >
+            <table style="width: 100%">
                 <tr>
                     <td style="width: 38%;text-align: right"><label for="txtTitle2">Nhan đề chính</label></td>
                     <td style=""><input type="text" class="form-control" id="txtTitle2" style="width: 300px;margin-left: 20px;"></td>
