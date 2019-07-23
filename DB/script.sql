@@ -3211,3 +3211,914 @@ AS
 	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) + ' ORDER BY CPL.StartedDate DESC'
 EXEC (@stRSql)
 
+GO
+/****** Object:  Table [dbo].[FPT_RECOMMEND]    Script Date: 7/13/2019 5:03:11 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[FPT_RECOMMEND](
+	[RecommendID] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_FPT_RECOMMEND] PRIMARY KEY CLUSTERED 
+(
+	[RecommendID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[FPT_RECOMMEND_ITEM]    Script Date: 7/13/2019 5:03:11 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[FPT_RECOMMEND_ITEM](
+	[RecommendID] [varchar](50) NOT NULL,
+	[ItemID] [int] NOT NULL,
+ CONSTRAINT [PK_FK_FPT_RecommendID_ItemID] PRIMARY KEY CLUSTERED 
+(
+	[RecommendID] ASC,
+	[ItemID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[FPT_RECOMMEND_ITEM]  WITH CHECK ADD  CONSTRAINT [FK_FPT_RECOMMEND_Item_FPT_RECOMMEND] FOREIGN KEY([RecommendID])
+REFERENCES [dbo].[FPT_RECOMMEND] ([RecommendID])
+GO
+ALTER TABLE [dbo].[FPT_RECOMMEND_ITEM] CHECK CONSTRAINT [FK_FPT_RECOMMEND_Item_FPT_RECOMMEND]
+GO
+ALTER TABLE [dbo].[FPT_RECOMMEND_ITEM]  WITH CHECK ADD  CONSTRAINT [FK_FPT_RECOMMEND_Item_ITEM] FOREIGN KEY([ItemID])
+REFERENCES [dbo].[ITEM] ([ID])
+GO
+ALTER TABLE [dbo].[FPT_RECOMMEND_ITEM] CHECK CONSTRAINT [FK_FPT_RECOMMEND_Item_ITEM]
+GO
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_BY_RECOMMENDID]    Script Date: 07/23/2019 09:30:52 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,DucNV>
+-- Create date: <16/06/2019,,>
+-- Description:	<get data for 'Bao cao danh muc sach nhap' function,,>
+-- =============================================
+create PROCEDURE [dbo].[FPT_SP_GET_HOLDING_BY_RECOMMENDID] (@LibID int, @LocID int, @reid varchar(50), @StartDate date, @EndDate date, @OrderBy varchar(10))
+AS
+if @LocID =0 or @LocID is null
+BEGIN
+if @OrderBy = 'asc'
+	BEGIN
+	
+		if @StartDate is null AND @EndDate is null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID and F.FieldCode = 245
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END	
+		ELSE IF @StartDate is null AND @EndDate is null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID and F.FieldCode = 245 and T.RECOMMENDID =@reid
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is null AND @EndDate is not null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is not null AND @EndDate is null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is not null AND @EndDate is null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is null AND @EndDate is not null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21)and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) 
+			AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+	END
+	------------------------
+	ELSE IF @OrderBy = 'desc'
+	BEGIN
+	if @StartDate is null AND @EndDate is null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LibID = @LibID and F.FieldCode = 245
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END	
+	ELSE IF @StartDate is null AND @EndDate is null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LibID = @LibID and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is null AND @EndDate is not null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LibID = @LibID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is null AND @EndDate is not null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LibID = @LibID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21)and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) 
+		AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+END
+	
+END
+--- CHECK LocID---------------------------------------------
+else
+BEGIN
+if @OrderBy = 'asc'
+	BEGIN
+	
+		if @StartDate is null AND @EndDate is null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID and F.FieldCode = 245
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END	
+		ELSE IF @StartDate is null AND @EndDate is null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID and F.FieldCode = 245 and T.RECOMMENDID =@reid
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is null AND @EndDate is not null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is not null AND @EndDate is null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is not null AND @EndDate is null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is null AND @EndDate is not null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21)and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+		ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) 
+			AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY NgayBoSung ASC, U.DKCB asc
+		END
+	END
+	------------------------
+	ELSE IF @OrderBy = 'desc'
+	BEGIN
+	if @StartDate is null AND @EndDate is null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID and F.FieldCode = 245
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END	
+	ELSE IF @StartDate is null AND @EndDate is null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is null AND @EndDate is not null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is null AND @EndDate is not null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21)and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER AS SoChungTu, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as NhanDe, 
+				 cast(A.ReceiptedDate as Date) AS NgayChungTu,
+				U.DKCB, cast(A.ACQUIREDDATE as Date) AS NgayBoSung, A.LocationID, T.RECOMMENDID,
+				C.Year as NamXuatBan, A.Price as DonGia, REPLACE(A.Currency,' ','') as DonViTienTe, R.NXB as IdNhaXuatBan, U.ItemID
+			FROM HOLDING A
+			join (SELECT distinct ItemID ,
+STUFF(( SELECT  ', ' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('')
+), 1, 1, '') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on A.ItemID = U.ItemID
+			
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) 
+		AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY NgayBoSung desc, U.DKCB desc
+	END
+END
+	
+END

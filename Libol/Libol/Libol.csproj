@@ -195,6 +195,12 @@
     <Compile Include="EntityResult\SP_CATA_GET_MODIFIED_FIELDS_Result.cs" />
     <Compile Include="EntityResult\SP_CIR_OVERDUELIST_GETINFOR_Result.cs" />
     <Compile Include="EntityResult\SP_GET_CURRENT_CHECKIN_INFOR_Result.cs" />
+    <Compile Include="Models\FPT_RECOMMEND.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SP_GET_LOCKEDPATRONS_Result2.cs" />
     <Compile Include="Models\FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result.cs" />
     <Compile Include="Models\SP_UNLOCK_PATRON_CARD_Result.cs" />
@@ -464,9 +470,6 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_JOIN_ISBN_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_RECOMMEND.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_CIR_LIBLOCUSER_SEL_Result.cs">
@@ -2387,6 +2390,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="EntityResultRAS\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

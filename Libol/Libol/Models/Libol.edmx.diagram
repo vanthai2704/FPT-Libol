@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2b52a503fd424021864156eff977a143" Name="Diagram1" ZoomLevel="51">
+      <Diagram DiagramId="2b52a503fd424021864156eff977a143" Name="Diagram1" ZoomLevel="59">
         <EntityTypeShape EntityType="LibolModel.ACQ_ACQUIRE_SOURCE" Width="1.5" PointX="3" PointY="90.75" IsExpanded="true" />
         <EntityTypeShape EntityType="LibolModel.ACQ_BUDGET" Width="1.5" PointX="0.75" PointY="102.75" IsExpanded="true" />
         <EntityTypeShape EntityType="LibolModel.ACQ_BUDGET_ACCUMULATE" Width="1.5" PointX="3" PointY="121.25" IsExpanded="true" />
@@ -400,8 +400,8 @@
         <AssociationConnector Association="LibolModel.SYS_USER_REFERENCE" ManuallyRouted="false" />
         <AssociationConnector Association="LibolModel.SYS_USER_SER_LOCATION" ManuallyRouted="false" />
         <EntityTypeShape EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" Width="1.5" PointX="5.375" PointY="27.75" />
-        <EntityTypeShape EntityType="LibolModel.FPT_RECOMMEND" Width="1.5" PointX="5.25" PointY="94.625" />
-        <AssociationConnector Association="LibolModel.FK_FPT_RECOMMEND_ACQ_PO" />
+        <EntityTypeShape EntityType="LibolModel.FPT_RECOMMEND" Width="1.5" PointX="15.375" PointY="27.875" />
+        <AssociationConnector Association="LibolModel.FPT_RECOMMEND_ITEM" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

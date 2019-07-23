@@ -1708,7 +1708,7 @@ namespace Libol.Controllers
             List<Temper> listPO = new List<Temper>();
             if (sdd == "" && edd == "")
             {
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(LibID, LocID, recomCode, null, null, orderby).ToList())
+                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, null, null, orderby).ToList())
                 {
                     String tpDKCB = item.DKCB;
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
@@ -1726,14 +1726,14 @@ namespace Libol.Controllers
                     {
                         isb = ite.ISBN;
                     }
-                    listPO.Add(new Temper(uCount, item.REID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
                 }
                 ViewBag.POList = listPO;
             }
             else if (sdd != "" && edd == "")
             {
                 DateTime sdt = Convert.ToDateTime(sdd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(LibID, LocID, recomCode, sdt, null, orderby).ToList())
+                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, sdt, null, orderby).ToList())
                 {
                     String tpDKCB = item.DKCB;
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
@@ -1751,14 +1751,14 @@ namespace Libol.Controllers
                     {
                         isb = ite.ISBN;
                     }
-                    listPO.Add(new Temper(uCount, item.REID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
                 }
                 ViewBag.POList = listPO;
             }
             else if (sdd == "" && edd != "")
             {
                 DateTime edt = Convert.ToDateTime(edd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(LibID, LocID, recomCode, null, edt, orderby).ToList())
+                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, null, edt, orderby).ToList())
                 {
                     String tpDKCB = item.DKCB;
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
@@ -1776,7 +1776,7 @@ namespace Libol.Controllers
                     {
                         isb = ite.ISBN;
                     }
-                    listPO.Add(new Temper(uCount, item.REID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
                 }
                 ViewBag.POList = listPO;
             }
@@ -1784,7 +1784,7 @@ namespace Libol.Controllers
             {
                 DateTime sdt = Convert.ToDateTime(sdd);
                 DateTime edt = Convert.ToDateTime(edd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(LibID, LocID, recomCode, sdt, edt, orderby).ToList())
+                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, sdt, edt, orderby).ToList())
                 {
                     String tpDKCB = item.DKCB;
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
@@ -1802,7 +1802,7 @@ namespace Libol.Controllers
                     {
                         isb = ite.ISBN;
                     }
-                    listPO.Add(new Temper(uCount, item.REID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
                 }
                 ViewBag.POList = listPO;
             }
@@ -2543,85 +2543,84 @@ namespace Libol.Controllers
 
             return View();
         }
+        //    protected void export_Click(object sender, EventArgs e)
+        //    {
+        //        DataTable dtSource = new DataTable("Temper");
+        //        if (ViewBag.DisVND != null)
+        //        {
+        //            foreach (var item in ViewBag.DisVND)
+        //            {
+        //                dtSource.Rows.Add(new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
+        //                            item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
+        //                            item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien));
+        //            }
+        //        }
 
-        protected void export_Click(object sender, EventArgs e)
-        {
-            DataTable dtSource = new DataTable("Temper");
-            if (ViewBag.DisVND != null)
-            {
-                foreach (var item in ViewBag.DisVND)
-                {
-                    dtSource.Rows.Add(new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien));
-                }
-            }
+        //        GenerateWord(dtSource);
+        //    }
 
-            GenerateWord(dtSource);
-        }
-
-        public static void GenerateWord(DataTable dtSource)
-        {
-            StringBuilder sbDocBody = new StringBuilder(); ;
-            try
-            {
-                // Declare Styles
-                sbDocBody.Append("<style>");
-                sbDocBody.Append(".Header {  background-color:Navy; color:#ffffff; font-weight:bold;font-family:Verdana; font-size:12px;}");
-                sbDocBody.Append(".SectionHeader { background-color:#8080aa; color:#ffffff; font-family:Verdana; font-size:12px;font-weight:bold;}");
-                sbDocBody.Append(".Content { background-color:#ccccff; color:#000000; font-family:Verdana; font-size:12px;text-align:left}");
-                sbDocBody.Append(".Label { background-color:#ccccee; color:#000000; font-family:Verdana; font-size:12px; text-align:right;}");
-                sbDocBody.Append("</style>");
-                //
-                StringBuilder sbContent = new StringBuilder(); ;
-                sbDocBody.Append("<br><table align=\"center\" cellpadding=1 cellspacing=0 style=\"background-color:#000000;\">");
-                sbDocBody.Append("<tr><td width=\"500\">");
-                sbDocBody.Append("<table width=\"100%\" cellpadding=1 cellspacing=2 style=\"background-color:#ffffff;\">");
-                //
-                if (dtSource.Rows.Count > 0)
-                {
-                    sbDocBody.Append("<tr><td>");
-                    sbDocBody.Append("<table width=\"600\" cellpadding=\"0\" cellspacing=\"2\"><tr><td>");
-                    //
-                    // Add Column Headers
-                    sbDocBody.Append("<tr><td width=\"25\"> </td></tr>");
-                    sbDocBody.Append("<tr>");
-                    sbDocBody.Append("<td> </td>");
-                    for (int i = 0; i < dtSource.Columns.Count; i++)
-                    {
-                        sbDocBody.Append("<td class=\"Header\" width=\"120\">" + dtSource.Columns[i].ToString().Replace(".", "<br>") + "</td>");
-                    }
-                    sbDocBody.Append("</tr>");
-                    //
-                    // Add Data Rows
-                    for (int i = 0; i < dtSource.Rows.Count; i++)
-                    {
-                        sbDocBody.Append("<tr>");
-                        sbDocBody.Append("<td> </td>");
-                        for (int j = 0; j < dtSource.Columns.Count; j++)
-                        {
-                            sbDocBody.Append("<td class=\"Content\">" + dtSource.Rows[i][j].ToString() + "</td>");
-                        }
-                        sbDocBody.Append("</tr>");
-                    }
-                    sbDocBody.Append("</table>");
-                    sbDocBody.Append("</td></tr></table>");
-                    sbDocBody.Append("</td></tr></table>");
-                }
-                //
-                //HttpContext.Current.Response.Clear();
-                //HttpContext.Current.Response.Buffer = true;
-                ////
-                //HttpContext.Current.Response.AppendHeader("Content-Type", "application/msword");
-                //HttpContext.Current.Response.AppendHeader("Content-disposition", "attachment; filename=EmployeeDetails.doc");
-                //HttpContext.Current.Response.Write(sbDocBody.ToString());
-                //HttpContext.Current.Response.End();
-            }
-            catch (Exception ex)
-            {
-                // Ignore this error as this is caused due to termination of the Response Stream.
-            }
-        }
+        //    public static void GenerateWord(DataTable dtSource)
+        //    {
+        //        StringBuilder sbDocBody = new StringBuilder(); ;
+        //        try
+        //        {
+        //            // Declare Styles
+        //            sbDocBody.Append("<style>");
+        //            sbDocBody.Append(".Header {  background-color:Navy; color:#ffffff; font-weight:bold;font-family:Verdana; font-size:12px;}");
+        //            sbDocBody.Append(".SectionHeader { background-color:#8080aa; color:#ffffff; font-family:Verdana; font-size:12px;font-weight:bold;}");
+        //            sbDocBody.Append(".Content { background-color:#ccccff; color:#000000; font-family:Verdana; font-size:12px;text-align:left}");
+        //            sbDocBody.Append(".Label { background-color:#ccccee; color:#000000; font-family:Verdana; font-size:12px; text-align:right;}");
+        //            sbDocBody.Append("</style>");
+        //            //
+        //            StringBuilder sbContent = new StringBuilder(); ;
+        //            sbDocBody.Append("<br><table align=\"center\" cellpadding=1 cellspacing=0 style=\"background-color:#000000;\">");
+        //            sbDocBody.Append("<tr><td width=\"500\">");
+        //            sbDocBody.Append("<table width=\"100%\" cellpadding=1 cellspacing=2 style=\"background-color:#ffffff;\">");
+        //            //
+        //            if (dtSource.Rows.Count > 0)
+        //            {
+        //                sbDocBody.Append("<tr><td>");
+        //                sbDocBody.Append("<table width=\"600\" cellpadding=\"0\" cellspacing=\"2\"><tr><td>");
+        //                //
+        //                // Add Column Headers
+        //                sbDocBody.Append("<tr><td width=\"25\"> </td></tr>");
+        //                sbDocBody.Append("<tr>");
+        //                sbDocBody.Append("<td> </td>");
+        //                for (int i = 0; i < dtSource.Columns.Count; i++)
+        //                {
+        //                    sbDocBody.Append("<td class=\"Header\" width=\"120\">" + dtSource.Columns[i].ToString().Replace(".", "<br>") + "</td>");
+        //                }
+        //                sbDocBody.Append("</tr>");
+        //                //
+        //                // Add Data Rows
+        //                for (int i = 0; i < dtSource.Rows.Count; i++)
+        //                {
+        //                    sbDocBody.Append("<tr>");
+        //                    sbDocBody.Append("<td> </td>");
+        //                    for (int j = 0; j < dtSource.Columns.Count; j++)
+        //                    {
+        //                        sbDocBody.Append("<td class=\"Content\">" + dtSource.Rows[i][j].ToString() + "</td>");
+        //                    }
+        //                    sbDocBody.Append("</tr>");
+        //                }
+        //                sbDocBody.Append("</table>");
+        //                sbDocBody.Append("</td></tr></table>");
+        //                sbDocBody.Append("</td></tr></table>");
+        //            }
+        //            //
+        //            //HttpContext.Current.Response.Clear();
+        //            //HttpContext.Current.Response.Buffer = true;
+        //            ////
+        //            //HttpContext.Current.Response.AppendHeader("Content-Type", "application/msword");
+        //            //HttpContext.Current.Response.AppendHeader("Content-disposition", "attachment; filename=EmployeeDetails.doc");
+        //            //HttpContext.Current.Response.Write(sbDocBody.ToString());
+        //            //HttpContext.Current.Response.End();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Ignore this error as this is caused due to termination of the Response Stream.
+        //        }
+        //    }
     }
 
 }

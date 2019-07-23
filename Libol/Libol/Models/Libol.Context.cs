@@ -22142,5 +22142,34 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_UPDATE_UNLOCK_PATRON_CARD", strPatronCodeParameter, lockedDayParameter, noteParameter);
         }
+    
+        public virtual ObjectResult<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result> FPT_SP_GET_HOLDING_BY_RECOMMENDID(Nullable<int> libID, Nullable<int> locID, string reid, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, string orderBy)
+        {
+            var libIDParameter = libID.HasValue ?
+                new ObjectParameter("LibID", libID) :
+                new ObjectParameter("LibID", typeof(int));
+    
+            var locIDParameter = locID.HasValue ?
+                new ObjectParameter("LocID", locID) :
+                new ObjectParameter("LocID", typeof(int));
+    
+            var reidParameter = reid != null ?
+                new ObjectParameter("reid", reid) :
+                new ObjectParameter("reid", typeof(string));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            var orderByParameter = orderBy != null ?
+                new ObjectParameter("OrderBy", orderBy) :
+                new ObjectParameter("OrderBy", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result>("FPT_SP_GET_HOLDING_BY_RECOMMENDID", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter, orderByParameter);
+        }
     }
 }

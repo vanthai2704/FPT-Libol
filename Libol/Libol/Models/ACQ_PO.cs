@@ -25,7 +25,6 @@ namespace Libol.Models
             this.SER_ITEM = new HashSet<SER_ITEM>();
             this.SER_ROUTING = new HashSet<SER_ROUTING>();
             this.ITEMs = new HashSet<ITEM>();
-            this.FPT_RECOMMEND = new HashSet<FPT_RECOMMEND>();
         }
     
         public int ID { get; set; }
@@ -63,7 +62,5 @@ namespace Libol.Models
         public virtual ICollection<SER_ROUTING> SER_ROUTING { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ITEM> ITEMs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<FPT_RECOMMEND> FPT_RECOMMEND { get; set; }
     }
 }
