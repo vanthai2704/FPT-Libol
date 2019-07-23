@@ -13,7 +13,7 @@ namespace Libol.Controllers
         LibolEntities le = new LibolEntities();
         AcquisitionBusiness ab = new AcquisitionBusiness();
         List<Temper> listTempt = new List<Temper>();
-        int UserID = 49;
+        
         public string GetContent(string copynumber)
         {
             string validate = copynumber.Replace("$a", " ");
@@ -34,7 +34,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> lib = new List<SelectListItem>();
             lib.Add(new SelectListItem { Text = "Hãy chọn thư viện", Value = "" });
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int) Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -63,7 +63,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL(UserID, id).ToList())
+            foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL((int)Session["UserID"], id).ToList())
             {
                 loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
             }
@@ -1609,7 +1609,7 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -1623,7 +1623,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            ViewBag.Result = ab.FPT_ACQ_YEAR_STATISTIC_LIST(LibID, LocID, strFromYear, strToYear, UserID);
+            ViewBag.Result = ab.FPT_ACQ_YEAR_STATISTIC_LIST(LibID, LocID, strFromYear, strToYear, (int)Session["UserID"]);
             return PartialView("GetYearStats");
         }
         public ActionResult StatisticMonth()
@@ -1632,7 +1632,7 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -1646,7 +1646,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            ViewBag.Result = ab.FPT_ACQ_MONTH_STATISTIC_LIST(LibID, LocID, strInYear, UserID);
+            ViewBag.Result = ab.FPT_ACQ_MONTH_STATISTIC_LIST(LibID, LocID, strInYear, (int)Session["UserID"]);
             return PartialView("GetMonthStats");
         }
         public ActionResult LiquidationStats()
@@ -1655,7 +1655,7 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -1668,7 +1668,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            ViewBag.Result = ab.FPT_GET_LIQUIDBOOKS_LIST(strLiquidID, LibID, LocID, strFromDate, strToDate, UserID);
+            ViewBag.Result = ab.FPT_GET_LIQUIDBOOKS_LIST(strLiquidID, LibID, LocID, strFromDate, strToDate, (int)Session["UserID"]);
             foreach(var item in ViewBag.Result)
             {
                 item.Content = GetContent(item.Content);
@@ -1680,7 +1680,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> lib = new List<SelectListItem>();
             lib.Add(new SelectListItem { Text = "Hãy chọn thư viện", Value = "" });
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
