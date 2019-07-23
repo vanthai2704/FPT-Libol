@@ -644,9 +644,6 @@
     <Compile Include="Models\FPT_EDU_SP_GETLOANTYPES_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_RECOMMEND.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -2388,8 +2385,6 @@
     <Content Include="Views\Acquired\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\Base\" />
-    <Folder Include="Views\Default\" />
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
     <Content Include="Views\Renew\Renew.cshtml" />
     <Content Include="Views\Shared\Permisssion.cshtml" />
@@ -2403,7 +2398,6 @@
     <Content Include="Views\Acquisition\HoldingLocRemove.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="EntityResultRAS\" />
   </ItemGroup>
   <ItemGroup>
