@@ -88,7 +88,7 @@ namespace Libol.Controllers
             return PartialView("_showPatronInfo");
         }
 
-        //thu hoi 1 an pham
+        //thu hồi 1 ấn phẩm vừa mượn
         public PartialViewResult Rollbackacheckout (string strCopyNumbers)
         {
             db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("MM/dd/yyyy"),
@@ -102,7 +102,7 @@ namespace Libol.Controllers
             return PartialView("_checkoutSuccess");
         }
 
-        //thay đổi ghi chú
+        //thay đổi ghi chú của ấn phẩm đang mượn
         public PartialViewResult ChangeNote(string strCopyNumber, string strNote, string strDueDate)
         {
             int lngTransactionID = db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumber).First().ID;
