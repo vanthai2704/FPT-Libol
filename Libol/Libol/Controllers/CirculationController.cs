@@ -325,6 +325,7 @@ namespace Libol.Controllers
             return View();
         }
 
+        [AuthAttribute(ModuleID = 3, RightID = "72")]
         public ActionResult LockPatronStats()
         {
             List<SelectListItem> lib = new List<SelectListItem>

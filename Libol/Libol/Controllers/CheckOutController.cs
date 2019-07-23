@@ -20,16 +20,10 @@ namespace Libol.Controllers
         private static string patroncode = "0";
         FormatHoldingTitle f = new FormatHoldingTitle();
 
-        // GET: CheckOut
+        [AuthAttribute(ModuleID = 3, RightID = "57")]
         public ActionResult Index()
         {
             patroncode = "0";
-            return View();
-        }
-
-        // GET: Giahan
-        public ActionResult Giahan()
-        {
             return View();
         }
 
@@ -111,13 +105,21 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult FindByName(string strFullName)
         {
-            ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").ToList().Take(50).ToList();
+            if (String.IsNullOrEmpty(strFullName))
+            {
+                ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
+            }
+            else
+            {
+                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").Take(50).ToList();
+            }
+            
             return PartialView("_findByCardNumber");
         }
         [HttpGet]
         public PartialViewResult FindByCardNumber()
         {
-            ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs("", "").ToList().Take(0).ToList();
+            ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
             return PartialView("_findByCardNumber");
         }
 
