@@ -9,3 +9,15 @@ Libol/.vs/Libol/v15/.suo
 *.dll
 Libol/Libol/obj/Debug/Libol.csproj.FileListAbsolute.txt
 Libol/Libol/obj/Debug/Libol.csprojAssemblyReference.cache
+Libol/Libol/obj/Debug/Libol.dll
+Libol/Libol/obj/Debug/TempPE/Models.Libol.Designer.cs.dll
+Libol/Libol/obj/Debug/TempPE/Models.Libol.cs.dll
+Libol/Libol/obj/Debug/Libol.pdb
+Libol/Libol/obj/Debug/edmxResourcesToEmbed/Models/Libol.ssdl
+Libol/Libol/obj/Debug/edmxResourcesToEmbed/Models/Libol.msl
+Libol/Libol/obj/Debug/edmxResourcesToEmbed/Models/Libol.csdl
+*.ide
+Libol/.vs/Libol/v15/.suo
+Libol/.vs/Libol/v15/Server/sqlite3/storage.ide
+Libol/.vs/Libol/v15/Server/sqlite3/storage.ide-shm
+Libol/.vs/Libol/v15/Server/sqlite3/storage.ide-wal

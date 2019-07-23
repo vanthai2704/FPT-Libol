@@ -43,6 +43,7 @@
                 margin-left: -15rem;
             }
         }
+
         th {
             font-size: 14px;
         }
@@ -89,21 +90,21 @@
                             <div class="form-group"><label class="col-form-label">Hạn trả:</label></div>
                         </div>
                         <div class="col-8">
-                            <div class="form-group"><input class="form-control" id="strDueDate" type="date"  /></div>
+                            <div class="form-group"><input class="form-control" id="strDueDate" type="date" /></div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
-                        <div class="col"><input class="form-control" id="strPatronCode" type="text" onkeypress="checkoutCardInfo(event)" /></div>
+                        <div class="col"><input class="form-control" id="strPatronCode" type="text" onchange="getCardInfo()" /></div>
                         <div class="col-4"><label class="col-form-label"><a onclick="findByCardNumber();" href="#">Tìm</a> | <a href="/Patron/Create">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" id="strCopyNumber" type="text" onkeypress="checkoutSuccess(event)" /></div>
-                        <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
+                        <div class="col"><input class="form-control" id="strCopyNumber" type="text" onkeypress="checkout(event)" /></div>
+                        <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
-                        <div class="col"><button class="btn btn-primary" type="button" id="myButton">Ghi mượn</button></div>
+                        <div class="col"><button class="btn btn-primary" type="button" onclick="checkoutSuccess()">Ghi mượn</button></div>
                     </div>
                 </div>
 
@@ -114,17 +115,14 @@
     </div>
 </body>
 <script type="text/javascript">
-    document.getElementById("myButton").onclick = function () {
-        $.ajax({
-            url: "CheckOut/CheckOutCardInfo",
-            type: "Get",
-            success: function (Response) {
-                $("#contentcheckout").html(Response)
-            }
-        });
-    };
 
-    function checkoutSuccess(e) {
+    function checkout(e) {
+        if (e.keyCode == 13) {
+            checkoutSuccess()
+        }
+    }
+   
+    function checkoutSuccess() {
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
@@ -134,60 +132,57 @@
             strCopyNumbers: document.getElementById("strCopyNumber").value,
             strCheckOutDate: document.getElementById("strCheckoutDate").value
         };
-        if (e.keyCode == 13) {
-            $.ajax({
-                url: "CheckOut/CheckOutSuccess",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    $("#contentcheckout").html(result)
-                },
-                error: function (errormessage) {
-                    console.log("error");
-                }
-            });
-        }
+        $.ajax({
+            url: "CheckOut/CheckOutSuccess",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#contentcheckout").html(result)
+            },
+            error: function (errormessage) {
+                console.log("error");
+            }
+        });
     }
 
-    function checkoutCardInfo(e) {
+    function getCardInfo() {
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
             strFixDueDate: document.getElementById("strDueDate").value
         };
-        if (e.keyCode == 13) {
-            $.ajax({
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                beforeSend: function (request) {
-                    $.blockUI({
-                        css: {
-                            border: 'none',
-                            padding: '15px',
-                            backgroundColor: '#000',
-                            '-webkit-border-radius': '10px',
-                            '-moz-border-radius': '10px',
-                            opacity: .5,
-                            color: '#fff'
-                        }
-                    });
-                },
-                complete: function (request, json) {
+        $.ajax({
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
 
-                },
-                url: "/CheckOut/CheckOutCardInfo",
-                data: JSON.stringify(empObj),
-                success: function (result) {
-                    $("#contentcheckout").html(result);
-                    $.unblockUI()
-                },
-                error: function (errormessage) {
-                    $.unblockUI()
-                }
-            });
-        }
+            },
+            url: "/CheckOut/CheckOutCardInfo",
+            data: JSON.stringify(empObj),
+            success: function (result) {
+                $("#contentcheckout").html(result);
+                $.unblockUI()
+            },
+            error: function (errormessage) {
+                $.unblockUI()
+            }
+        });
     }
+
 
     function rollbackacheckout(copyNumber) {
         var empObj = {
@@ -204,6 +199,58 @@
             error: function (errormessage) {
             }
         });
+    }
+
+    function findByCardNumber() {
+        $.ajax({
+            url: "/CheckOut/FindByCardNumber",
+            type: "GET",
+            success: function (result) {
+                $("#contentcheckout").html(result);
+                console.log('ýes');
+            },
+            error: function (errormessage) {
+                console.log('error')
+            }
+        });
+    }
+
+    function Searchpatronbyname() {
+        var empObj = {
+            strFullName: document.getElementById("searchpatronbyname").value
+        };
+        $.ajax({
+            url: "/CheckOut/FindByName",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#contentcheckout").html(result);
+                console.log('ýes');
+            },
+            error: function (errormessage) {
+                console.log('error')
+            }
+        });
+    }
+    function btnsearchpatron() {
+        var empObj = {
+            strFullName: document.getElementById("searchpatronbyname").value
+        };
+        $.ajax({
+            url: "/CheckOut/FindByName",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#contentcheckout").html(result);
+                console.log('ýes');
+            },
+            error: function (errormessage) {
+                console.log('error')
+            }
+        });
+
     }
 
 </script>

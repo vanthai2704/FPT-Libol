@@ -12,6 +12,17 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    @Scripts.Render("~/Content/CustomJS/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/CustomJS/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/CustomJS/dataTables.buttons.min.js")
+    @Scripts.Render("~/Content/CustomJS/buttons.bootstrap4.min.js")
+    @Scripts.Render("~/Content/CustomJS/jszip.min.js")
+    @Scripts.Render("~/Content/CustomJS/pdfmake.min.js")
+    @Scripts.Render("~/Content/CustomJS/vfs_fonts.js")
+    @Scripts.Render("~/Content/CustomJS/buttons.html5.min.js")
+    @Scripts.Render("~/Content/CustomJS/buttons.print.min.js")
+    @Scripts.Render("~/Content/CustomJS/buttons.colVis.min.js")
+    @Scripts.Render("~/Content/CustomJS/jstree.min.js")
     <style>
         .navbar {
             padding: 0 !important;
@@ -77,8 +88,6 @@
         }
     </script>
     @*END------------SCRIPT FOR LOGIN FUNCTION*@
-
-    
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -100,30 +109,42 @@
                                 <a class="dropdown-item" href="/Patron/PatronProfile">Hồ sơ</a>
 
                                 <a class="dropdown-item" href="#">Thẻ</a>
-                                <a class="dropdown-item" href="/Patron/AddPatronByFile">Xử lý lô</a>
                                 <a class="dropdown-item" href="#">Thống kê</a>
                             </div>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" onclick="dodajAktywne(this)">
                             <a class="nav-link" href="/Catalogue/MainTab">Biên mục</a>
                         </li>
-
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown03">
                                 <a class="dropdown-item" href="/CheckOut">Ghi mượn</a>
                                 <a class="dropdown-item" href="/CheckIn">Ghi trả</a>
-                                <a class="dropdown-item" href="/CheckOut/Giahan">Gia hạn</a>
+                                <a class="dropdown-item" href="/Renew/Renew">Gia hạn</a>
+                                <a class="dropdown-item" href="/OverdueList/OverdueList">Quá hạn</a>
+                                <a class="dropdown-item" href="/Circulation/LockPatronStats">Chính sách</a>
+                                <a class="dropdown-item" href="/Circulation/Index">Báo cáo</a>
+                                @*<div class="dropdown-item dropright dropdown-toggle" data-toggle="dropdown">
+                                        <a>Báo cáo</a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="/Circulation/ReportLoanCopy">Từng mượn</a>
+                                            <a class="dropdown-item" href="/Circulation/ReportOnLoanCopy">Đang mượn</a>
+                                            <a class="dropdown-item" href="#">Submenu</a>
+                                            <a class="dropdown-item" href="#">Submenu0</a>
+                                        </div>
+                                    </div>*@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bổ sung</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown04">
                                 <a class="dropdown-item" href="/Acquired/Index">Bổ sung</a>
+                                <a class="dropdown-item" href="/AcquireReport/AcquisitionIndex">Bổ sung</a>
+                                <a class="dropdown-item" href="/AcquireReport/AcquireStatisticIndex">Thống kê</a>
                                 <a class="dropdown-item" href="#">Kho</a>
-                                <a class="dropdown-item" href="#">Thống kê</a>
                                 <a class="dropdown-item" href="/PrintBarcode">In mã vạch</a>
                                 <a class="dropdown-item" href="/PrintLabel">In nhãn</a>
+                                <a class="dropdown-item" href="/Acquisition/HoldingLocRemove">Thanh lý</a>
                             </div>
                         </li>
                         <li class="nav-item">
@@ -145,5 +166,6 @@
         </footer>
     </div>
     <div class="g-signin2" data-onsuccess="onSignIn" style="display:none;"></div>
+
 </body>
 </html>

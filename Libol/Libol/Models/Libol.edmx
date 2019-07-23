@@ -2786,7 +2786,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <PropertyRef Name="Email" />
           </Key>
           <Property Name="Email" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="ID" Type="int" />
+          <Property Name="ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SYS_USER_LOCATION">
           <Key>
@@ -3822,6 +3822,30 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="FIELD900S">
+              <PropertyRef Name="ItemID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FPT_RECOMMEND_Item_FPT_RECOMMEND">
+          <End Role="FPT_RECOMMEND" Type="Self.FPT_RECOMMEND" Multiplicity="1" />
+          <End Role="FPT_RECOMMEND_ITEM" Type="Self.FPT_RECOMMEND_ITEM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FPT_RECOMMEND">
+              <PropertyRef Name="RecommendID" />
+            </Principal>
+            <Dependent Role="FPT_RECOMMEND_ITEM">
+              <PropertyRef Name="RecommendID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FPT_RECOMMEND_Item_ITEM">
+          <End Role="ITEM" Type="Self.ITEM" Multiplicity="1" />
+          <End Role="FPT_RECOMMEND_ITEM" Type="Self.FPT_RECOMMEND_ITEM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ITEM">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FPT_RECOMMEND_ITEM">
               <PropertyRef Name="ItemID" />
             </Dependent>
           </ReferentialConstraint>
@@ -5283,6 +5307,72 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strInput" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="FPT_ACQ_MONTH_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="strInYear" Type="varchar" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_YEAR_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="strFromYear" Type="varchar" Mode="In" />
+          <Parameter Name="strToYear" Type="varchar" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ADMIN_GET_RIGHTS_ACCEPT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModuleID" Type="int" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ADMIN_GET_RIGHTS_DENY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModuleID" Type="int" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+          <Parameter Name="intUserParentID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ADMIN_GET_RIGHTS_DENY_ADMIN" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModuleID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ADMIN_GET_RIGHTS_WHEN_CREATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intModuleID" Type="int" Mode="In" />
+          <Parameter Name="intParentID" Type="int" Mode="In" />
+          <Parameter Name="IsBasic" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_BORROWNUMBER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="itemID" Type="int" Mode="In" />
+          <Parameter Name="price" Type="real" Mode="In" />
+          <Parameter Name="acqdate" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_CHECK_ITEMID_AND_ACQUIREDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LocID" Type="int" Mode="In" />
+          <Parameter Name="CDate" Type="date" Mode="In" />
+          <Parameter Name="itemId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+          <Parameter Name="intLibID" Type="int" Mode="In" />
+          <Parameter Name="strLocPrefix" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+          <Parameter Name="intLibID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_CIR_MONTH_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intType" Type="int" Mode="In" />
+          <Parameter Name="intStatus" Type="int" Mode="In" />
+          <Parameter Name="strInYear" Type="varchar" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_CIR_YEAR_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intType" Type="int" Mode="In" />
+          <Parameter Name="intStatus" Type="int" Mode="In" />
+          <Parameter Name="strFromYear" Type="varchar" Mode="In" />
+          <Parameter Name="strToYear" Type="varchar" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
         <Function Name="FPT_EDU_ADD_COLLEGE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="College" Type="nvarchar" Mode="In" />
         </Function>
@@ -5520,6 +5610,40 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCreator" Type="nvarchar" Mode="In" />
           <Parameter Name="intIsAuthority" Type="int" Mode="In" />
         </Function>
+        <Function Name="FPT_SP_CIR_GET_RENEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+          <Parameter Name="intType" Type="smallint" Mode="In" />
+          <Parameter Name="strCodeVal" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_CIR_LIB_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_CIR_LIBLOCUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+          <Parameter Name="intLibID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_COPYNUMBER_STRING" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="libid" Type="int" Mode="In" />
+          <Parameter Name="acqdate" Type="varchar" Mode="In" />
+          <Parameter Name="price" Type="real" Mode="In" />
+          <Parameter Name="itemid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LibID" Type="int" Mode="In" />
+          <Parameter Name="LocID" Type="int" Mode="In" />
+          <Parameter Name="POID" Type="int" Mode="In" />
+          <Parameter Name="StartDate" Type="date" Mode="In" />
+          <Parameter Name="EndDate" Type="date" Mode="In" />
+          <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_HOLDING_BY_RECOMMENDID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="LibID" Type="int" Mode="In" />
+          <Parameter Name="LocID" Type="int" Mode="In" />
+          <Parameter Name="reid" Type="varchar" Mode="In" />
+          <Parameter Name="StartDate" Type="date" Mode="In" />
+          <Parameter Name="EndDate" Type="date" Mode="In" />
+          <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="FPT_SP_GET_STAT_BOOK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
           <Parameter Name="strLocationID" Type="nvarchar" Mode="In" />
@@ -5571,9 +5695,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="SEARCH_CODE_TITLE_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strIDs" Type="varchar" Mode="In" />
           <Parameter Name="smintCHECKJAVASCRIPT" Type="smallint" Mode="In" />
-        </Function>
-        <Function Name="SearchAllTables" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="SearchStr" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="SONDP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strACQIDs" Type="varchar" Mode="In" />
@@ -8788,6 +8909,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         </Function>
         <Function Name="SP_HOLDING_LIBLOC_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SP_HOLDING_LIBLOCUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+          <Parameter Name="intLibID" Type="int" Mode="In" />
         </Function>
         <Function Name="SP_HOLDING_LIBRARY_INS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strAddress" Type="nvarchar" Mode="In" />
@@ -12216,6 +12341,14 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="ITEM" EntitySet="ITEM" />
             <End Role="FIELD900S" EntitySet="FIELD900S" />
           </AssociationSet>
+          <AssociationSet Name="FK_FPT_RECOMMEND_Item_FPT_RECOMMEND" Association="Self.FK_FPT_RECOMMEND_Item_FPT_RECOMMEND">
+            <End Role="FPT_RECOMMEND" EntitySet="FPT_RECOMMEND" />
+            <End Role="FPT_RECOMMEND_ITEM" EntitySet="FPT_RECOMMEND_ITEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FPT_RECOMMEND_Item_ITEM" Association="Self.FK_FPT_RECOMMEND_Item_ITEM">
+            <End Role="ITEM" EntitySet="ITEM" />
+            <End Role="FPT_RECOMMEND_ITEM" EntitySet="FPT_RECOMMEND_ITEM" />
+          </AssociationSet>
           <AssociationSet Name="FK_HOLDING_ACQ_ACQUIRE_SOURCE" Association="Self.FK_HOLDING_ACQ_ACQUIRE_SOURCE">
             <End Role="ACQ_ACQUIRE_SOURCE" EntitySet="ACQ_ACQUIRE_SOURCE" />
             <End Role="HOLDING" EntitySet="HOLDING" />
@@ -15257,7 +15390,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <NavigationProperty Name="HOLDING_LOCATION1" Relationship="Self.SYS_USER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
           <NavigationProperty Name="SYS_REFERENCE" Relationship="Self.SYS_USER_REFERENCE" FromRole="SYS_USER" ToRole="SYS_REFERENCE" />
           <NavigationProperty Name="HOLDING_LOCATION2" Relationship="Self.SYS_USER_SER_LOCATION" FromRole="SYS_USER" ToRole="HOLDING_LOCATION" />
-          <NavigationProperty Name="SYS_USER_GOOGLE_ACCOUNT" Relationship="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" FromRole="SYS_USER" ToRole="SYS_USER_GOOGLE_ACCOUNT" />
         </EntityType>
         <EntityType Name="SYS_USER_RIGHT">
           <Key>
@@ -25021,11 +25153,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="TESTCAI" />
-          <EntitySet Name="SYS_USER_GOOGLE_ACCOUNT" EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" />
-          <AssociationSet Name="FK__SYS_USER_GOO__ID__600DFEBC" Association="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC">
-            <End Role="SYS_USER" EntitySet="SYS_USER" />
-            <End Role="SYS_USER_GOOGLE_ACCOUNT" EntitySet="SYS_USER_GOOGLE_ACCOUNT" />
-          </AssociationSet>
           <FunctionImport Name="DemoGetMarcForm">
             <Parameter Name="intFormID" Mode="In" Type="Int32" />
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
@@ -29683,26 +29810,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="COUNTRY" Nullable="false" MaxLength="100" />
           <Property Type="String" Name="PROVINCE" Nullable="false" MaxLength="50" />
         </ComplexType>
-        <EntityType Name="SYS_USER_GOOGLE_ACCOUNT">
-          <Key>
-            <PropertyRef Name="Email" />
-          </Key>
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ID" Type="Int32" />
-          <NavigationProperty Name="SYS_USER" Relationship="LibolModel.FK__SYS_USER_GOO__ID__600DFEBC" FromRole="SYS_USER_GOOGLE_ACCOUNT" ToRole="SYS_USER" />
-        </EntityType>
-        <Association Name="FK__SYS_USER_GOO__ID__600DFEBC">
-          <End Type="LibolModel.SYS_USER" Role="SYS_USER" Multiplicity="0..1" />
-          <End Type="LibolModel.SYS_USER_GOOGLE_ACCOUNT" Role="SYS_USER_GOOGLE_ACCOUNT" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SYS_USER">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="SYS_USER_GOOGLE_ACCOUNT">
-              <PropertyRef Name="ID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="SP_CATA_GET_MARC_FORM_2019_Result">
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
@@ -33010,7 +33117,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SEARCH_CODE_TITLE_SEL" FunctionName="LibolModel.Store.SEARCH_CODE_TITLE_SEL" />
-          <FunctionImportMapping FunctionImportName="SearchAllTables" FunctionName="LibolModel.Store.SearchAllTables" />
           <FunctionImportMapping FunctionImportName="SONDP" FunctionName="LibolModel.Store.SONDP" />
           <FunctionImportMapping FunctionImportName="SP_ABC" FunctionName="LibolModel.Store.SP_ABC" />
           <FunctionImportMapping FunctionImportName="SP_ACQ_ACCUMULATE_UPDATE" FunctionName="LibolModel.Store.SP_ACQ_ACCUMULATE_UPDATE" />
@@ -39622,15 +39728,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_DELETE" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_DELETE" />
           <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_INSERT" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_INSERT" />
           <FunctionImportMapping FunctionImportName="SQ_CIR_PATRON_GROUP_LOC_UPDATE" FunctionName="LibolModel.Store.SQ_CIR_PATRON_GROUP_LOC_UPDATE" />
-          <FunctionImportMapping FunctionImportName="TESTCAI" FunctionName="LibolModel.Store.TESTCAI" />
-          <EntitySetMapping Name="SYS_USER_GOOGLE_ACCOUNT">
-            <EntityTypeMapping TypeName="LibolModel.SYS_USER_GOOGLE_ACCOUNT">
-              <MappingFragment StoreEntitySet="SYS_USER_GOOGLE_ACCOUNT">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="DemoGetMarcForm" FunctionName="LibolModel.Store.SP_CATA_GET_MARC_FORM" />
            <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE">
             <ResultMapping>
