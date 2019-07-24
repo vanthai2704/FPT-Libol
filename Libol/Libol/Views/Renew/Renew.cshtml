@@ -8,7 +8,7 @@
 <h4 style="margin-top: 20px;margin-bottom: 20px;">Gia hạn</h4>
 <div class="row">
     <div class="col">
-        <label>Mã số:</label><input type="text" id="fieldsearch">
+        <label>Mã số: </label><input type="text" id="fieldsearch">
         <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-1" name="groupradio" value="3" checked><label class="form-check-label" for="formCheck-1">ĐKCB</label></div>
         <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-2" name="groupradio" value="1"><label class="form-check-label" for="formCheck-2">Số thẻ</label></div>
         <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="formCheck-3" name="groupradio" value="2"><label class="form-check-label" for="formCheck-3">Mã tài liệu</label></div>
@@ -20,7 +20,7 @@
 </div>
 <div class="row">
     <div class="col">
-        <label>Ngày ra hạn cụ thể:</label><input type="date" id="strFixedDueDate">
+        <label>Ngày ra hạn cụ thể: </label><input type="date" id="strFixedDueDate">
         <button class="btn btn-primary" type="button" onclick="renew()">Gia hạn</button>
     </div>
 </div>
@@ -79,6 +79,7 @@
             type: "POST",
             success: function (result) {
                 $("#content").html(result);
+                alert("" + @ViewBag.message+ "");
             },
             error: function (errormessage) {
                 console.log("abcssd");

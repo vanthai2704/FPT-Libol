@@ -196,7 +196,7 @@
 
     function Searchpatronbyname() {
         var empObj = {
-            strFullName: document.getElementById("searchpatronbyname").value
+            strFullName: document.getElementById("txtFullName").value
         };
         $.ajax({
             url: "/CheckOut/FindByName",
@@ -229,7 +229,7 @@
     }
     function btnsearchpatron() {
         var empObj = {
-            strFullName: document.getElementById("searchpatronbyname").value
+            strFullName: document.getElementById("txtFullName").value
         };
         $.ajax({
             url: "/CheckOut/FindByName",
