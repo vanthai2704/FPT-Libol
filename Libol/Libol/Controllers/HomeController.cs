@@ -9,9 +9,11 @@ namespace Libol.Controllers
 {
     public class HomeController : Controller
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         [AuthAttribute(ModuleID = 0, RightID = "0")]
         public ActionResult Index()
         {
+            log.Info("Start Homepage!");
             return View();
         }
     }
