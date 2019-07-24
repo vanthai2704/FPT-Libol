@@ -26,7 +26,7 @@ namespace Libol.Controllers
 
             return validate.Trim();
         }
-        // GET: Circulation
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult Index()
         {
             return View();
@@ -37,6 +37,7 @@ namespace Libol.Controllers
             return View();
         }
 
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult ReportOnLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -114,6 +115,7 @@ namespace Libol.Controllers
             return PartialView("GetFilteredOnLoanStats");
         }
         //-------------------END OF ONLOAN REPORT---------------------
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult ReportLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -237,6 +239,7 @@ namespace Libol.Controllers
             ViewData["lib"] = lib;
             return View();
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticYear()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -311,6 +314,7 @@ namespace Libol.Controllers
             ViewBag.UsingResult = cb.GET_FPT_CIR_MONTH_STATISTIC_LIST(LibID, LocID, Type, 1, strInYear, UserID);
             return PartialView("GetMonthStats");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticMonth()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -408,6 +412,7 @@ namespace Libol.Controllers
             return PartialView("GetLockPatronStats");
         }
 
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticPatronGroup()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -437,6 +442,7 @@ namespace Libol.Controllers
 
             return PartialView("DisplayPatronGroup");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticTopPatron()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -462,6 +468,7 @@ namespace Libol.Controllers
             ViewBag.test = result;
             return PartialView("DisplayTopPatron");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticTopCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>

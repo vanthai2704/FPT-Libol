@@ -1,5 +1,6 @@
 ﻿using Libol.EntityResult;
 using Libol.Models;
+using Libol.SupportClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Libol.Controllers
         private static Byte Type = 0;
         private static string CodeVal = "";
 
-        // GET: Renew
+        [AuthAttribute(ModuleID = 3, RightID = "149")]
         public ActionResult Renew()
         {
             return View();
@@ -31,6 +32,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 3, RightID = "72")]
         public PartialViewResult Renew(int[] intLoanID, Byte intAddTime, Byte intTimeUnit, string strFixedDueDate,string[] duedates, int [] inttimes, int[] intrange)
         {
             for(int i = 0; i < intLoanID.Length; i++)
