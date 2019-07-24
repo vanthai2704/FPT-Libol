@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'E:\Github\FPT-Libol\Libol\Libol\Models\Libol.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\CapstoneProject\FPT-Libol\Libol\Libol\Models\Libol.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

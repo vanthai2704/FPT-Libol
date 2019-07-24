@@ -25213,7 +25213,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strIDSource" Mode="In" Type="Int32" />
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="TESTCAI" />
           <FunctionImport Name="DemoGetMarcForm">
             <Parameter Name="intFormID" Mode="In" Type="Int32" />
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />

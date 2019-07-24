@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Libol.Models;
 using Libol.EntityResult;
 using System.Data.Entity.Core.Objects;
+using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
@@ -13,7 +14,8 @@ namespace Libol.Controllers
     {
         private LibolEntities db = new LibolEntities();
         CatalogueBusiness catalogueBusiness = new CatalogueBusiness();
-        // GET: Catalogue
+
+        [AuthAttribute(ModuleID = 1, RightID = "0")]
         public ActionResult MainTab()
         {
 
@@ -24,6 +26,7 @@ namespace Libol.Controllers
 
         //----------------Add New Cata ----------------
         //---------------------------------------------
+        [AuthAttribute(ModuleID = 1, RightID = "2")]
         public ActionResult AddNewCatalogue()
         {
             //get list marc form
@@ -105,6 +108,7 @@ namespace Libol.Controllers
 
         //----------------Search Field Cata -----------
         //---------------------------------------------
+        [AuthAttribute(ModuleID = 1, RightID = "3")]
         public ActionResult SearchCodeNumber()
         {
             return View();
@@ -122,6 +126,7 @@ namespace Libol.Controllers
 
         //----------------Detail Cata -----------
         //---------------------------------------------
+        [AuthAttribute(ModuleID = 1, RightID = "3")]
         public ActionResult AddNewCatalogueDetail()
         {
             string Id = Request["ID"];

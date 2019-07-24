@@ -1,5 +1,6 @@
 ﻿using Libol.EntityResult;
 using Libol.Models;
+using Libol.SupportClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Libol.Controllers
         private LibolEntities db = new LibolEntities();
         ShelfBusiness shelfBusiness = new ShelfBusiness();
 
-        // GET: Acquisition
+        [AuthAttribute(ModuleID = 4, RightID = "125")]
         public ActionResult HoldingLocRemove()
         {
             ViewBag.Library = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, (int)Session["UserID"], 1);

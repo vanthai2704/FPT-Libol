@@ -1,4 +1,5 @@
 ﻿using Libol.Models;
+using Libol.SupportClass;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,6 +26,7 @@ namespace Libol.Controllers
 
             return validate.Trim();
         }
+        [AuthAttribute(ModuleID = 4, RightID = "0")]
         public ActionResult AcquisitionIndex()
         {
             return View();
@@ -1595,6 +1597,7 @@ namespace Libol.Controllers
             return View();
         }
 
+        [AuthAttribute(ModuleID = 4, RightID = "127")]
         public ActionResult AcquireStatisticIndex()
         {
             return View();

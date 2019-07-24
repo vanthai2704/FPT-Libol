@@ -21322,11 +21322,6 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SQ_CIR_PATRON_GROUP_LOC_UPDATE", strIDSourceParameter, intLocationIDParameter);
         }
     
-        public virtual int TESTCAI()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TESTCAI");
-        }
-    
         public virtual int DemoGetMarcForm(Nullable<int> intFormID, Nullable<int> intIsAuthority)
         {
             var intFormIDParameter = intFormID.HasValue ?

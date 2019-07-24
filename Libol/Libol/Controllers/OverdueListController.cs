@@ -15,7 +15,7 @@ namespace Libol.Controllers
         FormatHoldingTitle f = new FormatHoldingTitle();
         ShelfBusiness shelfBusiness = new ShelfBusiness();
 
-        // GET: OverdueList
+        [AuthAttribute(ModuleID = 3, RightID = "0")]
         public ActionResult OverdueList()
         {
             ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
