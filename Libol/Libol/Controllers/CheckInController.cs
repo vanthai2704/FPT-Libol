@@ -114,11 +114,10 @@ namespace Libol.Controllers
             return PartialView("_findByCardNumber");
         }
 
-        public PartialViewResult GetPatronSearchDetail(string code)
+        public JsonResult GetPatronSearchDetail(string code)
         {
             getpatrondetail(code);
-            ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(fullname, "").Where(a => a.DOB != null).ToList();
-            return PartialView("_findByCardNumber");
+            return Json(ViewBag.PatronDetail, JsonRequestBehavior.AllowGet);
         }
 
         public void getpatrondetail(string strPatronCode)

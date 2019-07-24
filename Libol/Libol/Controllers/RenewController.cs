@@ -35,18 +35,36 @@ namespace Libol.Controllers
         [AuthAttribute(ModuleID = 3, RightID = "72")]
         public PartialViewResult Renew(int[] intLoanID, Byte intAddTime, Byte intTimeUnit, string strFixedDueDate,string[] duedates, int [] inttimes, int[] intrange)
         {
-            for(int i = 0; i < intLoanID.Length; i++)
+            ViewBag.codeErrorCount = 0;
+            for (int i = 0; i < intLoanID.Length; i++)
             {
+                DateTime expiredDate = db.CIR_LOAN.Where(a => a.ID == intLoanID[i]).First().CIR_PATRON.ExpiredDate;
                 if(inttimes[i] >= intrange[i])
                 {
+                    ViewBag.codeErrorCount = ViewBag.codeErrorCount + 1;
+                    ViewBag.codeError = 1;
+                    ViewBag.message = "số lượt gia hạn đã đạt mức tối đa";
                 }
                 else if (Equals(strFixedDueDate,""))
                 {
-
+                    ViewBag.codeErrorCount = ViewBag.codeErrorCount + 1;
+                    ViewBag.codeError = 1;
+                    ViewBag.message = "vui lòng chọn ngày ra hạn";
                 }
                 else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[i])) < 0) {
+                    ViewBag.codeErrorCount = ViewBag.codeErrorCount + 1;
+                    ViewBag.codeError = 1;
+                    ViewBag.message = "ngày ra hạn sớm hơn hạn trả hiện tại";
+                }
+                else if (DateTime.Compare(expiredDate, Convert.ToDateTime(strFixedDueDate)) < 0)
+                {
+                    ViewBag.codeErrorCount = ViewBag.codeErrorCount + 1;
+                    ViewBag.codeError = 1;
+                    ViewBag.message = "ngày ra hạn muộn hơn ngày hết hạn thẻ";
                 }
                 else{
+                    ViewBag.codeError = 0;
+                    ViewBag.message = "gia hạn thành công";
                     db.SP_RENEW_ITEM(intLoanID[i], intAddTime, intTimeUnit, strFixedDueDate);
                 }
             }
