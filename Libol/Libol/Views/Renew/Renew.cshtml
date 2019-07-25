@@ -25,6 +25,7 @@
     </div>
 </div>
 
+
 <script>
     function getrenewtable() {
         var xInt = $('.form-check input:radio:checked').val();
@@ -47,12 +48,11 @@
     }
 
     function renew() {
-        var rows = $('#table_loadrenew .selected');
         var selectedIds = table.columns().checkboxes.selected()[0];
         var ids = [];
         var times = [];
         var range = [];
-        var dates= [];
+        var dates = [];
         for (var i = 0; i < selectedIds.length; i++) {
             var x = selectedIds[i].ID;
             var t = selectedIds[i].DueDate;
@@ -79,7 +79,7 @@
             type: "POST",
             success: function (result) {
                 $("#content").html(result);
-                alert("" + @ViewBag.message+ "");
+                alert(document.getElementById("hiddenmessage").value);
             },
             error: function (errormessage) {
                 console.log("abcssd");
