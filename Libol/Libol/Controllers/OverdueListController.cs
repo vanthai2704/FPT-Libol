@@ -53,7 +53,7 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult OnchangeLibrary(int LibID)
         {
-            List<SP_HOLDING_LOCATION_GET_INFO_Result> list = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(LibID, 43, 0, -1);
+            List<SP_HOLDING_LOCATION_GET_INFO_Result> list = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(LibID, (int)Session["UserID"], 0, -1);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 

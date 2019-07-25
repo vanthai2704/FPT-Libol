@@ -41,7 +41,7 @@ namespace Libol.Controllers
             )
         {
             getpatrondetail(strPatronCode);
-            int success= db.SP_CHECKOUT(strPatronCode, 43, intLoanMode, strCopyNumbers, strFixDueDate, strCheckOutDate, intHoldIgnore,
+            int success= db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], intLoanMode, strCopyNumbers, strFixDueDate, strCheckOutDate, intHoldIgnore,
                new ObjectParameter("intOutValue", typeof(int)),
                 new ObjectParameter("intOutID", typeof(int)));
             string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
@@ -92,7 +92,7 @@ namespace Libol.Controllers
         //thu hồi 1 ấn phẩm vừa mượn
         public PartialViewResult Rollbackacheckout (string strCopyNumbers)
         {
-            db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("MM/dd/yyyy"),
+            db.SP_CHECKIN((int)Session["UserID"], 1, 0, strCopyNumbers, DateTime.Now.ToString("MM/dd/yyyy"),
                new ObjectParameter("strTransIDs", typeof(string)),
                new ObjectParameter("strPatronCode", typeof(string)),
                new ObjectParameter("intError", typeof(int)));

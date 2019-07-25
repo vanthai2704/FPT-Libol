@@ -54,7 +54,7 @@ namespace Libol.Controllers
             string strCheckInDate
         )
         {
-            db.SP_CHECKIN(43, intType, intAutoPaid, strCopyNumbers, strCheckInDate,
+            db.SP_CHECKIN((int)Session["UserID"], intType, intAutoPaid, strCopyNumbers, strCheckInDate,
                 new ObjectParameter("strTransIDs", typeof(string)),
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
@@ -80,7 +80,7 @@ namespace Libol.Controllers
             ViewData["patroninfo"] = patroninfo;
             foreach (string CopyNumber in strCopyNumbers)
             {
-                db.SP_CHECKIN(43, intType, intAutoPaid, CopyNumber, strCheckInDate,
+                db.SP_CHECKIN((int)Session["UserID"], intType, intAutoPaid, CopyNumber, strCheckInDate,
                 new ObjectParameter("strTransIDs", typeof(string)),
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));

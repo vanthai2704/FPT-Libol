@@ -22166,5 +22166,18 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result>("FPT_SP_GET_HOLDING_BY_RECOMMENDID", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter, orderByParameter);
         }
+    
+        public virtual ObjectResult<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> FPT_SP_CATA_GET_CONTENTS_OF_ITEMS(string strItemIDs, Nullable<int> intIsAuthority)
+        {
+            var strItemIDsParameter = strItemIDs != null ?
+                new ObjectParameter("strItemIDs", strItemIDs) :
+                new ObjectParameter("strItemIDs", typeof(string));
+    
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result>("FPT_SP_CATA_GET_CONTENTS_OF_ITEMS", strItemIDsParameter, intIsAuthorityParameter);
+        }
     }
 }

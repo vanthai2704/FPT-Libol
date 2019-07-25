@@ -35,75 +35,70 @@ namespace Libol.Controllers
         [AuthAttribute(ModuleID = 3, RightID = "72")]
         public PartialViewResult Renew(int[] intLoanID, Byte intAddTime, Byte intTimeUnit, string strFixedDueDate, string[] duedates, int[] inttimes, int[] intrange)
         {
-            ViewBag.codeErrorCount = 0;
-            if (intLoanID.Length == 1)
-            {
-                int LoadID = intLoanID[0];
-                DateTime expiredDate = db.CIR_LOAN.Where(a => a.ID == LoadID).First().CIR_PATRON.ExpiredDate;
-                if (inttimes[0] >= intrange[0])
-                {
-                    ViewBag.codeError = 1;
-                    ViewBag.message = "số lượt gia hạn đã đạt mức tối đa";
-                }
-                else if (Equals(strFixedDueDate, ""))
-                {
-                    ViewBag.codeError = 1;
-                    ViewBag.message = "vui lòng chọn ngày ra hạn";
-                }
-                else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[0])) < 0)
-                {
-                    ViewBag.codeError = 1;
-                    ViewBag.message = "ngày ra hạn sớm hơn hạn trả hiện tại";
-                }
-                else if (DateTime.Compare(expiredDate, Convert.ToDateTime(strFixedDueDate)) < 0)
-                {
-                    ViewBag.codeError = 1;
-                    ViewBag.message = "ngày ra hạn muộn hơn ngày hết hạn thẻ";
-                }
-                else
-                {
-                    ViewBag.codeError = 0;
-                    ViewBag.message = "gia hạn thành công";
-                    db.SP_RENEW_ITEM(intLoanID[0], intAddTime, intTimeUnit, strFixedDueDate);
-                }
-            }
-            else if (intLoanID.Length > 1)
-            {
-                for (int i = 0; i < intLoanID.Length; i++)
-                {
-                    DateTime expiredDate = db.CIR_LOAN.Where(a => a.ID == intLoanID[i]).First().CIR_PATRON.ExpiredDate;
-                    if (inttimes[i] >= intrange[i])
-                    {
-                        ViewBag.codeErrorCount = ViewBag.codeErrorCount + 1;
-                        ViewBag.codeError = 1;
-                    }
-                    else if (Equals(strFixedDueDate, ""))
-                    {
-                        ViewBag.codeErrorCount = ViewBag.codeErrorCount + 1;
-                        ViewBag.codeError = 1;
-                    }
-                    else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[i])) < 0)
-                    {
-                        ViewBag.codeErrorCount = ViewBag.codeErrorCount + 1;
-                        ViewBag.codeError = 1;
-                    }
-                    else if (DateTime.Compare(expiredDate, Convert.ToDateTime(strFixedDueDate)) < 0)
-                    {
-                        ViewBag.codeErrorCount = ViewBag.codeErrorCount + 1;
-                        ViewBag.codeError = 1;
-                    }
-                    else
-                    {
-                        ViewBag.codeError = 0;
-                        db.SP_RENEW_ITEM(intLoanID[i], intAddTime, intTimeUnit, strFixedDueDate);
-                    }
-                }
-                ViewBag.message = "gia hạn thành công( "+intLoanID.Length- ViewBag.codeErrorCount + " ) bản ghi"+ "" +"gia hạn thất bại( "+ ViewBag.codeErrorCount + " )bản ghi";
-            }
-            else
+            int codeErrorCount = 0;
+            if (intLoanID is null)
             {
                 ViewBag.message = "Vui lòng chọn ấn phẩm cấn gia hạn";
             }
+            else
+            {
+                if (intLoanID.Length == 1)
+                {
+                    int LoadID = intLoanID[0];
+                    DateTime expiredDate = db.CIR_LOAN.Where(a => a.ID == LoadID).First().CIR_PATRON.ExpiredDate;
+                    if (inttimes[0] >= intrange[0])
+                    {
+                        ViewBag.message = "số lượt gia hạn đã đạt mức tối đa";
+                    }
+                    else if (Equals(strFixedDueDate, ""))
+                    {
+                        ViewBag.message = "vui lòng chọn ngày ra hạn";
+                    }
+                    else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[0])) < 0)
+                    {
+                        ViewBag.message = "ngày ra hạn sớm hơn hạn trả hiện tại";
+                    }
+                    else if (DateTime.Compare(expiredDate, Convert.ToDateTime(strFixedDueDate)) < 0)
+                    {
+                        ViewBag.message = "ngày ra hạn muộn hơn ngày hết hạn thẻ";
+                    }
+                    else
+                    {
+                        ViewBag.message = "gia hạn thành công";
+                        db.SP_RENEW_ITEM(intLoanID[0], intAddTime, intTimeUnit, strFixedDueDate);
+                    }
+                }
+                else if (intLoanID.Length > 1)
+                {
+                    for (int i = 0; i < intLoanID.Length; i++)
+                    {
+                        int LoadID = intLoanID[i];
+                        DateTime expiredDate = db.CIR_LOAN.Where(a => a.ID == LoadID).First().CIR_PATRON.ExpiredDate;
+                        if (inttimes[i] >= intrange[i])
+                        {
+                            codeErrorCount = codeErrorCount + 1;
+                        }
+                        else if (Equals(strFixedDueDate, ""))
+                        {
+                            codeErrorCount = codeErrorCount + 1;
+                        }
+                        else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[i])) < 0)
+                        {
+                            codeErrorCount = codeErrorCount + 1;
+                        }
+                        else if (DateTime.Compare(expiredDate, Convert.ToDateTime(strFixedDueDate)) < 0)
+                        {
+                            codeErrorCount = codeErrorCount + 1;
+                        }
+                        else
+                        {
+                            db.SP_RENEW_ITEM(intLoanID[i], intAddTime, intTimeUnit, strFixedDueDate);
+                        }
+                    }
+                    ViewBag.message = "gia hạn thành công( " + (intLoanID.Length - codeErrorCount) + " ) bản ghi" + "" + " gia hạn thất bại( " + codeErrorCount + " )bản ghi";
+                }
+            }
+            
             getcontentrenew((int)Session["UserID"], Type, CodeVal);
             return PartialView("_searchToRenew", ViewBag.message);
         }

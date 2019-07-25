@@ -5651,9 +5651,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
           <Parameter Name="strItemType" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
-          <Parameter Name="strItemType" Type="varchar" Mode="In" />
+        <Function Name="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
+          <Parameter Name="intIsAuthority" Type="int" Mode="In" />
         </Function>
         <Function Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
@@ -25462,6 +25462,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="EndDate" Mode="In" Type="DateTime" />
             <Parameter Name="OrderBy" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS" ReturnType="Collection(LibolModel.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result)">
+            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+            <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -30251,6 +30255,12 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="DonViTienTe" Nullable="true" MaxLength="8000" />
           <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
           <Property Type="Int32" Name="ItemID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result">
+          <Property Type="String" Name="IDSort" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="FieldCode" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Ind" Nullable="true" MaxLength="8000" />
+          <Property Type="String" Name="Content" Nullable="true" MaxLength="1000" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -40156,14 +40166,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" />
-          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE_2019">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result">
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM">
             <ResultMapping>
               <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result">
@@ -40364,6 +40366,16 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
                 <ScalarProperty Name="DonViTienTe" ColumnName="DonViTienTe" />
                 <ScalarProperty Name="IdNhaXuatBan" ColumnName="IdNhaXuatBan" />
                 <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result">
+                <ScalarProperty Name="IDSort" ColumnName="IDSort" />
+                <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+                <ScalarProperty Name="Ind" ColumnName="Ind" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
