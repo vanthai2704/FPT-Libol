@@ -205,6 +205,7 @@
     <Compile Include="Models\FPT_RECOMMEND.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result.cs" />
     <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
