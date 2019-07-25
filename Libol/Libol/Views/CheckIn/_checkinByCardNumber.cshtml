@@ -8,34 +8,29 @@
     </style>
     <link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
     <link rel="stylesheet" type="text/css" href="~/Content/DataTables/Select-1.3.0/css/select.bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/DataTables/dataTables.checkboxes.css">
     <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
     <script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
+    <script type="text/javascript" charset="utf8" src="~/Content/DataTables/dataTables.checkboxes.min.js"></script>
     <script>
         $(document).ready(function () {
             var table = $('#table_loaninfo').DataTable({
                 columnDefs: [{
-                    orderable: false,
-                    className: 'select-checkbox',
-                    targets: 0
+                    targets: 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
                 }],
                 select: {
-                    style: 'os',
-                    selector: 'td:first-child'
+                    style: 'multi'
                 },
                 order: [[1, 'asc']],
                 orderCellsTop: true,
 
             });
 
-            $('#table_loaninfo').on('click', '#select_all', function () {
-                if ($('#select_all:checked').val() === 'on') {
-                    table.rows({ search: 'applied' }).select();
-                }
-                else {
-                    table.rows().deselect();
-                }
-            });
+
         });
     </script>
 </head>
@@ -64,6 +59,20 @@
                 </div>
                 <div class="form-row">
                     <div class="col"><label class="col-form-label">Nhóm: <strong>@ViewBag.PatronDetail.intPatronGroupID</strong></label></div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label class="col-form-label">
+                            Tình trạng: @if (ViewBag.active == 1)
+                            {
+                                <strong>Thẻ mở</strong>
+                            }
+                            else
+                            {
+                                <strong style="color:red;">Thẻ khóa</strong> <a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal3">Chi tiết</a>
+                            }
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -221,3 +230,55 @@
         </div>
     </div>
 </div>
+
+@if (ViewBag.active == 0)
+{
+    <!-- The Modal Black Patron Detail -->
+    <div class="modal" id="myModal3">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Thông tin chi tiết bạn đọc đang bị khóa</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                        <table>
+                            <tr>
+                                <td class="columnleft">Họ tên: </td>
+                                <td><strong>@ViewBag.PatronDetail.Name</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Số thẻ: </td>
+                                <td><strong>@ViewBag.PatronDetail.Name</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Ngày bị khóa: </td>
+                                <td><strong>@ViewBag.blackstartdate.ToString("dd/MM/yyyy")</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Đến hết ngày: </td>
+                                <td><strong>@ViewBag.blackenddate.ToString("dd/MM/yyyy")</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="columnleft">Lí do bị khóa: </td>
+                                <td><strong>@ViewBag.blackNote</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Libol.Models;
 using Libol.EntityResult;
 using System.Data.Entity.Core.Objects;
+using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
@@ -13,7 +14,8 @@ namespace Libol.Controllers
     {
         private LibolEntities db = new LibolEntities();
         CatalogueBusiness catalogueBusiness = new CatalogueBusiness();
-        // GET: Catalogue
+
+        [AuthAttribute(ModuleID = 1, RightID = "0")]
         public ActionResult MainTab()
         {
             return View();
@@ -23,6 +25,7 @@ namespace Libol.Controllers
 
         //----------------Add New Cata ----------------
         //---------------------------------------------
+        [AuthAttribute(ModuleID = 1, RightID = "2")]
         public ActionResult AddNewCatalogue()
         {
             //get list marc form
@@ -56,9 +59,10 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult CheckItemNumber(string strFieldValue, string strFieldCode)
         {
-            ObjectParameter Output = new ObjectParameter("lngItemID", typeof(Int32));
-            db.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(strFieldValue, strFieldCode, Output);
-            return Json(Output.Value, JsonRequestBehavior.AllowGet);
+            //ObjectParameter Output = new ObjectParameter("lngItemID", typeof(Int32));
+            //db.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(strFieldValue, strFieldCode, Output);
+            //return Json(Output.Value, JsonRequestBehavior.AllowGet);
+            return Json("", JsonRequestBehavior.AllowGet);
         }
 
 
@@ -103,6 +107,7 @@ namespace Libol.Controllers
 
         //----------------Search Field Cata -----------
         //---------------------------------------------
+        [AuthAttribute(ModuleID = 1, RightID = "3")]
         public ActionResult SearchCodeNumber()
         {
             return View();
@@ -118,8 +123,10 @@ namespace Libol.Controllers
 
 
 
-        //----------------Detail Cata --------------------------------------
-        //------------------------------------------------------------------
+
+        //----------------Detail Cata -----------
+        //---------------------------------------------
+        [AuthAttribute(ModuleID = 1, RightID = "3")]
         public ActionResult AddNewCatalogueDetail()
         {
             string Id = Request["ID"];

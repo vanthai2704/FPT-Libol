@@ -16,18 +16,32 @@ using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
-    public class PatronController : BaseController
+    public class PatronController : Controller
     {
         private LibolEntities db = new LibolEntities();
-       
+
+        [AuthAttribute(ModuleID = 2, RightID = "0")]
         public ActionResult PatronProfile()
         {
             return View();
         }
 
+        [AuthAttribute(ModuleID = 2, RightID = "45")]
+        public ActionResult SearchPatronFilter()
+        {
+            ViewBag.PatronGroup = db.SP_PAT_GET_PATRONGROUP().ToList();
+            ViewBag.Faculty = db.CIR_DIC_FACULTY.Select(a => a.Faculty).Distinct().ToList();
+            ViewBag.Occupation = db.SP_PAT_GET_OCCUPATION().ToList();
+            return View();
+        }
+
+        [AuthAttribute(ModuleID = 2, RightID = "46,48")]
         public ActionResult Create(string strPatronID)
         {
-            
+            if (!((List<Int32>)Session["RightIDs"]).Contains(46) && String.IsNullOrEmpty(strPatronID))
+            {
+                return new ViewResult() { ViewName = "Permisssion" };
+            }
             ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
             ViewBag.PatronGroup = db.SP_PAT_GET_PATRONGROUP().ToList();
             ViewBag.Education = db.SP_PAT_GET_EDUCATION().ToList();
@@ -67,6 +81,7 @@ namespace Libol.Controllers
 
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "0")]
         public JsonResult OnchangeCollege(int CollegeID)
         {
             ViewBag.Faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == CollegeID).ToList();
@@ -84,6 +99,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "46")]
         public JsonResult NewPatron(string strCode, string strValidDate, string strExpiredDate, string strLastIssuedDate, string strLastName, string strFirstName,
              Nullable<bool> blnSex, string strDOB, Nullable<int> intEthnicID, Nullable<int> intEducationID, Nullable<int> intOccupationID,
             string strWorkPlace, string strTelephone, string strMobile, string strEmail, string strPortrait, Nullable<int> intPatronGroupID, string strNote,
@@ -187,6 +203,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "48")]
         public JsonResult UpdatePatron(int ID, string strCode, string strValidDate, string strExpiredDate, string strLastIssuedDate, string strLastName, string strFirstName,
              Nullable<bool> blnSex, string strDOB, Nullable<int> intEthnicID, Nullable<int> intEducationID, Nullable<int> intOccupationID,
             string strWorkPlace, string strTelephone, string strMobile, string strEmail, string strPortrait, Nullable<int> intPatronGroupID, string strNote,
@@ -306,6 +323,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "0")]
         public JsonResult UploadPhotoPatron()
         {
             string strCode = Request.Form["strCode"];
@@ -325,12 +343,14 @@ namespace Libol.Controllers
             return Json("", JsonRequestBehavior.AllowGet);
         }
 
+        [AuthAttribute(ModuleID = 2, RightID = "216")]
         public ActionResult AddPatronByFile()
         {
             return View();
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "216")]
         public ActionResult PreviewPatronFile()
         {
             List<PatronFile> listPatronInFile = new List<PatronFile>();
@@ -373,7 +393,7 @@ namespace Libol.Controllers
                                         patronFile.Line = j + 2;
                                         patronFile.strCode = ds.Tables[0].Rows[j].Field<string>("Mã Sinh viên");
                                         patronFile.FullName = ds.Tables[0].Rows[j].Field<string>("Họ và tên");
-                                        patronFile.blnSex = ds.Tables[0].Rows[j].Field<string>("Giới tính ");
+                                        patronFile.blnSex = ds.Tables[0].Rows[j].Field<string>("Giới tính");
                                         
                                         patronFile.strEmail = ds.Tables[0].Rows[j].Field<string>("Email");
                                         patronFile.strAddress = ds.Tables[0].Rows[j].Field<string>("Địa chỉ thường trú");
@@ -440,6 +460,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "216")]
         public ActionResult InsertFileToDB()
         {
             List<PatronFile> listPatronInFile =(List<PatronFile>) Session["listPatronInFile"];
@@ -479,7 +500,7 @@ namespace Libol.Controllers
                     }
                     DateTime strExpiredDate = DateTime.Now;
                     strExpiredDate= strExpiredDate.AddYears(4);
-                    NewPatron(p.strCode, DateTime.Now.ToShortDateString(), strExpiredDate.ToShortDateString(), DateTime.Now.ToShortDateString(), strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString(), null, null, null, null, null, p.strMobile
+                    NewPatron(p.strCode, DateTime.Now.ToShortDateString(), strExpiredDate.ToShortDateString(), DateTime.Now.ToShortDateString(), strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString("yyyy-dd-MM"), null, null, null, null, null, p.strMobile
                         , p.strEmail, null, intPatronGroupID, null, 0, null, p.strAddress, 1, p.strCity, 209, "", 0, intCollegeID, intFacultyID, p.strGrade, p.strClass);
                 }
                 ViewBag.Notify = "Danh sách đã được thêm vào hệ thống!";
@@ -489,6 +510,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "46,48")]
         public JsonResult AddDictionary(string field, string data, int CollegeID)
         {
             AddDictionaryResult addDictionaryResult = new AddDictionaryResult();
@@ -579,8 +601,9 @@ namespace Libol.Controllers
             }
 
             return Json(addDictionaryResult, JsonRequestBehavior.AllowGet);
-        } 
+        }
 
+        [AuthAttribute(ModuleID = 2, RightID = "45")]
         public ActionResult SearchPatron()
         {
             ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
@@ -591,12 +614,67 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public JsonResult ListPatron(DataTableAjaxPostModel model)
+        [AuthAttribute(ModuleID = 2, RightID = "45")]
+        public JsonResult ListPatron(DataTableAjaxPostModel model,string strCode, string  blnSex, string strLastIssuedDate, string  intPatronGroupID,
+            string strClass, string strGrade, string strName, string strDOB, string strExpiredDate, string faculty, string intOccupationID)
         {
             
-
             var patrons = db.CIR_PATRON;
             var search = patrons.Where(a => true);
+            if (!String.IsNullOrEmpty(strCode))
+            {
+                search = search.Where(a => a.Code.Contains(strCode));
+            }
+            if (!String.IsNullOrEmpty(blnSex))
+            {
+                search = search.Where(a => a.Sex.ToString() == blnSex);
+            }
+            if (!String.IsNullOrEmpty(strLastIssuedDate))
+            {
+                search = search.Where(a => (SqlFunctions.DatePart("year", a.LastIssuedDate) + "-" + SqlFunctions.DatePart("month", a.LastIssuedDate) + "-" + SqlFunctions.DatePart("day", a.LastIssuedDate)) == (strLastIssuedDate)
+                        || ( SqlFunctions.DatePart("year", a.LastIssuedDate) + "-" + SqlFunctions.DatePart("month", a.LastIssuedDate) + "-0" + SqlFunctions.DatePart("day", a.LastIssuedDate))==(strLastIssuedDate)
+                        || (SqlFunctions.DatePart("year", a.LastIssuedDate) + "-0" + SqlFunctions.DatePart("month", a.LastIssuedDate) + "-" + SqlFunctions.DatePart("day", a.LastIssuedDate))==(strLastIssuedDate)
+                        || (SqlFunctions.DatePart("year", a.LastIssuedDate) + "-0" + SqlFunctions.DatePart("month", a.LastIssuedDate) + "-0" + SqlFunctions.DatePart("day", a.LastIssuedDate))==(strLastIssuedDate));
+            }
+            if (!String.IsNullOrEmpty(intPatronGroupID))
+            {
+                search = search.Where(a => a.CIR_PATRON_GROUP == null ? false : a.CIR_PATRON_GROUP.Name == intPatronGroupID);
+            }
+            if (!String.IsNullOrEmpty(strClass))
+            {
+                search = search.Where(a => a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.Class.Contains(strClass));
+            }
+            if (!String.IsNullOrEmpty(strGrade))
+            {
+                search = search.Where(a => a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.Grade.Contains(strGrade));
+            }
+            if (!String.IsNullOrEmpty(strName))
+            {
+                search = search.Where(a => (a.FirstName.Trim() + " " + a.MiddleName.Trim() + " " + a.LastName.Trim()).Contains(strName)
+                        || (a.FirstName.Trim() + " " + a.LastName.Trim()).Contains(strName));
+            }
+            if (!String.IsNullOrEmpty(strDOB))
+            {
+                search = search.Where(a => (SqlFunctions.DatePart("year", a.DOB) + "-" + SqlFunctions.DatePart("month", a.DOB) + "-" + SqlFunctions.DatePart("day", a.DOB)) == (strDOB)
+                        || (SqlFunctions.DatePart("year", a.DOB) + "-" + SqlFunctions.DatePart("month", a.DOB) + "-0" + SqlFunctions.DatePart("day", a.DOB)) == (strDOB)
+                        || (SqlFunctions.DatePart("year", a.DOB) + "-0" + SqlFunctions.DatePart("month", a.DOB) + "-" + SqlFunctions.DatePart("day", a.DOB)) == (strDOB)
+                        || (SqlFunctions.DatePart("year", a.DOB) + "-0" + SqlFunctions.DatePart("month", a.DOB) + "-0" + SqlFunctions.DatePart("day", a.DOB)) == (strDOB));
+            }
+            if (!String.IsNullOrEmpty(strExpiredDate))
+            {
+                search = search.Where(a => (SqlFunctions.DatePart("year", a.ExpiredDate) + "-" + SqlFunctions.DatePart("month", a.ExpiredDate) + "-" + SqlFunctions.DatePart("day", a.ExpiredDate)) == (strExpiredDate)
+                        || (SqlFunctions.DatePart("year", a.ExpiredDate) + "-" + SqlFunctions.DatePart("month", a.ExpiredDate) + "-0" + SqlFunctions.DatePart("day", a.ExpiredDate)) == (strExpiredDate)
+                        || (SqlFunctions.DatePart("year", a.ExpiredDate) + "-0" + SqlFunctions.DatePart("month", a.ExpiredDate) + "-" + SqlFunctions.DatePart("day", a.ExpiredDate)) == (strExpiredDate)
+                        || (SqlFunctions.DatePart("year", a.ExpiredDate) + "-0" + SqlFunctions.DatePart("month", a.ExpiredDate) + "-0" + SqlFunctions.DatePart("day", a.ExpiredDate)) == (strExpiredDate));
+            }
+            if (!String.IsNullOrEmpty(faculty))
+            {
+                search = search.Where(a => a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty == (faculty));
+            }
+            if (!String.IsNullOrEmpty(intOccupationID))
+            {
+                search = search.Where(a => a.CIR_DIC_OCCUPATION != null && a.CIR_DIC_OCCUPATION.Occupation == intOccupationID);
+            }
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
@@ -621,76 +699,7 @@ namespace Libol.Controllers
                 
                 
             }
-            if (model.columns[0].search.value != null)
-            {
-                string searchValue = model.columns[0].search.value;
-                search = search.Where(a => a.Code.Contains(searchValue));
-            }
-            if (model.columns[1].search.value != null)
-            {
-                string searchValue = model.columns[1].search.value;
-                search = search.Where(a => (a.FirstName.Trim() + " " + a.MiddleName.Trim() + " " + a.LastName.Trim()).Contains(searchValue)
-                            || (a.FirstName.Trim() + " " + a.LastName.Trim()).Contains(searchValue)
-                );
-            }
-            if (model.columns[2].search.value != null)
-            {
-                string searchValue = model.columns[2].search.value;
-                search = search.Where(a => (SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
-                        || ("0" + SqlFunctions.DatePart("day", a.DOB) + "/" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
-                        || (SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue)
-                        || ("0" + SqlFunctions.DatePart("day", a.DOB) + "/0" + SqlFunctions.DatePart("month", a.DOB) + "/" + SqlFunctions.DatePart("year", a.DOB)).Contains(searchValue));
-            }
-            if (model.columns[3].search.value != null)
-            {
-                string searchValue = model.columns[3].search.value;
-                search = search.Where(a => a.Sex.Contains(searchValue));
-            }
-            if (model.columns[4].search.value != null)
-            {
-                string searchValue = model.columns[4].search.value;
-                search = search.Where(a => (a.CIR_DIC_ETHNIC != null && a.CIR_DIC_ETHNIC.Ethnic.Contains(searchValue)));
-            }
-            if (model.columns[5].search.value != null)
-            {
-                string searchValue = model.columns[5].search.value;
-                search = search.Where(a => (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College.Contains(searchValue)));
-            }
-            if (model.columns[6].search.value != null)
-            {
-                string searchValue = model.columns[6].search.value;
-                search = search.Where(a => (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY != null && a.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty.Contains(searchValue)));
-            }
-            if (model.columns[7].search.value != null)
-            {
-                string searchValue = model.columns[7].search.value;
-                search = search.Where(a => (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.Grade.Contains(searchValue)));
-            }
-            if (model.columns[8].search.value != null)
-            {
-                string searchValue = model.columns[8].search.value;
-                search = search.Where(a => (a.CIR_PATRON_UNIVERSITY != null && a.CIR_PATRON_UNIVERSITY.Class.Contains(searchValue)));
-            }
-            if (model.columns[9].search.value != null)
-            {
-                string searchValue = model.columns[9].search.value;
-                search = search.Where(a => a.Telephone.Contains(searchValue));
-            }
-            if (model.columns[10].search.value != null)
-            {
-                string searchValue = model.columns[10].search.value;
-                search = search.Where(a => a.Mobile.Contains(searchValue));
-            }
-            if (model.columns[11].search.value != null)
-            {
-                string searchValue = model.columns[11].search.value;
-                search = search.Where(a => a.Email.Contains(searchValue));
-            }
-            if (model.columns[12].search.value != null)
-            {
-                string searchValue = model.columns[12].search.value;
-                search = search.Where(a => (a.CIR_PATRON_GROUP != null && a.CIR_PATRON_GROUP.Name.Contains(searchValue)));
-            }
+            
             var sorting = search.OrderBy(a => a.ID);
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             var result = new List<CustomPatron>(paging.Count);
@@ -728,6 +737,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "45")]
         public PartialViewResult PatronDetail(string strCode)
         {
             var patron = db.CIR_PATRON.Where(a => a.Code == strCode).First();
@@ -757,6 +767,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "51")]
         public JsonResult DeletePatron(string strPatronID)
         {
             int id = Int32.Parse(strPatronID);

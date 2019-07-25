@@ -7,27 +7,24 @@ using Libol.Models;
 using Libol.EntityResult;
 using System.Data;
 using System.Data.Entity.Core.Objects;
+using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
     public class CheckOutController : BaseController
     {
-
         private LibolEntities db = new LibolEntities();
         CheckOutBusiness checkOutBusiness = new CheckOutBusiness();
+        SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
         private static string strTransactionIDs = "";
         private static string patroncode = "0";
+        private static string fullname = "";
+        FormatHoldingTitle f = new FormatHoldingTitle();
 
-        // GET: CheckOut
+        [AuthAttribute(ModuleID = 3, RightID = "57")]
         public ActionResult Index()
         {
             patroncode = "0";
-            return View();
-        }
-
-        // GET: Giahan
-        public ActionResult Giahan()
-        {
             return View();
         }
 
@@ -61,7 +58,10 @@ namespace Libol.Controllers
             }
             else
             {
-                strTransactionIDs = "0";
+                if (patroncode != strPatronCode)
+                {
+                    strTransactionIDs = "0";
+                }
             }
             getcurrentloandetail();
             patroncode = strPatronCode;
@@ -89,10 +89,10 @@ namespace Libol.Controllers
             return PartialView("_showPatronInfo");
         }
 
-        //thu hoi 1 an pham
+        //thu hồi 1 ấn phẩm vừa mượn
         public PartialViewResult Rollbackacheckout (string strCopyNumbers)
         {
-            db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("dd/MM/yyyy"),
+            db.SP_CHECKIN(43, 1, 0, strCopyNumbers, DateTime.Now.ToString("MM/dd/yyyy"),
                new ObjectParameter("strTransIDs", typeof(string)),
                new ObjectParameter("strPatronCode", typeof(string)),
                new ObjectParameter("intError", typeof(int)));
@@ -103,10 +103,48 @@ namespace Libol.Controllers
             return PartialView("_checkoutSuccess");
         }
 
+        //thay đổi ghi chú của ấn phẩm đang mượn
+        public PartialViewResult ChangeNote(string strCopyNumber, string strNote, string strDueDate)
+        {
+            int lngTransactionID = db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumber).First().ID;
+            db.SP_UPDATE_CURRENT_LOAN(lngTransactionID, strNote,"");
+            getcurrentloandetail();
+            getpatrondetail(patroncode);
+            return PartialView("_checkoutSuccess");
+        }
+
+        [HttpPost]
+        public PartialViewResult FindByName(string strFullName)
+        {
+            if (String.IsNullOrEmpty(strFullName))
+            {
+                ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
+            }
+            else
+            {
+                fullname = strFullName;
+                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").Where(a => a.DOB != null).ToList();
+            }
+            
+            return PartialView("_findByCardNumber");
+        }
+        [HttpGet]
+        public PartialViewResult FindByCardNumber()
+        {
+            ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
+            return PartialView("_findByCardNumber");
+        }
+
+        public JsonResult GetPatronSearchDetail(string code)
+        {
+            getpatrondetail(code);
+            return Json(ViewBag.PatronDetail, JsonRequestBehavior.AllowGet);
+        }
+
         public void getpatrondetail(string strPatronCode)
         {
             SP_GET_PATRON_INFOR_Result patroninfo =
-               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("dd/MM/yyyy")).First();
+               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("MM/dd/yyyy")).First();
             CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
             ViewBag.PatronDetail = new CustomPatron
             {
@@ -143,7 +181,7 @@ namespace Libol.Controllers
             {
                 onLoans.Add(new OnLoan
                 {
-                    Title = getcopynumber(a.TITLE),
+                    Title = f.OnFormatHoldingTitle(a.TITLE),
                     Copynumber = a.COPYNUMBER,
                     CheckoutDate = a.CHECKOUTDATE.ToString("dd/MM/yyyy"),
                     DueDate = a.DUEDATE.Value.ToString("dd/MM/yyyy"),
@@ -162,7 +200,7 @@ namespace Libol.Controllers
             {
                 onLoans.Add(new OnLoan
                 {
-                    Title = getcopynumber(a.Title),
+                    Title = f.OnFormatHoldingTitle(a.Title),
                     Copynumber = a.CopyNumber,
                     CheckoutDate = a.CheckOutDate.ToString("dd/MM/yyyy"),
                     DueDate = a.DueDate.ToString("dd/MM/yyyy"),
@@ -206,19 +244,5 @@ namespace Libol.Controllers
             public string Note { get; set; }
         }
 
-        public string getcopynumber(string copynumber)
-        {
-            string validate = copynumber.Replace("$a", "");
-            validate = validate.Replace("$b", "");
-            validate = validate.Replace("$c", "");
-            validate = validate.Replace("=$b", "");
-            validate = validate.Replace(":$b", "");
-            validate = validate.Replace("/$c", "");
-            validate = validate.Replace(".$n", "");
-            validate = validate.Replace(":$p", "");
-            validate = validate.Replace(";$c", "");
-            validate = validate.Replace("+$e", "");
-            return validate;
-        }
     }
 }

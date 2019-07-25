@@ -244,6 +244,7 @@ namespace Libol.Models
         public virtual DbSet<MARC_AUTHORITY_WS_DETAIL> MARC_AUTHORITY_WS_DETAIL { get; set; }
         public virtual DbSet<MARC_BIB_WS_DETAIL> MARC_BIB_WS_DETAIL { get; set; }
         public virtual DbSet<SYS_USER_GOOGLE_ACCOUNT> SYS_USER_GOOGLE_ACCOUNT { get; set; }
+        public virtual DbSet<FPT_RECOMMEND> FPT_RECOMMEND { get; set; }
     
         public virtual ObjectResult<CAT_DIC_LIST_SEL_Result> CAT_DIC_LIST_SEL()
         {
@@ -21321,11 +21322,6 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SQ_CIR_PATRON_GROUP_LOC_UPDATE", strIDSourceParameter, intLocationIDParameter);
         }
     
-        public virtual int TESTCAI()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TESTCAI");
-        }
-    
         public virtual int DemoGetMarcForm(Nullable<int> intFormID, Nullable<int> intIsAuthority)
         {
             var intFormIDParameter = intFormID.HasValue ?
@@ -21454,6 +21450,721 @@ namespace Libol.Models
                 new ObjectParameter("intIsAuthority", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result>("FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM", strItemIDsParameter, intIsAuthorityParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_ACCEPT_Result> FPT_ADMIN_GET_RIGHTS_ACCEPT(Nullable<int> intModuleID, Nullable<int> intUserID)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_ACCEPT_Result>("FPT_ADMIN_GET_RIGHTS_ACCEPT", intModuleIDParameter, intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_DENY_Result> FPT_ADMIN_GET_RIGHTS_DENY(Nullable<int> intModuleID, Nullable<int> intUserID, Nullable<int> intUserParentID)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intUserParentIDParameter = intUserParentID.HasValue ?
+                new ObjectParameter("intUserParentID", intUserParentID) :
+                new ObjectParameter("intUserParentID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_DENY_Result>("FPT_ADMIN_GET_RIGHTS_DENY", intModuleIDParameter, intUserIDParameter, intUserParentIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result> FPT_ADMIN_GET_RIGHTS_WHEN_CREATE(Nullable<int> intModuleID, Nullable<int> intParentID, Nullable<int> isBasic)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            var intParentIDParameter = intParentID.HasValue ?
+                new ObjectParameter("intParentID", intParentID) :
+                new ObjectParameter("intParentID", typeof(int));
+    
+            var isBasicParameter = isBasic.HasValue ?
+                new ObjectParameter("IsBasic", isBasic) :
+                new ObjectParameter("IsBasic", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_WHEN_CREATE_Result>("FPT_ADMIN_GET_RIGHTS_WHEN_CREATE", intModuleIDParameter, intParentIDParameter, isBasicParameter);
+        }
+    
+        public virtual int FPT_ACQ_MONTH_STATISTIC(Nullable<int> intLibraryID, Nullable<int> intLocationID, string strInYear, Nullable<int> intUserID)
+        {
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var strInYearParameter = strInYear != null ?
+                new ObjectParameter("strInYear", strInYear) :
+                new ObjectParameter("strInYear", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_ACQ_MONTH_STATISTIC", intLibraryIDParameter, intLocationIDParameter, strInYearParameter, intUserIDParameter);
+        }
+    
+        public virtual int FPT_ACQ_YEAR_STATISTIC(Nullable<int> intLibraryID, Nullable<int> intLocationID, string strFromYear, string strToYear, Nullable<int> intUserID)
+        {
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var strFromYearParameter = strFromYear != null ?
+                new ObjectParameter("strFromYear", strFromYear) :
+                new ObjectParameter("strFromYear", typeof(string));
+    
+            var strToYearParameter = strToYear != null ?
+                new ObjectParameter("strToYear", strToYear) :
+                new ObjectParameter("strToYear", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_ACQ_YEAR_STATISTIC", intLibraryIDParameter, intLocationIDParameter, strFromYearParameter, strToYearParameter, intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> FPT_BORROWNUMBER(Nullable<int> itemID, Nullable<float> price, string acqdate)
+        {
+            var itemIDParameter = itemID.HasValue ?
+                new ObjectParameter("itemID", itemID) :
+                new ObjectParameter("itemID", typeof(int));
+    
+            var priceParameter = price.HasValue ?
+                new ObjectParameter("price", price) :
+                new ObjectParameter("price", typeof(float));
+    
+            var acqdateParameter = acqdate != null ?
+                new ObjectParameter("acqdate", acqdate) :
+                new ObjectParameter("acqdate", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_BORROWNUMBER", itemIDParameter, priceParameter, acqdateParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> FPT_CHECK_ITEMID_AND_ACQUIREDATE(Nullable<int> locID, Nullable<System.DateTime> cDate, Nullable<int> itemId)
+        {
+            var locIDParameter = locID.HasValue ?
+                new ObjectParameter("LocID", locID) :
+                new ObjectParameter("LocID", typeof(int));
+    
+            var cDateParameter = cDate.HasValue ?
+                new ObjectParameter("CDate", cDate) :
+                new ObjectParameter("CDate", typeof(System.DateTime));
+    
+            var itemIdParameter = itemId.HasValue ?
+                new ObjectParameter("itemId", itemId) :
+                new ObjectParameter("itemId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_CHECK_ITEMID_AND_ACQUIREDATE", locIDParameter, cDateParameter, itemIdParameter);
+        }
+    
+        public virtual ObjectResult<FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL_Result> FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL(Nullable<int> intUserID, Nullable<int> intLibID, string strLocPrefix)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            var strLocPrefixParameter = strLocPrefix != null ?
+                new ObjectParameter("strLocPrefix", strLocPrefix) :
+                new ObjectParameter("strLocPrefix", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL_Result>("FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL", intUserIDParameter, intLibIDParameter, strLocPrefixParameter);
+        }
+    
+        public virtual ObjectResult<string> FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL(Nullable<int> intUserID, Nullable<int> intLibID)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL", intUserIDParameter, intLibIDParameter);
+        }
+    
+        public virtual int FPT_CIR_MONTH_STATISTIC(Nullable<int> intLibraryID, Nullable<int> intLocationID, Nullable<int> intType, Nullable<int> intStatus, string strInYear, Nullable<int> intUserID)
+        {
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            var intStatusParameter = intStatus.HasValue ?
+                new ObjectParameter("intStatus", intStatus) :
+                new ObjectParameter("intStatus", typeof(int));
+    
+            var strInYearParameter = strInYear != null ?
+                new ObjectParameter("strInYear", strInYear) :
+                new ObjectParameter("strInYear", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_CIR_MONTH_STATISTIC", intLibraryIDParameter, intLocationIDParameter, intTypeParameter, intStatusParameter, strInYearParameter, intUserIDParameter);
+        }
+    
+        public virtual int FPT_CIR_YEAR_STATISTIC(Nullable<int> intLibraryID, Nullable<int> intLocationID, Nullable<int> intType, Nullable<int> intStatus, string strFromYear, string strToYear, Nullable<int> intUserID)
+        {
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            var intStatusParameter = intStatus.HasValue ?
+                new ObjectParameter("intStatus", intStatus) :
+                new ObjectParameter("intStatus", typeof(int));
+    
+            var strFromYearParameter = strFromYear != null ?
+                new ObjectParameter("strFromYear", strFromYear) :
+                new ObjectParameter("strFromYear", typeof(string));
+    
+            var strToYearParameter = strToYear != null ?
+                new ObjectParameter("strToYear", strToYear) :
+                new ObjectParameter("strToYear", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_CIR_YEAR_STATISTIC", intLibraryIDParameter, intLocationIDParameter, intTypeParameter, intStatusParameter, strFromYearParameter, strToYearParameter, intUserIDParameter);
+        }
+    
+        public virtual int FPT_GET_LIQUIDBOOKS(string strLiquidCode, Nullable<int> intLibraryID, Nullable<int> intLocationID, string strDateFrom, string strDateTo, Nullable<int> intUserID)
+        {
+            var strLiquidCodeParameter = strLiquidCode != null ?
+                new ObjectParameter("strLiquidCode", strLiquidCode) :
+                new ObjectParameter("strLiquidCode", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var strDateFromParameter = strDateFrom != null ?
+                new ObjectParameter("strDateFrom", strDateFrom) :
+                new ObjectParameter("strDateFrom", typeof(string));
+    
+            var strDateToParameter = strDateTo != null ?
+                new ObjectParameter("strDateTo", strDateTo) :
+                new ObjectParameter("strDateTo", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_LIQUIDBOOKS", strLiquidCodeParameter, intLibraryIDParameter, intLocationIDParameter, strDateFromParameter, strDateToParameter, intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result> FPT_GET_LOCFULLNAME_LIBUSER_SEL(Nullable<int> intUserID, Nullable<int> intLibID, string strLocPrefix)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            var strLocPrefixParameter = strLocPrefix != null ?
+                new ObjectParameter("strLocPrefix", strLocPrefix) :
+                new ObjectParameter("strLocPrefix", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result>("FPT_GET_LOCFULLNAME_LIBUSER_SEL", intUserIDParameter, intLibIDParameter, strLocPrefixParameter);
+        }
+    
+        public virtual int FPT_GET_PATRON_LOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, string strSerial, Nullable<int> intUserID)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var strItemCodeParameter = strItemCode != null ?
+                new ObjectParameter("strItemCode", strItemCode) :
+                new ObjectParameter("strItemCode", typeof(string));
+    
+            var strCopyNumberParameter = strCopyNumber != null ?
+                new ObjectParameter("strCopyNumber", strCopyNumber) :
+                new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var strLocationPrefixParameter = strLocationPrefix != null ?
+                new ObjectParameter("strLocationPrefix", strLocationPrefix) :
+                new ObjectParameter("strLocationPrefix", typeof(string));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
+                new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
+                new ObjectParameter("strCheckOutDateFrom", typeof(string));
+    
+            var strCheckOutDateToParameter = strCheckOutDateTo != null ?
+                new ObjectParameter("strCheckOutDateTo", strCheckOutDateTo) :
+                new ObjectParameter("strCheckOutDateTo", typeof(string));
+    
+            var strCheckInDateFromParameter = strCheckInDateFrom != null ?
+                new ObjectParameter("strCheckInDateFrom", strCheckInDateFrom) :
+                new ObjectParameter("strCheckInDateFrom", typeof(string));
+    
+            var strCheckInDateToParameter = strCheckInDateTo != null ?
+                new ObjectParameter("strCheckInDateTo", strCheckInDateTo) :
+                new ObjectParameter("strCheckInDateTo", typeof(string));
+    
+            var strSerialParameter = strSerial != null ?
+                new ObjectParameter("strSerial", strSerial) :
+                new ObjectParameter("strSerial", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, strLocationPrefixParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, strSerialParameter, intUserIDParameter);
+        }
+    
+        public virtual int FPT_GET_PATRON_ONLOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strDueDateFrom, string strDueDateTo, string strSerial, Nullable<int> intUserID)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var strItemCodeParameter = strItemCode != null ?
+                new ObjectParameter("strItemCode", strItemCode) :
+                new ObjectParameter("strItemCode", typeof(string));
+    
+            var strCopyNumberParameter = strCopyNumber != null ?
+                new ObjectParameter("strCopyNumber", strCopyNumber) :
+                new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var strLocationPrefixParameter = strLocationPrefix != null ?
+                new ObjectParameter("strLocationPrefix", strLocationPrefix) :
+                new ObjectParameter("strLocationPrefix", typeof(string));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
+                new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
+                new ObjectParameter("strCheckOutDateFrom", typeof(string));
+    
+            var strCheckOutDateToParameter = strCheckOutDateTo != null ?
+                new ObjectParameter("strCheckOutDateTo", strCheckOutDateTo) :
+                new ObjectParameter("strCheckOutDateTo", typeof(string));
+    
+            var strDueDateFromParameter = strDueDateFrom != null ?
+                new ObjectParameter("strDueDateFrom", strDueDateFrom) :
+                new ObjectParameter("strDueDateFrom", typeof(string));
+    
+            var strDueDateToParameter = strDueDateTo != null ?
+                new ObjectParameter("strDueDateTo", strDueDateTo) :
+                new ObjectParameter("strDueDateTo", typeof(string));
+    
+            var strSerialParameter = strSerial != null ?
+                new ObjectParameter("strSerial", strSerial) :
+                new ObjectParameter("strSerial", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_ONLOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, strLocationPrefixParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strDueDateFromParameter, strDueDateToParameter, strSerialParameter, intUserIDParameter);
+        }
+    
+        public virtual int FPT_GET_PATRON_RENEW_LOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intUserID)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var strItemCodeParameter = strItemCode != null ?
+                new ObjectParameter("strItemCode", strItemCode) :
+                new ObjectParameter("strItemCode", typeof(string));
+    
+            var strCopyNumberParameter = strCopyNumber != null ?
+                new ObjectParameter("strCopyNumber", strCopyNumber) :
+                new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var strLocationPrefixParameter = strLocationPrefix != null ?
+                new ObjectParameter("strLocationPrefix", strLocationPrefix) :
+                new ObjectParameter("strLocationPrefix", typeof(string));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
+                new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
+                new ObjectParameter("strCheckOutDateFrom", typeof(string));
+    
+            var strCheckOutDateToParameter = strCheckOutDateTo != null ?
+                new ObjectParameter("strCheckOutDateTo", strCheckOutDateTo) :
+                new ObjectParameter("strCheckOutDateTo", typeof(string));
+    
+            var strCheckInDateFromParameter = strCheckInDateFrom != null ?
+                new ObjectParameter("strCheckInDateFrom", strCheckInDateFrom) :
+                new ObjectParameter("strCheckInDateFrom", typeof(string));
+    
+            var strCheckInDateToParameter = strCheckInDateTo != null ?
+                new ObjectParameter("strCheckInDateTo", strCheckInDateTo) :
+                new ObjectParameter("strCheckInDateTo", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_RENEW_LOAN_INFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, strLocationPrefixParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, intUserIDParameter);
+        }
+    
+        public virtual int FPT_GET_PATRON_RENEW_ONLOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intUserID)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var strItemCodeParameter = strItemCode != null ?
+                new ObjectParameter("strItemCode", strItemCode) :
+                new ObjectParameter("strItemCode", typeof(string));
+    
+            var strCopyNumberParameter = strCopyNumber != null ?
+                new ObjectParameter("strCopyNumber", strCopyNumber) :
+                new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            var strLocationPrefixParameter = strLocationPrefix != null ?
+                new ObjectParameter("strLocationPrefix", strLocationPrefix) :
+                new ObjectParameter("strLocationPrefix", typeof(string));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
+                new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
+                new ObjectParameter("strCheckOutDateFrom", typeof(string));
+    
+            var strCheckOutDateToParameter = strCheckOutDateTo != null ?
+                new ObjectParameter("strCheckOutDateTo", strCheckOutDateTo) :
+                new ObjectParameter("strCheckOutDateTo", typeof(string));
+    
+            var strCheckInDateFromParameter = strCheckInDateFrom != null ?
+                new ObjectParameter("strCheckInDateFrom", strCheckInDateFrom) :
+                new ObjectParameter("strCheckInDateFrom", typeof(string));
+    
+            var strCheckInDateToParameter = strCheckInDateTo != null ?
+                new ObjectParameter("strCheckInDateTo", strCheckInDateTo) :
+                new ObjectParameter("strCheckInDateTo", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_RENEW_ONLOAN_INFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, strLocationPrefixParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> FPT_SELECT_USECOUNT2(Nullable<int> libID, Nullable<int> itemID, Nullable<System.DateTime> cDate)
+        {
+            var libIDParameter = libID.HasValue ?
+                new ObjectParameter("LibID", libID) :
+                new ObjectParameter("LibID", typeof(int));
+    
+            var itemIDParameter = itemID.HasValue ?
+                new ObjectParameter("itemID", itemID) :
+                new ObjectParameter("itemID", typeof(int));
+    
+            var cDateParameter = cDate.HasValue ?
+                new ObjectParameter("cDate", cDate) :
+                new ObjectParameter("cDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_SELECT_USECOUNT2", libIDParameter, itemIDParameter, cDateParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_CIR_LIB_SEL_Result> FPT_SP_CIR_LIB_SEL(Nullable<int> intUserID)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CIR_LIB_SEL_Result>("FPT_SP_CIR_LIB_SEL", intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_CIR_LIBLOCUSER_SEL_Result> FPT_SP_CIR_LIBLOCUSER_SEL(Nullable<int> intUserID, Nullable<int> intLibID)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CIR_LIBLOCUSER_SEL_Result>("FPT_SP_CIR_LIBLOCUSER_SEL", intUserIDParameter, intLibIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_GET_COPYNUMBER_STRING_Result> FPT_SP_GET_COPYNUMBER_STRING(Nullable<int> libid, string acqdate, Nullable<float> price, Nullable<int> itemid)
+        {
+            var libidParameter = libid.HasValue ?
+                new ObjectParameter("libid", libid) :
+                new ObjectParameter("libid", typeof(int));
+    
+            var acqdateParameter = acqdate != null ?
+                new ObjectParameter("acqdate", acqdate) :
+                new ObjectParameter("acqdate", typeof(string));
+    
+            var priceParameter = price.HasValue ?
+                new ObjectParameter("price", price) :
+                new ObjectParameter("price", typeof(float));
+    
+            var itemidParameter = itemid.HasValue ?
+                new ObjectParameter("itemid", itemid) :
+                new ObjectParameter("itemid", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_COPYNUMBER_STRING_Result>("FPT_SP_GET_COPYNUMBER_STRING", libidParameter, acqdateParameter, priceParameter, itemidParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12_Result> FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12(Nullable<int> libID, Nullable<int> locID, Nullable<int> pOID, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, string orderBy)
+        {
+            var libIDParameter = libID.HasValue ?
+                new ObjectParameter("LibID", libID) :
+                new ObjectParameter("LibID", typeof(int));
+    
+            var locIDParameter = locID.HasValue ?
+                new ObjectParameter("LocID", locID) :
+                new ObjectParameter("LocID", typeof(int));
+    
+            var pOIDParameter = pOID.HasValue ?
+                new ObjectParameter("POID", pOID) :
+                new ObjectParameter("POID", typeof(int));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            var orderByParameter = orderBy != null ?
+                new ObjectParameter("OrderBy", orderBy) :
+                new ObjectParameter("OrderBy", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12_Result>("FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12", libIDParameter, locIDParameter, pOIDParameter, startDateParameter, endDateParameter, orderByParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result> FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(Nullable<int> itemID, Nullable<System.DateTime> acqDate)
+        {
+            var itemIDParameter = itemID.HasValue ?
+                new ObjectParameter("ItemID", itemID) :
+                new ObjectParameter("ItemID", typeof(int));
+    
+            var acqDateParameter = acqDate.HasValue ?
+                new ObjectParameter("AcqDate", acqDate) :
+                new ObjectParameter("AcqDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result>("FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE", itemIDParameter, acqDateParameter);
+        }
+    
+        public virtual ObjectResult<SP_HOLDING_LIBLOCUSER_SEL_Result> SP_HOLDING_LIBLOCUSER_SEL(Nullable<int> intUserID, Nullable<int> intLibID)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_HOLDING_LIBLOCUSER_SEL_Result>("SP_HOLDING_LIBLOCUSER_SEL", intUserIDParameter, intLibIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_JOIN_ISBN_Result> FPT_JOIN_ISBN(Nullable<int> itemid)
+        {
+            var itemidParameter = itemid.HasValue ?
+                new ObjectParameter("itemid", itemid) :
+                new ObjectParameter("itemid", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_JOIN_ISBN_Result>("FPT_JOIN_ISBN", itemidParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result> FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(Nullable<int> libID, Nullable<int> locID, string reid, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, string orderBy)
+        {
+            var libIDParameter = libID.HasValue ?
+                new ObjectParameter("LibID", libID) :
+                new ObjectParameter("LibID", typeof(int));
+    
+            var locIDParameter = locID.HasValue ?
+                new ObjectParameter("LocID", locID) :
+                new ObjectParameter("LocID", typeof(int));
+    
+            var reidParameter = reid != null ?
+                new ObjectParameter("reid", reid) :
+                new ObjectParameter("reid", typeof(string));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            var orderByParameter = orderBy != null ?
+                new ObjectParameter("OrderBy", orderBy) :
+                new ObjectParameter("OrderBy", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result>("FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter, orderByParameter);
+        }
+    
+        public virtual int FPT_SP_CIR_GET_RENEW(Nullable<int> intUserID, Nullable<short> intType, string strCodeVal)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(short));
+    
+            var strCodeValParameter = strCodeVal != null ?
+                new ObjectParameter("strCodeVal", strCodeVal) :
+                new ObjectParameter("strCodeVal", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_CIR_GET_RENEW", intUserIDParameter, intTypeParameter, strCodeValParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result> FPT_ADMIN_GET_RIGHTS_DENY_ADMIN(Nullable<int> intModuleID)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result>("FPT_ADMIN_GET_RIGHTS_DENY_ADMIN", intModuleIDParameter);
+        }
+    
+        public virtual int FPT_GET_PATRON_LOCK_STATISTIC(string strPatronCode, string strLockDateFrom, string strLockDateTo, Nullable<int> intCollegeID)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var strLockDateFromParameter = strLockDateFrom != null ?
+                new ObjectParameter("strLockDateFrom", strLockDateFrom) :
+                new ObjectParameter("strLockDateFrom", typeof(string));
+    
+            var strLockDateToParameter = strLockDateTo != null ?
+                new ObjectParameter("strLockDateTo", strLockDateTo) :
+                new ObjectParameter("strLockDateTo", typeof(string));
+    
+            var intCollegeIDParameter = intCollegeID.HasValue ?
+                new ObjectParameter("intCollegeID", intCollegeID) :
+                new ObjectParameter("intCollegeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC", strPatronCodeParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
+        }
+    
+        public virtual int FPT_SP_UPDATE_UNLOCK_PATRON_CARD(string strPatronCode, Nullable<int> lockedDay, string note)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var lockedDayParameter = lockedDay.HasValue ?
+                new ObjectParameter("lockedDay", lockedDay) :
+                new ObjectParameter("lockedDay", typeof(int));
+    
+            var noteParameter = note != null ?
+                new ObjectParameter("Note", note) :
+                new ObjectParameter("Note", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_UPDATE_UNLOCK_PATRON_CARD", strPatronCodeParameter, lockedDayParameter, noteParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result> FPT_SP_GET_HOLDING_BY_RECOMMENDID(Nullable<int> libID, Nullable<int> locID, string reid, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, string orderBy)
+        {
+            var libIDParameter = libID.HasValue ?
+                new ObjectParameter("LibID", libID) :
+                new ObjectParameter("LibID", typeof(int));
+    
+            var locIDParameter = locID.HasValue ?
+                new ObjectParameter("LocID", locID) :
+                new ObjectParameter("LocID", typeof(int));
+    
+            var reidParameter = reid != null ?
+                new ObjectParameter("reid", reid) :
+                new ObjectParameter("reid", typeof(string));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            var orderByParameter = orderBy != null ?
+                new ObjectParameter("OrderBy", orderBy) :
+                new ObjectParameter("OrderBy", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result>("FPT_SP_GET_HOLDING_BY_RECOMMENDID", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter, orderByParameter);
         }
     }
 }

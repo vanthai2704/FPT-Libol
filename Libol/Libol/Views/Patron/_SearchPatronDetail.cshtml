@@ -103,8 +103,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
-                <button type="button" class="btn btn-danger" onclick="showConfirmDel()">Xóa</button>
+                @if (((List<Int32>)Session["RightIDs"]).Contains(48))
+                {
+                    <button type="button" class="btn btn-primary" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
+                }
+                @if (((List<Int32>)Session["RightIDs"]).Contains(51))
+                {
+                    <button type="button" class="btn btn-danger" onclick="showConfirmDel()">Xóa</button>
+                }
+
             </div>
 
         </div>

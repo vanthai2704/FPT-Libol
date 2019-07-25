@@ -1,11 +1,11 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Ghi trả";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <head>
-
+    <script src="~/Scripts/jquery.blockUI.js"></script>
 
     <style>
 
@@ -92,16 +92,16 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;">
                         <div class="col-3"><label class="col-form-label">Số thẻ:</label></div>
-                        <div class="col"><input class="form-control" type="text" id="strPatronCode" onkeypress="checkinByCardNumber(event)" /></div>
+                        <div class="col"><input class="form-control" type="text" id="strPatronCode" onchange="checkinByCardNumber()" /></div>
                         <div class="col-4"><label class="col-form-label"> <a onclick="Searchpatron();" href="#">Tìm</a> | <a href="/Patron/Create">Thêm</a></label></div>
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" type="text" id="strCopyNumber" onkeypress="checkinbyDKCB(event)" /></div>
-                        <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
+                        <div class="col"><input class="form-control" type="text" id="strCopyNumber" onkeypress="checkin(event)" /></div>
+                        <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
-                        <div class="col"><button class="btn btn-primary" type="button" id="myButton">Ghi trả</button></div>
+                        <div class="col"><button class="btn btn-primary" type="button" onclick="checkinbyDKCB()">Ghi trả</button></div>
 
                     </div>
                 </div>
@@ -114,84 +114,82 @@
 </body>
 
 <script type="text/javascript">
-    document.getElementById("myButton").onclick = function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: "CheckIn/CheckInByDKCB",
-            type: "Get",
-            data: $(this).serialize(),
-            success: function (Response) {
-                $("#contentcheckin").html(Response)
-            },
-            error: function (jXHR, textStatus, errorThrown) {
-                alert(errorThrown);
-            }
-        });
-    };
 
     function findByCardNumber() {
         $.ajax({
             url: "CheckIn/FindByCardNumber",
             data: null,
             type: "Post",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+            },
             success: function (result) {
-
                 document.getElementById("contentcheckin").innerHTML = result;
+                $.unblockUI()
             },
             error: function (errormessage) {
-
+                $.unblockUI()
             }
         });
     }
 
-    function checkinByCardNumber(e) {
+    function checkinByCardNumber() {
         var empObj = {
             strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
             strFixDueDate: document.getElementById("strCheckinDate").value
         };
+        $.ajax({
+            url: "/CheckIn/CheckInByCardNumber",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
+            success: function (result) {
+                $("#contentcheckin").html(result);
+                $.unblockUI()
+            },
+            error: function (errormessage) {
+                console.log("abcssd");
+                $.unblockUI()
+            }
+        });
+    }
+
+    function checkin(e) {
         if (e.keyCode == 13) {
-            $.ajax({
-                url: "/CheckIn/CheckInByCardNumber",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    $("#contentcheckin").html(result);
-                },
-                error: function (errormessage) {
-                    console.log("abcssd");
-                }
-            });
+            checkinbyDKCB()
         }
     }
 
 
-    function checkinbyDKCB(e) {
-        var empObj = {
-            strFullName: '',
-            strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strCheckinDate").value,
-            intType: 1,
-            intAutoPaid: 0,
-            strCopyNumbers: document.getElementById("strCopyNumber").value,
-            strCheckInDate: document.getElementById("strCheckinDate").value
-        };
-        if (e.keyCode == 13) {
-            $.ajax({
-                url: "CheckIn/CheckInByDKCB",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    $("#contentcheckin").html(result)
-                },
-                error: function (errormessage) {
-                    console.log("error");
-                }
-            });
-        }
-    }
     function Searchpatron() {
         $.ajax({
             url: "/CheckIn/FindByCardNumber",
@@ -205,25 +203,40 @@
             }
         });
     }
-    function Searchpatronbyname(e) {
+
+    function Searchpatronbyname() {
         var empObj = {
             strFullName: document.getElementById("searchpatronbyname").value
         };
-        if (e.keyCode == 13) {
-            $.ajax({
-                url: "/CheckIn/FindByName",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    $("#contentcheckin").html(result);
-                    console.log('ýes');
-                },
-                error: function (errormessage) {
-                    console.log('error')
-                }
-            });
-        }
+        $.ajax({
+            url: "/CheckIn/FindByName",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
+            success: function (result) {
+                $("#contentcheckin").html(result);
+                $.unblockUI()
+            },
+            error: function (errormessage) {
+                $.unblockUI()
+            }
+        });
     }
     function btnsearchpatron() {
         var empObj = {
@@ -234,15 +247,55 @@
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
             success: function (result) {
                 $("#contentcheckin").html(result);
-                console.log('ýes');
+                $.unblockUI()
             },
             error: function (errormessage) {
-                console.log('error')
+                $.unblockUI()
             }
         });
 
+    }
+
+    function checkinbyDKCB() {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strCheckinDate").value,
+            intType: 1,
+            intAutoPaid: 0,
+            strCopyNumbers: document.getElementById("strCopyNumber").value,
+            strCheckInDate: document.getElementById("strCheckinDate").value
+        };
+        $.ajax({
+            url: "CheckIn/CheckInByDKCB",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#contentcheckin").html(result)
+            },
+            error: function (errormessage) {
+                console.log("error");
+            }
+        });
     }
 
     function checkinbyDKCBs() {

@@ -127,6 +127,9 @@ namespace Libol.Models
             int mediumId = item.MediumID;
             int typeId = item.TypeID;
             string bibLevel = item.BibLevel;
+
+            string callNumber = item.CallNumber;
+
             // check FormID,RecordType,... 
             if (!db.MARC_WORKSHEET.Any(m => m.ID == formId)
                 || !db.CAT_DIC_RECORDTYPE.Any(m => m.Code == recordType)
@@ -179,6 +182,7 @@ namespace Libol.Models
                 CallNumber = item.CallNumber,
                 SourceAgencyID = item.SourceAgencyID
 
+
             };
             db.ITEMs.Add(newItem);
             db.SaveChanges();
@@ -229,6 +233,7 @@ namespace Libol.Models
                     }
 
                     if (listFieldName.Contains("926"))
+
                     {
                         int index = listFieldName.IndexOf("926");
                         accessLevel = Convert.ToByte(listFieldValue[index]);
@@ -289,8 +294,6 @@ namespace Libol.Models
                         FormID = formId,
                         RecordType = recordType,
                         BibLevel = bibLevel,
-                        CallNumber = callNumber,
-                        SourceAgencyID = Int32.Parse(sourceAgencyID)
 
                     };
                     //add Item

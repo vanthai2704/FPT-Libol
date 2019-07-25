@@ -62,6 +62,7 @@ namespace Libol.Models
             this.ITEM_FULLTEXT = new HashSet<ITEM_FULLTEXT>();
             this.SER_ISSUE = new HashSet<SER_ISSUE>();
             this.ACQ_PO = new HashSet<ACQ_PO>();
+            this.FPT_RECOMMEND = new HashSet<FPT_RECOMMEND>();
         }
     
         public int ID { get; set; }
@@ -179,5 +180,7 @@ namespace Libol.Models
         public virtual MARC_WORKSHEET MARC_WORKSHEET { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ACQ_PO> ACQ_PO { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FPT_RECOMMEND> FPT_RECOMMEND { get; set; }
     }
 }
