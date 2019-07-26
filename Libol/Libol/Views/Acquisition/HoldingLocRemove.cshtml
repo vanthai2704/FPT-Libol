@@ -1,4 +1,4 @@
-﻿
+﻿@using Libol.Models;
 @{
     ViewBag.Title = "Thanh lý";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,7 +14,10 @@
     }
 </style>
 
-<h4 style="margin-top: 20px;margin-bottom: 20px;">Thanh ly</h4>
+<h4 style="margin-top: 20px;margin-bottom: 20px; color: red" >Thanh lý</h4>
+@{
+    List<SP_HOLDING_REMOVE_REASON_SEL_Result> listReason = ViewData["ListReason"] as List<SP_HOLDING_REMOVE_REASON_SEL_Result>; // list Reason
+}
 
 <div class="row">
     <div class="col-6">
@@ -82,27 +85,26 @@
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-3 align-self-center">Mã thanh lý: </label>
-            <input type="text" class="form-control col-md-4" >
+            <input type="text" class="form-control col-md-4" id="txtLiquidate">
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-3 align-self-center">Ngày thanh lý: </label>
-            <input type="date" class="form-control col-md-4" >
+            <input type="date" class="form-control col-md-4" id="DateLiquidate" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)">
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-3 align-self-center">Lý do: </label>
-            <select class="form-control col-md-4" style="width:80% !important">
-                <option>Quà tặng</option>
-                <option>Sách mất đền tiền</option>
-                <option>Sách cũ hỏng rách nát</option>
-                <option>Sách đổi version</option>
-                <option>Sách quá hạn trên 30 ngày</option>
-                <option>Trao đổi</option>
-                <option>Lý do khác</option>
+            <select name="listReason" id="listReason">
+                @{
+                    foreach (SP_HOLDING_REMOVE_REASON_SEL_Result item in listReason)
+                    {
+                        <option value="@item.ID">@item.REASON</option>
+                    }
+                }
             </select>
         </div>
         <div class="form-group row col-12">
             <label class="control-label col-md-5 align-self-center"></label>
-            <div class="col" style="padding-left:25px;"><button type="button" class="btn btn-primary">Thanh lý</button></div>
+            <div class="col" style="padding-left:25px;"><button type="button" class="btn btn-primary" id="btnLiquidate" onclick="Liquidate()">Thanh lý</button></div>
         </div>
     </div>
 
@@ -170,8 +172,32 @@
             document.getElementById("selectfile").disabled = true;
             document.getElementById("fieldkcb").disabled = false;
         }
+        // Thanh Ly 
+        function Liquidate() {
+            var Liquidate = document.getElementById("txtLiquidate").value;
+            var DateLiquidate = document.getElementById("DateLiquidate").value;
+            var Reason = $("#listReason :selected").val();
+            var DKCB = document.getElementById("fieldkcb").value;
+            var Copynumber = document.getElementById("txtSDKCB").value;
+
+            $.ajax({
+                url: "/Acquisition/Liquidate",
+                data: JSON.stringify({ Copynumber, DKCB, Liquidate,DateLiquidate,Reason}),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    alert('Bạn đã thanh lý sản phẩm thành công');
+                },
+                error: function () {
+                    alert('Thanh lý sản phẩm  không thành công');
+                }
+
+            });
+
+        }
 
 
 
-        //
+                //
     </script>
