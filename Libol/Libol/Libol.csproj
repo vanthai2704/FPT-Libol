@@ -55,6 +55,7 @@
     </Reference>
     <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -209,10 +210,15 @@
     <Compile Include="EntityResult\SP_CIR_OVERDUELIST_GETINFOR_Result.cs" />
     <Compile Include="EntityResult\SP_GET_CURRENT_CHECKIN_INFOR_Result.cs" />
     <Compile Include="EntityResult\SP_GET_TITLES_Result.cs" />
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_RECOMMEND.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result.cs" />
+    <Compile Include="Models\FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -504,9 +510,6 @@
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -516,16 +519,10 @@
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result.cs">
@@ -543,9 +540,6 @@
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_SH_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -558,9 +552,6 @@
     </Compile>
     <Compile Include="Models\FPT_CIR_MONTH_STATISTIC_Result.cs" />
     <Compile Include="Models\FPT_CIR_YEAR_STATISTIC_Result.cs" />
-    <Compile Include="Models\FPT_GET_COLLEGE_Result.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\FPT_GET_LIQUIDBOOKS_Result.cs" />
     <Compile Include="Models\FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>

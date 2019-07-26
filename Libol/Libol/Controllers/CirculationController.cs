@@ -528,7 +528,7 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult GetLockPatron(DataTableAjaxPostModel model ,int libraryID, string PatronCode,string Note,string StartedDate,string FinishDate)
         {
-            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode, "", "", 0);
+            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode,"", "", "", 0);
             var search = lockedpatron.Where(a => true);
             if(libraryID != -1)
             {

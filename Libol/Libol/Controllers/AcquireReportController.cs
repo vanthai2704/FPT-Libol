@@ -1608,7 +1608,7 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int) Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
