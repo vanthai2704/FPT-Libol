@@ -104,10 +104,6 @@ namespace Libol.Controllers
             return sP_CIR_OVERDUELISTs;
         }
 
-        private void GetlistOverdue(int intUserID,string patronids, string whereCondition) {
-
-        }
-
         private string ProcessCondition(string txtSoThe, string txtTenBanDoc,int ddlNhomBanDoc,int ddlTruong,int ddlKhoa, string txtKhoaHoc, string txtLopHoc,int ddlLib,int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)
         {
             string str = "";

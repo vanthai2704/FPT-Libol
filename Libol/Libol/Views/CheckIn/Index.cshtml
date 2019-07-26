@@ -175,6 +175,9 @@
             success: function (result) {
                 $("#contentcheckin").html(result);
                 $.unblockUI()
+                if (document.getElementById("hiddenmessage").value != "") {
+                    alert(document.getElementById("hiddenmessage").value);
+                }
             },
             error: function (errormessage) {
                 console.log("abcssd");
@@ -291,6 +294,9 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
             },
             error: function (errormessage) {
                 console.log("error");
@@ -322,11 +328,15 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
             },
             error: function (errormessage) {
                 console.log("error");
             }
         });
     }
+
 </script>
 
