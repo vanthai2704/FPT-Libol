@@ -14,9 +14,15 @@ namespace Libol.Models
     
     public partial class FPT_RECOMMEND
     {
-        public int POID { get; set; }
-        public string ReID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public FPT_RECOMMEND()
+        {
+            this.ITEMs = new HashSet<ITEM>();
+        }
     
-        public virtual ACQ_PO ACQ_PO { get; set; }
+        public string RecommendID { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ITEM> ITEMs { get; set; }
     }
 }

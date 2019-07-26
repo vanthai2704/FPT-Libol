@@ -1,4 +1,5 @@
 ﻿using Libol.Models;
+using Libol.SupportClass;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,7 +14,7 @@ namespace Libol.Controllers
         LibolEntities le = new LibolEntities();
         AcquisitionBusiness ab = new AcquisitionBusiness();
         List<Temper> listTempt = new List<Temper>();
-        int UserID = 49;
+        
         public string GetContent(string copynumber)
         {
             string validate = copynumber.Replace("$a", " ");
@@ -25,6 +26,7 @@ namespace Libol.Controllers
 
             return validate.Trim();
         }
+        [AuthAttribute(ModuleID = 4, RightID = "0")]
         public ActionResult AcquisitionIndex()
         {
             return View();
@@ -34,7 +36,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> lib = new List<SelectListItem>();
             lib.Add(new SelectListItem { Text = "Hãy chọn thư viện", Value = "" });
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int) Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -63,7 +65,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL(UserID, id).ToList())
+            foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL((int)Session["UserID"], id).ToList())
             {
                 loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
             }
@@ -1595,6 +1597,7 @@ namespace Libol.Controllers
             return View();
         }
 
+        [AuthAttribute(ModuleID = 4, RightID = "127")]
         public ActionResult AcquireStatisticIndex()
         {
             return View();
@@ -1628,7 +1631,7 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -1642,7 +1645,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            ViewBag.Result = ab.FPT_ACQ_YEAR_STATISTIC_LIST(LibID, LocID, strFromYear, strToYear, UserID);
+            ViewBag.Result = ab.FPT_ACQ_YEAR_STATISTIC_LIST(LibID, LocID, strFromYear, strToYear, (int)Session["UserID"]);
             return PartialView("GetYearStats");
         }
         public ActionResult StatisticMonth()
@@ -1651,7 +1654,7 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -1665,7 +1668,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            ViewBag.Result = ab.FPT_ACQ_MONTH_STATISTIC_LIST(LibID, LocID, strInYear, UserID);
+            ViewBag.Result = ab.FPT_ACQ_MONTH_STATISTIC_LIST(LibID, LocID, strInYear, (int)Session["UserID"]);
             return PartialView("GetMonthStats");
         }
         public ActionResult LiquidationStats()
@@ -1674,7 +1677,7 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -1687,7 +1690,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            ViewBag.Result = ab.FPT_GET_LIQUIDBOOKS_LIST(strLiquidID, LibID, LocID, strFromDate, strToDate, UserID);
+            ViewBag.Result = ab.FPT_GET_LIQUIDBOOKS_LIST(strLiquidID, LibID, LocID, strFromDate, strToDate, (int)Session["UserID"]);
             foreach(var item in ViewBag.Result)
             {
                 item.Content = GetContent(item.Content);
@@ -1699,7 +1702,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> lib = new List<SelectListItem>();
             lib.Add(new SelectListItem { Text = "Hãy chọn thư viện", Value = "" });
-            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -1727,7 +1730,7 @@ namespace Libol.Controllers
             List<Temper> listPO = new List<Temper>();
             if (sdd == "" && edd == "")
             {
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(LibID, LocID, recomCode, null, null, orderby).ToList())
+                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, null, null, orderby).ToList())
                 {
                     String tpDKCB = item.DKCB;
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
@@ -1745,14 +1748,14 @@ namespace Libol.Controllers
                     {
                         isb = ite.ISBN;
                     }
-                    listPO.Add(new Temper(uCount, item.REID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
                 }
                 ViewBag.POList = listPO;
             }
             else if (sdd != "" && edd == "")
             {
                 DateTime sdt = Convert.ToDateTime(sdd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(LibID, LocID, recomCode, sdt, null, orderby).ToList())
+                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, sdt, null, orderby).ToList())
                 {
                     String tpDKCB = item.DKCB;
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
@@ -1770,14 +1773,14 @@ namespace Libol.Controllers
                     {
                         isb = ite.ISBN;
                     }
-                    listPO.Add(new Temper(uCount, item.REID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
                 }
                 ViewBag.POList = listPO;
             }
             else if (sdd == "" && edd != "")
             {
                 DateTime edt = Convert.ToDateTime(edd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(LibID, LocID, recomCode, null, edt, orderby).ToList())
+                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, null, edt, orderby).ToList())
                 {
                     String tpDKCB = item.DKCB;
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
@@ -1795,7 +1798,7 @@ namespace Libol.Controllers
                     {
                         isb = ite.ISBN;
                     }
-                    listPO.Add(new Temper(uCount, item.REID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
                 }
                 ViewBag.POList = listPO;
             }
@@ -1803,7 +1806,7 @@ namespace Libol.Controllers
             {
                 DateTime sdt = Convert.ToDateTime(sdd);
                 DateTime edt = Convert.ToDateTime(edd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3(LibID, LocID, recomCode, sdt, edt, orderby).ToList())
+                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, sdt, edt, orderby).ToList())
                 {
                     String tpDKCB = item.DKCB;
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
@@ -1821,7 +1824,7 @@ namespace Libol.Controllers
                     {
                         isb = ite.ISBN;
                     }
-                    listPO.Add(new Temper(uCount, item.REID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
                 }
                 ViewBag.POList = listPO;
             }

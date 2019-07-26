@@ -9,10 +9,11 @@ using System.IO;
 using System.Reflection;
 using Excel = Microsoft.Office.Interop.Excel;
 
+using Libol.SupportClass;
 
 namespace Libol.Controllers
-{    
-    public class CirculationController : BaseController
+{
+    public class CirculationController : Controller
     {
         LibolEntities le = new LibolEntities();
         CirculationBusiness cb = new CirculationBusiness();
@@ -29,7 +30,7 @@ namespace Libol.Controllers
 
             return validate.Trim();
         }
-        // GET: Circulation
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult Index()
         {
             return View();
@@ -40,6 +41,7 @@ namespace Libol.Controllers
             return View();
         }
 
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult ReportOnLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -117,6 +119,7 @@ namespace Libol.Controllers
             return PartialView("GetFilteredOnLoanStats");
         }
         //-------------------END OF ONLOAN REPORT---------------------
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult ReportLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -195,15 +198,15 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
             List<GET_PATRON_RENEW_LOAN_INFOR_Result> result = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, UserID);
-               
+
             foreach (var item in result)
             {
-                item.Content = GetContent(item.Content);               
-                if((item.CheckInDate-item.OverDueDateNew).Days>item.OverdueDays)
+                item.Content = GetContent(item.Content);
+                if ((item.CheckInDate - item.OverDueDateNew).Days > item.OverdueDays)
                 {
                     item.OverdueDays = 0;
                     item.OverdueFine = 0;
-                }     
+                }
 
             }
             ViewBag.Result = result;
@@ -240,6 +243,7 @@ namespace Libol.Controllers
             ViewData["lib"] = lib;
             return View();
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticYear()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -272,7 +276,7 @@ namespace Libol.Controllers
             int Type = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            if (!String.IsNullOrEmpty(strType)) Type = Convert.ToInt32(strType);            
+            if (!String.IsNullOrEmpty(strType)) Type = Convert.ToInt32(strType);
             if (Type == 3)
             {
                 ViewBag.TypeName = "bạn đọc";
@@ -314,6 +318,7 @@ namespace Libol.Controllers
             ViewBag.UsingResult = cb.GET_FPT_CIR_MONTH_STATISTIC_LIST(LibID, LocID, Type, 1, strInYear, UserID);
             return PartialView("GetMonthStats");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticMonth()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -328,6 +333,7 @@ namespace Libol.Controllers
             return View();
         }
 
+        [AuthAttribute(ModuleID = 3, RightID = "72")]
         public ActionResult LockPatronStats()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -360,6 +366,46 @@ namespace Libol.Controllers
             ViewData["note"] = note;
             return View();
         }
+        // trinhlv1 LockCard()
+        [HttpPost]
+        public JsonResult LockCardPatron(string cardNumber,string startDate,int lockDays, string note)
+        {
+           // List<SP_UNLOCK_PATRON_CARD_Result> listResult1 = cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("''SE05062''");
+            List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cardNumber, lockDays, startDate, note);
+            ViewData["listResult"] = listResult;
+            return Json(listResult, JsonRequestBehavior.AllowGet);
+
+        }
+        // Edit LockCard()
+        [HttpPost]
+        public JsonResult UpdatedLockCardPatron(string patronCode, int lockDays, string note)
+        {
+            List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> listResult = cb.FPT_SP_UPDATE_UNLOCK_PATRON_CARD(patronCode, lockDays, note);
+            ViewData["listResult"] = listResult;
+            return Json(listResult, JsonRequestBehavior.AllowGet);
+
+        }
+        // trinhlv1 UnLockCard()
+        [HttpPost]
+        public JsonResult UnLockCardPatron(List<string> patroncodeList)
+        {
+            try
+            {
+                foreach (var item in patroncodeList)
+                {
+                    cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("'" + item+ "'"); ;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Json(new { Message = "Mở Khóa thành công!" }, JsonRequestBehavior.AllowGet);
+            //List<SP_UNLOCK_PATRON_CARD_Result> listResult = cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("'"+patroncode+"'");
+            //ViewData["listResult"] = listResult;
+            //return Json(listResult, JsonRequestBehavior.AllowGet);
+
+        }
 
         public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom, string strCollegeID)
         {
@@ -378,6 +424,7 @@ namespace Libol.Controllers
             return PartialView("GetLockPatronStats");
         }
 
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticPatronGroup()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -407,6 +454,7 @@ namespace Libol.Controllers
 
             return PartialView("DisplayPatronGroup");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticTopPatron()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -432,6 +480,7 @@ namespace Libol.Controllers
             ViewBag.test = result;
             return PartialView("DisplayTopPatron");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticTopCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -474,5 +523,59 @@ namespace Libol.Controllers
             //le.SP_HOLDING_LIBLOCUSER_SEL(UserID, id).ToList();
             return View();
         }
+        // get list lock patron in datatable
+        // trinhlv
+        [HttpPost]
+        public JsonResult GetLockPatron(DataTableAjaxPostModel model ,int libraryID, string PatronCode,string Note,string StartedDate,string FinishDate)
+        {
+            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode, "", "", 0);
+            var search = lockedpatron.Where(a => true);
+            if(libraryID != -1)
+            {
+                // Tim theo thu vien
+            }
+            if (!String.IsNullOrEmpty(Note))
+            {
+                search = search.Where(a => a.Note.Contains(Note));
+            }
+            if (!String.IsNullOrEmpty(StartedDate))
+            {
+                search = search.Where(a => a.StartedDate.ToString("yyyy-MM-dd").CompareTo(StartedDate) >= 0);
+            }
+            if (!String.IsNullOrEmpty(FinishDate))
+            {
+                search = search.Where(a => a.FinishDate.ToString("yyyy-MM-dd").CompareTo(FinishDate)<=0);
+            }
+            var paging = search.Skip(model.start).Take(model.length).ToList();
+            var result = paging.ToList();
+            List<SP_GET_LOCKEDPATRONS_Result2> list = new List<SP_GET_LOCKEDPATRONS_Result2>();
+            foreach (var i in result)
+            {
+                list.Add(new SP_GET_LOCKEDPATRONS_Result2()
+                {
+                    PatronCode = i.PatronCode,
+                    StartedDate = i.StartedDate.ToString("dd/MM/yyyy"),
+                    Note = i.Note,
+                    FullName = i.FullName,
+                    FinishDate = i.FinishDate.ToString("dd/MM/yyyy"),
+                    LockedDays = i.LockedDays
+
+                });
+            }
+
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = lockedpatron.Count(),
+                recordsFiltered = search.Count(),
+                data = list
+            });
+        }
+
+        public class LockCardStatus
+        {
+            public string PatronCode { get; set; }
+        }
+
     }
 }

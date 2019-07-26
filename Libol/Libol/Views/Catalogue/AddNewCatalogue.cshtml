@@ -65,7 +65,7 @@
             @{
                 foreach (CAT_DIC_MEDIUM medium in listMedium)
                 {
-                    <option value="@medium.ID">@medium.Description</option>
+                    <option value="@medium.ID">@medium.Code : @medium.Description</option>
                 }
             }
         </select>
@@ -77,7 +77,7 @@
             @{
                 foreach (CAT_DIC_ITEM_TYPE itemType in listItemType)
                 {
-                    <option value="@itemType.ID">@itemType.TypeName</option>
+                    <option value="@itemType.ID">@itemType.TypeCode : @itemType.TypeName</option>
                 }
             }
         </select>
@@ -91,7 +91,8 @@
             }
         </select>
     </div>
-
+    <br>
+    @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>*@
     <div id="formCreated">
 
     </div>
@@ -100,7 +101,7 @@
         <div class="form-row col-md-12 text-center">
             <div style="margin : auto">
                 <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới" onclick="doWork();" />
-                <button disabled type="button" id="btnReset" class="btn btn-primary form-control">Đặt Lại</button>
+                <button disabled type="button" id="btnReset" class="btn btn-primary form-control" onclick="reset();">Đặt Lại</button>
                 <button disabled type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal">Thêm Trường</button>
             </div>
         </div>
@@ -111,7 +112,7 @@
 
 
 
-<!--The Modal -->
+<!--The Modal Insert Thành Công-->
 <div class="modal fade" id="centralModalSm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -125,10 +126,29 @@
                 Mã Tài Liệu : <label class='col-md-2 align-self-center font-weight-bold' id="codeId"></label>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-info" onclick="location.href='/Catalogue/AddCatalogueDetail';">Thêm Trường</button>
+                <button type="button" class="btn btn-outline-info" id="btnDetail">Thêm Trường</button>
                 <button type="button" class="btn btn-success" onclick="location.href='/Catalogue/AddNewCatalogue';">Biên Mục Mới</button>
-                <button type="button" class="btn btn-secondary" id="btnShelf" >Xếp Giá</button>
+                <button type="button" class="btn btn-secondary" id="btnShelf">Xếp Giá</button>
             </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade bd-example-modal-lg" id="checkTTModal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Các Bản Ghi Có Nhan Đề Tương Tự</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="checkModalBody">
+                @*<div class='form-group row col-12'><label class='col-md-9'>Content here !!!</label><label class='col-md-3'><br /><button type='button' class='btn btn-primary form-control'>Sử Dụng Biểu Ghi</button><br /><br /><button type='button' class='btn btn-primary form-control'>Dùng Thông Tin</button></label></div>*@<hr>
+               
+            </form>
         </div>
     </div>
 </div>
@@ -136,6 +156,11 @@
 
 <script>
     
+    //get form 2019 to default
+    $(document).ready(function () {
+        $('#listMarcFormID option[value=14]').attr('selected', true);
+        SelectedForm();
+    });
     var Data = [];
     function SelectedForm() {
         Data = ["001"];
@@ -153,6 +178,7 @@
             success: function (result) {
                 $.each(result, function (i, item) {
                     Data.push(item.FieldCode);
+
                     var field = item.FieldCode;
 
                     field = field.replace('$', '');
@@ -160,7 +186,7 @@
                         html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Nhan Đề Song Song [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "1></input>     </div> " +
                             "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Phụ Đề [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "2></input>     </div>";
                     }
-                    else if (!(item.FieldCode == '900' || item.FieldCode == '911' || item.FieldCode == '925' || item.FieldCode == '926' || item.FieldCode == '927')) {
+                    else if (!(item.FieldCode == '900' || item.FieldCode == '911' || item.FieldCode == '925' || item.FieldCode == '926' || item.FieldCode == '927' || item.FieldCode == '852$a')) {
                         html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "></input> </div>";
                     }
                 });
@@ -174,14 +200,14 @@
                     //check tittle
                     $("#245a").focusout(function () {
                         checkTitle($('#245a').val(), '');
-                        
+
                     });
 
                     //Check ISBN  \\ Chưa check cho trường hợp lặp
                     $("#020a").focusout(function () {
-                        checkItemNumber($('#020a').val() , '020$a');
+                        checkItemNumber($('#020a').val(), '020$a');
                     });
-
+                    //getListAuthor();
                 });
             },
             error: function (errorThrown) {
@@ -200,13 +226,140 @@
             dataType: "json",
             success: function (listTitle) {
                 if (listTitle.length > 0) {
-                    $("#dv245a").append("<label class='control-label col-md-3 align-self-center font-weight-bold'  id ='lbCheck245'> </label>").focus();
-                    $('#lbCheck245').text("Nhan đề đã tồn tại , mời nhập lại !").css('color' , 'red');
-                    //alert 
-                    $('#245a').focus();
+
+                    debugger;
+                    var distinct = $.grep(listTitle, function (v) {
+                        return v.FieldCode === "001";
+                    });
+                    var arrId = [];
+                    //get list ItemID
+                    $.each(distinct, function (i, item) {
+                        arrId.push(item.ItemID);
+                    });
+
+                    var html = '';
+                    $.each(arrId, function (i, item) {
+                        var strContent = i +1 + " : ";
+                        //get  Field 100
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "100" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                        strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
+                        //get Field 110
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "110" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                        strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
+                        //get Field 111
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "111" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                        strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
+                        //get Field 245
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "245" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + '<B>' + field[0].Content + '</B> </br> </br>';
+                        //get Field 250
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "250" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + '<B>' + field[0].Content + '</B>  </br>';
+                        //get Field 260
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "260" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + '<B>' + field[0].Content + '</B>  </br>  </br>';
+                        //get Field 300
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "300" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + field[0].Content + '  </br>  </br>';
+                        //get Field 490
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "490" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent  + field[0].Content + '  </br>';
+                        //get Field 520
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "520" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + field[0].Content + ' </br>';
+                        //get Field 505
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "505" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + field[0].Content + ' </br>';
+                        //get Field 020
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "020" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + field[0].Content + '  </br>  </br>';
+                        //get Field 022
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "022" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent +  field[0].Content + '  </br>';
+                        //get Field 6%
+                        var field = $.grep(listTitle, function (v) {
+                            debugger;
+                            return (parseInt(v.FieldCode) >= 600 && parseInt(v.FieldCode) < 700 ) &&  v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            $.each(field, function (i, item) {
+                                strContent = strContent + parseInt(i+1)  + ' : ' + item.Content + '  </br>';
+                            });
+                            
+                        //get Field 700
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "700" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent  + field[0].Content + '  </br>';
+                        //get Field 710
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "710" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent  + field[0].Content + '  </br>';
+                        //get Field 082
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "082" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + ' </br> Dewey Class No : ' + field[0].Content + '. </br>';
+                        //get Field 090
+                        var field = $.grep(listTitle, function (v) {
+                            return v.FieldCode === "090" && v.ItemID === item
+                        });
+                        if (field.length > 0)
+                            strContent = strContent + 'Call no. : <B>' + field[0].Content + '</B> </br>';
+
+
+                        html += "<div class='form-group row col-12'><label class='col-md-9 text-left'>" + strContent + "</label><label class='col-md-3'><br /><a type='button' class='btn btn-primary form-control' href='/Shelf/Index?Code=" + distinct[i].Content + "'>Sử Dụng Biểu Ghi</a><br /><br /><button type='button' class='btn btn-primary form-control'>Dùng Thông Tin</button></label></div><hr>"
+                    });
+                    $('#checkModalBody').html(html);
+
+                    $('#checkTTModal').modal({ backdrop: 'static', keyboard: false })
+                    $('#checkTTModal').modal('toggle');
+                  
+
+
                 }
                 else {
-                    $('#lbCheck245').remove();
+                 
                 }
             },
             error: function (errorThrown) {
@@ -215,7 +368,13 @@
 
         });
     }
-    function checkItemNumber(value , code) {
+
+    function reUseBM(code) {
+        debugger;
+        alert("dddddd");
+    }
+
+    function checkItemNumber(value, code) {
         $.ajax({
             url: "/Catalogue/CheckItemNumber",
             type: "POST",
@@ -224,15 +383,17 @@
             dataType: "json",
             success: function (Value) {
                 if (Value > 0) {
-                    $("#020a").append("<label class='control-label col-md-3 align-self-center font-weight-bold'  id ='lbCheck020'> </label>").focus();
-                    $('#lbCheck020').text("Mã ISBN đã tồn tại , mời nhập lại !").css('color', 'red');
-                    //alert 
-                    
+                    //debugger;
+                    $('#lbCheck020').empty();
+                    $("#dv020a").append("<label class='control-label col-md-2 align-self-center font-weight-bold'  id ='lbCheck020'> </label>");
+                    $('#lbCheck020').text(" Mã ISBN đã tồn tại !").css('color', 'red');
+                    //alert
+
                 }
                 else {
-                    $('#lbCheck245').remove();
+                    $('#lbCheck020').remove();
                 }
-                
+
             },
             error: function (errorThrown) {
                 alert(errorThrown);
@@ -240,13 +401,17 @@
 
         });
     }
- 
+
+    function reset() {
+        $(':input').val('');
+    }
+
 </script>
 
 
 <script>
 
-    
+
     function doWork() {
         var arrFieldName = [];
         var arrFieldValue = [];
@@ -304,23 +469,27 @@
             }
         });
 
-    //Insert Item
+        //Insert Item
 
         $.ajax({
             url: "/Catalogue/InsertOrUpdateCatalogue",
             type: "POST",
-            data: JSON.stringify({ listFieldsName: arrFieldName, listFieldsValue: arrFieldValue }),
+            data: JSON.stringify({ listFieldsName: arrFieldName, listFieldsValue: arrFieldValue, listFieldsOrg: null, listValuesOrg: null }),
             contentType: "application/json;charset=utf-8",
             dataType: "json",
-            success: function (code) {
+            success: function (Data) {
                 //pop up Modal
-                
-                $('#codeId').text(code[0]);
-                $('#centralModalSm').modal({ backdrop: 'static', keyboard: false })
+
+                $('#codeId').text(Data[0]);
+                $('#centralModalSm').modal({ backdrop: 'static' })
                 $('#centralModalSm').modal('toggle');
                 $('#btnShelf').click(function () {
-                    window.location.href = '/Shelf/Index?Code=' + code[0] +'&ItemID='+code[1];
+                    window.location.href = '/Shelf/Index?Code=' + Data[0];
                 });
+                $('#btnDetail').click(function () {
+                    window.location.href = '/Catalogue/AddNewCatalogueDetail?ID='+ Data[1];
+                });
+                
 
             },
             error: function (errorThrown) {

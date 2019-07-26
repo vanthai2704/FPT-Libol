@@ -24,14 +24,16 @@
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
 <script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
-<script type="text/javascript" charset="utf8" src="~/Content/DataTables/dataTables.checkboxes.min.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/dataTables.checkboxesCustomForAccount.min.js"></script>
 <script>
     var table;
     $(document).ready(function () {
         table = $('#table_account').DataTable({
             columnDefs: [{
                 targets: 0,
-                'checkboxes': {
+                data: "ID",
+
+                checkboxes: {
                     'selectRow': true
                 }
             },
@@ -65,16 +67,32 @@
             ],
             order: [[1, 'asc']],
             orderCellsTop: true,
+
+            drawCallback: function (settings, json) {
+                var colIdx = 1;
+                var table = $('#table_account').DataTable();
+                var IDs = table.column(colIdx).data();
+
+                $(IDs).each(function (index, value) {
+                    if (value === 1) {
+                        $(table.row(index).node()).addClass('not-selectable');
+                        $(table.row(index).node()).children('td').children('input').remove();
+                    }
+                });
+
+                // Deselect unselectable rows (that can still be selected by using the shift key)...
+                table.on('select', function (e, dt, type, indexes) {
+                    if (type === 'row') {
+                        var rows = table.rows(indexes).nodes();
+
+                        $.each($(rows), function () {
+                            if ($(this).hasClass('not-selectable')) table.row($(this)).deselect();
+                        })
+                    }
+                });
+            },
         });
 
-        table.on('select', function (e, dt, type, indexes) {
-            if (type === 'row') {
-                var rows = table.rows(indexes).nodes().to$();
-                $.each(rows, function () {
-                    if ($(this).hasClass('ignoreme')) table.row($(this)).deselect();
-                })
-            }
-        });
     });
 
 </script>
@@ -110,7 +128,11 @@
                 </thead>
 
             </table>
-            <button type="button" class="btn btn-danger" onclick="getSelected()">Xóa</button>
+            @if (((Int32)Session["UserID"]) == 1)
+            {
+                <button type="button" class="btn btn-danger" onclick="getSelected()">Xóa</button>
+            }
+
         </div>
         <div class="col">
             <div class="form-row" style="padding-right : 3rem">
@@ -157,142 +179,167 @@
             </div>
 
             <h5>Quyền truy cập vào các phân hệ</h5>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Biên mục</label></div>
-                <div class="col">
-                    <select class="form-control" id="module1">
-                        <option value="0">Không</option>
-                        @if (@Model.CatModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            @if (((List<Int32>)Session["RightIDs"]).Contains(199))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Biên mục</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module1">
+                            <option value="0">Không</option>
+                            @if (@Model.CatModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(1)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(1)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Bạn đọc</label></div>
-                <div class="col">
-                    <select class="form-control" id="module2">
-                        <option value="0">Không</option>
-                        @if (@Model.PatModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(200))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Bạn đọc</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module2">
+                            <option value="0">Không</option>
+                            @if (@Model.PatModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(2)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(2)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Mượn trả</label></div>
-                <div class="col">
-                    <select class="form-control" id="module3">
-                        <option value="0">Không</option>
-                        @if (@Model.CirModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(201))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Mượn trả</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module3">
+                            <option value="0">Không</option>
+                            @if (@Model.CirModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(3)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(3)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Bổ sung</label></div>
-                <div class="col">
-                    <select class="form-control" id="module4">
-                        <option value="0">Không</option>
-                        @if (@Model.AcqModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(202))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Bổ sung</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module4">
+                            <option value="0">Không</option>
+                            @if (@Model.AcqModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(4)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(4)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Ấn phẩm định kỳ</label></div>
-                <div class="col">
-                    <select class="form-control" id="module5">
-                        <option value="0">Không</option>
-                        @if (@Model.SerModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(203))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Ấn phẩm định kỳ</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module5">
+                            <option value="0">Không</option>
+                            @if (@Model.SerModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(5)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(5)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">ILL</label></div>
-                <div class="col">
-                    <select class="form-control" id="module8">
-                        <option value="0">Không</option>
-                        @if (@Model.ILLModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(204))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">ILL</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module8">
+                            <option value="0">Không</option>
+                            @if (@Model.ILLModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(8)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(8)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Sưu tập số</label></div>
-                <div class="col">
-                    <select class="form-control" id="module9">
-                        <option value="0">Không</option>
-                        @if (@Model.DelModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            }
+            @if (((List<Int32>)Session["RightIDs"]).Contains(205))
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Sưu tập số</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module9">
+                            <option value="0">Không</option>
+                            @if (@Model.DelModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(9)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(9)">Các quyền</a></div>
-            </div>
-            <div class="form-row">
-                <div class="col"><label class="col-form-label float-right">Quản trị</label></div>
-                <div class="col">
-                    <select class="form-control" id="module6">
-                        <option value="0">Không</option>
-                        @if (@Model.AdmModule)
-                        {
-                            <option value="1" selected>Có</option>
-                        }
-                        else
-                        {
-                            <option value="1">Có</option>
-                        }
-                    </select>
+            }
+            @if (((Int32)Session["UserID"]) == 1)
+            {
+                <div class="form-row">
+                    <div class="col"><label class="col-form-label float-right">Quản trị</label></div>
+                    <div class="col">
+                        <select class="form-control" id="module6">
+                            <option value="0">Không</option>
+                            @if (@Model.AdmModule)
+                            {
+                                <option value="1" selected>Có</option>
+                            }
+                            else
+                            {
+                                <option value="1">Có</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col"><a href="#" onclick="ShowRight(6)">Các quyền</a></div>
                 </div>
-                <div class="col"><a href="#" onclick="ShowRight(6)">Các quyền</a></div>
-            </div>
+            }
+
 
             <div class="form-group row" style="padding-right : 3rem">
                 <div class="col">
@@ -474,7 +521,9 @@
             GetAcceptRights(right8) +
             GetAcceptRights(right9) +
             GetAcceptRights(right6);
-
+        var locRights1 = GetAcceptLocRights(right3);
+        var locRights2 = GetAcceptLocRights(right4);
+        var locRights3 = GetAcceptLocRights(right5);
         var empObj = {
             Name: document.getElementById("txtName").value,
             Username: document.getElementById("txtUsername").value,
@@ -489,7 +538,10 @@
             module8: module8,
             module9: module9,
             module6: module6,
-            rights: rights.substring(0, rights.length - 1)
+            rights: rights.substring(0, rights.length - 1),
+            locRights1: locRights1,
+            locRights2: locRights2,
+            locRights3: locRights3,
         }
         $.ajax({
             url: "/Management/AddNewUser",
@@ -524,14 +576,49 @@
     }
     function UpdateUser() {
         hideInvalid();
+        if (right1 == null || right2 == null || right3 == null || right4 == null || right5 == null || right8 == null || right9 == null || right6 == null) {
+
+            document.getElementById("notifyMessage").innerHTML = "Vui lòng chờ!";
+            $("#modalNotify").modal();
+        }
+        var module1 = $('#module1').val();
+        var module2 = $('#module2').val();
+        var module3 = $('#module3').val();
+        var module4 = $('#module4').val();
+        var module5 = $('#module5').val();
+        var module8 = $('#module8').val();
+        var module9 = $('#module9').val();
+        var module6 = $('#module6').val();
+        var rights = GetAcceptRights(right1) +
+            GetAcceptRights(right2) +
+            GetAcceptRights(right3) +
+            GetAcceptRights(right4) +
+            GetAcceptRights(right5) +
+            GetAcceptRights(right8) +
+            GetAcceptRights(right9) +
+            GetAcceptRights(right6);
+        var locRights1 = GetAcceptLocRights(right3);
+        var locRights2 = GetAcceptLocRights(right4);
+        var locRights3 = GetAcceptLocRights(right5);
         var empObj = {
             ID: document.getElementById("txtID").value,
             Name: document.getElementById("txtName").value,
             Username: document.getElementById("txtUsername").value,
             Email: document.getElementById("txtEmail").value,
             Password: document.getElementById("txtPassword").value,
-            RepeatPassword: document.getElementById("txtRepeatPassword").value
-
+            RepeatPassword: document.getElementById("txtRepeatPassword").value,
+            module1: module1,
+            module2: module2,
+            module3: module3,
+            module4: module4,
+            module5: module5,
+            module8: module8,
+            module9: module9,
+            module6: module6,
+            rights: rights.substring(0, rights.length - 1),
+            locRights1: locRights1,
+            locRights2: locRights2,
+            locRights3: locRights3,
         }
         $.ajax({
             url: "/Management/UpdateUser",
@@ -635,6 +722,9 @@
     var right8 = null;
     var right9 = null;
     var right6 = null;
+    var rightLoc1 = null;
+    var rightLoc2 = null;
+    var rightLoc3 = null;
 
     function ShowRight(moduleID) {
         HideLocRights();
@@ -863,6 +953,15 @@
         return rights;
     }
 
+    function GetAcceptLocRights(right) {
+        var locRights = "";
+        var accept = right.AcceptLoc;
+        for (var i in accept) {
+            locRights += accept[i].ID + ",";
+        }
+        return locRights;
+    }
+
     function Accept() {
         var denyRightsID = $('#denyRights').val();
         var denyRights = $("#denyRights :selected").toArray();
@@ -1028,7 +1127,7 @@
                 case '1':
                     right1.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right1.Deny.push(item);
@@ -1036,7 +1135,7 @@
                 case '2':
                     right2.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right2.Deny.push(item);
@@ -1044,7 +1143,7 @@
                 case '3':
                     right3.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right3.Deny.push(item);
@@ -1052,7 +1151,7 @@
                 case '4':
                     right4.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right4.Deny.push(item);
@@ -1060,7 +1159,7 @@
                 case '5':
                     right5.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right5.Deny.push(item);
@@ -1068,7 +1167,7 @@
                 case '8':
                     right8.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right8.Deny.push(item);
@@ -1076,7 +1175,7 @@
                 case '9':
                     right9.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right9.Deny.push(item);
@@ -1084,7 +1183,7 @@
                 case '6':
                     right6.Accept.splice(acceptRights[id].index, 1);
                     var item = {
-                        ID: acceptRights[id],
+                        ID: acceptRightsID[id],
                         LocName: acceptRights[id].innerText
                     };
                     right6.Deny.push(item);
@@ -1106,7 +1205,7 @@
                 case '1':
                     right1.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right1.DenyLoc.push(item);
@@ -1114,7 +1213,7 @@
                 case '2':
                     right2.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right2.DenyLoc.push(item);
@@ -1122,7 +1221,7 @@
                 case '3':
                     right3.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right3.DenyLoc.push(item);
@@ -1130,7 +1229,7 @@
                 case '4':
                     right4.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right4.DenyLoc.push(item);
@@ -1138,7 +1237,7 @@
                 case '5':
                     right5.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right5.DenyLoc.push(item);
@@ -1146,7 +1245,7 @@
                 case '8':
                     right8.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right8.DenyLoc.push(item);
@@ -1154,7 +1253,7 @@
                 case '9':
                     right9.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right9.DenyLoc.push(item);
@@ -1162,7 +1261,7 @@
                 case '6':
                     right6.AcceptLoc.splice(acceptLocRights[id].index, 1);
                     var item = {
-                        ID: acceptLocRights[id],
+                        ID: acceptLocRightsID[id],
                         Right: acceptLocRights[id].innerText
                     };
                     right6.DenyLoc.push(item);

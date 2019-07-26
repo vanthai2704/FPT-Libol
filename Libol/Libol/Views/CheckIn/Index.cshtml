@@ -1,11 +1,11 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Ghi trả";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <head>
-
+    <script src="~/Scripts/jquery.blockUI.js"></script>
 
     <style>
 
@@ -98,7 +98,7 @@
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
                         <div class="col"><input class="form-control" type="text" id="strCopyNumber" onkeypress="checkin(event)" /></div>
-                        <div class="col-4"><label class="col-form-label"><a href="#">Tìm</a> | <a href="#">Thêm</a></label></div>
+                        <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
                         <div class="col"><button class="btn btn-primary" type="button" onclick="checkinbyDKCB()">Ghi trả</button></div>
@@ -114,32 +114,33 @@
 </body>
 
 <script type="text/javascript">
-    document.getElementById("myButton").onclick = function (e) {
-        e.preventDefault();
-        $.ajax({
-            url: "CheckIn/CheckInByDKCB",
-            type: "Get",
-            data: $(this).serialize(),
-            success: function (Response) {
-                $("#contentcheckin").html(Response)
-            },
-            error: function (jXHR, textStatus, errorThrown) {
-                alert(errorThrown);
-            }
-        });
-    };
 
     function findByCardNumber() {
         $.ajax({
             url: "CheckIn/FindByCardNumber",
             data: null,
             type: "Post",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+            },
             success: function (result) {
-
                 document.getElementById("contentcheckin").innerHTML = result;
+                $.unblockUI()
             },
             error: function (errormessage) {
-
+                $.unblockUI()
             }
         });
     }
@@ -155,11 +156,32 @@
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
             success: function (result) {
                 $("#contentcheckin").html(result);
+                $.unblockUI()
+                if (document.getElementById("hiddenmessage").value != "") {
+                    alert(document.getElementById("hiddenmessage").value);
+                }
             },
             error: function (errormessage) {
                 console.log("abcssd");
+                $.unblockUI()
             }
         });
     }
@@ -168,6 +190,91 @@
         if (e.keyCode == 13) {
             checkinbyDKCB()
         }
+    }
+
+
+    function Searchpatron() {
+        $.ajax({
+            url: "/CheckIn/FindByCardNumber",
+            type: "GET",
+            success: function (result) {
+                $("#contentcheckin").html(result);
+                console.log('ýes');
+            },
+            error: function (errormessage) {
+                console.log('error')
+            }
+        });
+    }
+
+    function Searchpatronbyname() {
+        var empObj = {
+            strFullName: document.getElementById("searchpatronbyname").value
+        };
+        $.ajax({
+            url: "/CheckIn/FindByName",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
+            success: function (result) {
+                $("#contentcheckin").html(result);
+                $.unblockUI()
+            },
+            error: function (errormessage) {
+                $.unblockUI()
+            }
+        });
+    }
+    function btnsearchpatron() {
+        var empObj = {
+            strFullName: document.getElementById("searchpatronbyname").value
+        };
+        $.ajax({
+            url: "/CheckIn/FindByName",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
+            success: function (result) {
+                $("#contentcheckin").html(result);
+                $.unblockUI()
+            },
+            error: function (errormessage) {
+                $.unblockUI()
+            }
+        });
+
     }
 
     function checkinbyDKCB() {
@@ -187,64 +294,14 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
             },
             error: function (errormessage) {
                 console.log("error");
             }
         });
-    }
-
-    function Searchpatron() {
-        $.ajax({
-            url: "/CheckIn/FindByCardNumber",
-            type: "GET",
-            success: function (result) {
-                $("#contentcheckin").html(result);
-                console.log('ýes');
-            },
-            error: function (errormessage) {
-                console.log('error')
-            }
-        });
-    }
-    function Searchpatronbyname(e) {
-        var empObj = {
-            strFullName: document.getElementById("searchpatronbyname").value
-        };
-        if (e.keyCode == 13) {
-            $.ajax({
-                url: "/CheckIn/FindByName",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    $("#contentcheckin").html(result);
-                    console.log('ýes');
-                },
-                error: function (errormessage) {
-                    console.log('error')
-                }
-            });
-        }
-    }
-    function btnsearchpatron() {
-        var empObj = {
-            strFullName: document.getElementById("searchpatronbyname").value
-        };
-        $.ajax({
-            url: "/CheckIn/FindByName",
-            data: JSON.stringify(empObj),
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            success: function (result) {
-                $("#contentcheckin").html(result);
-                console.log('ýes');
-            },
-            error: function (errormessage) {
-                console.log('error')
-            }
-        });
-
     }
 
     function checkinbyDKCBs() {
@@ -271,11 +328,15 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
             },
             error: function (errormessage) {
                 console.log("error");
             }
         });
     }
+
 </script>
 

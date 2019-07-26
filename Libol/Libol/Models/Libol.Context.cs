@@ -21330,11 +21330,6 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SQ_CIR_PATRON_GROUP_LOC_UPDATE", strIDSourceParameter, intLocationIDParameter);
         }
     
-        public virtual int TESTCAI()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("TESTCAI");
-        }
-    
         public virtual int DemoGetMarcForm(Nullable<int> intFormID, Nullable<int> intIsAuthority)
         {
             var intFormIDParameter = intFormID.HasValue ?
@@ -22087,20 +22082,37 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result>("FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter, orderByParameter);
         }
     
-        public virtual ObjectResult<FPT_GET_COLLEGE_Result> FPT_GET_COLLEGE()
+        public virtual int FPT_SP_CIR_GET_RENEW(Nullable<int> intUserID, Nullable<short> intType, string strCodeVal)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_GET_COLLEGE_Result>("FPT_GET_COLLEGE");
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(short));
+    
+            var strCodeValParameter = strCodeVal != null ?
+                new ObjectParameter("strCodeVal", strCodeVal) :
+                new ObjectParameter("strCodeVal", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_CIR_GET_RENEW", intUserIDParameter, intTypeParameter, strCodeValParameter);
         }
     
-        public virtual int FPT_GET_PATRON_LOCK_STATISTIC(string strPatronCode, string strNote, string strLockDateFrom, string strLockDateTo, Nullable<int> intCollegeID)
+        public virtual ObjectResult<FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result> FPT_ADMIN_GET_RIGHTS_DENY_ADMIN(Nullable<int> intModuleID)
+        {
+            var intModuleIDParameter = intModuleID.HasValue ?
+                new ObjectParameter("intModuleID", intModuleID) :
+                new ObjectParameter("intModuleID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result>("FPT_ADMIN_GET_RIGHTS_DENY_ADMIN", intModuleIDParameter);
+        }
+    
+        public virtual int FPT_GET_PATRON_LOCK_STATISTIC(string strPatronCode, string strLockDateFrom, string strLockDateTo, Nullable<int> intCollegeID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
                 new ObjectParameter("strPatronCode", typeof(string));
-    
-            var strNoteParameter = strNote != null ?
-                new ObjectParameter("strNote", strNote) :
-                new ObjectParameter("strNote", typeof(string));
     
             var strLockDateFromParameter = strLockDateFrom != null ?
                 new ObjectParameter("strLockDateFrom", strLockDateFrom) :
@@ -22114,245 +22126,66 @@ namespace Libol.Models
                 new ObjectParameter("intCollegeID", intCollegeID) :
                 new ObjectParameter("intCollegeID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC", strPatronCodeParameter, strNoteParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC", strPatronCodeParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
         }
     
-        public virtual ObjectResult<FPT_ACQ_LANGUAGE_STATISTIC_Result> FPT_ACQ_LANGUAGE_STATISTIC(Nullable<int> intLibraryID)
+        public virtual int FPT_SP_UPDATE_UNLOCK_PATRON_CARD(string strPatronCode, Nullable<int> lockedDay, string note)
         {
-            var intLibraryIDParameter = intLibraryID.HasValue ?
-                new ObjectParameter("intLibraryID", intLibraryID) :
-                new ObjectParameter("intLibraryID", typeof(int));
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_LANGUAGE_STATISTIC_Result>("FPT_ACQ_LANGUAGE_STATISTIC", intLibraryIDParameter);
+            var lockedDayParameter = lockedDay.HasValue ?
+                new ObjectParameter("lockedDay", lockedDay) :
+                new ObjectParameter("lockedDay", typeof(int));
+    
+            var noteParameter = note != null ?
+                new ObjectParameter("Note", note) :
+                new ObjectParameter("Note", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_UPDATE_UNLOCK_PATRON_CARD", strPatronCodeParameter, lockedDayParameter, noteParameter);
         }
     
-        public virtual ObjectResult<FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result> FPT_ACQ_LANGUAGE_DETAILS_STATISTIC(string strTypeSelect, Nullable<int> intLibraryID)
+        public virtual ObjectResult<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result> FPT_SP_GET_HOLDING_BY_RECOMMENDID(Nullable<int> libID, Nullable<int> locID, string reid, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, string orderBy)
         {
-            var strTypeSelectParameter = strTypeSelect != null ?
-                new ObjectParameter("strTypeSelect", strTypeSelect) :
-                new ObjectParameter("strTypeSelect", typeof(string));
+            var libIDParameter = libID.HasValue ?
+                new ObjectParameter("LibID", libID) :
+                new ObjectParameter("LibID", typeof(int));
     
-            var intLibraryIDParameter = intLibraryID.HasValue ?
-                new ObjectParameter("intLibraryID", intLibraryID) :
-                new ObjectParameter("intLibraryID", typeof(int));
+            var locIDParameter = locID.HasValue ?
+                new ObjectParameter("LocID", locID) :
+                new ObjectParameter("LocID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result>("FPT_ACQ_LANGUAGE_DETAILS_STATISTIC", strTypeSelectParameter, intLibraryIDParameter);
+            var reidParameter = reid != null ?
+                new ObjectParameter("reid", reid) :
+                new ObjectParameter("reid", typeof(string));
+    
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("StartDate", startDate) :
+                new ObjectParameter("StartDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("EndDate", endDate) :
+                new ObjectParameter("EndDate", typeof(System.DateTime));
+    
+            var orderByParameter = orderBy != null ?
+                new ObjectParameter("OrderBy", orderBy) :
+                new ObjectParameter("OrderBy", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result>("FPT_SP_GET_HOLDING_BY_RECOMMENDID", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter, orderByParameter);
         }
     
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result> FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(Nullable<int> intType)
+        public virtual ObjectResult<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> FPT_SP_CATA_GET_CONTENTS_OF_ITEMS(string strItemIDs, Nullable<int> intIsAuthority)
         {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
+            var strItemIDsParameter = strItemIDs != null ?
+                new ObjectParameter("strItemIDs", strItemIDs) :
+                new ObjectParameter("strItemIDs", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result>("FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR", intTypeParameter);
-        }
+            var intIsAuthorityParameter = intIsAuthority.HasValue ?
+                new ObjectParameter("intIsAuthority", intIsAuthority) :
+                new ObjectParameter("intIsAuthority", typeof(int));
     
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result> FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result>("FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result> FPT_ACQ_STATISTIC_TOP20_BY_DDC(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DDC", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_Result> FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_Result>("FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result> FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result>("FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result> FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result>("FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_Result> FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_Result>("FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_Result> FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_Result>("FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result> FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result>("FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result> FPT_ACQ_STATISTIC_TOP20_BY_SERIALS(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result>("FPT_ACQ_STATISTIC_TOP20_BY_SERIALS", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_SH_Result> FPT_ACQ_STATISTIC_TOP20_BY_SH(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_SH_Result>("FPT_ACQ_STATISTIC_TOP20_BY_SH", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result> FPT_ACQ_STATISTIC_TOP20_BY_BBK(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result>("FPT_ACQ_STATISTIC_TOP20_BY_BBK", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result> FPT_ACQ_STATISTIC_TOP20_BY_DIC40(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DIC40", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result> FPT_ACQ_STATISTIC_TOP20_BY_DIC41(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DIC41", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result> FPT_ACQ_STATISTIC_TOP20_BY_DIC42(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DIC42", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result> FPT_ACQ_STATISTIC_TOP20_BY_DIC43(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DIC43", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result> FPT_ACQ_STATISTIC_TOP20_BY_LOC(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result>("FPT_ACQ_STATISTIC_TOP20_BY_LOC", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result> FPT_ACQ_STATISTIC_TOP20_BY_NLM(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result>("FPT_ACQ_STATISTIC_TOP20_BY_NLM", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result> FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result>("FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result> FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result>("FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result> FPT_ACQ_STATISTIC_TOP20_BY_UDC(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result>("FPT_ACQ_STATISTIC_TOP20_BY_UDC", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result> FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result>("FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result> FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result>("FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW", intTypeParameter);
-        }
-    
-        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result> FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW(Nullable<int> intType)
-        {
-            var intTypeParameter = intType.HasValue ?
-                new ObjectParameter("intType", intType) :
-                new ObjectParameter("intType", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result>("FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW", intTypeParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result>("FPT_SP_CATA_GET_CONTENTS_OF_ITEMS", strItemIDsParameter, intIsAuthorityParameter);
         }
     }
 }
