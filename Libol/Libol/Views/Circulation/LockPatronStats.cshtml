@@ -28,89 +28,195 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css">
+    <script>
+        $(document).ready(function () {
+            var table = $('#table').DataTable({
+                lengthChange: false,
+                buttons: [
+                    {
+                        extend: 'print',
+                        title: function () { var printTitle = 'Danh sách bạn đọc bị khóa'; return printTitle; }
+                    },
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'colvis'
+                ],
+                'columnDefs': [{
+                    'targets': 6,
+                    'searchable': false,
+                    'orderable': false,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, row) {
+                        return '<input type="checkbox" name="id[]" value="' + row[1] + '">';
+                    }
+                }],
+                order: false,                
+            });
+
+            $('#table-select-all').on('click', function () {
+                // Get all rows with search applied
+                var rows = table.rows({ 'search': 'applied' }).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#table tbody').on('change', 'input[type="checkbox"]', function () {
+                // If checkbox is not checked
+                if (!this.checked) {
+                    var el = $('#table-select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
+            });
+
+            $("#ExportReporttoExcel").on("click", function () {
+                table.button('.buttons-excel').trigger();
+            });
+
+            $("#Print").on("click", function () {
+                table.button('.buttons-print').trigger();
+            });
+
+        });
+    </script>
 </head>
+@using (Html.BeginForm())
+{
+    <div id="Main">
+        <table class="table">
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td class="text-right">Số thẻ</td>
+                    <td><input id="PatronCode" name="PatronCode" type="text" /></td>
+                    <td class="text-right">Ghi chú</td>
+                    <td><textarea id="Note" name="Note"></textarea></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-right">Ngày bắt đầu</td>
+                    <td><input id="StartedDate" name="StartedDate" type="date" /></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="text-right">Số ngày</td>
+                    <td><input id="LockedDays" name="LockedDays" type="number" /></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="submit" id="Lock" name="Lock" />
 
-<div id="Main">
-    <table class="table">
-        <thead>
-            <tr></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td></td>
-                <td class="text-right">Số thẻ</td>
-                <td><input id="PatronCode" name="PatronCode" type="text" /></td>
-                <td class="text-right">Ghi chú</td>
-                <td rowspan="3"><textarea id="Note" name="Note"></textarea></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td class="text-right">Ngày bắt đầu</td>
-                <td><input id="StartedDate" name="StartedDate" type="date" /></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td class="text-right">Số ngày</td>
-                <td><input id="LockedDays" name="LockedDays" type="number" /></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-    <input type="submit" id="Lock" name="Lock" />
-    <table class="table">
-        <thead>
-            <tr></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="text-right">Số thẻ</td>
-                <td><input id="PatronCodeFilter" name="PatronCodeFilter" type="text" /></td>
-                <td class="text-right">Ngày khóa từ</td>
-                <td><input id="LockDateFrom" name="LockDateFrom" type="date" /></td>
-                <td class="text-right">Đến</td>
-                <td><input id="LockDateTo" name="LockDateTo" type="date" /></td>
-            </tr>
-        </tbody>
-    </table>
-    <button id="Find" type="submit">Lọc</button>
-    <div id="ContentStatLockPatron"></div>
-</div>
+        <div class="form-row">
+            <div class="form-group col-sm">
+                <label for="Library">Thư viện trường</label>
+                @Html.DropDownList("LibraryFilter", ViewData["lib"] as List<SelectListItem>, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-sm">
+                <label for="PatronCodeFilter">Thẻ bạn đọc</label>
+                <input type="text" class="form-control" id="PatronCodeFilter" name="PatronCodeFilter">
+            </div>
+            <div class="form-group col-sm">
+                <label for="LockDateToFilter">Lý do</label>
+                @*<input type="text" class="form-control" id="NoteFilter" name="NoteFilter">*@
+                @Html.DropDownList("NoteFilter", ViewData["note"] as List<SelectListItem>, new { @class = "form-control" })
+            </div>
+            <div class="form-group col-sm">
+                <label for="LockDateFromFilter">Thời gian khóa Từ</label>
+                <input type="date" class="form-control" id="LockDateFromFilter" name="LockDateFromFilter">
+            </div>
+            <div class="form-group col-sm">
+                <label for="LockDateToFilter">Đến</label>
+                <input type="date" class="form-control" id="LockDateToFilter" name="LockDateToFilter">
+            </div>
+        </div>
+        <button id="Find" type="submit" class="btn btn-primary">Lọc</button>
+
+        <div id="ContentStatLockPatron">
+            <table id="table" class="table table-striped table-bordered" style="border-collapse: collapse;" border="1">
+                <thead>
+                    <tr>
+                        <th>Họ và tên bạn đọc</th>
+                        <th>Số thẻ bạn đọc</th>
+                        <th>Từ ngày</th>
+                        <th>Đến ngày</th>
+                        <th>Số ngày</th>
+                        <th>Lý do</th>
+                        <th><input type="checkbox" name="select_all" value="1" id="table-select-all">Chọn</th>
+                        <th>Sửa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Result)
+                    {
+                        <tr>
+                            <td>@item.FullName</td>
+                            <td>@item.PatronCode</td>
+                            <td>@item.StartedDate.ToString("dd/MM/yyyy")</td>
+                            <td>@item.FinishDate.ToString("dd/MM/yyyy")</td>
+                            <td>@item.LockedDays</td>
+                            <td>@item.Note</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                    </tr>
+                </tfoot>
+            </table>
+            <div style="margin-top:20px;" class="btn-group d-xl-flex justify-content-xl-center" role="group">
+                <button id="Print" type="button" style="margin-right:20px;">In</button>
+                <button id="ExportReporttoExcel" type="button" style="margin-right:20px;">Lưu vào file excel</button>
+            </div>
+        </div>
+    </div>
+}
 
 
 
 
+@*<script type="text/javascript">
+        document.getElementById("Find").onclick = function () {
+            var empObj = {
+                strPatronCode: document.getElementById("PatronCodeFilter").value,
+                strLockDateFrom: document.getElementById("LockDateFromFilter").value,
+                strLockDateTo: document.getElementById("LockDateToFilter").value,
+                strCollegeID: document.getElementById("LibraryFilter").value
+            };
 
-<script type="text/javascript">
-    document.getElementById("Find").onclick = function () {
-        var empObj = {
-            //strLibID: document.getElementById("Library").value,
-            strPatronCode: document.getElementById("PatronCodeFilter").value,
-            strLockDateFrom: document.getElementById("LockDateFrom").value,
-            strLockDateTo: document.getElementById("LockDateTo").value,
+            $.ajax({
+                url: "GetLockPatronStats",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                beforeSend: function () {
+                    $("#ContentStatLockPatron").html("<h4>Loading...</h4>");
+                },
+                success: function (result) {
+                    $("#ContentStatLockPatron").html(result)
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
         };
 
-        $.ajax({
-            url: "GetLockPatronStats",
-            data: JSON.stringify(empObj),
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            beforeSend: function () {
-                $("#ContentStatLockPatron").html("<h4>Loading...</h4>");
-            },
-            success: function (result) {
-                $("#ContentStatLockPatron").html(result)
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
-    };
-
-</script>
+    </script>*@
 

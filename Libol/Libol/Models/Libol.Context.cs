@@ -1564,7 +1564,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GET_BLACK_PATRON_INFOR_Result>("GET_BLACK_PATRON_INFOR");
         }
     
-        public virtual int GET_PATRON_LOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, string strSerial, Nullable<int> intUserID)
+        public virtual int GET_PATRON_LOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, string strSerial, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -1577,6 +1577,10 @@ namespace Libol.Models
             var strCopyNumberParameter = strCopyNumber != null ?
                 new ObjectParameter("strCopyNumber", strCopyNumber) :
                 new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
     
             var intLocationIDParameter = intLocationID.HasValue ?
                 new ObjectParameter("intLocationID", intLocationID) :
@@ -1606,10 +1610,10 @@ namespace Libol.Models
                 new ObjectParameter("intUserID", intUserID) :
                 new ObjectParameter("intUserID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_LOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, strSerialParameter, intUserIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_LOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, strSerialParameter, intUserIDParameter);
         }
     
-        public virtual int GET_PATRON_ONLOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strDueDateFrom, string strDueDateTo, string strSerial, Nullable<int> intUserID)
+        public virtual int GET_PATRON_ONLOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strDueDateFrom, string strDueDateTo, string strSerial, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -1622,6 +1626,10 @@ namespace Libol.Models
             var strCopyNumberParameter = strCopyNumber != null ?
                 new ObjectParameter("strCopyNumber", strCopyNumber) :
                 new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
     
             var intLocationIDParameter = intLocationID.HasValue ?
                 new ObjectParameter("intLocationID", intLocationID) :
@@ -1651,10 +1659,10 @@ namespace Libol.Models
                 new ObjectParameter("intUserID", intUserID) :
                 new ObjectParameter("intUserID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_ONLOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strDueDateFromParameter, strDueDateToParameter, strSerialParameter, intUserIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_ONLOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strDueDateFromParameter, strDueDateToParameter, strSerialParameter, intUserIDParameter);
         }
     
-        public virtual int GET_PATRON_RENEW_LOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intLoan, Nullable<int> intUserID)
+        public virtual int GET_PATRON_RENEW_LOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -1667,6 +1675,10 @@ namespace Libol.Models
             var strCopyNumberParameter = strCopyNumber != null ?
                 new ObjectParameter("strCopyNumber", strCopyNumber) :
                 new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
     
             var intLocationIDParameter = intLocationID.HasValue ?
                 new ObjectParameter("intLocationID", intLocationID) :
@@ -1688,15 +1700,11 @@ namespace Libol.Models
                 new ObjectParameter("strCheckInDateTo", strCheckInDateTo) :
                 new ObjectParameter("strCheckInDateTo", typeof(string));
     
-            var intLoanParameter = intLoan.HasValue ?
-                new ObjectParameter("intLoan", intLoan) :
-                new ObjectParameter("intLoan", typeof(int));
-    
             var intUserIDParameter = intUserID.HasValue ?
                 new ObjectParameter("intUserID", intUserID) :
                 new ObjectParameter("intUserID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_RENEW_LOAN_INFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, intLoanParameter, intUserIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_RENEW_LOAN_INFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, intUserIDParameter);
         }
     
         public virtual ObjectResult<ILL_GET_OUT_RESPONSE_INFOR_Result> ILL_GET_OUT_RESPONSE_INFOR(Nullable<int> lngID)
@@ -22077,6 +22085,274 @@ namespace Libol.Models
                 new ObjectParameter("OrderBy", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3_Result>("FPT_SP_GET_HOLDING_BY_RECOMMEND_LAN3", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter, orderByParameter);
+        }
+    
+        public virtual ObjectResult<FPT_GET_COLLEGE_Result> FPT_GET_COLLEGE()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_GET_COLLEGE_Result>("FPT_GET_COLLEGE");
+        }
+    
+        public virtual int FPT_GET_PATRON_LOCK_STATISTIC(string strPatronCode, string strNote, string strLockDateFrom, string strLockDateTo, Nullable<int> intCollegeID)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var strNoteParameter = strNote != null ?
+                new ObjectParameter("strNote", strNote) :
+                new ObjectParameter("strNote", typeof(string));
+    
+            var strLockDateFromParameter = strLockDateFrom != null ?
+                new ObjectParameter("strLockDateFrom", strLockDateFrom) :
+                new ObjectParameter("strLockDateFrom", typeof(string));
+    
+            var strLockDateToParameter = strLockDateTo != null ?
+                new ObjectParameter("strLockDateTo", strLockDateTo) :
+                new ObjectParameter("strLockDateTo", typeof(string));
+    
+            var intCollegeIDParameter = intCollegeID.HasValue ?
+                new ObjectParameter("intCollegeID", intCollegeID) :
+                new ObjectParameter("intCollegeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC", strPatronCodeParameter, strNoteParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_LANGUAGE_STATISTIC_Result> FPT_ACQ_LANGUAGE_STATISTIC(Nullable<int> intLibraryID)
+        {
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_LANGUAGE_STATISTIC_Result>("FPT_ACQ_LANGUAGE_STATISTIC", intLibraryIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result> FPT_ACQ_LANGUAGE_DETAILS_STATISTIC(string strTypeSelect, Nullable<int> intLibraryID)
+        {
+            var strTypeSelectParameter = strTypeSelect != null ?
+                new ObjectParameter("strTypeSelect", strTypeSelect) :
+                new ObjectParameter("strTypeSelect", typeof(string));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result>("FPT_ACQ_LANGUAGE_DETAILS_STATISTIC", strTypeSelectParameter, intLibraryIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result> FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result>("FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result> FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result>("FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result> FPT_ACQ_STATISTIC_TOP20_BY_DDC(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DDC", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_Result> FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_Result>("FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result> FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result>("FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result> FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result>("FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_Result> FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_Result>("FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_Result> FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_Result>("FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result> FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result>("FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result> FPT_ACQ_STATISTIC_TOP20_BY_SERIALS(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result>("FPT_ACQ_STATISTIC_TOP20_BY_SERIALS", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_SH_Result> FPT_ACQ_STATISTIC_TOP20_BY_SH(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_SH_Result>("FPT_ACQ_STATISTIC_TOP20_BY_SH", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result> FPT_ACQ_STATISTIC_TOP20_BY_BBK(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result>("FPT_ACQ_STATISTIC_TOP20_BY_BBK", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result> FPT_ACQ_STATISTIC_TOP20_BY_DIC40(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DIC40", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result> FPT_ACQ_STATISTIC_TOP20_BY_DIC41(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DIC41", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result> FPT_ACQ_STATISTIC_TOP20_BY_DIC42(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DIC42", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result> FPT_ACQ_STATISTIC_TOP20_BY_DIC43(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result>("FPT_ACQ_STATISTIC_TOP20_BY_DIC43", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result> FPT_ACQ_STATISTIC_TOP20_BY_LOC(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result>("FPT_ACQ_STATISTIC_TOP20_BY_LOC", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result> FPT_ACQ_STATISTIC_TOP20_BY_NLM(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result>("FPT_ACQ_STATISTIC_TOP20_BY_NLM", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result> FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result>("FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result> FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result>("FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result> FPT_ACQ_STATISTIC_TOP20_BY_UDC(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result>("FPT_ACQ_STATISTIC_TOP20_BY_UDC", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result> FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result>("FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result> FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result>("FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW", intTypeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result> FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW(Nullable<int> intType)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result>("FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW", intTypeParameter);
         }
     }
 }

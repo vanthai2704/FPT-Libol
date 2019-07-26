@@ -1601,7 +1601,26 @@ namespace Libol.Controllers
         }
         public ActionResult LanguageStat()
         {
+            List<SelectListItem> lib = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            };
+            foreach (var l in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
             return View();
+        }
+        [HttpPost]
+        public PartialViewResult GetLanguageStats(string strLibID)
+        {
+            int LibID = 0;
+            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            ViewBag.Result = le.FPT_ACQ_LANGUAGE_STATISTIC(LibID).First();
+            ViewBag.ItemDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("ITEM",LibID);
+            ViewBag.CopyDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("COPY", LibID);
+            return PartialView("GetLanguageStats");
         }
         public ActionResult StatisticYear()
         {
@@ -2622,6 +2641,126 @@ namespace Libol.Controllers
                 // Ignore this error as this is caused due to termination of the Response Stream.
             }
         }
+
+        public ActionResult StatisticTop20()
+        {            
+            List<SelectListItem> cat = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn tiêu chí", Value = "" }
+            };
+            foreach (var c in le.CAT_DIC_LIST.ToList())
+            {
+                cat.Add(new SelectListItem { Text = c.Name.ToString(), Value = c.ID.ToString() });
+            }
+            ViewData["cat"] = cat;
+            return View();
+        }
+
+        public PartialViewResult GetTop20Stats(string strCatID)
+        {
+            int id = 0;
+            if(!String.IsNullOrEmpty(strCatID)) id = Int32.Parse(strCatID);
+            CAT_DIC_LIST list = le.CAT_DIC_LIST.Where(a => a.ID == id).First();
+            switch (list.ID)
+            {
+                case 0:
+                    ViewBag.Result = null;
+                    break;
+                case 1:                    
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(0).ToList();
+                    break;
+                case 2:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER(0).ToList();
+                    break;
+                case 3:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD(0).ToList();
+                    break;
+                case 4:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_BBK(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_BBK(0).ToList();
+                    break;
+                case 5:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DDC(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DDC(0).ToList();
+                    break;
+                case 6:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LOC(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LOC(0).ToList();
+                    break;
+                case 7:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_UDC(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_UDC(0).ToList();
+                    break;
+                case 9:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SH(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SH(0).ToList();
+                    break;
+                case 10:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE(0).ToList();
+                    break;
+                case 11:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY(0).ToList();
+                    break;
+                case 12:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS(0).ToList();
+                    break;
+                case 14:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW(0).ToList();
+                    break;
+                case 17:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW(0).ToList();
+                    break;
+                case 18:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW(0).ToList();
+                    break;
+                case 19:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT(0).ToList();
+                    break;
+                case 30:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_NLM(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_NLM(0).ToList();
+                    break;
+                case 31:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET(0).ToList();
+                    break;
+                case 38:
+                    ViewBag.BAPResult = null;
+                    ViewBag.DAPResult = null;
+                    break;
+                case 40:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC40(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC40(0).ToList();
+                    break;
+                case 41:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC41(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC41(0).ToList();
+                    break;
+                case 42:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC42(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC42(0).ToList();
+                    break;
+                case 43:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC43(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC43(0).ToList();
+                    break;                
+            }
+            ViewBag.Category = list.Name;
+            ViewBag.Total = le.FPT_ACQ_LANGUAGE_STATISTIC(0).First();
+            return PartialView("GetTop20Stats");           
+        }
+
+
     }
 
 }

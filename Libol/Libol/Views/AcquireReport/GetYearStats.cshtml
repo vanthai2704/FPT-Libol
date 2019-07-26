@@ -1,43 +1,78 @@
 ﻿<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-</head>
-<script>
-    function exportTableToExcel(tableID1, tableID2, tableID3, filename = '') {
-        var downloadLink;
-        var dataType = 'application/vnd.ms-excel';
-        var tableSelect1 = document.getElementById(tableID1);
-        var tableSelect2 = document.getElementById(tableID2);
-        var tableSelect3 = document.getElementById(tableID3);
-        var tableHTML1 = tableSelect1.outerHTML.replace(/ /g, '%20');
-        var tableHTML2 = tableSelect2.outerHTML.replace(/ /g, '%20');
-        var tableHTML3 = tableSelect3.outerHTML.replace(/ /g, '%20');
-        var tableHTML = tableHTML1 + "<br/>" + tableHTML2 + "<br/>" + tableHTML3;
-        // Specify file name
-        filename = filename ? filename + '.xls' : 'excel_data.xls';
-
-        // Create download link element
-        downloadLink = document.createElement("a");
-
-        document.body.appendChild(downloadLink);
-
-        if (navigator.msSaveOrOpenBlob) {
-            var blob = new Blob(['\ufeff', tableHTML], {
-                type: dataType
-            });
-            navigator.msSaveOrOpenBlob(blob, filename);
-        } else {
-            // Create a link to the file
-            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-
-            // Setting the file name
-            downloadLink.download = filename;
-
-            //triggering the function
-            downloadLink.click();
+    <style>
+        .caps::first-letter {
+            text-transform: capitalize;
         }
-    }
-</script>
+
+        .hide {
+            display: none;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var table1 = $("#table1").DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                order: false,
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: function () { var printTitle = 'Bổ sung - Báo cáo hàng năm'; return printTitle; }
+                    },
+                ],
+            });
+            var table2 = $("#table2").DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                order: false,
+            });
+            var table3 = $("#table3").DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                order: false,
+            });
+            var tbl2_th = document.getElementById("tbl2_th").innerHTML;
+            var tbl3_th = document.getElementById("tbl3_th").innerHTML;
+            var data_tbl2 = [
+                ["", ""],
+                ["Năm", tbl2_th],
+
+            ];
+            var data_tbl3 = [
+                ["", ""],
+                ["Năm", tbl3_th],
+
+            ];
+            table1.rows.add(data_tbl2).draw()
+                .nodes()
+                .to$()
+                .addClass('hide');
+            table1.rows.add(table2.data().toArray()).draw()
+                .nodes()
+                .to$()
+                .addClass('hide');
+            table1.rows.add(data_tbl3).draw()
+                .nodes()
+                .to$()
+                .addClass('hide');
+            table1.rows.add(table3.data().toArray()).draw()
+                .nodes()
+                .to$()
+                .addClass('hide');
+            //tableToExport.rows.add(table2.data().toArray()).draw();
+            //console.log(tableToExport.data());
+            $("#ExportReporttoExcel").on("click", function () {
+                table1.button('.buttons-excel').trigger();
+            });
+        });
+        /**/</script>
+</head>
+
 @{
     int sum1 = 0;
     int sum2 = 0;
@@ -56,18 +91,22 @@ else
                     <div id="table_div1" style="margin-top: 150px;">
                         <h4 id="stat1" style="margin-left:50px;">Số đầu ấn phẩm</h4><br />
                         <table id="table1" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
-                            <tr>
-                                <th>Năm</th>
-                                <th>Số đầu ấn phẩm</th>
-                            </tr>
-                            @foreach (var item in ViewBag.Result)
-                            {
+                            <thead>
                                 <tr>
-                                    <td>@item.Year</td>
-                                    <td>@item.BooksTotal</td>
+                                    <th>Năm</th>
+                                    <th>Số đầu ấn phẩm</th>
                                 </tr>
-                                sum1 += item.BooksTotal;
-                            }
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.Result)
+                                {
+                                    <tr>
+                                        <td>@item.Year</td>
+                                        <td>@item.BooksTotal</td>
+                                    </tr>
+                                    sum1 += item.BooksTotal;
+                                }
+                            </tbody>
                         </table>
                     </div>
                 </td>
@@ -82,18 +121,22 @@ else
                     <div id="table_div2" style="margin-top: 150px;">
                         <h4 id="stat2" style="margin-left:50px;">Số bản ấn phẩm</h4><br />
                         <table id="table2" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
-                            <tr>
-                                <th>Năm</th>
-                                <th>Số bản ấn phẩm</th>
-                            </tr>
-                            @foreach (var item in ViewBag.Result)
-                            {
+                            <thead>
                                 <tr>
-                                    <td>@item.Year</td>
-                                    <td>@item.CopiesTotal</td>
+                                    <th>Năm</th>
+                                    <th id="tbl2_th">Số bản ấn phẩm</th>
                                 </tr>
-                                sum2 += item.CopiesTotal;
-                            }
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.Result)
+                                {
+                                    <tr>
+                                        <td>@item.Year</td>
+                                        <td>@item.CopiesTotal</td>
+                                    </tr>
+                                    sum2 += item.CopiesTotal;
+                                }
+                            </tbody>
                         </table>
                     </div>
                 </td>
@@ -108,18 +151,22 @@ else
                     <div id="table_div3" style="margin-top: 150px;">
                         <h4 id="stat3" style="margin-left:50px;">Số chi phí</h4><br />
                         <table id="table3" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
-                            <tr>
-                                <th>Năm</th>
-                                <th>Số chi phí</th>
-                            </tr>
-                            @foreach (var item in ViewBag.Result)
-                            {
+                            <thead>
                                 <tr>
-                                    <td>@item.Year</td>
-                                    <td>@item.MoneyTotal</td>
+                                    <th>Năm</th>
+                                    <th id="tbl3_th">Số chi phí</th>
                                 </tr>
-                                sum3 += item.MoneyTotal;
-                            }
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.Result)
+                                {
+                                    <tr>
+                                        <td>@item.Year</td>
+                                        <td>@item.MoneyTotal</td>
+                                    </tr>
+                                    sum3 += item.MoneyTotal;
+                                }
+                            </tbody>
                         </table>
                     </div>
                 </td>
@@ -133,7 +180,7 @@ else
 
     <div class="btn-group d-xl-flex justify-content-xl-center" role="group">
         <button id="print" type="button" style="margin-right:20px;">In</button>
-        <button id="excel" type="button" style="margin-right:20px;" onclick="exportTableToExcel('table1','table2','table3', 'ThongKeHangNam')">Lưu vào file excel</button>
+        <button id="ExportReporttoExcel" type="button" style="margin-right:20px;">Lưu vào file excel</button>
     </div>
 }
 <script type="text/javascript">
@@ -159,6 +206,7 @@ else
         var len = table.rows.length;
         var arr = [["Năm", "Số đầu ấn phẩm", { role: "style" }]];
         for (var i = 1; i < len; i++) {
+            if (table.rows[i].classList.contains("hide")) continue;
             arr.push([table.rows[i].cells[0].innerHTML, parseInt(table.rows[i].cells[1].innerHTML), "aquamarine1"]);
         }
         var data = google.visualization.arrayToDataTable(arr);

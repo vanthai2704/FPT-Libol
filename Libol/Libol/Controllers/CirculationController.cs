@@ -5,6 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Reflection;
+using Excel = Microsoft.Office.Interop.Excel;
+
 
 namespace Libol.Controllers
 {    
@@ -326,14 +330,51 @@ namespace Libol.Controllers
 
         public ActionResult LockPatronStats()
         {
+            List<SelectListItem> lib = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            };
+            foreach (var l in le.CIR_DIC_COLLEGE.ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.College, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
             //FPT_CIR_GET_LOCKEDPATRONS(PatronCode, LockDateTo, LockDateFrom, LibraryID, UserID)
             //ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(null, null, null);
+            string LibraryFilter = Request.Form["LibraryFilter"];
+            string PatronCodeFilter = Request.Form["PatronCodeFilter"];
+            string LockDateFromFilter = Request.Form["LockDateFromFilter"];
+            string LockDateToFilter = Request.Form["LockDateToFilter"];
+            string NoteFilter = Request.Form["NoteFilter"];
+            int CollegeID = 0;
+            if (!String.IsNullOrEmpty(LibraryFilter)) CollegeID = Convert.ToInt32(LibraryFilter);
+            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCodeFilter, NoteFilter, LockDateFromFilter, LockDateToFilter, CollegeID);
+            List<SelectListItem> note = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn lý do", Value = "" }
+            };
+            foreach (var l in le.CIR_PATRON_LOCK.ToList())
+            {
+                note.Add(new SelectListItem { Text = l.Note, Value = l.Note.ToString() });
+            }
+            ViewData["note"] = note;
             return View();
         }
 
-        public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom)
+        public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom, string strCollegeID)
         {
-            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo);
+            //int CollegeID = 0;
+            //if (!String.IsNullOrEmpty(strCollegeID)) CollegeID = Convert.ToInt32(strCollegeID);
+            //ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo, CollegeID);
+            //List<SelectListItem> lib = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            //};
+            //foreach (var l in le.FPT_GET_COLLEGE().ToList())
+            //{
+            //    lib.Add(new SelectListItem { Text = l.COLLEGE, Value = l.ID.ToString() });
+            //}
+            //ViewData["lib"] = lib;
             return PartialView("GetLockPatronStats");
         }
 
