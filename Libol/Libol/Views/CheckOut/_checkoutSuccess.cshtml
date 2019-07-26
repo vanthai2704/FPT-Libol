@@ -1,7 +1,4 @@
-﻿@{
-    Libol.Models.SP_GET_PATRON_INFOR_Result patroninfo = (Libol.Models.SP_GET_PATRON_INFOR_Result)ViewData["patroninfo"];
-}
-<head>
+﻿<head>
     <style>
         .columnleft {
             float: right;
@@ -136,7 +133,14 @@
     <div class="col-7">
         <div class="form-row">
             <div class="col-2" style="padding-top:5px;">
-                <img src="~/Content/Images/NoImage.png" />
+                @if (String.IsNullOrEmpty(ViewBag.PatronDetail.strPortrait))
+                {
+                    <img src="~/Content/ImagePatron/NoImage.png" style="width: 90px;height: 130px;" id="avatarImage" />
+                }
+                else
+                {
+                    <img src="~/Content/ImagePatron/@ViewBag.PatronDetail.strPortrait" style="width: 90px;height: 130px;" id="avatarImage" />
+                }
             </div>
             <div class="col">
                 <div class="form-row">
@@ -181,13 +185,13 @@
                     @foreach (var item in ViewBag.currentloaninfo)
                     {
                         <tr>
-                            <td></td>
+                            <td><a>Thu hồi</a></td>
                             <td>@item.Title</td>
                             <td>@item.Copynumber</td>
                             <td>@item.CheckoutDate</td>
                             <td>@item.DueDate</td>
                             <td>@item.Note</td>
-                            <td>...</td>
+                            <td><button class="btn btn-info">Sửa</button></td>
                         </tr>
                     }
                 </tbody>
@@ -196,14 +200,7 @@
     </div>
 }
 
-@*<div class="row">
-    @grid.GetHtml(
-        tableStyle:"table table-responsive table-striped table-bordered",
-        columns: grid.Columns(
-            grid.Column(header:"Thu hồi",format:@<text><div class="edit">@item.Title</div></text>)
-        )
-    )
-</div>*@
+
 
 
 
@@ -360,3 +357,4 @@
         </div>
 
     </div>
+    <input type="hidden" value="@ViewBag.message" id="hiddenmessage">

@@ -86,6 +86,10 @@
                 }
             });
         }
+
+        function GoTo(url) {
+            window.location = url;
+        }
     </script>
     @*END------------SCRIPT FOR LOGIN FUNCTION*@
 </head>
@@ -123,16 +127,20 @@
                                 <a class="dropdown-item" href="/Renew/Renew">Gia hạn</a>
                                 <a class="dropdown-item" href="/OverdueList/OverdueList">Quá hạn</a>
                                 <a class="dropdown-item" href="/Circulation/LockPatronStats">Chính sách</a>
-                                <a class="dropdown-item" href="/Circulation/Index">Báo cáo</a>
-                                @*<div class="dropdown-item dropright dropdown-toggle" data-toggle="dropdown">
-                                        <a>Báo cáo</a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="/Circulation/ReportLoanCopy">Từng mượn</a>
-                                            <a class="dropdown-item" href="/Circulation/ReportOnLoanCopy">Đang mượn</a>
-                                            <a class="dropdown-item" href="#">Submenu</a>
-                                            <a class="dropdown-item" href="#">Submenu0</a>
-                                        </div>
-                                    </div>*@
+                                @*<a class="dropdown-item" href="/Circulation/Index">Báo cáo</a>*@
+                                <div class="dropdown-item dropright dropdown-toggle" data-toggle="dropdown">
+                                    <a>Báo cáo</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/ReportLoanCopy')">Từng mượn</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/ReportOnLoanCopy')">Đang mượn</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticYear')">Hàng năm</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticMonth')">Hàng tháng</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticTopPatron')">Top bạn đọc</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticTopCopy')">Top ấn phẩm</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticPatronGroup')">Nhóm bạn đọc</a>
+                                    </div>
+                                </div>
+                                <a class="dropdown-item" href="/Circulation/LockPatronStats">Chính sách</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -141,6 +149,18 @@
                                 <a class="dropdown-item" href="/Acquired/Index">Bổ sung</a>
                                 <a class="dropdown-item" href="/AcquireReport/AcquisitionIndex">Báo cáo</a>
                                 <a class="dropdown-item" href="/AcquireReport/AcquireStatisticIndex">Thống kê</a>
+                                <div class="dropdown-item dropright dropdown-toggle" data-toggle="dropdown">
+                                    <a>Báo cáo</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/Index')">Danh mục sách nhập</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/RecomendReport')">Báo cáo đề nghị</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticYear')">Hàng năm</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticMonth')">Hàng tháng</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/LiquidationStats')">Báo cáo ĐKCB bị hủy</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticTop20')">Thống kê Top 20</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/LanguageStat')">Báo cáo theo mã ngôn ngữ</a>
+                                    </div>
+                                </div>
                                 <a class="dropdown-item" href="#">Kho</a>
                                 <a class="dropdown-item" href="/PrintBarcode">In mã vạch</a>
                                 <a class="dropdown-item" href="/PrintLabel">In nhãn</a>

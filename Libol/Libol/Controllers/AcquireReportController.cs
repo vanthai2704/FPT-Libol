@@ -1604,7 +1604,26 @@ namespace Libol.Controllers
         }
         public ActionResult LanguageStat()
         {
+            List<SelectListItem> lib = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            };
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int) Session["UserID"]).ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
             return View();
+        }
+        [HttpPost]
+        public PartialViewResult GetLanguageStats(string strLibID)
+        {
+            int LibID = 0;
+            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            ViewBag.Result = le.FPT_ACQ_LANGUAGE_STATISTIC(LibID).First();
+            ViewBag.ItemDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("ITEM",LibID);
+            ViewBag.CopyDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("COPY", LibID);
+            return PartialView("GetLanguageStats");
         }
         public ActionResult StatisticYear()
         {
@@ -2546,84 +2565,205 @@ namespace Libol.Controllers
 
             return View();
         }
-        //    protected void export_Click(object sender, EventArgs e)
-        //    {
-        //        DataTable dtSource = new DataTable("Temper");
-        //        if (ViewBag.DisVND != null)
-        //        {
-        //            foreach (var item in ViewBag.DisVND)
-        //            {
-        //                dtSource.Rows.Add(new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-        //                            item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-        //                            item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien));
-        //            }
-        //        }
 
-        //        GenerateWord(dtSource);
-        //    }
+        protected void export_Click(object sender, EventArgs e)
+        {
+            DataTable dtSource = new DataTable("Temper");
+            if (ViewBag.DisVND != null)
+            {
+                foreach (var item in ViewBag.DisVND)
+                {
+                    dtSource.Rows.Add(new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
+                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
+                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien));
+                }
+            }
 
-        //    public static void GenerateWord(DataTable dtSource)
-        //    {
-        //        StringBuilder sbDocBody = new StringBuilder(); ;
-        //        try
-        //        {
-        //            // Declare Styles
-        //            sbDocBody.Append("<style>");
-        //            sbDocBody.Append(".Header {  background-color:Navy; color:#ffffff; font-weight:bold;font-family:Verdana; font-size:12px;}");
-        //            sbDocBody.Append(".SectionHeader { background-color:#8080aa; color:#ffffff; font-family:Verdana; font-size:12px;font-weight:bold;}");
-        //            sbDocBody.Append(".Content { background-color:#ccccff; color:#000000; font-family:Verdana; font-size:12px;text-align:left}");
-        //            sbDocBody.Append(".Label { background-color:#ccccee; color:#000000; font-family:Verdana; font-size:12px; text-align:right;}");
-        //            sbDocBody.Append("</style>");
-        //            //
-        //            StringBuilder sbContent = new StringBuilder(); ;
-        //            sbDocBody.Append("<br><table align=\"center\" cellpadding=1 cellspacing=0 style=\"background-color:#000000;\">");
-        //            sbDocBody.Append("<tr><td width=\"500\">");
-        //            sbDocBody.Append("<table width=\"100%\" cellpadding=1 cellspacing=2 style=\"background-color:#ffffff;\">");
-        //            //
-        //            if (dtSource.Rows.Count > 0)
-        //            {
-        //                sbDocBody.Append("<tr><td>");
-        //                sbDocBody.Append("<table width=\"600\" cellpadding=\"0\" cellspacing=\"2\"><tr><td>");
-        //                //
-        //                // Add Column Headers
-        //                sbDocBody.Append("<tr><td width=\"25\"> </td></tr>");
-        //                sbDocBody.Append("<tr>");
-        //                sbDocBody.Append("<td> </td>");
-        //                for (int i = 0; i < dtSource.Columns.Count; i++)
-        //                {
-        //                    sbDocBody.Append("<td class=\"Header\" width=\"120\">" + dtSource.Columns[i].ToString().Replace(".", "<br>") + "</td>");
-        //                }
-        //                sbDocBody.Append("</tr>");
-        //                //
-        //                // Add Data Rows
-        //                for (int i = 0; i < dtSource.Rows.Count; i++)
-        //                {
-        //                    sbDocBody.Append("<tr>");
-        //                    sbDocBody.Append("<td> </td>");
-        //                    for (int j = 0; j < dtSource.Columns.Count; j++)
-        //                    {
-        //                        sbDocBody.Append("<td class=\"Content\">" + dtSource.Rows[i][j].ToString() + "</td>");
-        //                    }
-        //                    sbDocBody.Append("</tr>");
-        //                }
-        //                sbDocBody.Append("</table>");
-        //                sbDocBody.Append("</td></tr></table>");
-        //                sbDocBody.Append("</td></tr></table>");
-        //            }
-        //            //
-        //            //HttpContext.Current.Response.Clear();
-        //            //HttpContext.Current.Response.Buffer = true;
-        //            ////
-        //            //HttpContext.Current.Response.AppendHeader("Content-Type", "application/msword");
-        //            //HttpContext.Current.Response.AppendHeader("Content-disposition", "attachment; filename=EmployeeDetails.doc");
-        //            //HttpContext.Current.Response.Write(sbDocBody.ToString());
-        //            //HttpContext.Current.Response.End();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Ignore this error as this is caused due to termination of the Response Stream.
-        //        }
-        //    }
+            GenerateWord(dtSource);
+        }
+
+        public static void GenerateWord(DataTable dtSource)
+        {
+            StringBuilder sbDocBody = new StringBuilder(); ;
+            try
+            {
+                // Declare Styles
+                sbDocBody.Append("<style>");
+                sbDocBody.Append(".Header {  background-color:Navy; color:#ffffff; font-weight:bold;font-family:Verdana; font-size:12px;}");
+                sbDocBody.Append(".SectionHeader { background-color:#8080aa; color:#ffffff; font-family:Verdana; font-size:12px;font-weight:bold;}");
+                sbDocBody.Append(".Content { background-color:#ccccff; color:#000000; font-family:Verdana; font-size:12px;text-align:left}");
+                sbDocBody.Append(".Label { background-color:#ccccee; color:#000000; font-family:Verdana; font-size:12px; text-align:right;}");
+                sbDocBody.Append("</style>");
+                //
+                StringBuilder sbContent = new StringBuilder(); ;
+                sbDocBody.Append("<br><table align=\"center\" cellpadding=1 cellspacing=0 style=\"background-color:#000000;\">");
+                sbDocBody.Append("<tr><td width=\"500\">");
+                sbDocBody.Append("<table width=\"100%\" cellpadding=1 cellspacing=2 style=\"background-color:#ffffff;\">");
+                //
+                if (dtSource.Rows.Count > 0)
+                {
+                    sbDocBody.Append("<tr><td>");
+                    sbDocBody.Append("<table width=\"600\" cellpadding=\"0\" cellspacing=\"2\"><tr><td>");
+                    //
+                    // Add Column Headers
+                    sbDocBody.Append("<tr><td width=\"25\"> </td></tr>");
+                    sbDocBody.Append("<tr>");
+                    sbDocBody.Append("<td> </td>");
+                    for (int i = 0; i < dtSource.Columns.Count; i++)
+                    {
+                        sbDocBody.Append("<td class=\"Header\" width=\"120\">" + dtSource.Columns[i].ToString().Replace(".", "<br>") + "</td>");
+                    }
+                    sbDocBody.Append("</tr>");
+                    //
+                    // Add Data Rows
+                    for (int i = 0; i < dtSource.Rows.Count; i++)
+                    {
+                        sbDocBody.Append("<tr>");
+                        sbDocBody.Append("<td> </td>");
+                        for (int j = 0; j < dtSource.Columns.Count; j++)
+                        {
+                            sbDocBody.Append("<td class=\"Content\">" + dtSource.Rows[i][j].ToString() + "</td>");
+                        }
+                        sbDocBody.Append("</tr>");
+                    }
+                    sbDocBody.Append("</table>");
+                    sbDocBody.Append("</td></tr></table>");
+                    sbDocBody.Append("</td></tr></table>");
+                }
+                //
+                //HttpContext.Current.Response.Clear();
+                //HttpContext.Current.Response.Buffer = true;
+                ////
+                //HttpContext.Current.Response.AppendHeader("Content-Type", "application/msword");
+                //HttpContext.Current.Response.AppendHeader("Content-disposition", "attachment; filename=EmployeeDetails.doc");
+                //HttpContext.Current.Response.Write(sbDocBody.ToString());
+                //HttpContext.Current.Response.End();
+            }
+            catch (Exception ex)
+            {
+                // Ignore this error as this is caused due to termination of the Response Stream.
+            }
+        }
+
+        public ActionResult StatisticTop20()
+        {            
+            List<SelectListItem> cat = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn tiêu chí", Value = "" }
+            };
+            foreach (var c in le.CAT_DIC_LIST.ToList())
+            {
+                cat.Add(new SelectListItem { Text = c.Name.ToString(), Value = c.ID.ToString() });
+            }
+            ViewData["cat"] = cat;
+            return View();
+        }
+
+        public PartialViewResult GetTop20Stats(string strCatID)
+        {
+            int id = 0;
+            if(!String.IsNullOrEmpty(strCatID)) id = Int32.Parse(strCatID);
+            CAT_DIC_LIST list = le.CAT_DIC_LIST.Where(a => a.ID == id).First();
+            switch (list.ID)
+            {
+                case 0:
+                    ViewBag.Result = null;
+                    break;
+                case 1:                    
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(0).ToList();
+                    break;
+                case 2:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER(0).ToList();
+                    break;
+                case 3:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD(0).ToList();
+                    break;
+                case 4:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_BBK(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_BBK(0).ToList();
+                    break;
+                case 5:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DDC(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DDC(0).ToList();
+                    break;
+                case 6:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LOC(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LOC(0).ToList();
+                    break;
+                case 7:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_UDC(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_UDC(0).ToList();
+                    break;
+                case 9:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SH(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SH(0).ToList();
+                    break;
+                case 10:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE(0).ToList();
+                    break;
+                case 11:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY(0).ToList();
+                    break;
+                case 12:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS(0).ToList();
+                    break;
+                case 14:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW(0).ToList();
+                    break;
+                case 17:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW(0).ToList();
+                    break;
+                case 18:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW(0).ToList();
+                    break;
+                case 19:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT(0).ToList();
+                    break;
+                case 30:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_NLM(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_NLM(0).ToList();
+                    break;
+                case 31:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET(0).ToList();
+                    break;
+                case 38:
+                    ViewBag.BAPResult = null;
+                    ViewBag.DAPResult = null;
+                    break;
+                case 40:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC40(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC40(0).ToList();
+                    break;
+                case 41:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC41(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC41(0).ToList();
+                    break;
+                case 42:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC42(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC42(0).ToList();
+                    break;
+                case 43:
+                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC43(1).ToList();
+                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC43(0).ToList();
+                    break;                
+            }
+            ViewBag.Category = list.Name;
+            ViewBag.Total = le.FPT_ACQ_LANGUAGE_STATISTIC(0).First();
+            return PartialView("GetTop20Stats");           
+        }
+
+
     }
 
 }

@@ -5,6 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Reflection;
+using Excel = Microsoft.Office.Interop.Excel;
+
 using Libol.SupportClass;
 
 namespace Libol.Controllers
@@ -336,9 +340,9 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.HOLDING_LIBRARY.ToList())
+            foreach (var l in le.CIR_DIC_COLLEGE.ToList())
             {
-                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+                lib.Add(new SelectListItem { Text = l.College, Value = l.ID.ToString() });
             }
             ViewData["lib"] = lib;
             //FPT_CIR_GET_LOCKEDPATRONS(PatronCode, LockDateTo, LockDateFrom, LibraryID, UserID)
@@ -356,11 +360,22 @@ namespace Libol.Controllers
             string PatronCodeFilter = Request.Form["PatronCodeFilter"];
             string LockDateFromFilter = Request.Form["LockDateFromFilter"];
             string LockDateToFilter = Request.Form["LockDateToFilter"];
+            string NoteFilter = Request.Form["NoteFilter"];
             int CollegeID = 0;
             if (!String.IsNullOrEmpty(LibraryFilter)) CollegeID = Convert.ToInt32(LibraryFilter);
-            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCodeFilter, LockDateFromFilter, LockDateToFilter, CollegeID);
+
             ShelfBusiness shelfBusiness = new ShelfBusiness();
             ViewBag.Library = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, Int32.Parse(Session["UserID"].ToString()), 1);
+            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCodeFilter, NoteFilter, LockDateFromFilter, LockDateToFilter, CollegeID);
+            List<SelectListItem> note = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn lý do", Value = "" }
+            };
+            foreach (var l in le.CIR_PATRON_LOCK.ToList())
+            {
+                note.Add(new SelectListItem { Text = l.Note, Value = l.Note.ToString() });
+            }
+            ViewData["note"] = note;
             return View(ViewBag.iddd);
         }
         // LockCard()
@@ -402,18 +417,18 @@ namespace Libol.Controllers
 
         public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom, string strCollegeID)
         {
-            int CollegeID = 0;
-            if (!String.IsNullOrEmpty(strCollegeID)) CollegeID = Convert.ToInt32(strCollegeID);
-            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo, CollegeID);
-            List<SelectListItem> lib = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
-            };
-            foreach (var l in le.HOLDING_LIBRARY.ToList())
-            {
-                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
-            }
-            ViewData["lib"] = lib;
+            //int CollegeID = 0;
+            //if (!String.IsNullOrEmpty(strCollegeID)) CollegeID = Convert.ToInt32(strCollegeID);
+            //ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo, CollegeID);
+            //List<SelectListItem> lib = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            //};
+            //foreach (var l in le.FPT_GET_COLLEGE().ToList())
+            //{
+            //    lib.Add(new SelectListItem { Text = l.COLLEGE, Value = l.ID.ToString() });
+            //}
+            //ViewData["lib"] = lib;
             return PartialView("GetLockPatronStats");
         }
 
@@ -520,7 +535,7 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult GetLockPatron(DataTableAjaxPostModel model ,int libraryID, string PatronCode,string Note,string StartedDate,string FinishDate)
         {
-            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode, "", "", 0);
+            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode,"", "", "", 0);
             var search = lockedpatron.Where(a => true);
             if(libraryID != -1)
             {

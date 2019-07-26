@@ -53,7 +53,7 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult OnchangeLibrary(int LibID)
         {
-            List<SP_HOLDING_LOCATION_GET_INFO_Result> list = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(LibID, 43, 0, -1);
+            List<SP_HOLDING_LOCATION_GET_INFO_Result> list = shelfBusiness.FPT_SP_HOLDING_LOCATION_GET_INFO(LibID, (int)Session["UserID"], 0, -1);
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
@@ -102,10 +102,6 @@ namespace Libol.Controllers
                 });
             }
             return sP_CIR_OVERDUELISTs;
-        }
-
-        private void GetlistOverdue(int intUserID,string patronids, string whereCondition) {
-
         }
 
         private string ProcessCondition(string txtSoThe, string txtTenBanDoc,int ddlNhomBanDoc,int ddlTruong,int ddlKhoa, string txtKhoaHoc, string txtLopHoc,int ddlLib,int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)

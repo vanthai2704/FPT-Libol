@@ -9,42 +9,63 @@
         .caps::first-letter {
             text-transform: capitalize;
         }
+
+        .hide {
+            display: none;
+        }
     </style>
     <script>
-        function exportTableToExcel(tableID1, tableID2, filename = '') {
-            var downloadLink;
-            var dataType = 'application/vnd.ms-excel';
-            var tableSelect1 = document.getElementById(tableID1);
-            var tableSelect2 = document.getElementById(tableID2);
-            var tableHTML1 = tableSelect1 == null ? "" : tableSelect1.outerHTML.replace(/ /g, '%20');
-            var tableHTML2 = tableSelect2 == null ? "" : tableSelect2.outerHTML.replace(/ /g, '%20');
-            var tableHTML = tableHTML1 + "<br/>" + tableHTML2;
-            // Specify file name
-            filename = filename ? filename + '.xls' : 'excel_data.xls';
+        $(document).ready(function () {
+            var table1 = $("#table1").DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                order: false,
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: function () { var printTitle = 'Mượn trả - Báo cáo hàng năm'; return printTitle; }
+                    },
+                ],
+            });
+            var table2 = $("#table2").DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                order: false,
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: function () { var printTitle = 'Mượn trả - Báo cáo hàng năm'; return printTitle; }
+                    },
+                ],
+            });
+            if (document.getElementById("table2") != null) {
+                var tbl2_th = document.getElementById("tbl2_th").innerHTML;
+                var data = [
+                    ["", ""],
+                    ["Năm", tbl2_th],
 
-            // Create download link element
-            downloadLink = document.createElement("a");
-
-            document.body.appendChild(downloadLink);
-
-            if (navigator.msSaveOrOpenBlob) {
-                var blob = new Blob(['\ufeff', tableHTML], {
-                    type: dataType
-                });
-                navigator.msSaveOrOpenBlob(blob, filename);
-            } else {
-                // Create a link to the file
-                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-
-                // Setting the file name
-                downloadLink.download = filename;
-
-                //triggering the function
-                downloadLink.click();
+                ];
+                table1.rows.add(data).draw()
+                    .nodes()
+                    .to$()
+                    .addClass('hide');
+                table1.rows.add(table2.data().toArray()).draw()
+                    .nodes()
+                    .to$()
+                    .addClass('hide');
             }
-        }
-
-/**/</script>
+            //tableToExport.rows.add(table2.data().toArray()).draw();
+            //console.log(tableToExport.data());
+            $("#ExportReporttoExcel").on("click", function () {
+                if (document.getElementById("table1") == null)
+                    table2.button('.buttons-excel').trigger();
+                else
+                    table1.button('.buttons-excel').trigger();
+            });
+        });
+        /**/</script>
 </head>
 @{
     int sum1 = 0;
@@ -105,7 +126,7 @@ else
                                 <thead>
                                     <tr>
                                         <th>Năm</th>
-                                        <th>Số @ViewBag.TypeName đã mượn</th>
+                                        <th id="tbl2_th">Số @ViewBag.TypeName đã mượn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -133,7 +154,7 @@ else
         }
     </div>
     <div style="margin-top:20px;" class="btn-group d-xl-flex justify-content-xl-center" role="group">
-        <button id="ExportReporttoExcel" type="button" style="margin-right:20px;" onclick="exportTableToExcel('table1','table2', 'ThongKeHangNam')">Lưu vào file excel</button>
+        <button id="ExportReporttoExcel" type="button" style="margin-right:20px;">Lưu vào file excel</button>
     </div>
 }
 <script type="text/javascript">
@@ -144,7 +165,7 @@ else
         <text>
     google.charts.setOnLoadCallback(drawChart1);
     document.getElementById("stat1").innerHTML += ": " + @sum1;
-    
+
         </text>
     }
     @if (ViewBag.UsedResult.Count >= 1)
@@ -154,8 +175,8 @@ else
     document.getElementById("stat2").innerHTML += ": " + @sum2;
         </text>
     }
-    
-    
+
+
 
     function drawChart1() {
         var table = document.getElementById("table1");
@@ -164,6 +185,7 @@ else
         var len = table.rows.length;
         var arr = [["Năm", "Số lượt mượn", { role: "style" }]];
         for (var i = 1; i < len; i++) {
+            if (table.rows[i].classList.contains("hide")) continue;
             arr.push([table.rows[i].cells[0].innerHTML, parseInt(table.rows[i].cells[1].innerHTML), "aquamarine1"]);
         }
         var data = google.visualization.arrayToDataTable(arr);
@@ -201,6 +223,7 @@ else
         var len = table.rows.length;
         var arr = [["Năm", "Số lượt mượn", { role: "style" }]];
         for (var i = 1; i < len; i++) {
+            if (table.rows[i].classList.contains("hide")) continue;
             arr.push([table.rows[i].cells[0].innerHTML, parseInt(table.rows[i].cells[1].innerHTML), "aquamarine1"]);
         }
         var data = google.visualization.arrayToDataTable(arr);
@@ -229,5 +252,5 @@ else
         };
         var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values2"));
         chart.draw(view, options);
-        }    
+        }
 </script>

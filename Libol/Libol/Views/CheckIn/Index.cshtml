@@ -175,6 +175,9 @@
             success: function (result) {
                 $("#contentcheckin").html(result);
                 $.unblockUI()
+                if (document.getElementById("hiddenmessage").value != "") {
+                    alert(document.getElementById("hiddenmessage").value);
+                }
             },
             error: function (errormessage) {
                 console.log("abcssd");
@@ -189,29 +192,6 @@
         }
     }
 
-    function checkinbyDKCB() {
-        var empObj = {
-            strFullName: '',
-            strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strCheckinDate").value,
-            intType: 1,
-            intAutoPaid: 0,
-            strCopyNumbers: document.getElementById("strCopyNumber").value,
-            strCheckInDate: document.getElementById("strCheckinDate").value
-        };
-        $.ajax({
-            url: "CheckIn/CheckInByDKCB",
-            data: JSON.stringify(empObj),
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            success: function (result) {
-                $("#contentcheckin").html(result)
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
-    }
 
     function Searchpatron() {
         $.ajax({
@@ -297,6 +277,33 @@
 
     }
 
+    function checkinbyDKCB() {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strCheckinDate").value,
+            intType: 1,
+            intAutoPaid: 0,
+            strCopyNumbers: document.getElementById("strCopyNumber").value,
+            strCheckInDate: document.getElementById("strCheckinDate").value
+        };
+        $.ajax({
+            url: "CheckIn/CheckInByDKCB",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
+            },
+            error: function (errormessage) {
+                console.log("error");
+            }
+        });
+    }
+
     function checkinbyDKCBs() {
         var rows = $('.selected');
         var ids = [];
@@ -321,11 +328,15 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
             },
             error: function (errormessage) {
                 console.log("error");
             }
         });
     }
+
 </script>
 
