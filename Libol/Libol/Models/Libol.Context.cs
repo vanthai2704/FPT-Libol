@@ -1564,7 +1564,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GET_BLACK_PATRON_INFOR_Result>("GET_BLACK_PATRON_INFOR");
         }
     
-        public virtual int GET_PATRON_LOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, string strSerial, Nullable<int> intUserID)
+        public virtual int GET_PATRON_LOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, string strSerial, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -1577,10 +1577,6 @@ namespace Libol.Models
             var strCopyNumberParameter = strCopyNumber != null ?
                 new ObjectParameter("strCopyNumber", strCopyNumber) :
                 new ObjectParameter("strCopyNumber", typeof(string));
-    
-            var intLibraryIDParameter = intLibraryID.HasValue ?
-                new ObjectParameter("intLibraryID", intLibraryID) :
-                new ObjectParameter("intLibraryID", typeof(int));
     
             var intLocationIDParameter = intLocationID.HasValue ?
                 new ObjectParameter("intLocationID", intLocationID) :
@@ -1610,10 +1606,10 @@ namespace Libol.Models
                 new ObjectParameter("intUserID", intUserID) :
                 new ObjectParameter("intUserID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_LOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, strSerialParameter, intUserIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_LOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, strSerialParameter, intUserIDParameter);
         }
     
-        public virtual int GET_PATRON_ONLOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strDueDateFrom, string strDueDateTo, string strSerial, Nullable<int> intUserID)
+        public virtual int GET_PATRON_ONLOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strDueDateFrom, string strDueDateTo, string strSerial, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -1626,10 +1622,6 @@ namespace Libol.Models
             var strCopyNumberParameter = strCopyNumber != null ?
                 new ObjectParameter("strCopyNumber", strCopyNumber) :
                 new ObjectParameter("strCopyNumber", typeof(string));
-    
-            var intLibraryIDParameter = intLibraryID.HasValue ?
-                new ObjectParameter("intLibraryID", intLibraryID) :
-                new ObjectParameter("intLibraryID", typeof(int));
     
             var intLocationIDParameter = intLocationID.HasValue ?
                 new ObjectParameter("intLocationID", intLocationID) :
@@ -1659,10 +1651,10 @@ namespace Libol.Models
                 new ObjectParameter("intUserID", intUserID) :
                 new ObjectParameter("intUserID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_ONLOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strDueDateFromParameter, strDueDateToParameter, strSerialParameter, intUserIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_ONLOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strDueDateFromParameter, strDueDateToParameter, strSerialParameter, intUserIDParameter);
         }
     
-        public virtual int GET_PATRON_RENEW_LOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intUserID)
+        public virtual int GET_PATRON_RENEW_LOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intLoan, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -1675,10 +1667,6 @@ namespace Libol.Models
             var strCopyNumberParameter = strCopyNumber != null ?
                 new ObjectParameter("strCopyNumber", strCopyNumber) :
                 new ObjectParameter("strCopyNumber", typeof(string));
-    
-            var intLibraryIDParameter = intLibraryID.HasValue ?
-                new ObjectParameter("intLibraryID", intLibraryID) :
-                new ObjectParameter("intLibraryID", typeof(int));
     
             var intLocationIDParameter = intLocationID.HasValue ?
                 new ObjectParameter("intLocationID", intLocationID) :
@@ -1700,11 +1688,15 @@ namespace Libol.Models
                 new ObjectParameter("strCheckInDateTo", strCheckInDateTo) :
                 new ObjectParameter("strCheckInDateTo", typeof(string));
     
+            var intLoanParameter = intLoan.HasValue ?
+                new ObjectParameter("intLoan", intLoan) :
+                new ObjectParameter("intLoan", typeof(int));
+    
             var intUserIDParameter = intUserID.HasValue ?
                 new ObjectParameter("intUserID", intUserID) :
                 new ObjectParameter("intUserID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_RENEW_LOAN_INFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, intUserIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GET_PATRON_RENEW_LOAN_INFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, intLoanParameter, intUserIDParameter);
         }
     
         public virtual ObjectResult<ILL_GET_OUT_RESPONSE_INFOR_Result> ILL_GET_OUT_RESPONSE_INFOR(Nullable<int> lngID)
@@ -22401,6 +22393,31 @@ namespace Libol.Models
                 new ObjectParameter("intType", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result>("FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT", intTypeParameter);
+        }
+    
+        public virtual int FPT_GET_PATRON_LOCK_STATISTIC1(string strPatronCode, string strNote, string strLockDateFrom, string strLockDateTo, Nullable<int> intCollegeID)
+        {
+            var strPatronCodeParameter = strPatronCode != null ?
+                new ObjectParameter("strPatronCode", strPatronCode) :
+                new ObjectParameter("strPatronCode", typeof(string));
+    
+            var strNoteParameter = strNote != null ?
+                new ObjectParameter("strNote", strNote) :
+                new ObjectParameter("strNote", typeof(string));
+    
+            var strLockDateFromParameter = strLockDateFrom != null ?
+                new ObjectParameter("strLockDateFrom", strLockDateFrom) :
+                new ObjectParameter("strLockDateFrom", typeof(string));
+    
+            var strLockDateToParameter = strLockDateTo != null ?
+                new ObjectParameter("strLockDateTo", strLockDateTo) :
+                new ObjectParameter("strLockDateTo", typeof(string));
+    
+            var intCollegeIDParameter = intCollegeID.HasValue ?
+                new ObjectParameter("intCollegeID", intCollegeID) :
+                new ObjectParameter("intCollegeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC1", strPatronCodeParameter, strNoteParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
         }
     }
 }
