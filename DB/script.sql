@@ -4231,3 +4231,421 @@ AS
 	SET @strSql = @strSql + @strJoinSQL + ' WHERE ' +@strLikeSQL
 	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) + ' ORDER BY CPL.StartedDate DESC'
 EXEC (@stRSql)
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED]    Script Date: 7/24/2019 02:50:55 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- Purpose: Select holidng_remove information
+-- In: some infor
+-- Creator: Vantd
+-- CreatedDate: 09/03/2005
+-- LastModifiedDate: 02/12/2005 by Sondp
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	SET @strSQL='SELECT HOLDING_REMOVED.*,LEFT(FIELD200S.Content,50) AS Content,
+		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON '
+
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND HOLDING_REMOVED.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING_REMOVED.LibID 
+			AND HOLDING_REMOVED.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			SET @strSQL=@strSQL + ',Code AS LibName'
+		END
+	ELSE
+		SET @strSQL=@strSQL + ','' '' AS LibName'
+
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING_REMOVED.LocationID 
+			AND HOLDING_REMOVED.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+
+		END
+
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+	SET @strTable = @strTable + ' '
+
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+PRINT @strSQL + @strTable + @strWhere
+	EXECUTE(@strSQL + @strTable + @strWhere)
+	
+	
+	GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING]    Script Date: 7/24/2019 02:52:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- Purpose: Select holidng_remove information
+-- In: some infor
+-- Creator: Vantd
+-- CreatedDate: 09/03/2005
+-- LastModifiedDate: 02/12/2005 by Sondp
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000),
+	@numberIndex NVARCHAR(500),
+	@numberRecordPerPage NVARCHAR(500)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	DECLARE @strPaging NVARCHAR(1000)
+	DECLARE @numberIndexs int
+	DECLARE @numberRecordPerPages int
+
+	SET @numberIndexs = CAST(@numberIndex as int)
+	SET @numberRecordPerPages = CAST(@numberRecordPerPage as int)
+
+
+	SET @strSQL='SELECT HOLDING_REMOVED.*,LEFT(FIELD200S.Content,50) AS Content,
+		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON '
+
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND HOLDING_REMOVED.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING_REMOVED.LibID 
+			AND HOLDING_REMOVED.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			SET @strSQL=@strSQL + ',Code AS LibName'
+		END
+	ELSE
+		SET @strSQL=@strSQL + ','' '' AS LibName'
+
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING_REMOVED.LocationID 
+			AND HOLDING_REMOVED.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+
+		END
+
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+	SET @strTable = @strTable + ' '
+
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+
+	SET @strPaging = ' ORDER BY HOLDING_REMOVED.ID ASC
+						OFFSET ' + CAST(@numberRecordPerPages*(@numberIndexs-1) as char)
+						+' ROWS FETCH NEXT '+ @numberRecordPerPage +' ROWS ONLY;'
+
+
+PRINT @strSQL + @strTable + @strWhere + @strPaging
+	EXECUTE(@strSQL + @strTable + @strWhere + @strPaging)
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING_v2]    Script Date: 7/28/2019 04:21:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- Purpose: Select holidng_remove information
+-- In: some infor
+-- Creator: Vantd
+-- CreatedDate: 09/03/2005
+-- LastModifiedDate: 02/12/2005 by Sondp
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING_v2]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000),
+	@numberIndex NVARCHAR(500),
+	@numberRecordPerPage NVARCHAR(500)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	DECLARE @strPaging NVARCHAR(1000)
+	DECLARE @numberIndexs int
+	DECLARE @numberRecordPerPages int
+	DECLARE @strfinal NVARCHAR(4000)
+
+	SET @numberIndexs = CAST(@numberIndex as int)
+	SET @numberRecordPerPages = CAST(@numberRecordPerPage as int)
+
+
+	SET @strSQL='SELECT ROW_NUMBER() OVER (ORDER BY hr.ID) AS Seq, hr.*,LEFT(FIELD200S.Content,50) AS Content,
+		hr.REASON as REASON_ID '
+
+	SET @strTable=' FROM (HOLDING_REMOVED hr Join HOLDING_LOCATION hl on hl.id = hr.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON hrr '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=hr.ItemID 
+		AND hrr.ID=hr.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND hr.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=hr.LibID 
+			AND hr.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			SET @strSQL=@strSQL + ',Code AS LibName'
+		END
+	ELSE
+		SET @strSQL=@strSQL + ','' '' AS LibName'
+
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=hr.LocationID 
+			AND hr.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+
+		END
+
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+
+	SET @strTable = @strTable + ' '
+
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+
+	SET @strfinal = 'select a.*, hrr.REASON as REASON_DETAIL from ('+ @strSQL + @strTable + @strWhere + ' ) 
+					a join HOLDING_REMOVE_REASON hrr on a.REASON_ID = hrr.ID 
+					where a.Seq between ' + CAST(@numberRecordPerPages*(@numberIndexs-1)+1 as char)
+						+  ' and ' + CAST(@numberRecordPerPages*(@numberIndexs) as char)
+PRINT @strfinal
+	EXECUTE(@strfinal)
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT]    Script Date: 7/24/2019 02:52:47 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- Purpose: Select holidng_remove information
+-- In: some infor
+-- Creator: Vantd
+-- CreatedDate: 09/03/2005
+-- LastModifiedDate: 02/12/2005 by Sondp
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	SET @strSQL='SELECT COUNT(HOLDING_REMOVED.ID) as Total '
+
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND HOLDING_REMOVED.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING_REMOVED.LibID 
+			AND HOLDING_REMOVED.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			
+		END
+
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING_REMOVED.LocationID 
+			AND HOLDING_REMOVED.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+
+		END
+
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+	SET @strTable = @strTable + ' '
+
+PRINT @strSQL + @strTable + @strWhere
+	EXECUTE(@strSQL + @strTable + @strWhere)
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_WITH_ID]    Script Date: 7/24/2019 02:53:23 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_WITH_ID]
+	@strID	NVARCHAR(100)
+	
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	SET @strSQL='SELECT HOLDING_REMOVED.*,LEFT(FIELD200S.Content,50) AS Content,
+		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON '
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason and HOLDING_REMOVED.ID = ' + @strID
+	SET @strTable = @strTable + ' '
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+PRINT @strSQL + @strTable + @strWhere
+	EXECUTE(@strSQL + @strTable + @strWhere)
+	
+	
+	
+	
+	GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_HOLDING_REMOVED_ITEM_DEL]    Script Date: 7/26/2019 12:28:11 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROC [dbo].[FPT_SP_HOLDING_REMOVED_ITEM_DEL]
+-- Purpose: Del data in tables HOLDING_REMOVED_...
+-- ---------   ------  -------------------------------------------
+ @strId	varchar(150)
+AS
+BEGIN TRAN DELETE_TRAN
+	DELETE FROM HOLDING_REMOVED WHERE ID = @strId
+IF @@Error>0 
+BEGIN
+	ROLLBACK TRAN DELETE_TRAN
+	RETURN
+END
+COMMIT TRAN
+
+
+
+
