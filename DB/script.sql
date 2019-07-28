@@ -3343,7 +3343,7 @@ ELSE
 	
 
 
-
+go
 -- thêm dữ liệu vào bảng để tạo form biên mục--
 INSERT [dbo].[MARC_WORKSHEET] ([ID], [Name], [Creator], [CreatedDate], [LastModifiedDate], [Note]) VALUES (14, N'Mẫu biên mục Sách (2019)', N'Nguyễn Thị Thơi', CAST(N'2019-06-13T00:00:00.000' AS DateTime), CAST(N'2019-06-13T00:00:00.000' AS DateTime), NULL)
 INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (14, N'001', 1, NULL, 0, NULL)
@@ -4695,9 +4695,10 @@ GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_WITH_ID]
-	@strID	NVARCHAR(100)
-	
+	@strID	NVARCHAR(100)	
 AS
 	DECLARE @strSQL NVARCHAR(4000)
 	DECLARE @strWhere NVARCHAR(4000)
@@ -4770,3 +4771,25 @@ SET @strSQL=''
 --print(@strSQL)
 
       EXEC(@strSQL)
+	  
+	 
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_HOLDING_LIBLOCUSER_SEL]    Script Date: 7/26/2019 01:23:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_SP_HOLDING_LIBLOCUSER_SEL](@intLibID int)
+AS
+	SELECT CODE + ':' + SYMBOL AS LOCNAME, 
+		B.ID AS ID, REPLACE(CAST(A.ID AS CHAR(3)) + ':' + CAST(B.ID AS CHAR(3)), ' ', '') AS GroupID, 
+		A.ID AS LibID, B.Symbol, A.Code
+	FROM HOLDING_LIBRARY A, HOLDING_LOCATION B 
+	WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.LibID = @intLibID
+	ORDER BY B.LibID, B.Symbol	 
+	  
