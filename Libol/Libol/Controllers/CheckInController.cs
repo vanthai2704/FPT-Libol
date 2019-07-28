@@ -67,7 +67,12 @@ namespace Libol.Controllers
                     new ObjectParameter("strPatronCode", typeof(string)),
                     new ObjectParameter("intError", typeof(int)));
                 getpatrondetail(patroncode);
-                if (success == 5)
+                if (success == -1)
+                {
+                    ViewBag.CurrentCheckin = null;
+                    ViewBag.message = "Ghi trả thất bại";
+                }
+                else
                 {
                     int lastid = db.CIR_LOAN_HISTORY.Max(a => a.ID);
                     int id = db.CIR_LOAN_HISTORY.Where(b => b.ID == lastid).First().ItemID;
@@ -82,11 +87,7 @@ namespace Libol.Controllers
                         OverdueFine = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().OverdueFine.ToString()
                     };
                 }
-                else
-                {
-                    ViewBag.CurrentCheckin = null;
-                    ViewBag.message = "Ghi trả thất bại";
-                }
+               
             }
             return PartialView("_checkinByDKCB");
         }
@@ -111,14 +112,14 @@ namespace Libol.Controllers
                 new ObjectParameter("intError", typeof(int)));
             }
             getpatrondetail(strPatronCode);
-            if (success == 5)
+            if (success == -1)
             {
-                ViewBag.message = "";
+                ViewBag.message = "Ghi trả thất bại";
                 ViewBag.CurrentCheckin = null;
             }
             else
             {
-                ViewBag.message = "Ghi trả thất bại";
+                ViewBag.message = "";
                 ViewBag.CurrentCheckin = null;
             }
             return PartialView("_checkinByDKCB");
