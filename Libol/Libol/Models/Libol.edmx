@@ -5825,6 +5825,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         </Function>
         <Function Name="FPT_SP_GET_HOLDING_REMOVED_WITH_ID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strID" Type="nvarchar" Mode="In" />
+           </Function>
         <Function Name="FPT_SP_GET_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strFromDate" Type="varchar" Mode="In" />
           <Parameter Name="strToDate" Type="varchar" Mode="In" />
@@ -25727,6 +25728,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           </FunctionImport>
           <FunctionImport Name="FPT_SP_HOLDING_REMOVED_ITEM_DEL">
             <Parameter Name="strId" Mode="In" Type="String" />
+            </FunctionImport>
           <FunctionImport Name="FPT_COUNT_COPYNUMBER_BY_ITEMID">
             <Parameter Name="itemID" Mode="In" Type="Int32" />
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />

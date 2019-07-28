@@ -22586,14 +22586,15 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_HOLDING_LIBLOCUSER_SEL_Result>("FPT_SP_HOLDING_LIBLOCUSER_SEL", intLibIDParameter);
         }
-    
+
         public virtual int FPT_SP_HOLDING_REMOVED_ITEM_DEL(string strId)
         {
             var strIdParameter = strId != null ?
                 new ObjectParameter("strId", strId) :
                 new ObjectParameter("strId", typeof(string));
-    
+
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_HOLDING_REMOVED_ITEM_DEL", strIdParameter);
+        }
 
 
         public virtual int FPT_COUNT_COPYNUMBER_BY_ITEMID(Nullable<int> itemID, Nullable<int> intLocationID, Nullable<int> intLibraryID)
