@@ -5783,6 +5783,49 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="EndDate" Type="date" Mode="In" />
           <Parameter Name="OrderBy" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="FPT_SP_GET_HOLDING_REMOVED" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibID" Type="nvarchar" Mode="In" />
+          <Parameter Name="intLocID" Type="nvarchar" Mode="In" />
+          <Parameter Name="strShelf" Type="nvarchar" Mode="In" />
+          <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+          <Parameter Name="strCallNumber" Type="nvarchar" Mode="In" />
+          <Parameter Name="strVolume" Type="nvarchar" Mode="In" />
+          <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_HOLDING_REMOVED_PAGING" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibID" Type="nvarchar" Mode="In" />
+          <Parameter Name="intLocID" Type="nvarchar" Mode="In" />
+          <Parameter Name="strShelf" Type="nvarchar" Mode="In" />
+          <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+          <Parameter Name="strCallNumber" Type="nvarchar" Mode="In" />
+          <Parameter Name="strVolume" Type="nvarchar" Mode="In" />
+          <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
+          <Parameter Name="numberIndex" Type="nvarchar" Mode="In" />
+          <Parameter Name="numberRecordPerPage" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_HOLDING_REMOVED_PAGING_v2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibID" Type="nvarchar" Mode="In" />
+          <Parameter Name="intLocID" Type="nvarchar" Mode="In" />
+          <Parameter Name="strShelf" Type="nvarchar" Mode="In" />
+          <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+          <Parameter Name="strCallNumber" Type="nvarchar" Mode="In" />
+          <Parameter Name="strVolume" Type="nvarchar" Mode="In" />
+          <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
+          <Parameter Name="numberIndex" Type="nvarchar" Mode="In" />
+          <Parameter Name="numberRecordPerPage" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibID" Type="nvarchar" Mode="In" />
+          <Parameter Name="intLocID" Type="nvarchar" Mode="In" />
+          <Parameter Name="strShelf" Type="nvarchar" Mode="In" />
+          <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+          <Parameter Name="strCallNumber" Type="nvarchar" Mode="In" />
+          <Parameter Name="strVolume" Type="nvarchar" Mode="In" />
+          <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_HOLDING_REMOVED_WITH_ID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strID" Type="nvarchar" Mode="In" />
+           </Function>
         <Function Name="FPT_SP_GET_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strFromDate" Type="varchar" Mode="In" />
           <Parameter Name="strToDate" Type="varchar" Mode="In" />
@@ -5792,6 +5835,12 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="FPT_SP_GET_STAT_BOOK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
           <Parameter Name="strLocationID" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_HOLDING_LIBLOCUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_HOLDING_REMOVED_ITEM_DEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strId" Type="varchar" Mode="In" />
         </Function>
         <Function Name="FPT_SP_ILL_SEARCH_PATRON" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strPatronName" Type="nvarchar" Mode="In" />
@@ -25631,6 +25680,55 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strLockDateTo" Mode="In" Type="String" />
             <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="FPT_SP_GET_HOLDING_REMOVED" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_REMOVED_Result)">
+            <Parameter Name="intLibID" Mode="In" Type="String" />
+            <Parameter Name="intLocID" Mode="In" Type="String" />
+            <Parameter Name="strShelf" Mode="In" Type="String" />
+            <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+            <Parameter Name="strCallNumber" Mode="In" Type="String" />
+            <Parameter Name="strVolume" Mode="In" Type="String" />
+            <Parameter Name="strTitle" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_GET_HOLDING_REMOVED_PAGING" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_REMOVED_PAGING_Result)">
+            <Parameter Name="intLibID" Mode="In" Type="String" />
+            <Parameter Name="intLocID" Mode="In" Type="String" />
+            <Parameter Name="strShelf" Mode="In" Type="String" />
+            <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+            <Parameter Name="strCallNumber" Mode="In" Type="String" />
+            <Parameter Name="strVolume" Mode="In" Type="String" />
+            <Parameter Name="strTitle" Mode="In" Type="String" />
+            <Parameter Name="numberIndex" Mode="In" Type="String" />
+            <Parameter Name="numberRecordPerPage" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_GET_HOLDING_REMOVED_PAGING_v2">
+            <Parameter Name="intLibID" Mode="In" Type="String" />
+            <Parameter Name="intLocID" Mode="In" Type="String" />
+            <Parameter Name="strShelf" Mode="In" Type="String" />
+            <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+            <Parameter Name="strCallNumber" Mode="In" Type="String" />
+            <Parameter Name="strVolume" Mode="In" Type="String" />
+            <Parameter Name="strTitle" Mode="In" Type="String" />
+            <Parameter Name="numberIndex" Mode="In" Type="String" />
+            <Parameter Name="numberRecordPerPage" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT" ReturnType="Collection(Int32)">
+            <Parameter Name="intLibID" Mode="In" Type="String" />
+            <Parameter Name="intLocID" Mode="In" Type="String" />
+            <Parameter Name="strShelf" Mode="In" Type="String" />
+            <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+            <Parameter Name="strCallNumber" Mode="In" Type="String" />
+            <Parameter Name="strVolume" Mode="In" Type="String" />
+            <Parameter Name="strTitle" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_GET_HOLDING_REMOVED_WITH_ID" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_REMOVED_WITH_ID_Result)">
+            <Parameter Name="strID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_HOLDING_LIBLOCUSER_SEL" ReturnType="Collection(LibolModel.FPT_SP_HOLDING_LIBLOCUSER_SEL_Result)">
+            <Parameter Name="intLibID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_HOLDING_REMOVED_ITEM_DEL">
+            <Parameter Name="strId" Mode="In" Type="String" />
+            </FunctionImport>
           <FunctionImport Name="FPT_COUNT_COPYNUMBER_BY_ITEMID">
             <Parameter Name="itemID" Mode="In" Type="Int32" />
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
@@ -30538,6 +30636,90 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <End Type="LibolModel.FPT_RECOMMEND" Role="FPT_RECOMMEND" Multiplicity="*" />
           <End Type="LibolModel.ITEM" Role="ITEM" Multiplicity="*" />
         </Association>
+        <ComplexType Name="FPT_SP_GET_HOLDING_REMOVED_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="CopyNumber" Nullable="false" MaxLength="32" />
+          <Property Type="Int32" Name="ItemID" Nullable="false" />
+          <Property Type="Int32" Name="LibID" Nullable="false" />
+          <Property Type="Int32" Name="LocationID" Nullable="true" />
+          <Property Type="Int32" Name="LoanTypeID" Nullable="false" />
+          <Property Type="String" Name="Shelf" Nullable="true" MaxLength="10" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="Reason" Nullable="true" />
+          <Property Type="DateTime" Name="AcquiredDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="RemovedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Volume" Nullable="true" MaxLength="32" />
+          <Property Type="Int32" Name="UseCount" Nullable="true" />
+          <Property Type="Int32" Name="PoID" Nullable="true" />
+          <Property Type="DateTime" Name="DateLastUsed" Nullable="true" Precision="23" />
+          <Property Type="String" Name="CallNumber" Nullable="true" MaxLength="32" />
+          <Property Type="Int32" Name="AcquiredSourceID" Nullable="true" />
+          <Property Type="String" Name="LiquidCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Content" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="REASON_ID" Nullable="true" />
+          <Property Type="String" Name="REASON1" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="LibName" Nullable="false" MaxLength="32" />
+          <Property Type="String" Name="LibName1" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="LocName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="FPT_SP_GET_HOLDING_REMOVED_PAGING_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="CopyNumber" Nullable="false" MaxLength="32" />
+          <Property Type="Int32" Name="ItemID" Nullable="false" />
+          <Property Type="Int32" Name="LibID" Nullable="false" />
+          <Property Type="Int32" Name="LocationID" Nullable="true" />
+          <Property Type="Int32" Name="LoanTypeID" Nullable="false" />
+          <Property Type="String" Name="Shelf" Nullable="true" MaxLength="10" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="Reason" Nullable="true" />
+          <Property Type="DateTime" Name="AcquiredDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="RemovedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Volume" Nullable="true" MaxLength="32" />
+          <Property Type="Int32" Name="UseCount" Nullable="true" />
+          <Property Type="Int32" Name="PoID" Nullable="true" />
+          <Property Type="DateTime" Name="DateLastUsed" Nullable="true" Precision="23" />
+          <Property Type="String" Name="CallNumber" Nullable="true" MaxLength="32" />
+          <Property Type="Int32" Name="AcquiredSourceID" Nullable="true" />
+          <Property Type="String" Name="LiquidCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Content" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="REASON_ID" Nullable="true" />
+          <Property Type="String" Name="REASON1" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="LibName" Nullable="false" MaxLength="32" />
+          <Property Type="String" Name="LibName1" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="LocName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="FPT_SP_GET_HOLDING_REMOVED_WITH_ID_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="CopyNumber" Nullable="false" MaxLength="32" />
+          <Property Type="Int32" Name="ItemID" Nullable="false" />
+          <Property Type="Int32" Name="LibID" Nullable="false" />
+          <Property Type="Int32" Name="LocationID" Nullable="true" />
+          <Property Type="Int32" Name="LoanTypeID" Nullable="false" />
+          <Property Type="String" Name="Shelf" Nullable="true" MaxLength="10" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="19" />
+          <Property Type="Int32" Name="Reason" Nullable="true" />
+          <Property Type="DateTime" Name="AcquiredDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="RemovedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Volume" Nullable="true" MaxLength="32" />
+          <Property Type="Int32" Name="UseCount" Nullable="true" />
+          <Property Type="Int32" Name="PoID" Nullable="true" />
+          <Property Type="DateTime" Name="DateLastUsed" Nullable="true" Precision="23" />
+          <Property Type="String" Name="CallNumber" Nullable="true" MaxLength="32" />
+          <Property Type="Int32" Name="AcquiredSourceID" Nullable="true" />
+          <Property Type="String" Name="LiquidCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Content" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="REASON_ID" Nullable="true" />
+          <Property Type="String" Name="REASON1" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="LocName" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="FPT_SP_HOLDING_LIBLOCUSER_SEL_Result">
+          <Property Type="String" Name="LOCNAME" Nullable="false" MaxLength="83" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="GroupID" Nullable="true" MaxLength="8000" />
+          <Property Type="Int32" Name="LibID" Nullable="false" />
+          <Property Type="String" Name="Symbol" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -40842,6 +41024,109 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </EndProperty>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_LOCK_STATISTIC1" FunctionName="LibolModel.Store.FPT_GET_PATRON_LOCK_STATISTIC" />
+          <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_REMOVED_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CopyNumber" ColumnName="CopyNumber" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="LibID" ColumnName="LibID" />
+                <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+                <ScalarProperty Name="LoanTypeID" ColumnName="LoanTypeID" />
+                <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="AcquiredDate" ColumnName="AcquiredDate" />
+                <ScalarProperty Name="RemovedDate" ColumnName="RemovedDate" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="UseCount" ColumnName="UseCount" />
+                <ScalarProperty Name="PoID" ColumnName="PoID" />
+                <ScalarProperty Name="DateLastUsed" ColumnName="DateLastUsed" />
+                <ScalarProperty Name="CallNumber" ColumnName="CallNumber" />
+                <ScalarProperty Name="AcquiredSourceID" ColumnName="AcquiredSourceID" />
+                <ScalarProperty Name="LiquidCode" ColumnName="LiquidCode" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="REASON_ID" ColumnName="REASON_ID" />
+                <ScalarProperty Name="REASON1" ColumnName="REASON1" />
+                <ScalarProperty Name="LibName" ColumnName="LibName" />
+                <ScalarProperty Name="LibName1" ColumnName="LibName1" />
+                <ScalarProperty Name="LocName" ColumnName="LocName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_PAGING" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_PAGING">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_REMOVED_PAGING_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CopyNumber" ColumnName="CopyNumber" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="LibID" ColumnName="LibID" />
+                <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+                <ScalarProperty Name="LoanTypeID" ColumnName="LoanTypeID" />
+                <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="AcquiredDate" ColumnName="AcquiredDate" />
+                <ScalarProperty Name="RemovedDate" ColumnName="RemovedDate" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="UseCount" ColumnName="UseCount" />
+                <ScalarProperty Name="PoID" ColumnName="PoID" />
+                <ScalarProperty Name="DateLastUsed" ColumnName="DateLastUsed" />
+                <ScalarProperty Name="CallNumber" ColumnName="CallNumber" />
+                <ScalarProperty Name="AcquiredSourceID" ColumnName="AcquiredSourceID" />
+                <ScalarProperty Name="LiquidCode" ColumnName="LiquidCode" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="REASON_ID" ColumnName="REASON_ID" />
+                <ScalarProperty Name="REASON1" ColumnName="REASON1" />
+                <ScalarProperty Name="LibName" ColumnName="LibName" />
+                <ScalarProperty Name="LibName1" ColumnName="LibName1" />
+                <ScalarProperty Name="LocName" ColumnName="LocName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_PAGING_v2" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_PAGING_v2" />
+          <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT" />
+          <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_WITH_ID" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_WITH_ID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_REMOVED_WITH_ID_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CopyNumber" ColumnName="CopyNumber" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="LibID" ColumnName="LibID" />
+                <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+                <ScalarProperty Name="LoanTypeID" ColumnName="LoanTypeID" />
+                <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="AcquiredDate" ColumnName="AcquiredDate" />
+                <ScalarProperty Name="RemovedDate" ColumnName="RemovedDate" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="UseCount" ColumnName="UseCount" />
+                <ScalarProperty Name="PoID" ColumnName="PoID" />
+                <ScalarProperty Name="DateLastUsed" ColumnName="DateLastUsed" />
+                <ScalarProperty Name="CallNumber" ColumnName="CallNumber" />
+                <ScalarProperty Name="AcquiredSourceID" ColumnName="AcquiredSourceID" />
+                <ScalarProperty Name="LiquidCode" ColumnName="LiquidCode" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="REASON_ID" ColumnName="REASON_ID" />
+                <ScalarProperty Name="REASON1" ColumnName="REASON1" />
+                <ScalarProperty Name="LocName" ColumnName="LocName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_HOLDING_LIBLOCUSER_SEL" FunctionName="LibolModel.Store.FPT_SP_HOLDING_LIBLOCUSER_SEL">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_HOLDING_LIBLOCUSER_SEL_Result">
+                <ScalarProperty Name="LOCNAME" ColumnName="LOCNAME" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="LibID" ColumnName="LibID" />
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_HOLDING_REMOVED_ITEM_DEL" FunctionName="LibolModel.Store.FPT_SP_HOLDING_REMOVED_ITEM_DEL" />
           <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_BY_ITEMID" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_BY_ITEMID" />
           <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_ONLOAN" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_ONLOAN" />
           <FunctionImportMapping FunctionImportName="FPT_SP_GET_ITEM" FunctionName="LibolModel.Store.FPT_SP_GET_ITEM" />

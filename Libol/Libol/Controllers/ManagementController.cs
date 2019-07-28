@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web;
@@ -205,12 +206,12 @@ namespace Libol.Controllers
                         }
                         
                     }
-                    db.SaveChanges();
+                    
                     var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
                     userGoogleAccount.ID = ID;
                     userGoogleAccount.Email = Email;
                     db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
-                    
+                    db.SaveChanges();
                     return Json(new Result()
                     {
                         CodeError = 0,
@@ -324,8 +325,13 @@ namespace Libol.Controllers
                 }
                 if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).Count() > 0)
                 {
-                    var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).First();
+                    var userGoogleAccountDel = db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).First();
+                    db.Entry(userGoogleAccountDel).State = EntityState.Deleted;
+
+                    var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
+                    userGoogleAccount.ID = ID;
                     userGoogleAccount.Email = Email;
+                    db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
                 }
                 else
                 {
