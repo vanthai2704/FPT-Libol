@@ -2707,7 +2707,7 @@ namespace Libol.Controllers
                     {
                         int vitriC = -1;
                         int vitriB = -1;
-                        vitriC = items.Content.IndexOf("$c");
+                        vitriC = items.Content.LastIndexOf("$c");
                         vitriB = items.Content.IndexOf("$b");
                         if (vitriC > -1)
                         {
@@ -2722,10 +2722,21 @@ namespace Libol.Controllers
                                 }
                             }
                             namXB = Strdigit;
-                            nam = Convert.ToInt32(namXB);
+                            if(namXB != "")
+                            {
+                                nam = Convert.ToInt32(namXB);
+                            }
+                           
                             if (vitriB > -1)
                             {
-                                nhaXB = items.Content.Substring(vitriB, vitriC - vitriB - 2);
+                                if(vitriB< vitriC)
+                                {
+                                    nhaXB = items.Content.Substring(vitriB, vitriC - vitriB - 2);
+                                }
+                                else if(vitriB > vitriC)
+                                {
+                                    nhaXB = items.Content.Substring(vitriB);
+                                }
                                 nhaXB = GetContent(nhaXB);
                             }
                         }
@@ -2768,7 +2779,9 @@ namespace Libol.Controllers
                     borrowNum = liItem.Sluong;
                 }
                 remainingNum = countCopy - borrowNum;
+
                 listItem.Add(new FPT_SP_GET_ITEM_Result(item.ID, StrTitle, item.Code, tGia, noiXB, nhaXB, nam, countCopy, item.DKCB, borrowNum, remainingNum));
+                
             }
 
 

@@ -4784,7 +4784,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE [dbo].[FPT_SP_HOLDING_LIBLOCUSER_SEL](@intLibID int)
+Create PROCEDURE [dbo].[FPT_SP_HOLDING_LIBLOCUSER_SEL](@intLibID int)
 AS
 	SELECT CODE + ':' + SYMBOL AS LOCNAME, 
 		B.ID AS ID, REPLACE(CAST(A.ID AS CHAR(3)) + ':' + CAST(B.ID AS CHAR(3)), ' ', '') AS GroupID, 
