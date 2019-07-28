@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="Libol" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^F:\\CapstoneProject\\FPT-Libol\\Libol\\Libol\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^F:\\CapstoneProject\\FPT-Libol\\Libol\\Libol\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="LibolEntities-Web.config Connection String" description="" value="metadata=res://*/Models.Libol.csdl|res://*/Models.Libol.ssdl|res://*/Models.Libol.msl;provider=System.Data.SqlClient;provider connection string=&quot;Server=tcp:libolserver.database.windows.net,1433;Initial Catalog=LibolNew3;Persist Security Info=False;User ID=liboladmin;Password=Chipchip11;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;&quot;" tags="">
+    <parameterEntry kind="XmlFile" scope="F:\\CapstoneProject\\FPT-Libol\\Libol\\Libol\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='LibolEntities']/@connectionString" />
+  </parameter>
+</parameters>

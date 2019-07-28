@@ -2131,8 +2131,6 @@
     <Compile Include="SupportClass\Wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\dataTables.checkboxes.min.js" />
-    <Content Include="App_Data\datatables.min.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -2272,6 +2270,8 @@
     </Content>
     <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
     <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
+    <None Include="Properties\PublishProfiles\Libol - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\Libol - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2398,6 +2398,7 @@
     <Content Include="Views\Acquisition\HoldingLocRemove.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="EntityResultRAS\" />
   </ItemGroup>
   <ItemGroup>
