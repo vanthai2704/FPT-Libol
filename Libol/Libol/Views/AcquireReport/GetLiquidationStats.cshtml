@@ -51,35 +51,7 @@
             $("#ExportReporttoExcel").on("click", function () {
                 table.button('.buttons-excel').trigger();
             });
-
-            //$("#ExportReporttoWord").on("click", function () {
-            //    table.button('.buttons-word').trigger();
-            //});
-
-            $('body').on('click', '#ExportReporttoWord', function (e) {
-                $.fn.DataTable.Export.word(table, {
-                    filename: 'customer-lists',
-                    title: 'Report',
-                    message: 'Customer lists',
-                    header: [
-                        'Thư viện',
-                        'Kho',
-                        'Đăng ký cá biệt',
-                        'Nhan đề/ Tác giả',
-                        'Ngày hủy',
-                        'Giá tiền'
-                    ],
-                    field: [
-                        0,
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                    ]
-                });
-            });
-
+            
             $("#Print").on("click", function () {
                 table.button('.buttons-print').trigger();
             });
@@ -128,5 +100,4 @@
 <div class="btn-group d-xl-flex justify-content-xl-center" role="group">
     <button id="Print" type="button" style="margin-right:20px;">In</button>
     <button id="ExportReporttoExcel" type="button" style="margin-right:20px;">Lưu vào file excel</button>
-    <button id="ExportReporttoWord" type="button" style="margin-right:20px;">Lưu vào file word</button>
 </div>
