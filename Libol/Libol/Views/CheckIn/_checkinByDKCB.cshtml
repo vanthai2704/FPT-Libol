@@ -79,10 +79,37 @@
         </div>
     </div>
 
+    if (ViewBag.CurrentCheckin != null)
+    {
+        <h5>Thông tin ấn phẩm vừa trả</h5>
+            <table>
+                <tr>
+                    <td class="columnleft">Nhan đề: </td>
+                    <td><strong>@ViewBag.CurrentCheckin.Title</strong></td>
+                </tr>
+                <tr>
+                    <td class="columnleft">ĐKCB: </td>
+                    <td><strong>@ViewBag.CurrentCheckin.Copynumber</strong></td>
+                </tr>
+                <tr>
+                    <td class="columnleft">Ngày mượn: </td>
+                    <td><strong>@ViewBag.CurrentCheckin.CheckOutDate</strong></td>
+                </tr>
+                <tr>
+                    <td class="columnleft">Ngày trả: </td>
+                    <td><strong>@ViewBag.CurrentCheckin.CheckInDate</strong></td>
+                </tr>
+                <tr>
+                    <td class="columnleft">Ghi nhận phí phạt: </td>
+                    <td><strong>@ViewBag.CurrentCheckin.OverdueFine</strong></td>
+                </tr>
+            </table>
+    }
+
 
     if (ViewBag.patronloaninfo.Count > 0)
     {
-        <h5>Bạn đọc này cũng đang mượn các ấn phẩm</h5>
+        <h5 style="margin-top: 10px;">Bạn đọc này cũng đang mượn các ấn phẩm</h5>
         <table id="table_loaninfo" class="table table-striped table-bordered datatables">
             <thead>
                 <tr>
@@ -234,4 +261,4 @@
         </div>
     </div>
 }
-    <input type="hidden" value="@ViewBag.message" id="hiddenmessage1">
+<input type="hidden" value="@ViewBag.message" id="hiddenmessage1">

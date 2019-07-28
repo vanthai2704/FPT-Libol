@@ -69,10 +69,22 @@ namespace Libol.Controllers
                 getpatrondetail(patroncode);
                 if (success == 5)
                 {
+                    int lastid = db.CIR_LOAN_HISTORY.Max(a => a.ID);
+                    int id = db.CIR_LOAN_HISTORY.Where(b => b.ID == lastid).First().ItemID;
+                    String fieldcode = "245";
                     ViewBag.message = "";
+                    ViewBag.CurrentCheckin = new CurrentCheckIn
+                    {
+                        Title = f.OnFormatHoldingTitle(db.FIELD200S.Where(a => a.ItemID == id).Where(a => a.FieldCode == fieldcode).First().Content),
+                        Copynumber = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().CopyNumber,
+                        CheckOutDate = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().CheckOutdate.ToString("dd/MM/yyyy"),
+                        CheckInDate = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().CheckInDate.ToString("dd/MM/yyyy"),
+                        OverdueFine = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().OverdueFine.ToString()
+                    };
                 }
                 else
                 {
+                    ViewBag.CurrentCheckin = null;
                     ViewBag.message = "Ghi trả thất bại";
                 }
             }
@@ -102,10 +114,12 @@ namespace Libol.Controllers
             if (success == 5)
             {
                 ViewBag.message = "";
+                ViewBag.CurrentCheckin = null;
             }
             else
             {
                 ViewBag.message = "Ghi trả thất bại";
+                ViewBag.CurrentCheckin = null;
             }
             return PartialView("_checkinByDKCB");
         }
@@ -211,6 +225,15 @@ namespace Libol.Controllers
         public string DueDate { get; set; }
         public string OverDueDate { get; set; }
         public string Note { get; set; }
+    }
+
+    public class CurrentCheckIn
+    {
+        public string Title { get; set; }
+        public string Copynumber { get; set; }
+        public string CheckOutDate { get; set; }
+        public string CheckInDate { get; set; }
+        public string OverdueFine { get; set; }
     }
 
     public class DetailPatron
