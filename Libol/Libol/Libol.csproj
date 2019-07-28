@@ -194,6 +194,7 @@
     <Compile Include="Controllers\CatalogueController.cs" />
     <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ManagementController.cs" />
     <Compile Include="Controllers\OverdueListController.cs" />
     <Compile Include="Controllers\PatronController.cs" />
@@ -2490,6 +2491,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="EntityResultRAS\" />
+    <Folder Include="Views\Error\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

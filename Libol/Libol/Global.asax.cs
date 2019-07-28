@@ -23,6 +23,8 @@ namespace Libol
         {
             var ex = Server.GetLastError();
             //log the error!
+            log.Info("");
+            log.Info("------------------------------------------------------------------------------------------------------");            
             log.Error(ex.Message);
             log.Error(ex.StackTrace);
             log.Error(ex.TargetSite);
