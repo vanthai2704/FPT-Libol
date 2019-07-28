@@ -17,5 +17,15 @@ namespace Libol
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        protected void Application_Error()
+        {
+            var ex = Server.GetLastError();
+            //log the error!
+            log.Error(ex.Message);
+            log.Error(ex.StackTrace);
+            log.Error(ex.TargetSite);
+        }
     }
 }
