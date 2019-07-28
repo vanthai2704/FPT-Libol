@@ -120,12 +120,27 @@
             url: "CheckIn/FindByCardNumber",
             data: null,
             type: "Post",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+            },
             success: function (result) {
-
                 document.getElementById("contentcheckin").innerHTML = result;
+                $.unblockUI()
             },
             error: function (errormessage) {
-
+                $.unblockUI()
             }
         });
     }
@@ -160,6 +175,9 @@
             success: function (result) {
                 $("#contentcheckin").html(result);
                 $.unblockUI()
+                if (document.getElementById("hiddenmessage").value != "") {
+                    alert(document.getElementById("hiddenmessage").value);
+                }
             },
             error: function (errormessage) {
                 console.log("abcssd");
@@ -174,29 +192,6 @@
         }
     }
 
-    function checkinbyDKCB() {
-        var empObj = {
-            strFullName: '',
-            strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strCheckinDate").value,
-            intType: 1,
-            intAutoPaid: 0,
-            strCopyNumbers: document.getElementById("strCopyNumber").value,
-            strCheckInDate: document.getElementById("strCheckinDate").value
-        };
-        $.ajax({
-            url: "CheckIn/CheckInByDKCB",
-            data: JSON.stringify(empObj),
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            success: function (result) {
-                $("#contentcheckin").html(result)
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
-    }
 
     function Searchpatron() {
         $.ajax({
@@ -221,12 +216,28 @@
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
             success: function (result) {
                 $("#contentcheckin").html(result);
-                console.log('ýes');
+                $.unblockUI()
             },
             error: function (errormessage) {
-                console.log('error')
+                $.unblockUI()
             }
         });
     }
@@ -239,15 +250,58 @@
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
             success: function (result) {
                 $("#contentcheckin").html(result);
-                console.log('ýes');
+                $.unblockUI()
             },
             error: function (errormessage) {
-                console.log('error')
+                $.unblockUI()
             }
         });
 
+    }
+
+    function checkinbyDKCB() {
+        var empObj = {
+            strFullName: '',
+            strPatronCode: document.getElementById("strPatronCode").value,
+            strFixDueDate: document.getElementById("strCheckinDate").value,
+            intType: 1,
+            intAutoPaid: 0,
+            strCopyNumbers: document.getElementById("strCopyNumber").value,
+            strCheckInDate: document.getElementById("strCheckinDate").value
+        };
+        $.ajax({
+            url: "CheckIn/CheckInByDKCB",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
+            },
+            error: function (errormessage) {
+                console.log("error");
+            }
+        });
     }
 
     function checkinbyDKCBs() {
@@ -274,11 +328,15 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
             },
             error: function (errormessage) {
                 console.log("error");
             }
         });
     }
+
 </script>
 

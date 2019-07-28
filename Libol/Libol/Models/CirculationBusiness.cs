@@ -44,10 +44,10 @@ namespace Libol.Models
                 new object[] { LibraryID, LocationID, Type, Status, InYear, UserID }).ToList();
             return list;
         }
-        public List<SP_GET_LOCKEDPATRONS_Result> GET_SP_GET_LOCKEDPATRONS_LIST(string PatronCode, string LockDateFrom, string LockDateTo, int CollegeID)
+        public List<SP_GET_LOCKEDPATRONS_Result> GET_SP_GET_LOCKEDPATRONS_LIST(string PatronCode, string Note, string LockDateFrom, string LockDateTo, int CollegeID)
         {
-            List<SP_GET_LOCKEDPATRONS_Result> list = db.Database.SqlQuery<SP_GET_LOCKEDPATRONS_Result>("FPT_GET_PATRON_LOCK_STATISTIC {0}, {1}, {2}, {3}",
-                new object[] { PatronCode, LockDateFrom, LockDateTo, CollegeID }).ToList();
+            List<SP_GET_LOCKEDPATRONS_Result> list = db.Database.SqlQuery<SP_GET_LOCKEDPATRONS_Result>("FPT_GET_PATRON_LOCK_STATISTIC {0}, {1}, {2}, {3}, {4}",
+                new object[] { PatronCode, Note, LockDateFrom, LockDateTo, CollegeID }).ToList();
             return list;
         }
         public List<SP_LOCK_PATRON_CARD_Result> GET_SP_LOCK_PATRON_CARD_LIST(string strPatronCode, Nullable<int> intLockedDays, string strStartedDate, string strNote)

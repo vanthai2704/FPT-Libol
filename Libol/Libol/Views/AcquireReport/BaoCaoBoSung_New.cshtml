@@ -6,6 +6,7 @@
 }
 
 <head>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css">
     <link rel="stylesheet" href="~/Content/PagingStyle.css" />
     <script src="~/Scripts/TotalMoneyToWords.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
@@ -14,7 +15,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css">
     <script>
         $(document).ready(function () {
-            $('table.display').DataTable({
+            var table = $('#MainTable1').DataTable({
+                // pageLength: 50,
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 //lengthChange: false,
                 buttons: [
@@ -27,162 +29,162 @@
                     'pdf',
                     'colvis'
                 ],
+                info: false,
+                paging: false,
+                searching: false,
             });
-            //var table = $('#MainTable1').DataTable({
-            //    // pageLength: 50,
-            //    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            //    //lengthChange: false,
-            //    buttons: [
-            //        {
-            //            extend: 'print',
-            //            title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
-            //        },
-            //        'excel',
-            //        'csv',
-            //        'pdf',
-            //        'colvis'
-            //    ],
-            //});
 
-            //$("#ExcelTo").on("click", function () {
-            //    table.button('.buttons-excel').trigger();
-            //});
+            $("#ExcelTo").on("click", function () {
+                table.button('.buttons-excel').trigger();
+            });
 
-            //$("#Print").on("click", function () {
-            //    table.button('.buttons-print').trigger();
-            //});
+            $("#Print").on("click", function () {
+                table.button('.buttons-print').trigger();
+            });
         });
     </script>
-    @*<script>
-            $(document).ready(function () {
-                var table2 = $('#MainTable2').DataTable({
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    buttons: [
-                        {
-                            extend: 'print',
-                            title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
-                        },
-                        'excel',
-                        'csv',
-                        'pdf',
-                        'colvis'
-                    ],
-                    dom: '<"toolbar">frtip'
-                });
-
-                $("#ExcelTo").on("click", function () {
-                    table2.button('.buttons-excel').trigger();
-                });
-
-                $("#Print").on("click", function () {
-                    table2.button('.buttons-print').trigger();
-                });
+    <script>
+        $(document).ready(function () {
+            var table2 = $('#MainTable2').DataTable({
+                //le
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                //lengthChange: false,
+                buttons: [
+                    {
+                        extend: 'print',
+                        title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
+                    },
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'colvis'
+                ],
+                info: false,
+                paging: false,
+                searching: false,
             });
-        </script>
-        <script>
-            $(document).ready(function () {
-                var table = $('#MainTable3').DataTable({
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    buttons: [
-                        {
-                            extend: 'print',
-                            title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
-                        },
-                        'excel',
-                        'csv',
-                        'pdf',
-                        'colvis'
-                    ],
-                    dom: '<"toolbar">frtip'
-                });
 
-                $("#ExcelTo").on("click", function () {
-                    table.button('.buttons-excel').trigger();
-                });
-
-                $("#Print").on("click", function () {
-                    table.button('.buttons-print').trigger();
-                });
+            $("#ExcelTo").on("click", function () {
+                table2.button('.buttons-excel').trigger();
             });
-        </script>
-        <script>
-            $(document).ready(function () {
-                var table = $('#MainTable4').DataTable({
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    buttons: [
-                        {
-                            extend: 'print',
-                            title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
-                        },
-                        'excel',
-                        'csv',
-                        'pdf',
-                        'colvis'
-                    ],
-                    dom: '<"toolbar">frtip'
-                });
 
-                $("#ExcelTo").on("click", function () {
-                    table.button('.buttons-excel').trigger();
-                });
-
-                $("#Print").on("click", function () {
-                    table.button('.buttons-print').trigger();
-                });
+            $("#Print").on("click", function () {
+                table2.button('.buttons-print').trigger();
             });
-        </script>
-        <script>
-            $(document).ready(function () {
-                var table = $('#MainTable5').DataTable({
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    buttons: [
-                        {
-                            extend: 'print',
-                            title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
-                        },
-                        'excel',
-                        'csv',
-                        'pdf',
-                        'colvis'
-                    ],
-                    dom: '<"toolbar">frtip'
-                });
-
-                $("#ExcelTo").on("click", function () {
-                    table.button('.buttons-excel').trigger();
-                });
-
-                $("#Print").on("click", function () {
-                    table.button('.buttons-print').trigger();
-                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#MainTable3').DataTable({
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                buttons: [
+                    {
+                        extend: 'print',
+                        title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
+                    },
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'colvis'
+                ],
+                info: false,
+                paging: false,
+                searching: false,
             });
-        </script>
-        <script>
-            $(document).ready(function () {
-                var table = $('#MainTable6').DataTable({
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    buttons: [
-                        {
-                            extend: 'print',
-                            title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
-                        },
-                        'excel',
-                        'csv',
-                        'pdf',
-                        'colvis'
-                    ],
-                    dom: '<"toolbar">frtip'
-                });
 
-                $("#ExcelTo").on("click", function () {
-                    table.button('.buttons-excel').trigger();
-                });
-
-                $("#Print").on("click", function () {
-                    table.button('.buttons-print').trigger();
-                });
+            $("#ExcelTo").on("click", function () {
+                table.button('.buttons-excel').trigger();
             });
-        </script>*@
+
+            $("#Print").on("click", function () {
+                table.button('.buttons-print').trigger();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#MainTable4').DataTable({
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                buttons: [
+                    {
+                        extend: 'print',
+                        title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
+                    },
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'colvis'
+                ],
+                info: false,
+                paging: false,
+                searching: false,
+            });
+
+            $("#ExcelTo").on("click", function () {
+                table.button('.buttons-excel').trigger();
+            });
+
+            $("#Print").on("click", function () {
+                table.button('.buttons-print').trigger();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#MainTable5').DataTable({
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                buttons: [
+                    {
+                        extend: 'print',
+                        title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
+                    },
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'colvis'
+                ],
+                info: false,
+                paging: false,
+                searching: false,
+            });
+
+            $("#ExcelTo").on("click", function () {
+                table.button('.buttons-excel').trigger();
+            });
+
+            $("#Print").on("click", function () {
+                table.button('.buttons-print').trigger();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#MainTable6').DataTable({
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                buttons: [
+                    {
+                        extend: 'print',
+                        title: function () { var printTitle = 'Danh mục sách nhập'; return printTitle; }
+                    },
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'colvis'
+                ],
+                info: false,
+                paging: false,
+                searching: false,
+            });
+
+            $("#ExcelTo").on("click", function () {
+                table.button('.buttons-excel').trigger();
+            });
+
+            $("#Print").on("click", function () {
+                table.button('.buttons-print').trigger();
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -771,7 +773,7 @@
     <div class="btn-group d-xl-flex justify-content-xl-center" role="group">
         <button id="print" type="button" style="margin-right:20px;">In</button>
         <button id="ExcelTo" type="button" style="margin-right:20px;">Lưu vào file excel</button>
-        <button id="export" type="button" style="margin-right:20px;" onclick="exportEleToWord('MainTable', 'BaoCaoDanhMucSachNhap')">Lưu vào file word 2</button>
+        <button id="export" type="button" style="margin-right:20px;">Lưu vào file word 2</button>
     </div>
     <script src="~/Scripts/ExportToWord.js"></script>
     <script type="text/javascript">
@@ -848,6 +850,7 @@
                 $('#pageNavPosition6').show();
             });
         });
+        
     </script>
 </body>
 

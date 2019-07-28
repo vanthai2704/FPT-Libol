@@ -53,7 +53,14 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
@@ -66,6 +73,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -183,6 +191,7 @@
     <Compile Include="Controllers\CatalogueController.cs" />
     <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ManagementController.cs" />
     <Compile Include="Controllers\OverdueListController.cs" />
     <Compile Include="Controllers\PatronController.cs" />
@@ -192,12 +201,23 @@
     <Compile Include="Controllers\PrintLabelController.cs" />
     <Compile Include="Controllers\RenewController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
+    <Compile Include="EntityResult\FPT_COUNT_COPYNUMBER_BY_ITEMID_Result.cs" />
+    <Compile Include="EntityResult\FPT_COUNT_COPYNUMBER_ONLOAN_Result.cs" />
+    <Compile Include="EntityResult\FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result.cs" />
+    <Compile Include="EntityResult\FPT_SP_CATA_SEARCH_MARC_FIELDS_Results.cs" />
+    <Compile Include="EntityResult\FPT_SP_GET_ITEM_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
     <Compile Include="EntityResult\SP_CATA_GET_MODIFIED_FIELDS_Result.cs" />
     <Compile Include="EntityResult\SP_CIR_OVERDUELIST_GETINFOR_Result.cs" />
     <Compile Include="EntityResult\SP_GET_CURRENT_CHECKIN_INFOR_Result.cs" />
     <Compile Include="EntityResult\SP_GET_TITLES_Result.cs" />
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_RECOMMEND.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result.cs">
@@ -457,7 +477,73 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CirculationBusiness.cs" />
+    <Compile Include="Models\FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_LANGUAGE_STATISTIC_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_ACQ_MONTH_STATISTIC_Result.cs" />
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_SH_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_ACQ_YEAR_STATISTIC_Result.cs" />
     <Compile Include="Models\FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
@@ -2131,8 +2217,6 @@
     <Compile Include="SupportClass\Wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\dataTables.checkboxes.min.js" />
-    <Content Include="App_Data\datatables.min.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -2272,6 +2356,10 @@
     </Content>
     <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
     <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
+    <None Include="log4net.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2383,10 +2471,15 @@
     <Content Include="Views\Patron\_SearchPatronDetail.cshtml" />
     <Content Include="Uploads\Mẫu import user libol...xls" />
     <Content Include="Views\Acquired\Index.cshtml" />
+    <Content Include="Views\AcquireReport\StatTaskbar.cshtml" />
+    <Content Include="Views\AcquireReport\GetStatTaskbar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
     <Content Include="Views\Renew\Renew.cshtml" />
+    <Content Include="Views\AcquireReport\GetLanguageStats.cshtml" />
+    <Content Include="Views\AcquireReport\StatisticTop20.cshtml" />
+    <Content Include="Views\AcquireReport\GetTop20Stats.cshtml" />
     <Content Include="Views\Shared\Permisssion.cshtml" />
     <Content Include="Views\Renew\_searchToRenew.cshtml" />
     <Content Include="Views\OverdueList\OverdueList.cshtml" />
@@ -2398,7 +2491,9 @@
     <Content Include="Views\Acquisition\HoldingLocRemove.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="EntityResultRAS\" />
+    <Folder Include="Views\Error\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -2409,6 +2504,9 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -9,7 +9,7 @@ namespace Libol.Controllers
 {
     public class AcquiredController : Controller
     {
-        [AuthAttribute(ModuleID = 0, RightID = "0")]
+        [AuthAttribute(ModuleID = 4, RightID = "0")]
         public ActionResult Index()
         {
             return View();

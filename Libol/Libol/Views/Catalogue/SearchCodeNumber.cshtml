@@ -14,17 +14,17 @@
 <div id="container" class="container">
     <div class="row">
         <div class="col-sm-6 offset-sm-3 text-center">
-            <h2>Tim Kiem Bien Muc</h2>
+            <h2>Tìm Kiếm Biên Mục</h2>
             <div class="info-form">
                 <form action="" class="form-inlin justify-content-center">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="txtCode" placeholder="Ma Tai Lieu">
+                        <input type="text" class="form-control" id="txtCode" placeholder="Mã Tài Liệu">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="txtCN" placeholder="Ma DKCB">
+                        <input type="text" class="form-control" id="txtCN" placeholder="Mã ĐKCB">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="txtTT" placeholder="Nhan De Chinh">
+                        <input type="text" class="form-control" id="txtTT" placeholder="Nhan Đề Chính">
                     </div>
                     <button type="button" class="btn btn-success " onclick="Search()">Search</button>
                 </form>
@@ -56,7 +56,7 @@
             dataType: "json",
             success: function (inforList) {
                 Data = inforList;
-                $('#table').append("<tr class='table-success'><th scope='col'> Ma Tai Lieu</th ><th scope='col'>Nhan De</th></tr >")
+                $('#table').append("<tr class='table-success'><th scope='col'> Mã Tài Liệu</th ><th scope='col'>Nhan Đề</th></tr >")
                 for (var i = 0; i < inforList.length; ++i) {
                     var code;
                     if (inforList[i].FieldCode == '001') code = inforList[i].Content;
