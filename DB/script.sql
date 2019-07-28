@@ -4231,3 +4231,127 @@ AS
 	SET @strSql = @strSql + @strJoinSQL + ' WHERE ' +@strLikeSQL
 	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) + ' ORDER BY CPL.StartedDate DESC'
 EXEC (@stRSql)
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 07/28/2019 10:32:40 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<ducnv>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ DANH MỤC SÁCH NHẬP
+-- =============================================
+CREATE  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
+
+      @strFromDate VARCHAR(30),
+
+      @strToDate  VARCHAR(30),
+
+      @intLocationID    int,
+      
+      @intLibraryID int
+
+AS   
+
+      DECLARE @strSQL NVARCHAR(1000)
+
+      SET @strSQL=''
+
+      SET @strSQL=@strSQL + 'SELECT I.ID,I.Code, U.DKCB, F.Content 
+      FROM ITEM I
+      join FIELD200S F on I.ID=F.ITEMID
+join (SELECT distinct ItemID ,
+STUFF(( SELECT  '', '' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('''')
+), 1, 1, '''') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on I.ID = U.ItemID
+WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15) '
+
+      If @strFromDate<>''
+
+            SET @strSQL=@strSQL + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
+
+      If @strToDate<>''
+
+            SET @strSQL=@strSQL + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
+
+      If @intLocationID <>0
+
+            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+            
+       If @intLocationID =0
+
+            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+
+
+    --print(@strSQL)
+
+      EXEC(@strSQL)
+      
+      GO
+/****** Object:  StoredProcedure [dbo].[FPT_COUNT_COPYNUMBER_BY_ITEMID]    Script Date: 07/28/2019 10:38:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<ducnv>
+-- Create date: <Create Date,,>
+-- Description:	<ĐẾM SỐ LƯỢNG ĐANG KÝ CÁ BIỆT TRONG KHO,,>
+-- =============================================
+Create PROCEDURE [dbo].[FPT_COUNT_COPYNUMBER_BY_ITEMID] 
+@itemID int,
+ @intLocationID int,
+  @intLibraryID int
+	-- Add the parameters for the stored procedure here
+	
+AS
+DECLARE @strSQL NVARCHAR(1000)
+SET @strSQL=''
+
+      SET @strSQL=@strSQL +'SELECT COUNT(COPYNUMBER) as SLuong FROM HOLDING WHERE ITEMID = ' +convert(nvarchar,@itemID)
+
+	If @intLocationID <>0
+		 SET @strSQL=@strSQL +' AND  LocationID = ' +convert(nvarchar,@intLocationID)
+	If @intLocationID =0
+		SET @strSQL=@strSQL +' AND LibID = ' + convert(nvarchar,@intLibraryID)
+--print(@strSQL)
+
+      EXEC(@strSQL)
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_COUNT_COPYNUMBER_ONLOAN]    Script Date: 07/28/2019 10:41:12 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<DUCNV>
+-- Create date: <Create Date,,>
+-- Description:	<SỐ LƯỢNG ĐANG MƯỢN,,>
+-- =============================================
+Create PROCEDURE [dbo].[FPT_COUNT_COPYNUMBER_ONLOAN] 
+@itemID int,
+ @intLocationID int,
+  @intLibraryID int
+	-- Add the parameters for the stored procedure here
+	
+AS
+DECLARE @strSQL NVARCHAR(1000)
+SET @strSQL=''
+
+      SET @strSQL=@strSQL +'SELECT COUNT(COPYNUMBER) as SLuong FROM CIR_LOAN WHERE ITEMID = ' +convert(nvarchar,@itemID)
+
+	If @intLocationID <>0
+		 SET @strSQL=@strSQL + ' AND ITEMID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+	If @intLocationID =0
+		SET @strSQL=@strSQL + ' AND ITEMID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+--print(@strSQL)
+
+      EXEC(@strSQL)
