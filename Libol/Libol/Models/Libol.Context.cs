@@ -22420,6 +22420,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC1", strPatronCodeParameter, strNoteParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
         }
     
+
         public virtual ObjectResult<FPT_SP_GET_HOLDING_REMOVED_Result> FPT_SP_GET_HOLDING_REMOVED(string intLibID, string intLocID, string strShelf, string strCopyNumber, string strCallNumber, string strVolume, string strTitle)
         {
             var intLibIDParameter = intLibID != null ?
@@ -22593,6 +22594,62 @@ namespace Libol.Models
                 new ObjectParameter("strId", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_HOLDING_REMOVED_ITEM_DEL", strIdParameter);
+
+
+        public virtual int FPT_COUNT_COPYNUMBER_BY_ITEMID(Nullable<int> itemID, Nullable<int> intLocationID, Nullable<int> intLibraryID)
+        {
+            var itemIDParameter = itemID.HasValue ?
+                new ObjectParameter("itemID", itemID) :
+                new ObjectParameter("itemID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_COUNT_COPYNUMBER_BY_ITEMID", itemIDParameter, intLocationIDParameter, intLibraryIDParameter);
+        }
+    
+        public virtual int FPT_COUNT_COPYNUMBER_ONLOAN(Nullable<int> itemID, Nullable<int> intLocationID, Nullable<int> intLibraryID)
+        {
+            var itemIDParameter = itemID.HasValue ?
+                new ObjectParameter("itemID", itemID) :
+                new ObjectParameter("itemID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_COUNT_COPYNUMBER_ONLOAN", itemIDParameter, intLocationIDParameter, intLibraryIDParameter);
+        }
+    
+        public virtual int FPT_SP_GET_ITEM(string strFromDate, string strToDate, Nullable<int> intLocationID, Nullable<int> intLibraryID)
+        {
+            var strFromDateParameter = strFromDate != null ?
+                new ObjectParameter("strFromDate", strFromDate) :
+                new ObjectParameter("strFromDate", typeof(string));
+    
+            var strToDateParameter = strToDate != null ?
+                new ObjectParameter("strToDate", strToDate) :
+                new ObjectParameter("strToDate", typeof(string));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_GET_ITEM", strFromDateParameter, strToDateParameter, intLocationIDParameter, intLibraryIDParameter);
+
         }
     }
 }

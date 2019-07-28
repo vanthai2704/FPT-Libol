@@ -4234,12 +4234,11 @@ EXEC (@stRSql)
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED]    Script Date: 7/24/2019 02:50:55 PM ******/
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED]    Script Date: 07/28/2019 10:32:40 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
 
 -- Purpose: Select holidng_remove information
 -- In: some infor
@@ -4322,8 +4321,6 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-
 -- Purpose: Select holidng_remove information
 -- In: some infor
 -- Creator: Vantd
@@ -4416,13 +4413,75 @@ PRINT @strSQL + @strTable + @strWhere + @strPaging
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING_v2]    Script Date: 7/28/2019 04:21:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 7/28/2019 04:21:02 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+-- =============================================
+-- Author:		<ducnv>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ DANH MỤC SÁCH NHẬP
+-- =============================================
+CREATE  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
 
+      @strFromDate VARCHAR(30),
+
+      @strToDate  VARCHAR(30),
+
+      @intLocationID    int,
+      
+      @intLibraryID int
+
+AS   
+
+      DECLARE @strSQL NVARCHAR(1000)
+
+      SET @strSQL=''
+
+      SET @strSQL=@strSQL + 'SELECT I.ID,I.Code, U.DKCB, F.Content 
+      FROM ITEM I
+      join FIELD200S F on I.ID=F.ITEMID
+join (SELECT distinct ItemID ,
+STUFF(( SELECT  '', '' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('''')
+), 1, 1, '''') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on I.ID = U.ItemID
+WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15) '
+
+      If @strFromDate<>''
+
+            SET @strSQL=@strSQL + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
+
+      If @strToDate<>''
+
+            SET @strSQL=@strSQL + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
+
+      If @intLocationID <>0
+
+            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+            
+       If @intLocationID =0
+
+            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+
+
+    --print(@strSQL)
+
+      EXEC(@strSQL)
+      
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING_v2]    Script Date: 7/28/2019 04:21:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 -- Purpose: Select holidng_remove information
 -- In: some infor
 -- Creator: Vantd
@@ -4598,13 +4657,44 @@ PRINT @strSQL + @strTable + @strWhere
 
 
 
+
+      GO
+/****** Object:  StoredProcedure [dbo].[FPT_COUNT_COPYNUMBER_BY_ITEMID]    Script Date: 07/28/2019 10:38:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<ducnv>
+-- Create date: <Create Date,,>
+-- Description:	<ĐẾM SỐ LƯỢNG ĐANG KÝ CÁ BIỆT TRONG KHO,,>
+-- =============================================
+Create PROCEDURE [dbo].[FPT_COUNT_COPYNUMBER_BY_ITEMID] 
+@itemID int,
+ @intLocationID int,
+  @intLibraryID int
+	-- Add the parameters for the stored procedure here
+	
+AS
+DECLARE @strSQL NVARCHAR(1000)
+SET @strSQL=''
+
+      SET @strSQL=@strSQL +'SELECT COUNT(COPYNUMBER) as SLuong FROM HOLDING WHERE ITEMID = ' +convert(nvarchar,@itemID)
+
+	If @intLocationID <>0
+		 SET @strSQL=@strSQL +' AND  LocationID = ' +convert(nvarchar,@intLocationID)
+	If @intLocationID =0
+		SET @strSQL=@strSQL +' AND LibID = ' + convert(nvarchar,@intLibraryID)
+--print(@strSQL)
+
+      EXEC(@strSQL)
+
+
 GO
 /****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_WITH_ID]    Script Date: 7/24/2019 02:53:23 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_WITH_ID]
 	@strID	NVARCHAR(100)
 	
@@ -4649,3 +4739,34 @@ COMMIT TRAN
 
 
 
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_COUNT_COPYNUMBER_ONLOAN]    Script Date: 07/28/2019 10:41:12 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		<DUCNV>
+-- Create date: <Create Date,,>
+-- Description:	<SỐ LƯỢNG ĐANG MƯỢN,,>
+-- =============================================
+Create PROCEDURE [dbo].[FPT_COUNT_COPYNUMBER_ONLOAN] 
+@itemID int,
+ @intLocationID int,
+  @intLibraryID int
+	-- Add the parameters for the stored procedure here
+	
+AS
+DECLARE @strSQL NVARCHAR(1000)
+SET @strSQL=''
+
+      SET @strSQL=@strSQL +'SELECT COUNT(COPYNUMBER) as SLuong FROM CIR_LOAN WHERE ITEMID = ' +convert(nvarchar,@itemID)
+
+	If @intLocationID <>0
+		 SET @strSQL=@strSQL + ' AND ITEMID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+	If @intLocationID =0
+		SET @strSQL=@strSQL + ' AND ITEMID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+--print(@strSQL)
+
+      EXEC(@strSQL)

@@ -1,4 +1,5 @@
-﻿using Libol.Models;
+﻿using Libol.EntityResult;
+using Libol.Models;
 using Libol.SupportClass;
 using System;
 using System.Collections.Generic;
@@ -41,22 +42,6 @@ namespace Libol.Controllers
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
             ViewData["lib"] = lib;
-            //String s = "";
-            //List<SelectListItem> loc = new List<SelectListItem>();
-            //if (s == null)
-            //{
-            //    loc.Add(new SelectListItem { Text = "Hay chon kho", Value = "" });
-            //}
-            //else
-            //{
-            //    int id = Convert.ToInt32(s);
-            //    loc.Add(new SelectListItem { Text = "All", Value = "*"});
-            //    foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL(UserID, id).ToList())
-            //    {
-            //        loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
-            //    }
-            //    ViewData["locId"] = loc.ToList();
-            //}
             return View();
         }
 
@@ -110,11 +95,6 @@ namespace Libol.Controllers
                             }
                             if (check != "")
                             {
-                                //Temper tmpt = new Temper();
-                                //string p = item.NgayChungTu.ToString();
-                                // string p2 = item.NgayBoSung.ToString();
-                                //string pp = item.DonGia.ToString();
-                                //List<Temper> tpDKCB = new List<Temper>();
                                 String tpDKCB = item.DKCB;
                                 foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
                                 {
@@ -533,7 +513,7 @@ namespace Libol.Controllers
                     String[] arrDKfull = new string[slDauphay + 1];
                     string h = item.DKCB;
                     String ht = "";
-                    String htt = "";
+                    String strghep = "";
                     string lastStr = "";
 
                     if (slnhap > 1)
@@ -565,7 +545,6 @@ namespace Libol.Controllers
                         int kp = 0;
                         for (int m = 0; m < arrDKCBs.Length; m++)
                         {
-                            bool cked = true;
                             int n = m + 1;
                             int intM = 0;
                             int intN = 0;
@@ -604,12 +583,12 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + "-" + ganString;
+                                            strghep = strghep + "-" + ganString;
 
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + "-" + ganString + ",";
+                                            strghep = strghep + "-" + ganString + ",";
 
                                         }
 
@@ -619,11 +598,11 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + "," + ganString;
+                                            strghep = strghep + "," + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + ganString + ",";
+                                            strghep = strghep + ganString + ",";
                                         }
                                     }
                                 }
@@ -644,11 +623,11 @@ namespace Libol.Controllers
                                         if (indexGan == ck)
                                         {
 
-                                            htt = htt + hieu + "-" + ganString;
+                                            strghep = strghep + hieu + "-" + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + hieu + "-" + ganString + ",";
+                                            strghep = strghep + hieu + "-" + ganString + ",";
                                         }
 
                                     }
@@ -657,11 +636,11 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + "," + ganString;
+                                            strghep = strghep + "," + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + ganString + ",";
+                                            strghep = strghep + ganString + ",";
                                         }
                                     }
                                 }
@@ -678,14 +657,9 @@ namespace Libol.Controllers
                                     if (indexGan > 0)
                                     {
                                         int ck = arrDKCBs.Length;
-                                        if (indexGan == ck)
+                                         if (indexGan < ck)
                                         {
-                                            htt = htt;
-
-                                        }
-                                        else if (indexGan < ck)
-                                        {
-                                            htt = htt + "-" + ganString + ",";
+                                            strghep = strghep + "-" + ganString + ",";
 
                                         }
 
@@ -695,11 +669,11 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + ",";
+                                            strghep = strghep + ",";
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + ",";
+                                            strghep = strghep + ",";
                                         }
                                     }
                                 }
@@ -720,11 +694,11 @@ namespace Libol.Controllers
                                         if (indexGan == ck)
                                         {
 
-                                            htt = htt + hieu + "-" + ganString;
+                                            strghep = strghep + hieu + "-" + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + hieu + "-" + ganString + ",";
+                                            strghep = strghep + hieu + "-" + ganString + ",";
                                         }
 
                                     }
@@ -733,11 +707,11 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + "," + ganString;
+                                            strghep = strghep + "," + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + ganString + ",";
+                                            strghep = strghep + ganString + ",";
                                         }
                                     }
                                 }
@@ -750,12 +724,12 @@ namespace Libol.Controllers
                         u = dem;
 
                         //CUOI
-                        if (htt.LastIndexOf(',') > 0)
+                        if (strghep.LastIndexOf(',') > 0)
                         {
-                            htt = htt.Substring(0, htt.LastIndexOf(','));
+                            strghep = strghep.Substring(0, strghep.LastIndexOf(','));
                         }
 
-                        item.DKCB = lastStr + htt;
+                        item.DKCB = lastStr + strghep;
 
                     }
                     else if (slnhap == 1)
@@ -954,7 +928,7 @@ namespace Libol.Controllers
                     String[] arrDKfull = new string[slDauphay + 1];
                     string h = item.DKCB;
                     String ht = "";
-                    String htt = "";
+                    String strghep = "";
                     string lastStr = "";
 
                     if (slnhap > 1)
@@ -986,7 +960,6 @@ namespace Libol.Controllers
                         int kp = 0;
                         for (int m = 0; m < arrDKCBs.Length; m++)
                         {
-                            bool cked = true;
                             int n = m + 1;
                             int intM = 0;
                             int intN = 0;
@@ -1025,12 +998,12 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + "-" + ganString;
+                                            strghep = strghep + "-" + ganString;
 
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + "-" + ganString + ",";
+                                            strghep = strghep + "-" + ganString + ",";
 
                                         }
 
@@ -1040,11 +1013,11 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + "," + ganString;
+                                            strghep = strghep + "," + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + ganString + ",";
+                                            strghep = strghep + ganString + ",";
                                         }
                                     }
                                 }
@@ -1065,11 +1038,11 @@ namespace Libol.Controllers
                                         if (indexGan == ck)
                                         {
 
-                                            htt = htt + hieu + "-" + ganString;
+                                            strghep = strghep + hieu + "-" + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + hieu + "-" + ganString + ",";
+                                            strghep = strghep + hieu + "-" + ganString + ",";
                                         }
 
                                     }
@@ -1078,11 +1051,11 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + "," + ganString;
+                                            strghep = strghep + "," + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + ganString + ",";
+                                            strghep = strghep + ganString + ",";
                                         }
                                     }
                                 }
@@ -1099,14 +1072,9 @@ namespace Libol.Controllers
                                     if (indexGan > 0)
                                     {
                                         int ck = arrDKCBs.Length;
-                                        if (indexGan == ck)
+                                        if (indexGan < ck)
                                         {
-                                            htt = htt;
-
-                                        }
-                                        else if (indexGan < ck)
-                                        {
-                                            htt = htt + "-" + ganString + ",";
+                                            strghep = strghep + "-" + ganString + ",";
 
                                         }
 
@@ -1116,11 +1084,11 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + ",";
+                                            strghep = strghep + ",";
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + ",";
+                                            strghep = strghep + ",";
                                         }
                                     }
                                 }
@@ -1141,11 +1109,11 @@ namespace Libol.Controllers
                                         if (indexGan == ck)
                                         {
 
-                                            htt = htt + hieu + "-" + ganString;
+                                            strghep = strghep + hieu + "-" + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + hieu + "-" + ganString + ",";
+                                            strghep = strghep + hieu + "-" + ganString + ",";
                                         }
 
                                     }
@@ -1154,11 +1122,11 @@ namespace Libol.Controllers
                                         int ck = arrDKCBs.Length;
                                         if (indexGan == ck)
                                         {
-                                            htt = htt + "," + ganString;
+                                            strghep = strghep + "," + ganString;
                                         }
                                         else if (indexGan < ck)
                                         {
-                                            htt = htt + ganString + ",";
+                                            strghep = strghep + ganString + ",";
                                         }
                                     }
                                 }
@@ -1171,12 +1139,12 @@ namespace Libol.Controllers
                         u = dem;
 
                         //CUOI
-                        if (htt.LastIndexOf(',') > 0)
+                        if (strghep.LastIndexOf(',') > 0)
                         {
-                            htt = htt.Substring(0, htt.LastIndexOf(','));
+                            strghep = strghep.Substring(0, strghep.LastIndexOf(','));
                         }
 
-                        item.DKCB = lastStr + htt;
+                        item.DKCB = lastStr + strghep;
 
                     }
                     else if (slnhap == 1)
@@ -1545,7 +1513,6 @@ namespace Libol.Controllers
                 ViewBag.DisVND = display1.ToList();
 
             }
-            List<Temper> test = null;
             //check null
             if (display2.Count == 0)
             {
@@ -1736,6 +1703,7 @@ namespace Libol.Controllers
                     foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
                     {
                         // tpDKCB.Add(ites.DKCB, ites.ItemID);
+
                         tpDKCB = ites.DKCB;
                     }
                     int uCount = 0;
@@ -1920,7 +1888,7 @@ namespace Libol.Controllers
                 String[] arrDKfull = new string[slDauphay + 1];
                 string h = item.DKCB;
                 String ht = "";
-                String htt = "";
+                String strghep = "";
                 string lastStr = "";
 
                 if (slnhap > 1)
@@ -1952,7 +1920,6 @@ namespace Libol.Controllers
                     int kp = 0;
                     for (int m = 0; m < arrDKCBs.Length; m++)
                     {
-                        bool cked = true;
                         int n = m + 1;
                         int intM = 0;
                         int intN = 0;
@@ -1991,12 +1958,12 @@ namespace Libol.Controllers
                                     int ck = arrDKCBs.Length;
                                     if (indexGan == ck)
                                     {
-                                        htt = htt + "-" + ganString;
+                                        strghep = strghep + "-" + ganString;
 
                                     }
                                     else if (indexGan < ck)
                                     {
-                                        htt = htt + "-" + ganString + ",";
+                                        strghep = strghep + "-" + ganString + ",";
 
                                     }
 
@@ -2006,11 +1973,11 @@ namespace Libol.Controllers
                                     int ck = arrDKCBs.Length;
                                     if (indexGan == ck)
                                     {
-                                        htt = htt + "," + ganString;
+                                        strghep = strghep + "," + ganString;
                                     }
                                     else if (indexGan < ck)
                                     {
-                                        htt = htt + ganString + ",";
+                                        strghep = strghep + ganString + ",";
                                     }
                                 }
                             }
@@ -2031,11 +1998,11 @@ namespace Libol.Controllers
                                     if (indexGan == ck)
                                     {
 
-                                        htt = htt + hieu + "-" + ganString;
+                                        strghep = strghep + hieu + "-" + ganString;
                                     }
                                     else if (indexGan < ck)
                                     {
-                                        htt = htt + hieu + "-" + ganString + ",";
+                                        strghep = strghep + hieu + "-" + ganString + ",";
                                     }
 
                                 }
@@ -2044,11 +2011,11 @@ namespace Libol.Controllers
                                     int ck = arrDKCBs.Length;
                                     if (indexGan == ck)
                                     {
-                                        htt = htt + "," + ganString;
+                                        strghep = strghep + "," + ganString;
                                     }
                                     else if (indexGan < ck)
                                     {
-                                        htt = htt + ganString + ",";
+                                        strghep = strghep + ganString + ",";
                                     }
                                 }
                             }
@@ -2065,14 +2032,9 @@ namespace Libol.Controllers
                                 if (indexGan > 0)
                                 {
                                     int ck = arrDKCBs.Length;
-                                    if (indexGan == ck)
+                                    if (indexGan < ck)
                                     {
-                                        htt = htt;
-
-                                    }
-                                    else if (indexGan < ck)
-                                    {
-                                        htt = htt + "-" + ganString + ",";
+                                        strghep = strghep + "-" + ganString + ",";
 
                                     }
 
@@ -2082,11 +2044,11 @@ namespace Libol.Controllers
                                     int ck = arrDKCBs.Length;
                                     if (indexGan == ck)
                                     {
-                                        htt = htt + ",";
+                                        strghep = strghep + ",";
                                     }
                                     else if (indexGan < ck)
                                     {
-                                        htt = htt + ",";
+                                        strghep = strghep + ",";
                                     }
                                 }
                             }
@@ -2107,11 +2069,11 @@ namespace Libol.Controllers
                                     if (indexGan == ck)
                                     {
 
-                                        htt = htt + hieu + "-" + ganString;
+                                        strghep = strghep + hieu + "-" + ganString;
                                     }
                                     else if (indexGan < ck)
                                     {
-                                        htt = htt + hieu + "-" + ganString + ",";
+                                        strghep = strghep + hieu + "-" + ganString + ",";
                                     }
 
                                 }
@@ -2120,11 +2082,11 @@ namespace Libol.Controllers
                                     int ck = arrDKCBs.Length;
                                     if (indexGan == ck)
                                     {
-                                        htt = htt + "," + ganString;
+                                        strghep = strghep + "," + ganString;
                                     }
                                     else if (indexGan < ck)
                                     {
-                                        htt = htt + ganString + ",";
+                                        strghep = strghep + ganString + ",";
                                     }
                                 }
                             }
@@ -2137,12 +2099,12 @@ namespace Libol.Controllers
                     u = dem;
 
                     //CUOI
-                    if (htt.LastIndexOf(',') > 0)
+                    if (strghep.LastIndexOf(',') > 0)
                     {
-                        htt = htt.Substring(0, htt.LastIndexOf(','));
+                        strghep = strghep.Substring(0, strghep.LastIndexOf(','));
                     }
 
-                    item.DKCB = lastStr + htt;
+                    item.DKCB = lastStr + strghep;
 
                 }
                 else if (slnhap == 1)
@@ -2514,7 +2476,6 @@ namespace Libol.Controllers
                 ViewBag.DisVND = display1.ToList();
 
             }
-            List<Temper> test = null;
             //check null
             if (display2.Count == 0)
             {
@@ -2566,84 +2527,6 @@ namespace Libol.Controllers
             return View();
         }
 
-        protected void export_Click(object sender, EventArgs e)
-        {
-            DataTable dtSource = new DataTable("Temper");
-            if (ViewBag.DisVND != null)
-            {
-                foreach (var item in ViewBag.DisVND)
-                {
-                    dtSource.Rows.Add(new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien));
-                }
-            }
-
-            GenerateWord(dtSource);
-        }
-
-        public static void GenerateWord(DataTable dtSource)
-        {
-            StringBuilder sbDocBody = new StringBuilder(); ;
-            try
-            {
-                // Declare Styles
-                sbDocBody.Append("<style>");
-                sbDocBody.Append(".Header {  background-color:Navy; color:#ffffff; font-weight:bold;font-family:Verdana; font-size:12px;}");
-                sbDocBody.Append(".SectionHeader { background-color:#8080aa; color:#ffffff; font-family:Verdana; font-size:12px;font-weight:bold;}");
-                sbDocBody.Append(".Content { background-color:#ccccff; color:#000000; font-family:Verdana; font-size:12px;text-align:left}");
-                sbDocBody.Append(".Label { background-color:#ccccee; color:#000000; font-family:Verdana; font-size:12px; text-align:right;}");
-                sbDocBody.Append("</style>");
-                //
-                StringBuilder sbContent = new StringBuilder(); ;
-                sbDocBody.Append("<br><table align=\"center\" cellpadding=1 cellspacing=0 style=\"background-color:#000000;\">");
-                sbDocBody.Append("<tr><td width=\"500\">");
-                sbDocBody.Append("<table width=\"100%\" cellpadding=1 cellspacing=2 style=\"background-color:#ffffff;\">");
-                //
-                if (dtSource.Rows.Count > 0)
-                {
-                    sbDocBody.Append("<tr><td>");
-                    sbDocBody.Append("<table width=\"600\" cellpadding=\"0\" cellspacing=\"2\"><tr><td>");
-                    //
-                    // Add Column Headers
-                    sbDocBody.Append("<tr><td width=\"25\"> </td></tr>");
-                    sbDocBody.Append("<tr>");
-                    sbDocBody.Append("<td> </td>");
-                    for (int i = 0; i < dtSource.Columns.Count; i++)
-                    {
-                        sbDocBody.Append("<td class=\"Header\" width=\"120\">" + dtSource.Columns[i].ToString().Replace(".", "<br>") + "</td>");
-                    }
-                    sbDocBody.Append("</tr>");
-                    //
-                    // Add Data Rows
-                    for (int i = 0; i < dtSource.Rows.Count; i++)
-                    {
-                        sbDocBody.Append("<tr>");
-                        sbDocBody.Append("<td> </td>");
-                        for (int j = 0; j < dtSource.Columns.Count; j++)
-                        {
-                            sbDocBody.Append("<td class=\"Content\">" + dtSource.Rows[i][j].ToString() + "</td>");
-                        }
-                        sbDocBody.Append("</tr>");
-                    }
-                    sbDocBody.Append("</table>");
-                    sbDocBody.Append("</td></tr></table>");
-                    sbDocBody.Append("</td></tr></table>");
-                }
-                //
-                //HttpContext.Current.Response.Clear();
-                //HttpContext.Current.Response.Buffer = true;
-                ////
-                //HttpContext.Current.Response.AppendHeader("Content-Type", "application/msword");
-                //HttpContext.Current.Response.AppendHeader("Content-disposition", "attachment; filename=EmployeeDetails.doc");
-                //HttpContext.Current.Response.Write(sbDocBody.ToString());
-                //HttpContext.Current.Response.End();
-            }
-            catch (Exception ex)
-            {
-                // Ignore this error as this is caused due to termination of the Response Stream.
-            }
-        }
 
         public ActionResult StatisticTop20()
         {            
@@ -2761,6 +2644,403 @@ namespace Libol.Controllers
             ViewBag.Category = list.Name;
             ViewBag.Total = le.FPT_ACQ_LANGUAGE_STATISTIC(0).First();
             return PartialView("GetTop20Stats");           
+        }
+
+        //statistic book in
+        public ActionResult StatTaskbar()
+        {
+            List<SelectListItem> lib = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            };
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
+            return View();
+        }
+
+        public PartialViewResult GetStatTaskbar(string strLibID, string strLocID, string strFromDate, string strToDate)
+        {
+            int LibID = 0;
+            int LocID = 0;
+            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
+            List<FPT_SP_GET_ITEM_Result> listItem = new List<FPT_SP_GET_ITEM_Result>();
+            List<FPT_SP_GET_ITEM_Result> listIte = new List<FPT_SP_GET_ITEM_Result>();
+
+            listIte = ab.FPT_SP_GET_ITEM_LIST(strFromDate, strToDate, LocID, LibID).ToList();
+            foreach (var item in listIte)
+            {
+                int countCopy = 0;
+                int borrowNum = 0;
+                int remainingNum = 0;
+                string tGia = "";
+                string noiXB = "";
+                string nhaXB = "";
+                string namXB = "";
+                int nam = 0;
+                string StrTitle = "";
+                string Strdigit = "";
+                // countCopy = item.ID;
+                foreach (var coun in ab.FPT_COUNT_COPYNUMBER_BY_ITEMID_LIST(item.ID, LocID, LibID))
+                {
+                    countCopy = coun.SLuong;
+                }
+                //lay thong tin item
+                foreach (var items in ab.SP_GET_ITEM_INFOR_LIST(item.ID))
+                {
+                    if (items.FieldCode == "100")
+                    {
+                        tGia = GetContent(items.Content);
+                    }
+                    if (items.FieldCode == "044")
+                    {
+                        noiXB = GetContent(items.Content);
+                        if (noiXB == "cc")
+                        {
+                            noiXB = "";
+                        }
+                    }
+                    if (items.FieldCode == "260")
+                    {
+                        int vitriC = -1;
+                        int vitriB = -1;
+                        vitriC = items.Content.IndexOf("$c");
+                        vitriB = items.Content.IndexOf("$b");
+                        if (vitriC > -1)
+                        {
+                            vitriC = vitriC + 1;
+                            namXB = items.Content.Substring(vitriC + 1);
+                            foreach (char value in namXB)
+                            {
+                                bool digit = char.IsDigit(value);
+                                if (digit == true)
+                                {
+                                    Strdigit = Strdigit + value.ToString();
+                                }
+                            }
+                            namXB = Strdigit;
+                            nam = Convert.ToInt32(namXB);
+                            if (vitriB > -1)
+                            {
+                                nhaXB = items.Content.Substring(vitriB, vitriC - vitriB - 2);
+                                nhaXB = GetContent(nhaXB);
+                            }
+                        }
+                        else
+                        {
+                            if (vitriB > -1)
+                            {
+                                nhaXB = items.Content.Substring(vitriB + 2);
+                                nhaXB = GetContent(nhaXB);
+                            }
+                            //nhaXB = strtemt;
+                        }
+
+                    }
+                    StrTitle = item.Content;
+                    int vitriP = -1;
+                    vitriP = StrTitle.IndexOf("$p");
+                    //int vitriN = -1;
+
+                    if (vitriP > -1)
+                    {
+                        StrTitle = StrTitle.Substring(0, vitriP - 1);
+                    }
+                    int vitriTitleC = -1;
+                    vitriTitleC = StrTitle.IndexOf("$c");
+                    if (vitriTitleC > -1)
+                    {
+                        StrTitle = StrTitle.Substring(0, vitriTitleC - 1);
+                    }
+
+                    StrTitle = GetContent(StrTitle);
+
+
+
+                }
+
+                //so luong muon
+                foreach (var liItem in ab.FPT_COUNT_COPYNUMBER_ONLOAN_LIST(item.ID, LocID, LibID))
+                {
+                    borrowNum = liItem.Sluong;
+                }
+                remainingNum = countCopy - borrowNum;
+                listItem.Add(new FPT_SP_GET_ITEM_Result(item.ID, StrTitle, item.Code, tGia, noiXB, nhaXB, nam, countCopy, item.DKCB, borrowNum, remainingNum));
+            }
+
+
+
+            //gop DKCB
+            int slDauphay = 0;
+            int u = 1;
+            int dem = 1;
+            int indexGan = 0;
+            int demso = 0;
+            string ganString = "";
+            int slnhap = 0;
+            //gộp DKCB
+            foreach (var item in listItem)
+            {
+                string DKCBs = "";
+                DKCBs = item.DKCB;
+                char key = ',';
+                for (int i = 0; i < DKCBs.Length; i++)
+                {
+                    if (DKCBs[i] == key)
+                    {
+                        slDauphay++;
+
+                    }
+
+                }
+                slnhap = item.soluong;
+                String[] arrDK = new string[slDauphay + 1];
+                String[] arrDKfull = new string[slDauphay + 1];
+                string h = item.DKCB;
+                String ht = "";
+                String strghep = "";
+                string lastStr = "";
+
+                if (slnhap > 1)
+                {
+                    int indexDau = DKCBs.IndexOf(',');
+                    if (indexDau > 0)
+                    {
+                        ht = DKCBs.Substring(0, indexDau);
+                        lastStr = DKCBs.Substring(0, indexDau);
+                    }
+                    int bienphu = 0;
+                    string[] arrDKCBs = new string[slDauphay + 1];
+                    for (int i = 0; i < slDauphay; i++)
+                    {
+                        int checkDau = DKCBs.IndexOf(',');
+                        if (checkDau > 0)
+                        {
+                            string strTempt = DKCBs.Substring(0, checkDau);
+                            DKCBs = DKCBs.Substring(checkDau + 1);
+                            strTempt = strTempt.Substring(strTempt.Length - 6, 6);
+                            arrDKCBs[i] = strTempt;
+                        }
+                        bienphu++;
+
+                    }
+                    arrDKCBs[bienphu] = DKCBs.Substring(DKCBs.Length - 6, 6);
+
+                    //PHAN CU
+                    int kp = 0;
+                    for (int m = 0; m < arrDKCBs.Length; m++)
+                    {
+                        int n = m + 1;
+                        int intM = 0;
+                        int intN = 0;
+                        if (n < arrDKCBs.Length)
+                        {
+                            string strM = arrDKCBs[m];
+                            intM = Int32.Parse(strM);
+                            string strN = arrDKCBs[n];
+                            intN = Int32.Parse(strN); ;
+                            kp = intM + 1;
+                        }
+
+                        if (intN == kp)
+                        {
+                            if (n < arrDKCBs.Length)
+                            {
+                                indexGan = n;
+                                ganString = arrDKCBs[n];
+                                ganString = ganString.Substring(4, 2);
+                                demso++;
+                            }
+                            else
+                            {
+
+                            }
+                        }
+                        else if (n == arrDKCBs.Length - 1)
+                        {
+                            //lastStr = lastStr.Substring(lastStr.Length - 6, 6);
+                            if (lastStr == ht)
+                            {
+                                ganString = arrDKCBs[m];
+                                ganString = ganString.Substring(4, 2);
+                                if (indexGan > 0)
+                                {
+                                    int ck = arrDKCBs.Length;
+                                    if (indexGan == ck)
+                                    {
+                                        strghep = strghep + "-" + ganString;
+
+                                    }
+                                    else if (indexGan < ck)
+                                    {
+                                        strghep = strghep + "-" + ganString + ",";
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    int ck = arrDKCBs.Length;
+                                    if (indexGan == ck)
+                                    {
+                                        strghep = strghep + "," + ganString;
+                                    }
+                                    else if (indexGan < ck)
+                                    {
+                                        strghep = strghep + ganString + ",";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ganString = arrDKCBs[m];
+                                ganString = ganString.Substring(4, 2);
+                                int sDoi = Int32.Parse(ganString);
+                                int hieu = 0;
+                                hieu = sDoi - demso;
+                                if (hieu < 0)
+                                {
+                                    hieu = hieu - (2 * hieu);
+                                }
+                                if (indexGan > 0)
+                                {
+                                    int ck = arrDKCBs.Length;
+                                    if (indexGan == ck)
+                                    {
+
+                                        strghep = strghep + hieu + "-" + ganString;
+                                    }
+                                    else if (indexGan < ck)
+                                    {
+                                        strghep = strghep + hieu + "-" + ganString + ",";
+                                    }
+
+                                }
+                                else
+                                {
+                                    int ck = arrDKCBs.Length;
+                                    if (indexGan == ck)
+                                    {
+                                        strghep = strghep + "," + ganString;
+                                    }
+                                    else if (indexGan < ck)
+                                    {
+                                        strghep = strghep + ganString + ",";
+                                    }
+                                }
+                            }
+                            ht = ganString;
+                            indexGan = 0;
+                            demso = 0;
+                        }
+                        else
+                        {
+                            if (lastStr == ht)
+                            {
+                                ganString = arrDKCBs[m];
+                                ganString = ganString.Substring(4, 2);
+                                if (indexGan > 0)
+                                {
+                                    int ck = arrDKCBs.Length;
+                                    if (indexGan < ck)
+                                    {
+                                        strghep = strghep + "-" + ganString + ",";
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    int ck = arrDKCBs.Length;
+                                    if (indexGan == ck)
+                                    {
+                                        strghep = strghep + ",";
+                                    }
+                                    else if (indexGan < ck)
+                                    {
+                                        strghep = strghep + ",";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ganString = arrDKCBs[m];
+                                ganString = ganString.Substring(4, 2);
+                                int sDoi = Int32.Parse(ganString);
+                                int hieu = 0;
+                                hieu = sDoi - demso;
+                                if (hieu < 0)
+                                {
+                                    hieu = hieu - (2 * hieu);
+                                }
+                                if (indexGan > 0)
+                                {
+                                    int ck = arrDKCBs.Length;
+                                    if (indexGan == ck)
+                                    {
+
+                                        strghep = strghep + hieu + "-" + ganString;
+                                    }
+                                    else if (indexGan < ck)
+                                    {
+                                        strghep = strghep + hieu + "-" + ganString + ",";
+                                    }
+
+                                }
+                                else
+                                {
+                                    int ck = arrDKCBs.Length;
+                                    if (indexGan == ck)
+                                    {
+                                        strghep = strghep + "," + ganString;
+                                    }
+                                    else if (indexGan < ck)
+                                    {
+                                        strghep = strghep + ganString + ",";
+                                    }
+                                }
+                            }
+                            ht = ganString;
+                            indexGan = 0;
+                            demso = 0;
+                        }
+                        //}
+                    }
+                    u = dem;
+
+                    //CUOI
+                    if (strghep.LastIndexOf(',') > 0)
+                    {
+                        strghep = strghep.Substring(0, strghep.LastIndexOf(','));
+                    }
+
+                    item.DKCB = lastStr + strghep;
+
+                }
+                else if (slnhap == 1)
+                {
+                    int hjk = 0;
+                    hjk = DKCBs.IndexOf(',');
+                    if (hjk == -1)
+                    {
+                        item.DKCB = DKCBs;
+                    }
+                    else
+                    {
+                        item.DKCB = DKCBs.Substring(0, hjk);
+                    }
+                    u++;
+
+                }
+
+                slDauphay = 0;
+            }
+
+            ViewBag.Result = listItem;
+            return PartialView("GetStatTaskbar");
         }
 
 
