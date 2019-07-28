@@ -44,7 +44,7 @@
             @{
                 foreach (CAT_DIC_DIRLEVEL levelDir in listLevelDir)
                 {
-                    <option value="@levelDir.Code">@levelDir.Description</option>
+                    <option value="@levelDir.Code"> @levelDir.Code : @levelDir.Description</option>
                 }
             }
         </select>
@@ -56,7 +56,7 @@
             @{
                 foreach (CAT_DIC_RECORDTYPE recordType in ListRecordType)
                 {
-                    <option value="@recordType.Code">@recordType.Description</option>
+            <option value="@recordType.Code">@recordType.Code : @recordType.Description</option>
                 }
             }
         </select>
@@ -225,6 +225,7 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (listTitle) {
+                debugger;
                 if (listTitle.length > 0) {
 
                     debugger;
