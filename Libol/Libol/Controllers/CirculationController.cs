@@ -5,6 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Reflection;
+using Excel = Microsoft.Office.Interop.Excel;
+
 using Libol.SupportClass;
 
 namespace Libol.Controllers
@@ -14,7 +18,7 @@ namespace Libol.Controllers
         LibolEntities le = new LibolEntities();
         CirculationBusiness cb = new CirculationBusiness();
         PatronBusiness pb = new PatronBusiness();
-        int UserID = 49;
+        //int UserID = 49;
         public string GetContent(string copynumber)
         {
             string validate = copynumber.Replace("$a", " ");
@@ -26,7 +30,7 @@ namespace Libol.Controllers
 
             return validate.Trim();
         }
-        // GET: Circulation
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult Index()
         {
             return View();
@@ -37,13 +41,14 @@ namespace Libol.Controllers
             return View();
         }
 
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult ReportOnLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.FPT_SP_CIR_LIB_SEL(UserID).ToList())
+            foreach (var l in le.FPT_SP_CIR_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -57,7 +62,7 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
 
-            List<GET_PATRON_ONLOANINFOR_Result> result = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, UserID);
+            List<GET_PATRON_ONLOANINFOR_Result> result = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
             foreach (var item in result)
             {
                 item.Content = GetContent(item.Content);
@@ -88,7 +93,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            List<GET_PATRON_RENEW_ONLOAN_INFOR_Result> result = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, UserID);
+            List<GET_PATRON_RENEW_ONLOAN_INFOR_Result> result = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
             foreach (var item in result)
             {
                 item.Content = GetContent(item.Content);
@@ -114,13 +119,14 @@ namespace Libol.Controllers
             return PartialView("GetFilteredOnLoanStats");
         }
         //-------------------END OF ONLOAN REPORT---------------------
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult ReportLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.FPT_SP_CIR_LIB_SEL(UserID).ToList())
+            foreach (var l in le.FPT_SP_CIR_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -133,7 +139,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> LocPrefix = new List<SelectListItem>();
             LocPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
-            foreach (var lp in le.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL(UserID, id))
+            foreach (var lp in le.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL((int)Session["UserID"], id))
             {
                 LocPrefix.Add(new SelectListItem { Text = Regex.Replace(lp.ToString(), @"[^0-9a-zA-Z]+", ""), Value = lp.ToString() });
             }
@@ -145,7 +151,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> LocByPrefix = new List<SelectListItem>();
             LocByPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
-            foreach (var lbp in le.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL(UserID, id, prefix))
+            foreach (var lbp in le.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL((int)Session["UserID"], id, prefix))
             {
                 LocByPrefix.Add(new SelectListItem { Text = lbp.Symbol, Value = lbp.ID.ToString() });
             }
@@ -159,7 +165,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            List<GET_PATRON_LOANINFOR_Result> result = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, UserID);
+            List<GET_PATRON_LOANINFOR_Result> result = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
             foreach (var item in result)
             {
                 item.Content = GetContent(item.Content);
@@ -191,7 +197,7 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            List<GET_PATRON_RENEW_LOAN_INFOR_Result> result = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, UserID);
+            List<GET_PATRON_RENEW_LOAN_INFOR_Result> result = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
 
             foreach (var item in result)
             {
@@ -230,20 +236,21 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.FPT_SP_CIR_LIB_SEL(UserID).ToList())
+            foreach (var l in le.FPT_SP_CIR_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
             ViewData["lib"] = lib;
             return View();
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticYear()
         {
             List<SelectListItem> lib = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.FPT_SP_CIR_LIB_SEL(UserID).ToList())
+            foreach (var l in le.FPT_SP_CIR_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -255,7 +262,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            foreach (var l in le.FPT_SP_CIR_LIBLOCUSER_SEL(UserID, id).ToList())
+            foreach (var l in le.FPT_SP_CIR_LIBLOCUSER_SEL((int)Session["UserID"], id).ToList())
             {
                 loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
             }
@@ -282,8 +289,8 @@ namespace Libol.Controllers
             {
                 ViewBag.TypeName = "đầu ấn phẩm";
             }
-            ViewBag.UsedResult = cb.GET_FPT_CIR_YEAR_STATISTIC_LIST(LibID, LocID, Type, 0, strFromYear, strToYear, UserID);
-            ViewBag.UsingResult = cb.GET_FPT_CIR_YEAR_STATISTIC_LIST(LibID, LocID, Type, 1, strFromYear, strToYear, UserID);
+            ViewBag.UsedResult = cb.GET_FPT_CIR_YEAR_STATISTIC_LIST(LibID, LocID, Type, 0, strFromYear, strToYear, (int)Session["UserID"]);
+            ViewBag.UsingResult = cb.GET_FPT_CIR_YEAR_STATISTIC_LIST(LibID, LocID, Type, 1, strFromYear, strToYear, (int)Session["UserID"]);
             return PartialView("GetYearStats");
         }
         [HttpPost]
@@ -307,17 +314,18 @@ namespace Libol.Controllers
             {
                 ViewBag.TypeName = "đầu ấn phẩm";
             }
-            ViewBag.UsedResult = cb.GET_FPT_CIR_MONTH_STATISTIC_LIST(LibID, LocID, Type, 0, strInYear, UserID);
-            ViewBag.UsingResult = cb.GET_FPT_CIR_MONTH_STATISTIC_LIST(LibID, LocID, Type, 1, strInYear, UserID);
+            ViewBag.UsedResult = cb.GET_FPT_CIR_MONTH_STATISTIC_LIST(LibID, LocID, Type, 0, strInYear, (int)Session["UserID"]);
+            ViewBag.UsingResult = cb.GET_FPT_CIR_MONTH_STATISTIC_LIST(LibID, LocID, Type, 1, strInYear, (int)Session["UserID"]);
             return PartialView("GetMonthStats");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticMonth()
         {
             List<SelectListItem> lib = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.FPT_SP_CIR_LIB_SEL(UserID).ToList())
+            foreach (var l in le.FPT_SP_CIR_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -332,29 +340,48 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.HOLDING_LIBRARY.ToList())
+            foreach (var l in le.CIR_DIC_COLLEGE.ToList())
             {
-                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+                lib.Add(new SelectListItem { Text = l.College, Value = l.ID.ToString() });
             }
             ViewData["lib"] = lib;
             //FPT_CIR_GET_LOCKEDPATRONS(PatronCode, LockDateTo, LockDateFrom, LibraryID, UserID)
             //ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(null, null, null);
             string LibraryFilter = Request.Form["LibraryFilter"];
+            if (!string.IsNullOrEmpty(LibraryFilter))
+            {
+                ViewBag.iddd = Int32.Parse(LibraryFilter);
+
+            }
+            else
+            {
+                ViewBag.iddd = -1;
+            }
             string PatronCodeFilter = Request.Form["PatronCodeFilter"];
             string LockDateFromFilter = Request.Form["LockDateFromFilter"];
             string LockDateToFilter = Request.Form["LockDateToFilter"];
+            string NoteFilter = Request.Form["NoteFilter"];
             int CollegeID = 0;
             if (!String.IsNullOrEmpty(LibraryFilter)) CollegeID = Convert.ToInt32(LibraryFilter);
-            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCodeFilter, LockDateFromFilter, LockDateToFilter, CollegeID);
+
             ShelfBusiness shelfBusiness = new ShelfBusiness();
             ViewBag.Library = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, Int32.Parse(Session["UserID"].ToString()), 1);
-            return View();
+            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCodeFilter, NoteFilter, LockDateFromFilter, LockDateToFilter, CollegeID);
+            List<SelectListItem> note = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn lý do", Value = "" }
+            };
+            foreach (var l in le.CIR_PATRON_LOCK.ToList())
+            {
+                note.Add(new SelectListItem { Text = l.Note, Value = l.Note.ToString() });
+            }
+            ViewData["note"] = note;
+            return View(ViewBag.iddd);
         }
-        // trinhlv1 LockCard()
+        // LockCard()
         [HttpPost]
         public JsonResult LockCardPatron(string cardNumber,string startDate,int lockDays, string note)
         {
-           // List<SP_UNLOCK_PATRON_CARD_Result> listResult1 = cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("''SE05062''");
             List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cardNumber, lockDays, startDate, note);
             ViewData["listResult"] = listResult;
             return Json(listResult, JsonRequestBehavior.AllowGet);
@@ -369,7 +396,7 @@ namespace Libol.Controllers
             return Json(listResult, JsonRequestBehavior.AllowGet);
 
         }
-        // trinhlv1 UnLockCard()
+        // UnLockCard()
         [HttpPost]
         public JsonResult UnLockCardPatron(List<string> patroncodeList)
         {
@@ -385,36 +412,34 @@ namespace Libol.Controllers
                 throw;
             }
             return Json(new { Message = "Mở Khóa thành công!" }, JsonRequestBehavior.AllowGet);
-            //List<SP_UNLOCK_PATRON_CARD_Result> listResult = cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("'"+patroncode+"'");
-            //ViewData["listResult"] = listResult;
-            //return Json(listResult, JsonRequestBehavior.AllowGet);
 
         }
 
         public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom, string strCollegeID)
         {
-            int CollegeID = 0;
-            if (!String.IsNullOrEmpty(strCollegeID)) CollegeID = Convert.ToInt32(strCollegeID);
-            ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo, CollegeID);
-            List<SelectListItem> lib = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
-            };
-            foreach (var l in le.HOLDING_LIBRARY.ToList())
-            {
-                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
-            }
-            ViewData["lib"] = lib;
+            //int CollegeID = 0;
+            //if (!String.IsNullOrEmpty(strCollegeID)) CollegeID = Convert.ToInt32(strCollegeID);
+            //ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo, CollegeID);
+            //List<SelectListItem> lib = new List<SelectListItem>
+            //{
+            //    new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            //};
+            //foreach (var l in le.FPT_GET_COLLEGE().ToList())
+            //{
+            //    lib.Add(new SelectListItem { Text = l.COLLEGE, Value = l.ID.ToString() });
+            //}
+            //ViewData["lib"] = lib;
             return PartialView("GetLockPatronStats");
         }
 
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticPatronGroup()
         {
             List<SelectListItem> lib = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Chọn thư viện", Value = "" }
             };
-            foreach (var item in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var item in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = item.Code, Value = item.ID.ToString() });
             }
@@ -437,13 +462,14 @@ namespace Libol.Controllers
 
             return PartialView("DisplayPatronGroup");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticTopPatron()
         {
             List<SelectListItem> lib = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var item in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var item in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = item.Code, Value = item.ID.ToString() });
             }
@@ -462,13 +488,14 @@ namespace Libol.Controllers
             ViewBag.test = result;
             return PartialView("DisplayTopPatron");
         }
+        [AuthAttribute(ModuleID = 3, RightID = "67")]
         public ActionResult StatisticTopCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var item in le.SP_HOLDING_LIB_SEL(UserID).ToList())
+            foreach (var item in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = item.Code, Value = item.ID.ToString() });
             }
@@ -492,7 +519,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL(UserID, id).ToList())
+            foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL((int)Session["UserID"], id).ToList())
             {
                 loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
             }
@@ -500,20 +527,20 @@ namespace Libol.Controllers
         }
         public ActionResult DemoDataTableEport()
         {
-            ViewBag.ParentNodes = le.SP_HOLDING_LIB_SEL(UserID).ToList();
+            ViewBag.ParentNodes = le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList();
             //le.SP_HOLDING_LIBLOCUSER_SEL(UserID, id).ToList();
             return View();
         }
         // get list lock patron in datatable
-        // trinhlv
         [HttpPost]
         public JsonResult GetLockPatron(DataTableAjaxPostModel model ,int libraryID, string PatronCode,string Note,string StartedDate,string FinishDate)
         {
-            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode, "", "", 0);
+            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode,"", "", "", 0);
             var search = lockedpatron.Where(a => true);
             if(libraryID != -1)
             {
-                // Tim theo thu vien
+                List<String> listInLib = le.CIR_PATRON.Where(c => c.CIR_PATRON_GROUP == null ? false : c.CIR_PATRON_GROUP.HOLDING_LOCATION.Select(l => l.LibID).Contains(libraryID)).Select(c => c.Code).ToList();
+                search = lockedpatron.Where(a => listInLib.Contains(a.PatronCode));
             }
             if (!String.IsNullOrEmpty(Note))
             {
@@ -551,11 +578,6 @@ namespace Libol.Controllers
                 recordsFiltered = search.Count(),
                 data = list
             });
-        }
-
-        public class LockCardStatus
-        {
-            public string PatronCode { get; set; }
         }
 
     }

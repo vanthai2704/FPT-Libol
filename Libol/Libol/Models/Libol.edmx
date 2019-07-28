@@ -5271,11 +5271,81 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strInput" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="FPT_ACQ_LANGUAGE_DETAILS_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strTypeSelect" Type="varchar" Mode="In" />
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_LANGUAGE_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+        </Function>
         <Function Name="FPT_ACQ_MONTH_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="intLocationID" Type="int" Mode="In" />
           <Parameter Name="strInYear" Type="varchar" Mode="In" />
           <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_BBK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_DDC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC40" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC41" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC42" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC43" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_LOC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_NLM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_SERIALS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_SH" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_UDC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intType" Type="int" Mode="In" />
         </Function>
         <Function Name="FPT_ACQ_YEAR_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
@@ -5336,6 +5406,16 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strFromYear" Type="varchar" Mode="In" />
           <Parameter Name="strToYear" Type="varchar" Mode="In" />
           <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_COUNT_COPYNUMBER_BY_ITEMID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="itemID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_COUNT_COPYNUMBER_ONLOAN" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="itemID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
         </Function>
         <Function Name="FPT_EDU_ADD_COLLEGE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="College" Type="nvarchar" Mode="In" />
@@ -5590,6 +5670,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         </Function>
         <Function Name="FPT_GET_PATRON_LOCK_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+          <Parameter Name="strNote" Type="nvarchar" Mode="In" />
           <Parameter Name="strLockDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strLockDateTo" Type="varchar" Mode="In" />
           <Parameter Name="intCollegeID" Type="int" Mode="In" />
@@ -5651,9 +5732,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
           <Parameter Name="strItemType" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
-          <Parameter Name="strItemType" Type="varchar" Mode="In" />
+        <Function Name="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
+          <Parameter Name="intIsAuthority" Type="int" Mode="In" />
         </Function>
         <Function Name="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
@@ -5701,6 +5782,12 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="StartDate" Type="date" Mode="In" />
           <Parameter Name="EndDate" Type="date" Mode="In" />
           <Parameter Name="OrderBy" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strFromDate" Type="varchar" Mode="In" />
+          <Parameter Name="strToDate" Type="varchar" Mode="In" />
+          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
         </Function>
         <Function Name="FPT_SP_GET_STAT_BOOK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
@@ -25213,7 +25300,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strIDSource" Mode="In" Type="Int32" />
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="TESTCAI" />
           <FunctionImport Name="DemoGetMarcForm">
             <Parameter Name="intFormID" Mode="In" Type="Int32" />
             <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
@@ -25441,6 +25527,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           </FunctionImport>
           <FunctionImport Name="FPT_GET_PATRON_LOCK_STATISTIC">
             <Parameter Name="strPatronCode" Mode="In" Type="String" />
+            <Parameter Name="strNote" Mode="In" Type="String" />
             <Parameter Name="strLockDateFrom" Mode="In" Type="String" />
             <Parameter Name="strLockDateTo" Mode="In" Type="String" />
             <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
@@ -25450,11 +25537,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="lockedDay" Mode="In" Type="Int32" />
             <Parameter Name="Note" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="FPT_RECOMMEND" EntityType="LibolModel.FPT_RECOMMEND" />
-          <AssociationSet Name="FPT_RECOMMEND_ITEM" Association="LibolModel.FPT_RECOMMEND_ITEM">
-            <End Role="FPT_RECOMMEND" EntitySet="FPT_RECOMMEND" />
-            <End Role="ITEM" EntitySet="ITEMs" />
-          </AssociationSet>
           <FunctionImport Name="FPT_SP_GET_HOLDING_BY_RECOMMENDID" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result)">
             <Parameter Name="LibID" Mode="In" Type="Int32" />
             <Parameter Name="LocID" Mode="In" Type="Int32" />
@@ -25462,6 +25544,108 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="StartDate" Mode="In" Type="DateTime" />
             <Parameter Name="EndDate" Mode="In" Type="DateTime" />
             <Parameter Name="OrderBy" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS" ReturnType="Collection(LibolModel.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result)">
+            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+            <Parameter Name="intIsAuthority" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_LANGUAGE_DETAILS_STATISTIC" ReturnType="Collection(LibolModel.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result)">
+            <Parameter Name="strTypeSelect" Mode="In" Type="String" />
+            <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_LANGUAGE_STATISTIC" ReturnType="Collection(LibolModel.FPT_ACQ_LANGUAGE_STATISTIC_Result)">
+          <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_BBK" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_DDC" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC40" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC41" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC42" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC43" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_LOC" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_NLM" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_SERIALS" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_SH" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_SH_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_UDC" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result)">
+          <Parameter Name="intType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="FPT_RECOMMEND" EntityType="LibolModel.FPT_RECOMMEND" />
+          <AssociationSet Name="FPT_RECOMMEND_ITEM" Association="LibolModel.FPT_RECOMMEND_ITEM">
+            <End Role="FPT_RECOMMEND" EntitySet="FPT_RECOMMEND" />
+            <End Role="ITEM" EntitySet="ITEMs" />
+          </AssociationSet>
+          <FunctionImport Name="FPT_GET_PATRON_LOCK_STATISTIC1">
+            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+            <Parameter Name="strNote" Mode="In" Type="String" />
+            <Parameter Name="strLockDateFrom" Mode="In" Type="String" />
+            <Parameter Name="strLockDateTo" Mode="In" Type="String" />
+            <Parameter Name="intCollegeID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_COUNT_COPYNUMBER_BY_ITEMID">
+            <Parameter Name="itemID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_COUNT_COPYNUMBER_ONLOAN">
+            <Parameter Name="itemID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_GET_ITEM">
+            <Parameter Name="strFromDate" Mode="In" Type="String" />
+            <Parameter Name="strToDate" Mode="In" Type="String" />
+            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
@@ -30228,17 +30412,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="Right" Nullable="false" MaxLength="100" />
         </ComplexType>
-        <EntityType Name="FPT_RECOMMEND">
-          <Key>
-            <PropertyRef Name="RecommendID" />
-          </Key>
-          <Property Name="RecommendID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="ITEMs" Relationship="LibolModel.FPT_RECOMMEND_ITEM" FromRole="FPT_RECOMMEND" ToRole="ITEM" />
-        </EntityType>
-        <Association Name="FPT_RECOMMEND_ITEM">
-          <End Type="LibolModel.FPT_RECOMMEND" Role="FPT_RECOMMEND" Multiplicity="*" />
-          <End Type="LibolModel.ITEM" Role="ITEM" Multiplicity="*" />
-        </Association>
         <ComplexType Name="FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result">
           <Property Type="String" Name="SoChungTu" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="NhanDe" Nullable="true" MaxLength="4000" />
@@ -30253,6 +30426,118 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="IdNhaXuatBan" Nullable="false" MaxLength="256" />
           <Property Type="Int32" Name="ItemID" Nullable="false" />
         </ComplexType>
+        <ComplexType Name="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result">
+          <Property Type="String" Name="IDSort" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="FieldCode" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Ind" Nullable="true" MaxLength="8000" />
+          <Property Type="String" Name="Content" Nullable="true" MaxLength="1000" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="ISOCode" Nullable="false" MaxLength="15" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_LANGUAGE_STATISTIC_Result">
+          <Property Type="Int32" Name="TotalBook" Nullable="true" />
+          <Property Type="Int32" Name="TotalCopies" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="250" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="150" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="NAME" Nullable="false" MaxLength="164" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="32" />
+          <Property Type="String" Name="NAME" Nullable="false" MaxLength="32" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="CODE" Nullable="false" MaxLength="12" />
+          <Property Type="String" Name="AccessEntry" Nullable="true" MaxLength="64" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="150" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="256" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="300" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_SH_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="256" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result">
+          <Property Type="Int32" Name="Total" Nullable="true" />
+          <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <EntityType Name="FPT_RECOMMEND">
+          <Key>
+            <PropertyRef Name="RecommendID" />
+          </Key>
+          <Property Name="RecommendID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ITEMs" Relationship="LibolModel.FPT_RECOMMEND_ITEM" FromRole="FPT_RECOMMEND" ToRole="ITEM" />
+        </EntityType>
+        <Association Name="FPT_RECOMMEND_ITEM">
+          <End Type="LibolModel.FPT_RECOMMEND" Role="FPT_RECOMMEND" Multiplicity="*" />
+          <End Type="LibolModel.ITEM" Role="ITEM" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -40157,14 +40442,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" />
-          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE_2019">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result">
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-                <ScalarProperty Name="Content" ColumnName="Content" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM">
             <ResultMapping>
               <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result">
@@ -40333,23 +40610,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_LOCK_STATISTIC" FunctionName="LibolModel.Store.FPT_GET_PATRON_LOCK_STATISTIC" />
           <FunctionImportMapping FunctionImportName="FPT_SP_UPDATE_UNLOCK_PATRON_CARD" FunctionName="LibolModel.Store.FPT_SP_UPDATE_UNLOCK_PATRON_CARD" />
-          <EntitySetMapping Name="FPT_RECOMMEND">
-            <EntityTypeMapping TypeName="LibolModel.FPT_RECOMMEND">
-              <MappingFragment StoreEntitySet="FPT_RECOMMEND">
-                <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="FPT_RECOMMEND_ITEM" TypeName="LibolModel.FPT_RECOMMEND_ITEM" StoreEntitySet="FPT_RECOMMEND_ITEM">
-            <EndProperty Name="ITEM">
-              <ScalarProperty Name="ID" ColumnName="ItemID" />
-            </EndProperty>
-            <EndProperty Name="FPT_RECOMMEND">
-              <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
-            </EndProperty>
-          </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_RECOMMENDID" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_RECOMMENDID">
             <ResultMapping>
               <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result">
@@ -40368,6 +40629,222 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result">
+                <ScalarProperty Name="IDSort" ColumnName="IDSort" />
+                <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+                <ScalarProperty Name="Ind" ColumnName="Ind" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_LANGUAGE_DETAILS_STATISTIC" FunctionName="LibolModel.Store.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="ISOCode" ColumnName="ISOCode" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_LANGUAGE_STATISTIC" FunctionName="LibolModel.Store.FPT_ACQ_LANGUAGE_STATISTIC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_LANGUAGE_STATISTIC_Result">
+                <ScalarProperty Name="TotalBook" ColumnName="TotalBook" />
+                <ScalarProperty Name="TotalCopies" ColumnName="TotalCopies" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_BBK" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_BBK">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DDC" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DDC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DIC40" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DIC40">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DIC41" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DIC41">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DIC42" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DIC42">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DIC43" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DIC43">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_LOC" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_LOC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="CODE" ColumnName="CODE" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_NLM" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_NLM">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_SERIALS" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_SH" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_SH">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_SH_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_UDC" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_UDC">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="FPT_RECOMMEND">
+            <EntityTypeMapping TypeName="LibolModel.FPT_RECOMMEND">
+              <MappingFragment StoreEntitySet="FPT_RECOMMEND">
+                <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FPT_RECOMMEND_ITEM" TypeName="LibolModel.FPT_RECOMMEND_ITEM" StoreEntitySet="FPT_RECOMMEND_ITEM">
+            <EndProperty Name="ITEM">
+              <ScalarProperty Name="ID" ColumnName="ItemID" />
+            </EndProperty>
+            <EndProperty Name="FPT_RECOMMEND">
+              <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_LOCK_STATISTIC1" FunctionName="LibolModel.Store.FPT_GET_PATRON_LOCK_STATISTIC" />
+          <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_BY_ITEMID" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_BY_ITEMID" />
+          <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_ONLOAN" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_ONLOAN" />
+          <FunctionImportMapping FunctionImportName="FPT_SP_GET_ITEM" FunctionName="LibolModel.Store.FPT_SP_GET_ITEM" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

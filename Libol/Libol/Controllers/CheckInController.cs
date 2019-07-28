@@ -15,6 +15,7 @@ namespace Libol.Controllers
         private LibolEntities db = new LibolEntities();
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
         FormatHoldingTitle f = new FormatHoldingTitle();
+        private static string fullname = "";
         [AuthAttribute(ModuleID = 3, RightID = "58")]
         public ActionResult Index()
         {
@@ -37,8 +38,7 @@ namespace Libol.Controllers
             }
 
             getpatrondetail(strPatronCode);
-            int id2 = ViewBag.PatronDetail.ID;
-            getonloandetail(id2);
+           
             return PartialView("_checkinByCardNumber");
         }
 
@@ -53,13 +53,41 @@ namespace Libol.Controllers
             string strCheckInDate
         )
         {
-            db.SP_CHECKIN(43, intType, intAutoPaid, strCopyNumbers, strCheckInDate,
-                new ObjectParameter("strTransIDs", typeof(string)),
-                new ObjectParameter("strPatronCode", typeof(string)),
-                new ObjectParameter("intError", typeof(int)));
-            getpatrondetail(strPatronCode);
-            int id2 = ViewBag.PatronDetail.ID;
-            getonloandetail(id2);
+            int success = -1;
+            if (db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumbers).Count() == 0)
+            {
+                ViewBag.message = "ĐKCB không đúng hoặc chưa được ghi mượn";
+                ViewBag.PatronDetail = null;
+            }
+            else
+            {
+                string patroncode = db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumbers).First().CIR_PATRON.Code;
+                success = db.SP_CHECKIN((int)Session["UserID"], intType, intAutoPaid, strCopyNumbers, strCheckInDate,
+                    new ObjectParameter("strTransIDs", typeof(string)),
+                    new ObjectParameter("strPatronCode", typeof(string)),
+                    new ObjectParameter("intError", typeof(int)));
+                getpatrondetail(patroncode);
+                if (success == 5)
+                {
+                    int lastid = db.CIR_LOAN_HISTORY.Max(a => a.ID);
+                    int id = db.CIR_LOAN_HISTORY.Where(b => b.ID == lastid).First().ItemID;
+                    String fieldcode = "245";
+                    ViewBag.message = "";
+                    ViewBag.CurrentCheckin = new CurrentCheckIn
+                    {
+                        Title = f.OnFormatHoldingTitle(db.FIELD200S.Where(a => a.ItemID == id).Where(a => a.FieldCode == fieldcode).First().Content),
+                        Copynumber = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().CopyNumber,
+                        CheckOutDate = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().CheckOutdate.ToString("dd/MM/yyyy"),
+                        CheckInDate = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().CheckInDate.ToString("dd/MM/yyyy"),
+                        OverdueFine = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().OverdueFine.ToString()
+                    };
+                }
+                else
+                {
+                    ViewBag.CurrentCheckin = null;
+                    ViewBag.message = "Ghi trả thất bại";
+                }
+            }
             return PartialView("_checkinByDKCB");
         }
 
@@ -74,19 +102,25 @@ namespace Libol.Controllers
            string strCheckInDate
        )
         {
-            SP_GET_PATRON_INFOR_Result patroninfo =
-               db.SP_GET_PATRON_INFOR(strFullName, strPatronCode, strFixDueDate).First();
-            ViewData["patroninfo"] = patroninfo;
+            int success = -1;
             foreach (string CopyNumber in strCopyNumbers)
             {
-                db.SP_CHECKIN(43, intType, intAutoPaid, CopyNumber, strCheckInDate,
+                success = db.SP_CHECKIN((int)Session["UserID"], intType, intAutoPaid, CopyNumber, strCheckInDate,
                 new ObjectParameter("strTransIDs", typeof(string)),
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
             }
             getpatrondetail(strPatronCode);
-            int id2 = ViewBag.PatronDetail.ID;
-            getonloandetail(id2);
+            if (success == 5)
+            {
+                ViewBag.message = "";
+                ViewBag.CurrentCheckin = null;
+            }
+            else
+            {
+                ViewBag.message = "Ghi trả thất bại";
+                ViewBag.CurrentCheckin = null;
+            }
             return PartialView("_checkinByDKCB");
         }
 
@@ -99,47 +133,68 @@ namespace Libol.Controllers
             }
             else
             {
-                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").Take(50).ToList();
+                fullname = strFullName;
+                ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(fullname, "").Where(a => a.DOB != null).ToList();
             }
-                
+
             return PartialView("_findByCardNumber");
         }
+
         [HttpGet]
         public PartialViewResult FindByCardNumber()
         {
             ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
+            ViewBag.PatronDetail = null;
             return PartialView("_findByCardNumber");
+        }
+
+        public JsonResult GetPatronSearchDetail(string code)
+        {
+            getpatrondetail(code);
+            return Json(ViewBag.PatronDetail, JsonRequestBehavior.AllowGet);
         }
 
         public void getpatrondetail(string strPatronCode)
         {
-            SP_GET_PATRON_INFOR_Result patroninfo =
-               db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("MM/dd/yyyy")).First();
-            CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
-            ViewBag.PatronDetail = new DetailPatron
+            if (db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("MM/dd/yyyy")).Count() == 0)
             {
-                ID = patron.ID,
-                strCode = patron.Code,
-                Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName,
-                strDOB = Convert.ToDateTime(patron.DOB).ToString("dd/MM/yyyy"),
-                strValidDate = Convert.ToDateTime(patroninfo.ValidDate).ToString("dd/MM/yyyy"),
-                strExpiredDate = Convert.ToDateTime(patron.ExpiredDate).ToString("dd/MM/yyyy"),
-                Sex = patron.Sex == "1" ? "Nam" : "Nữ",
-                intEthnicID = db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).Count() == 0 ? "" : db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).First().Ethnic,
-                intCollegeID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College,
-                intFacultyID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty,
-                strEducationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel,
-                strWorkPlace = patroninfo.WorkPlace,
-                strGrade = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Grade,
-                strClass = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Class,
-                strAddress = patron.CIR_PATRON_OTHER_ADDR.Count == 0 ? "" : patron.CIR_PATRON_OTHER_ADDR.First().Address,
-                strTelephone = patron.Telephone,
-                strMobile = patron.Mobile,
-                strEmail = patron.Email,
-                strNote = patron.Note,
-                intOccupationID = patron.CIR_DIC_OCCUPATION == null ? "" : patron.CIR_DIC_OCCUPATION.Occupation,
-                intPatronGroupID = patron.CIR_PATRON_GROUP == null ? "" : patron.CIR_PATRON_GROUP.Name
-            };
+                ViewBag.message = "Số thẻ không tồn tại";
+                ViewBag.PatronDetail = null;
+            }
+            else
+            {
+                SP_GET_PATRON_INFOR_Result patroninfo =
+              db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("MM/dd/yyyy")).First();
+                CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First();
+                ViewBag.message = "";
+                ViewBag.PatronDetail = new DetailPatron
+                {
+                    ID = patron.ID,
+                    strCode = patron.Code,
+                    Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName,
+                    strDOB = Convert.ToDateTime(patron.DOB).ToString("dd/MM/yyyy"),
+                    strValidDate = Convert.ToDateTime(patroninfo.ValidDate).ToString("dd/MM/yyyy"),
+                    strExpiredDate = Convert.ToDateTime(patron.ExpiredDate).ToString("dd/MM/yyyy"),
+                    Sex = patron.Sex == "1" ? "Nam" : "Nữ",
+                    intEthnicID = db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).Count() == 0 ? "" : db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).First().Ethnic,
+                    intCollegeID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College,
+                    intFacultyID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty,
+                    strEducationlevel = patron.CIR_DIC_EDUCATION == null ? null : patron.CIR_DIC_EDUCATION.EducationLevel,
+                    strWorkPlace = patroninfo.WorkPlace,
+                    strGrade = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Grade,
+                    strClass = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Class,
+                    strAddress = patron.CIR_PATRON_OTHER_ADDR.Count == 0 ? "" : patron.CIR_PATRON_OTHER_ADDR.First().Address,
+                    strTelephone = patron.Telephone,
+                    strMobile = patron.Mobile,
+                    strEmail = patron.Email,
+                    strNote = patron.Note,
+                    intOccupationID = patron.CIR_DIC_OCCUPATION == null ? "" : patron.CIR_DIC_OCCUPATION.Occupation,
+                    intPatronGroupID = patron.CIR_PATRON_GROUP == null ? "" : patron.CIR_PATRON_GROUP.Name,
+                    strPortrait = patron.Portrait
+                };
+                int id2 = ViewBag.PatronDetail.ID;
+                getonloandetail(id2);
+            }
         }
 
         public void getonloandetail(int id)
@@ -155,6 +210,7 @@ namespace Libol.Controllers
                     Copynumber = a.COPYNUMBER,
                     CheckoutDate = a.CHECKOUTDATE.ToString("dd/MM/yyyy"),
                     DueDate = a.DUEDATE.Value.ToString("dd/MM/yyyy"),
+                    OverDueDate = (DateTime.Now - a.DUEDATE.Value).Days > 0 ? (DateTime.Now - a.DUEDATE.Value).Days.ToString() : "",
                     Note = a.NOTE
                 });
             }
@@ -167,7 +223,17 @@ namespace Libol.Controllers
         public string Copynumber { get; set; }
         public string CheckoutDate { get; set; }
         public string DueDate { get; set; }
+        public string OverDueDate { get; set; }
         public string Note { get; set; }
+    }
+
+    public class CurrentCheckIn
+    {
+        public string Title { get; set; }
+        public string Copynumber { get; set; }
+        public string CheckOutDate { get; set; }
+        public string CheckInDate { get; set; }
+        public string OverdueFine { get; set; }
     }
 
     public class DetailPatron
@@ -193,5 +259,6 @@ namespace Libol.Controllers
         public string strNote { get; set; }
         public string intOccupationID { get; set; }
         public string intPatronGroupID { get; set; }
+        public string strPortrait { get; set; }
     }
 }
