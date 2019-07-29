@@ -97,7 +97,7 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" type="text" id="strCopyNumber" onkeypress="checkin(event)" autofocus/></div>
+                        <div class="col"><input class="form-control" type="text" id="strCopyNumber" onkeypress="checkin(event)" autofocus /></div>
                         <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
@@ -111,9 +111,55 @@
         </div>
         <div class="col" id="contentcheckin"></div>
     </div>
+    <input type="hidden" value="@ViewBag.HiddenPatronCode" id="hiddenPatronCode" />
 </body>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        if ($("#hiddenPatronCode").val() != '') {
+            document.getElementById("strPatronCode").value = $("#hiddenPatronCode").val();
+            var empObj = {
+                strPatronCode: $("#hiddenPatronCode").val(),
+            };
+            $.ajax({
+                url: "/CheckIn/CheckInByCardNumber",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                beforeSend: function (request) {
+                    $.blockUI({
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: '#000',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff'
+                        }
+                    });
+                },
+                complete: function (request, json) {
+
+                },
+                success: function (result) {
+                    $("#contentcheckin").html(result);
+                    $.unblockUI()
+                    if (document.getElementById("hiddenmessage").value != "") {
+                        alert(document.getElementById("hiddenmessage").value);
+                    }
+                    document.getElementById("strCopyNumber").focus();
+                },
+                error: function (errormessage) {
+                    console.log("abcssd");
+                    $.unblockUI()
+                    document.getElementById("strCopyNumber").focus();
+                },
+
+            });
+        }
+    });
+
 
     function findByCardNumber() {
         $.ajax({
@@ -147,9 +193,7 @@
 
     function checkinByCardNumber() {
         var empObj = {
-            strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strCheckinDate").value
         };
         $.ajax({
             url: "/CheckIn/CheckInByCardNumber",

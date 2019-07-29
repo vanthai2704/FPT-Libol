@@ -22420,7 +22420,6 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC1", strPatronCodeParameter, strNoteParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
         }
     
-
         public virtual ObjectResult<FPT_SP_GET_HOLDING_REMOVED_Result> FPT_SP_GET_HOLDING_REMOVED(string intLibID, string intLocID, string strShelf, string strCopyNumber, string strCallNumber, string strVolume, string strTitle)
         {
             var intLibIDParameter = intLibID != null ?
@@ -22586,17 +22585,16 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_HOLDING_LIBLOCUSER_SEL_Result>("FPT_SP_HOLDING_LIBLOCUSER_SEL", intLibIDParameter);
         }
-
+    
         public virtual int FPT_SP_HOLDING_REMOVED_ITEM_DEL(string strId)
         {
             var strIdParameter = strId != null ?
                 new ObjectParameter("strId", strId) :
                 new ObjectParameter("strId", typeof(string));
-
+    
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_HOLDING_REMOVED_ITEM_DEL", strIdParameter);
         }
-
-
+    
         public virtual int FPT_COUNT_COPYNUMBER_BY_ITEMID(Nullable<int> itemID, Nullable<int> intLocationID, Nullable<int> intLibraryID)
         {
             var itemIDParameter = itemID.HasValue ?
@@ -22650,7 +22648,6 @@ namespace Libol.Models
                 new ObjectParameter("intLibraryID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_GET_ITEM", strFromDateParameter, strToDateParameter, intLocationIDParameter, intLibraryIDParameter);
-
         }
     }
 }
