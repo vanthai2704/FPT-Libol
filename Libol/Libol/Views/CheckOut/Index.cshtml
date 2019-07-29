@@ -113,8 +113,55 @@
         <div class="col" id="contentcheckout">
         </div>
     </div>
+    <input type="hidden" value="@ViewBag.HiddenPatronCode" id="hiddenPatronCode"/>
 </body>
 <script type="text/javascript">
+    $(document).ready(function () {
+        if ($("#hiddenPatronCode").val() != '') {
+            document.getElementById("strPatronCode").value = $("#hiddenPatronCode").val();
+            var empObj = {
+                strPatronCode: $("#hiddenPatronCode").val(),
+            };
+            $.ajax({
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                beforeSend: function (request) {
+                    $.blockUI({
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: '#000',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff'
+                        }
+                    });
+                },
+                complete: function (request, json) {
+                },
+                url: "/CheckOut/CheckOutCardInfo",
+                data: JSON.stringify(empObj),
+                success: function (result) {
+                    $("#contentcheckout").html(result);
+                    $.unblockUI()
+                    if (document.getElementById("hiddenmessage").value != "") {
+                        alert(document.getElementById("hiddenmessage").value);
+                        document.getElementById("strCopyNumber").value = "";
+                        document.getElementById("strCopyNumber").disabled = true;
+
+                    }
+                    else {
+                        document.getElementById("strCopyNumber").disabled = false;
+                        document.getElementById("strCopyNumber").focus();
+                    }
+                },
+                error: function (errormessage) {
+                    $.unblockUI()
+                }
+            });
+        }
+    });
 
     function checkout(e) {
         if (e.keyCode == 13) {
@@ -153,9 +200,7 @@
 
     function getCardInfo() {
         var empObj = {
-            strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strDueDate").value
         };
         $.ajax({
             contentType: "application/json;charset=utf-8",

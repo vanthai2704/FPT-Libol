@@ -22,9 +22,14 @@ namespace Libol.Controllers
         FormatHoldingTitle f = new FormatHoldingTitle();
 
         [AuthAttribute(ModuleID = 3, RightID = "57")]
-        public ActionResult Index()
+        public ActionResult Index(string PatronCode)
         {
             patroncode = "0";
+            if (!String.IsNullOrEmpty(PatronCode))
+            {
+                patroncode = PatronCode;
+            }
+            ViewBag.HiddenPatronCode = PatronCode;
             return View();
         }
 
@@ -72,7 +77,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult CheckOutCardInfo(string strFullName, string strPatronCode, string strFixDueDate)
+        public PartialViewResult CheckOutCardInfo(string strPatronCode)
         {
             if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Where(a => a.isLocked == 1).Count() == 0)
             {
