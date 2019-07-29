@@ -537,7 +537,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_LOANINFOR]
 	@strSerial nvarchar(50),
 	@intUserID int
 AS
-	DECLARE @strSql varchar(1000)
+	DECLARE @strSql varchar(2000)
 	DECLARE @strJoinSQL varchar(1000)
 	DECLARE @strLikeSql varchar(1000)
 	DECLARE @strSelectedTabs varchar(500)
@@ -632,7 +632,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_ONLOANINFOR]
 	@strSerial nvarchar(50),
 	@intUserID int
 AS
-	DECLARE @strSql varchar(1000)
+	DECLARE @strSql varchar(2000)
 	DECLARE @strJoinSQL varchar(1000)
 	DECLARE @strLikeSql varchar(1000)
 	DECLARE @strSelectedTabs varchar(500)
@@ -728,7 +728,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_RENEW_LOAN_INFOR]
 	@strCheckInDateTo varchar(30),
 	@intUserID int
 AS
-	DECLARE @strSql varchar(1000)
+	DECLARE @strSql varchar(2000)
 	DECLARE @strSql2 varchar(1000)
 	DECLARE @strJoinSQL varchar(1000)
 	DECLARE @strLikeSql varchar(1000)
@@ -828,7 +828,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_RENEW_ONLOAN_INFOR]
 	@strCheckInDateTo varchar(30),
 	@intUserID int
 AS
-	DECLARE @strSql varchar(1000)
+	DECLARE @strSql varchar(2000)
 	DECLARE @strSql2 varchar(1000)
 	DECLARE @strJoinSQL varchar(1000)
 	DECLARE @strLikeSql varchar(1000)
@@ -4196,11 +4196,11 @@ Create PROCEDURE [dbo].[FPT_GET_PATRON_LOCK_STATISTIC]
 	@strLockDateTo varchar(30),
 	@intCollegeID int
 AS
-	DECLARE @strSql nvarchar(1000)
+	DECLARE @strSql nvarchar(2000)
 	DECLARE @strJoinSQL nvarchar(1000)
 	DECLARE @strLikeSql nvarchar(1000)
 	
-	SET @strSql = 'SELECT CPL.PatronCode, CPL.StartedDate, CPL.Note, CP.FirstName + '' '' + CP.MiddleName + '' '' + CP.LastName as FullName, CPL.StartedDate + CPL.LockedDays as FinishDate, CPL.LockedDays '
+	SET @strSql = 'SELECT CPL.PatronCode, CPL.StartedDate, CPL.Note,  ISNULL(CP.FirstName,'''') + '' '' + ISNULL(CP.MiddleName,'''') + '' '' + ISNULL(CP.LastName,'''') as FullName, CPL.StartedDate + CPL.LockedDays as FinishDate, CPL.LockedDays '
 	SET @strLikeSql = '1 =1 AND '
 	SET @strJoinSQL = ''
 

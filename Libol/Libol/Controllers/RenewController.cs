@@ -48,23 +48,23 @@ namespace Libol.Controllers
                     DateTime expiredDate = db.CIR_LOAN.Where(a => a.ID == LoadID).First().CIR_PATRON.ExpiredDate;
                     if (inttimes[0] >= intrange[0])
                     {
-                        ViewBag.message = "số lượt gia hạn đã đạt mức tối đa";
+                        ViewBag.message = "Số lượt gia hạn đã đạt mức tối đa";
                     }
                     else if (Equals(strFixedDueDate, ""))
                     {
-                        ViewBag.message = "vui lòng chọn ngày gia hạn";
+                        ViewBag.message = "Vui lòng chọn ngày gia hạn";
                     }
                     else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[0])) < 0)
                     {
-                        ViewBag.message = "ngày gia hạn sớm hơn hạn trả hiện tại";
+                        ViewBag.message = "Ngày gia hạn sớm hơn hạn trả hiện tại";
                     }
                     else if (DateTime.Compare(expiredDate, Convert.ToDateTime(strFixedDueDate)) < 0)
                     {
-                        ViewBag.message = "ngày gia hạn muộn hơn ngày hết hạn thẻ";
+                        ViewBag.message = "Ngày gia hạn muộn hơn ngày hết hạn thẻ";
                     }
                     else
                     {
-                        ViewBag.message = "gia hạn thành công";
+                        ViewBag.message = "Gia hạn thành công";
                         db.SP_RENEW_ITEM(intLoanID[0], intAddTime, intTimeUnit, strFixedDueDate);
                     }
                 }
@@ -95,7 +95,7 @@ namespace Libol.Controllers
                             db.SP_RENEW_ITEM(intLoanID[i], intAddTime, intTimeUnit, strFixedDueDate);
                         }
                     }
-                    ViewBag.message = "gia hạn thành công( " + (intLoanID.Length - codeErrorCount) + " ) bản ghi" + "" + " gia hạn thất bại( " + codeErrorCount + " )bản ghi";
+                    ViewBag.message = "Gia hạn thành công( " + (intLoanID.Length - codeErrorCount) + " ) bản ghi" + "" + " gia hạn thất bại( " + codeErrorCount + " )bản ghi";
                 }
             }
             
