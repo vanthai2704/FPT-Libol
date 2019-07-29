@@ -143,6 +143,7 @@
                     alert(document.getElementById("hiddenmessage").value);
                 }
                 document.getElementById("strCopyNumber").value = "";
+                document.getElementById("strCopyNumber").focus();
             },
             error: function (errormessage) {
                 console.log("error");
@@ -183,6 +184,7 @@
                     alert(document.getElementById("hiddenmessage").value);
                     document.getElementById("strCopyNumber").value = "";
                     document.getElementById("strCopyNumber").disabled = true;
+                    document.getElementById("strCopyNumber").focus();
                 }
                 else {
                     document.getElementById("strCopyNumber").disabled = false;
