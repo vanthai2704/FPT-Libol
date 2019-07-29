@@ -20,8 +20,9 @@
 </div>
 <div class="row">
     <div class="col">
-        <label>Ngày ra hạn cụ thể: </label><input type="date" id="strFixedDueDate">
+        <label>Ngày gia hạn cụ thể: </label><input type="date" id="strFixedDueDate">
         <button class="btn btn-primary" type="button" onclick="renew()">Gia hạn</button>
+        <strong id="success"></strong>
     </div>
 </div>
 
@@ -81,8 +82,8 @@
             type: "POST",
             success: function (result) {
                 $("#content").html(result);
-                alert(document.getElementById("hiddenmessage").value);
                 document.getElementById("fieldsearch").focus();
+                $("#success").html($("#hiddenmessage").val());
             },
             error: function (errormessage) {
                 console.log("abcssd");
