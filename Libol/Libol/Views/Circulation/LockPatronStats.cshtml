@@ -84,7 +84,7 @@
                                 "'" + full.FinishDate + "'," +
                                 "'" + full.LockedDays + "'," +
                                 "'" + full.Note
-                                + "'" + ')">Edit</button>';
+                                + "'" + ')">Sửa</button>';
                         }
                     },
                 ],
@@ -92,11 +92,18 @@
                 buttons: [
                     {
                         extend: 'print',
-                        title: function () { var printTitle = 'Danh sách bạn đọc bị khóa'; return printTitle; }
+                        title: function () { var printTitle = 'Danh sách bạn đọc bị khóa'; return printTitle; },
+                        action: newExportAction,
+                        exportOptions: {
+                            columns: 'th:not(.notexport)'
+                        }
                     },
                     {
                         extend: 'excel',
-                        action: newExportAction
+                        action: newExportAction,
+                        exportOptions: {
+                            columns: 'th:not(.notexport)'
+                        }
                     },
                     'csv',
                     'pdf',
@@ -308,7 +315,7 @@
             </div>
             <div class="form-group row col-12">
                 <label class="control-label col-md-6 align-self-center">Số ngày : </label>
-                <input type="text" class="form-control col-md-2" id="LockedDays">
+                <input type="number" class="form-control col-md-2" id="LockedDays" value="2000">
 
             </div>
         </div>
@@ -367,8 +374,8 @@
                         <th>Đến ngày</th>
                         <th>Số ngày</th>
                         <th>Lý do</th>
-                        <th style="text-align: center;"><input type="checkbox" id="select_all" /></th>
-                        <th>Sửa</th>
+                        <th style="text-align: center;" class="notexport"><input type="checkbox" id="select_all" /></th>
+                        <th class="notexport">Sửa</th>
                     </tr>
                 </thead>
 

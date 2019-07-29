@@ -1,6 +1,6 @@
 ﻿@using Libol.Models;
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Xếp giá";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -121,7 +121,8 @@
 
     }
 
-    <label class="col-md-12" style="color:red" AutoSize="true">@ViewBag.content</label>
+    <div style=" margin-top: 0.5rem;">@ViewBag.content.Split('@')[0]<strong>@ViewBag.content.Split('@')[1]</strong>@ViewBag.content.Split('@')[2]</div>
+    <div>@ViewBag.content.Split('@')[3]</div>
     @if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
     {
         <span style="color:red">@ViewBag.AlertMessage</span>

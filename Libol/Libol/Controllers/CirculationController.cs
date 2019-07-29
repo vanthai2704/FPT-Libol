@@ -380,7 +380,7 @@ namespace Libol.Controllers
         }
         // LockCard()
         [HttpPost]
-        public JsonResult LockCardPatron(string cardNumber,string startDate,int lockDays, string note)
+        public JsonResult LockCardPatron(string cardNumber, string startDate, int lockDays, string note)
         {
             List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cardNumber, lockDays, startDate, note);
             ViewData["listResult"] = listResult;
@@ -404,7 +404,7 @@ namespace Libol.Controllers
             {
                 foreach (var item in patroncodeList)
                 {
-                    cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("'" + item+ "'"); ;
+                    cb.FPT_SP_UNLOCK_PATRON_CARD_LIST("'" + item + "'"); ;
                 }
             }
             catch (Exception)
@@ -533,14 +533,18 @@ namespace Libol.Controllers
         }
         // get list lock patron in datatable
         [HttpPost]
-        public JsonResult GetLockPatron(DataTableAjaxPostModel model ,int libraryID, string PatronCode,string Note,string StartedDate,string FinishDate)
+        public JsonResult GetLockPatron(DataTableAjaxPostModel model, int libraryID, string PatronCode, string Note, string StartedDate, string FinishDate)
         {
-            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST(PatronCode,"", "", "", 0);
+            var lockedpatron = cb.GET_SP_GET_LOCKEDPATRONS_LIST("", "", "", "", 0);
             var search = lockedpatron.Where(a => true);
-            if(libraryID != -1)
+            if (libraryID != -1)
             {
                 List<String> listInLib = le.CIR_PATRON.Where(c => c.CIR_PATRON_GROUP == null ? false : c.CIR_PATRON_GROUP.HOLDING_LOCATION.Select(l => l.LibID).Contains(libraryID)).Select(c => c.Code).ToList();
                 search = lockedpatron.Where(a => listInLib.Contains(a.PatronCode));
+            }
+            if (!String.IsNullOrEmpty(PatronCode))
+            {
+                search = search.Where(a => a.PatronCode.Contains(PatronCode));
             }
             if (!String.IsNullOrEmpty(Note))
             {
@@ -552,7 +556,7 @@ namespace Libol.Controllers
             }
             if (!String.IsNullOrEmpty(FinishDate))
             {
-                search = search.Where(a => a.FinishDate.ToString("yyyy-MM-dd").CompareTo(FinishDate)<=0);
+                search = search.Where(a => a.StartedDate.ToString("yyyy-MM-dd").CompareTo(FinishDate) <= 0);
             }
             var paging = search.Skip(model.start).Take(model.length).ToList();
             var result = paging.ToList();

@@ -100,7 +100,7 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" id="strCopyNumber" type="text" onkeypress="checkout(event)" disabled/></div>
+                        <div class="col"><input class="form-control" id="strCopyNumber" type="text" onkeypress="checkout(event)" disabled /></div>
                         <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
@@ -121,7 +121,7 @@
             checkoutSuccess()
         }
     }
-   
+
     function checkoutSuccess() {
         var empObj = {
             strFullName: '',
@@ -184,10 +184,11 @@
                     alert(document.getElementById("hiddenmessage").value);
                     document.getElementById("strCopyNumber").value = "";
                     document.getElementById("strCopyNumber").disabled = true;
-                    document.getElementById("strCopyNumber").focus();
+
                 }
                 else {
                     document.getElementById("strCopyNumber").disabled = false;
+                    document.getElementById("strCopyNumber").focus();
                 }
             },
             error: function (errormessage) {
