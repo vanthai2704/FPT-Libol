@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Báo cáo bổ sung";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -48,9 +48,9 @@
                     </tr>
                     <tr>
                         <td class="text-right">Từ thời gian bổ sung</td>
-                        <td><input name="StartDate" type="date" /> </td>
+                        <td><input name="StartDate" id="FromDate" type="date" /> </td>
                         <td class="text-right">Tới thời gian bổ sung</td>
-                        <td>&nbsp;<input name="EndDate" type="date"></td>
+                        <td>&nbsp;<input name="EndDate" id="ToDate" type="date"></td>
                     </tr>
                     <tr>
                         <td class="text-right">Sắp xếp theo ĐKCB</td>
@@ -67,7 +67,7 @@
         <div class="btn-group d-xl-flex justify-content-xl-center" role="group">
             <button id="preview" type="submit" style="margin-right:20px;">Xem thử</button>
             <button id="print" type="button" style="margin-right:20px;">In</button>
-            <button id="reset" type="button">Đặt lại</button>
+            <button id="reset" type="button" onclick="reset()">Đặt lại</button>
         </div>
     }
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -108,6 +108,13 @@
             $("#Library").val('');
             $("#Location").val('');
         });
+        function reset() {
+            $("#Library").val('');
+            $("#Location").empty();
+            $("#FromDate").val('');
+            $("#ToDate").val('');
+            $("#RecordNumber").val('');
+        }
     </script>
 </body>
 

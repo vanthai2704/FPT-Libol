@@ -100,7 +100,7 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" id="strCopyNumber" type="text" onkeypress="checkout(event)" /></div>
+                        <div class="col"><input class="form-control" id="strCopyNumber" type="text" onkeypress="checkout(event)" disabled/></div>
                         <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
@@ -139,6 +139,10 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckout").html(result)
+                if (document.getElementById("hiddenmessage").value != "") {
+                    alert(document.getElementById("hiddenmessage").value);
+                }
+                document.getElementById("strCopyNumber").value = "";
             },
             error: function (errormessage) {
                 console.log("error");
@@ -169,13 +173,20 @@
                 });
             },
             complete: function (request, json) {
-
             },
             url: "/CheckOut/CheckOutCardInfo",
             data: JSON.stringify(empObj),
             success: function (result) {
                 $("#contentcheckout").html(result);
                 $.unblockUI()
+                if (document.getElementById("hiddenmessage").value != "") {
+                    alert(document.getElementById("hiddenmessage").value);
+                    document.getElementById("strCopyNumber").value = "";
+                    document.getElementById("strCopyNumber").disabled = true;
+                }
+                else {
+                    document.getElementById("strCopyNumber").disabled = false;
+                }
             },
             error: function (errormessage) {
                 $.unblockUI()
@@ -189,47 +200,75 @@
             type: "GET",
             success: function (result) {
                 $("#contentcheckout").html(result);
-                console.log('ýes');
             },
             error: function (errormessage) {
-                console.log('error')
             }
         });
     }
 
     function Searchpatronbyname() {
         var empObj = {
-            strFullName: document.getElementById("searchpatronbyname").value
+            strFullName: document.getElementById("txtFullName").value
         };
         $.ajax({
             url: "/CheckOut/FindByName",
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+            },
             success: function (result) {
                 $("#contentcheckout").html(result);
-                console.log('ýes');
+                $.unblockUI()
             },
             error: function (errormessage) {
-                console.log('error')
+                $.unblockUI()
             }
         });
     }
     function btnsearchpatron() {
         var empObj = {
-            strFullName: document.getElementById("searchpatronbyname").value
+            strFullName: document.getElementById("txtFullName").value
         };
         $.ajax({
             url: "/CheckOut/FindByName",
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+            },
             success: function (result) {
                 $("#contentcheckout").html(result);
-                console.log('ýes');
+                $.unblockUI()
             },
             error: function (errormessage) {
-                console.log('error')
+                $.unblockUI()
             }
         });
 
