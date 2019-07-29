@@ -1,0 +1,63 @@
+﻿<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#table').DataTable({
+                lengthChange: false,
+                buttons: [
+                    {
+                        extend: 'print',
+                        title: function () { var printTitle = 'Nhật ký ấn phẩm đang được mượn'; return printTitle; }
+                    },
+                    'excel',
+                    'csv',
+                    'pdf',
+                    'colvis'
+                ]
+            });
+
+            $("#ExportReporttoExcel").on("click", function () {
+                table.button( '.buttons-excel' ).trigger();
+            });
+
+            $("#Print").on("click", function() {
+                table.button( '.buttons-print' ).trigger();
+            });
+        });
+    </script>
+</head>
+
+<div id="Main">
+    <h4 style="background-color:Highlight; color:white; margin-top:5px;">Nhật ký ấn phẩm đang được mượn <span id="Total" style="float:right;">Tổng số bạn đọc: @ViewBag.PatronCount / Tổng số lượt mượn: @ViewBag.Result.Count</span></h4>
+    <table id="table" class="table table-striped table-bordered" style="border-collapse: collapse;" border="1">
+        <thead>
+            <tr>
+                <th>Nhan đề</th>
+                <th>ĐKCB</th>
+                <th>Bạn đọc</th>
+                <th>Ngày mượn</th>
+                <th>Ngày trả</th>
+                <th>Đơn giá</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Result)
+            {
+                <tr>
+                    <td>@item.Content</td>
+                    <td>@item.CopyNumber</td>
+                    <td>@item.FullName</td>
+                    <td>@item.CheckOutDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.DueDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Price @item.Currency</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="margin-top:20px;" class="btn-group d-xl-flex justify-content-xl-center" role="group">
+    <button id="Print" type="button" style="margin-right:20px;">In</button>
+    <button id="ExportReporttoExcel" type="button" style="margin-right:20px;">Lưu vào file excel</button>
+</div>
