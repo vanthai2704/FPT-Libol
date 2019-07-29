@@ -40,8 +40,9 @@ namespace Libol.Controllers
             string strCheckOutDate
             )
         {
+            string CopyNumber = strCopyNumbers.Trim();
             getpatrondetail(strPatronCode);
-            int success= db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], intLoanMode, strCopyNumbers, strFixDueDate, strCheckOutDate, intHoldIgnore,
+            int success= db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strFixDueDate, strCheckOutDate, intHoldIgnore,
                new ObjectParameter("intOutValue", typeof(int)),
                 new ObjectParameter("intOutID", typeof(int)));
             string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();

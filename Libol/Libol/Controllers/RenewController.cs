@@ -120,7 +120,8 @@ namespace Libol.Controllers
                     Renewals = a.Renewals.ToString(),
                     CopyNumber = a.CopyNumber,
                     Code = a.Code,
-                    Note = (DateTime.Now - a.DueDate).Days > 0 ? (DateTime.Now - a.DueDate).Days.ToString() : ""
+                    OverDueDates = (DateTime.Now - a.DueDate).Days > 0 ? " ( "+(DateTime.Now - a.DueDate).Days.ToString()+" )" : "",
+                    Note = (DateTime.Now - a.DueDate).Days < -3 ? "Chưa đến thời gian gia hạn" : (DateTime.Now - a.DueDate).Days > 0 ? "Số ngày quá hạn: ": ""
                 });
             }
             ViewBag.ContentRenew = customRenews;
@@ -155,6 +156,7 @@ namespace Libol.Controllers
         public string Renewals { get; set; }
         public string CopyNumber { get; set; }
         public string Code { get; set; }
+        public string OverDueDates { get; set; }
         public string Note { get; set; }
     }
 
