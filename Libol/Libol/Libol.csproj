@@ -2375,6 +2375,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Log\console-app.log" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2488,6 +2489,7 @@
     <Content Include="Views\Acquired\Index.cshtml" />
     <Content Include="Views\AcquireReport\StatTaskbar.cshtml" />
     <Content Include="Views\AcquireReport\GetStatTaskbar.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
@@ -2508,7 +2510,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="EntityResultRAS\" />
-    <Folder Include="Views\Error\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

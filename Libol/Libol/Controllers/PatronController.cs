@@ -139,15 +139,26 @@ namespace Libol.Controllers
             {
                 InvalidFields += "strLastIssuedDate-";
             }
-            if (intCollegeID == -1)
+            //if (intCollegeID == -1)
+            //{
+            //    InvalidFields += "college-";
+            //}
+            //if (intFacultyID == -1)
+            //{
+            //    InvalidFields += "faculty-";
+            //}
+            if (String.IsNullOrEmpty(strWorkPlace))
             {
-                InvalidFields += "college-";
+                InvalidFields += "strWorkPlace-";
             }
-            if (intFacultyID == -1)
+            if (String.IsNullOrEmpty(strAddress))
             {
-                InvalidFields += "faculty-";
+                InvalidFields += "strAddress-";
             }
-
+            if (String.IsNullOrEmpty(strEmail))
+            {
+                InvalidFields += "strEmail-";
+            }
 
             if (InvalidFields != "")
             {
@@ -254,15 +265,26 @@ namespace Libol.Controllers
             {
                 InvalidFields += "strLastIssuedDate-";
             }
-            if (intCollegeID == -1)
+            //if (intCollegeID == -1)
+            //{
+            //    InvalidFields += "college-";
+            //}
+            //if (intFacultyID == -1)
+            //{
+            //    InvalidFields += "faculty-";
+            //}
+            if (String.IsNullOrEmpty(strWorkPlace))
             {
-                InvalidFields += "college-";
+                InvalidFields += "strWorkPlace-";
             }
-            if (intFacultyID == -1)
+            if (String.IsNullOrEmpty(strAddress))
             {
-                InvalidFields += "faculty-";
+                InvalidFields += "strAddress-";
             }
-
+            if (String.IsNullOrEmpty(strEmail))
+            {
+                InvalidFields += "strEmail-";
+            }
 
             if (InvalidFields != "")
             {

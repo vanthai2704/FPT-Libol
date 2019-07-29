@@ -52,15 +52,15 @@ namespace Libol.Controllers
                     }
                     else if (Equals(strFixedDueDate, ""))
                     {
-                        ViewBag.message = "vui lòng chọn ngày ra hạn";
+                        ViewBag.message = "vui lòng chọn ngày gia hạn";
                     }
                     else if (DateTime.Compare(Convert.ToDateTime(strFixedDueDate), Convert.ToDateTime(duedates[0])) < 0)
                     {
-                        ViewBag.message = "ngày ra hạn sớm hơn hạn trả hiện tại";
+                        ViewBag.message = "ngày gia hạn sớm hơn hạn trả hiện tại";
                     }
                     else if (DateTime.Compare(expiredDate, Convert.ToDateTime(strFixedDueDate)) < 0)
                     {
-                        ViewBag.message = "ngày ra hạn muộn hơn ngày hết hạn thẻ";
+                        ViewBag.message = "ngày gia hạn muộn hơn ngày hết hạn thẻ";
                     }
                     else
                     {

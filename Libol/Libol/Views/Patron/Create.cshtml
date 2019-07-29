@@ -249,6 +249,9 @@
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Nơi làm việc</label>
             <input type="text" class="form-control col-md-2" id="strWorkPlace" value="@Model.WorkPlace">
+            <div class="invalid-feedback">
+                Vui lòng chọn Nơi làm việc
+            </div>
         </div>
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Trường</label>
@@ -332,6 +335,9 @@
             {
                 <input type="text" class="form-control col-md-6" id="strAddress">
             }
+            <div class="invalid-feedback">
+                Vui lòng nhập Địa chỉ
+            </div>
             <label class="control-label col-md-1 align-self-center">Thành phố</label>
             @if (Model.CIR_PATRON_OTHER_ADDR != null && Model.CIR_PATRON_OTHER_ADDR.Count > 0)
             {
@@ -341,6 +347,7 @@
             {
                 <input type="text" class="form-control col-md-2" id="strCity">
             }
+
         </div>
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Tỉnh</label>
@@ -409,6 +416,9 @@
         <div class="form-group row">
             <label class="control-label col-md-1 align-self-center">Email</label>
             <input type="email" class="form-control col-md-2" id="strEmail" value="@Model.Email">
+            <div class="invalid-feedback">
+                Vui lòng nhập Email
+            </div>
             <label class="control-label col-md-3 align-self-center">Chứng minh thư</label>
             <input type="text" class="form-control col-md-2" id="strIDCard" value="@Model.IDCard">
         </div>
@@ -800,7 +810,7 @@
             document.getElementById("faculty").value = -1,
             document.getElementById("avatarImage").src = "/Content/ImagePatron/NoImage.png"
 
-        hideInvalid("strFirstName-strLastName-strDOB-strCode-intPatronGroupID-strValidDate-strExpiredDate-strLastIssuedDate-college-faculty");
+        hideInvalid("strFirstName-strLastName-strDOB-strCode-intPatronGroupID-strValidDate-strExpiredDate-strLastIssuedDate-college-faculty-strWorkPlace-strAddress-strEmail");
     }
 
     function ResetUpdate() {
