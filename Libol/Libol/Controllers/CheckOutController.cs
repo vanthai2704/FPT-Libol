@@ -45,7 +45,16 @@ namespace Libol.Controllers
                new ObjectParameter("intOutValue", typeof(int)),
                 new ObjectParameter("intOutID", typeof(int)));
             string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
-            if (success == 3)
+           
+            if (success == -1) 
+            {
+                if (patroncode != strPatronCode)
+                {
+                    strTransactionIDs = "0";
+                }
+                ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
+            }
+            else
             {
                 if (patroncode == strPatronCode)
                 {
@@ -55,14 +64,6 @@ namespace Libol.Controllers
                 {
                     strTransactionIDs = lastid;
                 }
-            }
-            else
-            {
-                if (patroncode != strPatronCode)
-                {
-                    strTransactionIDs = "0";
-                }
-                ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
             }
             getcurrentloandetail();
             patroncode = strPatronCode;

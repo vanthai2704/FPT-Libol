@@ -115,9 +115,11 @@ namespace Libol.Controllers
                     DueDate = a.DueDate.ToString("yyyy-MM-dd"),
                     Content = gettitle(a.Content),
                     DateRange = a.CheckOutDate.ToString("dd/MM/yyyy") + "-" + a.DueDate.ToString("dd/MM/yyyy"),
-                    FullName = a.FullName + "(" + a.Code + ")",
+                    FullName = a.FullName,
                     RenewCount = a.RenewCount.ToString(),
                     Renewals = a.Renewals.ToString(),
+                    CopyNumber = a.CopyNumber,
+                    Code = a.Code,
                     Note = (DateTime.Now - a.DueDate).Days > 0 ? (DateTime.Now - a.DueDate).Days.ToString() : ""
                 });
             }
@@ -151,6 +153,8 @@ namespace Libol.Controllers
         public string FullName { get; set; }
         public string RenewCount { get; set; }
         public string Renewals { get; set; }
+        public string CopyNumber { get; set; }
+        public string Code { get; set; }
         public string Note { get; set; }
     }
 
