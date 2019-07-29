@@ -53,16 +53,17 @@ namespace Libol.Controllers
             string strCheckInDate
         )
         {
+            string CopyNumber = strCopyNumbers.Trim();
             int success = -1;
-            if (db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumbers).Count() == 0)
+            if (db.CIR_LOAN.Where(a => a.CopyNumber == CopyNumber).Count() == 0)
             {
                 ViewBag.message = "ĐKCB không đúng hoặc chưa được ghi mượn";
                 ViewBag.PatronDetail = null;
             }
             else
             {
-                string patroncode = db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumbers).First().CIR_PATRON.Code;
-                success = db.SP_CHECKIN((int)Session["UserID"], intType, intAutoPaid, strCopyNumbers, strCheckInDate,
+                string patroncode = db.CIR_LOAN.Where(a => a.CopyNumber == CopyNumber).First().CIR_PATRON.Code;
+                success = db.SP_CHECKIN((int)Session["UserID"], intType, intAutoPaid, CopyNumber, strCheckInDate,
                     new ObjectParameter("strTransIDs", typeof(string)),
                     new ObjectParameter("strPatronCode", typeof(string)),
                     new ObjectParameter("intError", typeof(int)));
