@@ -176,6 +176,14 @@ namespace Libol.Controllers
                     CodeError = 2,
                     Data = "Bạn đọc với số thẻ " + strCode + " đã tồn tại!"
                 }, JsonRequestBehavior.AllowGet);
+            }else
+            if (db.CIR_PATRON.Where(a => a.Code != strCode && a.Email == strEmail).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Email " + strEmail + " không hợp lệ!"
+                }, JsonRequestBehavior.AllowGet);
             }
             else
             {
@@ -301,6 +309,15 @@ namespace Libol.Controllers
                 {
                     CodeError = 2,
                     Data = "Bạn đọc với số thẻ " + strCode + " đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            if (db.CIR_PATRON.Where(a => a.Code != strCode && a.Email == strEmail).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Email " + strEmail + " không hợp lệ!"
                 }, JsonRequestBehavior.AllowGet);
             }
             else
