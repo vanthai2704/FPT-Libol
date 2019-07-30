@@ -3,6 +3,7 @@ using Libol.Models;
 using Libol.SupportClass;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -15,6 +16,7 @@ namespace Libol.Controllers
         RenewBusiness renewBusiness = new RenewBusiness();
         private static Byte Type = 0;
         private static string CodeVal = "";
+        FormatHoldingTitle f = new FormatHoldingTitle();
 
         [AuthAttribute(ModuleID = 3, RightID = "149")]
         public ActionResult Renew()
@@ -25,9 +27,9 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult SearchToRenew(Byte intType, string strCodeVal)
         {
-            getcontentrenew((int)Session["UserID"], intType, strCodeVal);
+            CodeVal = strCodeVal.Trim();
+            getcontentrenew((int)Session["UserID"], intType, CodeVal);
             Type = intType;
-            CodeVal = strCodeVal;
             return PartialView("_searchToRenew");
         }
 
@@ -98,9 +100,21 @@ namespace Libol.Controllers
                     ViewBag.message = "Gia hạn thành công( " + (intLoanID.Length - codeErrorCount) + " ) bản ghi" + "" + " gia hạn thất bại( " + codeErrorCount + " )bản ghi";
                 }
             }
-            
+
             getcontentrenew((int)Session["UserID"], Type, CodeVal);
-            return PartialView("_searchToRenew", ViewBag.message);
+            return PartialView("_searchToRenew");
+        }
+
+        public void QuinkCheckInAndCheckOut(string strCopynumber, string strPatronCode, string strDueDate, string strCheckOutDate)
+        {
+            db.SP_CHECKIN((int)Session["UserID"], 1, 0, strCopynumber, strCheckOutDate,
+                    new ObjectParameter("strTransIDs", typeof(string)),
+                    new ObjectParameter("strPatronCode", typeof(string)),
+                    new ObjectParameter("intError", typeof(int)));
+            db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], 1, strCopynumber, strDueDate, strCheckOutDate, 0,
+                       new ObjectParameter("intOutValue", typeof(int)),
+                        new ObjectParameter("intOutID", typeof(int)));
+            ViewBag.message = "Mượn lại thành công";
         }
 
         public void getcontentrenew(int intUserID, Byte intType, string strCodeVal)
@@ -112,36 +126,20 @@ namespace Libol.Controllers
                 customRenews.Add(new CustomRenew
                 {
                     ID = a.ID,
-                    DueDate = a.DueDate.ToString("yyyy-MM-dd"),
-                    Content = gettitle(a.Content),
+                    DueDate = a.DueDate.ToString("yyyy-MM-dd"), // format khác để sử dụng trong insert db gọi từ hàm khác
+                    Content = f.OnFormatHoldingTitle(a.Content),
                     DateRange = a.CheckOutDate.ToString("dd/MM/yyyy") + "-" + a.DueDate.ToString("dd/MM/yyyy"),
                     FullName = a.FullName,
                     RenewCount = a.RenewCount.ToString(),
                     Renewals = a.Renewals.ToString(),
                     CopyNumber = a.CopyNumber,
                     Code = a.Code,
-                    OverDueDates = (DateTime.Now - a.DueDate).Days > 0 ? " ( "+(DateTime.Now - a.DueDate).Days.ToString()+" )" : "",
-                    Note = (DateTime.Now - a.DueDate).Days < -3 ? "Chưa đến thời gian gia hạn" : (DateTime.Now - a.DueDate).Days > 0 ? "Số ngày quá hạn: ": ""
+                    OverDueDates = (DateTime.Now - a.DueDate).Days > 0 ? " ( " + (DateTime.Now - a.DueDate).Days.ToString() + " )" : "",
+                    Note = (DateTime.Now - a.DueDate).Days < -3 ? "Chưa đến thời gian gia hạn" : (DateTime.Now - a.DueDate).Days > 0 ? "Số ngày quá hạn: " : ""
                 });
             }
             ViewBag.ContentRenew = customRenews;
         }
-
-        public string gettitle(string title)
-        {
-            string validate = title.Replace("$a", "");
-            validate = validate.Replace("$b", "");
-            validate = validate.Replace("$c", "");
-            validate = validate.Replace("=$b", "");
-            validate = validate.Replace(":$b", "");
-            validate = validate.Replace("/$c", "");
-            validate = validate.Replace(".$n", "");
-            validate = validate.Replace(":$p", "");
-            validate = validate.Replace(";$c", "");
-            validate = validate.Replace("+$e", "");
-            return validate;
-        }
-
 
     }
 

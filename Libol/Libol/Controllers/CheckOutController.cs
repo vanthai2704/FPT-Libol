@@ -55,7 +55,7 @@ namespace Libol.Controllers
         public PartialViewResult CheckOutSuccess(
             string strFullName,
             string strPatronCode,
-            string strFixDueDate,
+            string strDueDate,
             int intLoanMode,
             int intHoldIgnore,
             string strCopyNumbers,
@@ -94,7 +94,7 @@ namespace Libol.Controllers
                 }
                 else
                 {
-                    int success = db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strFixDueDate, strCheckOutDate, intHoldIgnore,
+                    int success = db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strDueDate, strCheckOutDate, intHoldIgnore,
                        new ObjectParameter("intOutValue", typeof(int)),
                         new ObjectParameter("intOutID", typeof(int)));
                     string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
