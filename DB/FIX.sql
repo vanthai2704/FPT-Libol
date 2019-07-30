@@ -539,3 +539,38 @@ AS
 	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) 
 	EXEC (@stRSql)
 	print(@stRSql)
+	
+------------------------------------------
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_COUNT_COPYNUMBER_ONLOAN]    Script Date: 07/29/2019 21:28:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		<DUCNV>
+-- Create date: <Create Date,,>
+-- Description:	So luong dang muon
+-- InUsed 
+-- =1: dang muon 
+-- =============================================
+ALTER PROCEDURE [dbo].[FPT_COUNT_COPYNUMBER_ONLOAN] 
+@itemID int,
+ @intLocationID int,
+  @intLibraryID int
+	-- Add the parameters for the stored procedure here
+	
+AS
+DECLARE @strSQL NVARCHAR(1000)
+SET @strSQL=''
+
+      SET @strSQL=@strSQL +'SELECT COUNT(COPYNUMBER) as SLuong FROM HOLDING WHERE InUsed = 1 AND  ITEMID = ' +convert(nvarchar,@itemID)
+
+	If @intLocationID <>0
+		 SET @strSQL=@strSQL + ' AND LocationID='+ convert(nvarchar,@intLocationID)
+	If @intLocationID =0
+		SET @strSQL=@strSQL + ' AND LibID='+ convert(nvarchar,@intLibraryID)
+--print(@strSQL)
+
+      EXEC(@strSQL)

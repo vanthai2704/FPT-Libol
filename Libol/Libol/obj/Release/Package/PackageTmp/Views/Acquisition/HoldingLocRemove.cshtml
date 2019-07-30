@@ -1,0 +1,203 @@
+﻿@using Libol.Models;
+@{
+    ViewBag.Title = "Thanh lý";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    label {
+        text-align: right;
+    }
+
+    .form-control {
+        font-size: 0.8rem !important;
+    }
+</style>
+
+<h4 style="margin-top: 20px;margin-bottom: 20px; color: red" >Thanh lý</h4>
+@{
+    List<SP_HOLDING_REMOVE_REASON_SEL_Result> listReason = ViewData["ListReason"] as List<SP_HOLDING_REMOVE_REASON_SEL_Result>; // list Reason
+}
+
+<div class="row">
+    <div class="col-6">
+        <div class="form-group row col-12">
+            <strong>Nguồn thanh lý</strong>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label" for="radio1">
+                <input type="radio" class="form-check-input" id="radio1" name="optradio" value="option1" onclick="RemoveByMTL()" checked>Thanh lý theo đầu ấn phẩm
+            </label>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Mã tài liệu: </label>
+            <input type="text" class="form-control col-md-5" id="txtSDKCB">
+            <div class="col-3"><button type="button" class="btn btn-primary" id="search">Tìm</button></div>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label" for="radio2">
+                <input type="radio" class="form-check-input" id="radio2" name="optradio" value="option2" onclick="RemoveByDKCB()">Thanh lý theo ĐKCB
+            </label>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Thư viện: </label>
+            <select class="form-control col-md-4" style="width:80% !important" onchange="OnchangeLibrary()" id="intLibID" disabled>
+                <option value="-1">----- Chọn -----</option>
+                @foreach (var item in ViewBag.Library)
+                {
+                    <option value="@item.ID">@item.Code</option>
+                }
+            </select>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Kho: </label>
+            <select class="form-control col-md-4" id="intLocID" disabled>
+                <option value="-1">----- Chọn -----</option>
+            </select>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Giá: </label>
+            <input type="text" class="form-control col-md-4" id="intPrice" disabled>
+        </div>
+        <div style="padding-left:10px;">
+            <div class="form-check">
+                <label class="form-check-label" for="radio3">
+                    <input type="radio" class="form-check-input" id="radio3" name="listradio" value="option3" onclick="GetDKCBbyFile()" disabled>Danh sách ĐKCB lấy từ file
+                </label>
+            </div>
+            <div class="form-group row col-12">
+                <div><button type="button" class="btn btn-primary" id="selectfile" disabled>Chọn tệp</button></div>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label" for="radio4">
+                    <input type="radio" class="form-check-input" id="radio4" name="listradio" value="option4" onclick="GetDKCBbyTextArea()" checked disabled>Danh sách ĐKCB nhập bên dưới
+                </label>
+            </div>
+            <div class="form-group row col-12">
+                <textarea class="form-control col-md-6" id="fieldkcb" disabled></textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-6">
+        <div class="form-group row col-12">
+            <strong>Thông tin thanh lý</strong>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Mã thanh lý: </label>
+            <input type="text" class="form-control col-md-4" id="txtLiquidate">
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Ngày thanh lý: </label>
+            <input type="date" class="form-control col-md-4" id="DateLiquidate" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)">
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-3 align-self-center">Lý do: </label>
+            <select name="listReason" id="listReason">
+                @{
+                    foreach (SP_HOLDING_REMOVE_REASON_SEL_Result item in listReason)
+                    {
+                        <option value="@item.ID">@item.REASON</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="form-group row col-12">
+            <label class="control-label col-md-5 align-self-center"></label>
+            <div class="col" style="padding-left:25px;"><button type="button" class="btn btn-primary" id="btnLiquidate" onclick="Liquidate()">Thanh lý</button></div>
+        </div>
+    </div>
+
+    <script>
+        function OnchangeLibrary() {
+            var e = document.getElementById("intLibID");
+            var id = e.options[e.selectedIndex].value;
+            var empObj = {
+                LibID: id
+            };
+            $.ajax({
+                url: "/Acquisition/OnchangeLibrary",
+                data: JSON.stringify(empObj),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var html = "<option value='-1'>----- Chọn -----</option>"
+                    for (r in result) {
+                        html = html + "<option value=" + result[r].ID + ">" + result[r].Symbol + "</option>"
+                    }
+                    document.getElementById("intLocID").innerHTML = html;
+
+                },
+                error: function (errormessage) {
+
+                }
+            });
+        }
+
+        function RemoveByMTL() {
+            document.getElementById("intPrice").disabled = true;
+            document.getElementById("txtSDKCB").disabled = false;
+            document.getElementById("search").disabled = false;
+            document.getElementById("intLibID").disabled = true;
+            document.getElementById("intLocID").disabled = true;
+            document.getElementById("radio3").disabled = true;
+            document.getElementById("radio4").disabled = true;
+            document.getElementById("selectfile").disabled = true;
+            document.getElementById("fieldkcb").disabled = true;
+        }
+
+        function RemoveByDKCB() {
+            document.getElementById("txtSDKCB").disabled = true;
+            document.getElementById("search").disabled = true;
+            document.getElementById("intLibID").disabled = false;
+            document.getElementById("intLocID").disabled = false;
+            document.getElementById("intPrice").disabled = false;
+            document.getElementById("radio3").disabled = false;
+            document.getElementById("radio4").disabled = false;
+            if (document.getElementById("radio3").checked == true) {
+                document.getElementById("selectfile").disabled = false;
+            }
+            else if (document.getElementById("radio4").checked == true) {
+                document.getElementById("fieldkcb").disabled = false;
+            }
+        }
+
+        function GetDKCBbyFile() {
+            document.getElementById("selectfile").disabled = false;
+            document.getElementById("fieldkcb").disabled = true;
+        }
+
+        function GetDKCBbyTextArea() {
+            document.getElementById("selectfile").disabled = true;
+            document.getElementById("fieldkcb").disabled = false;
+        }
+        // Thanh Ly 
+        function Liquidate() {
+            var Liquidate = document.getElementById("txtLiquidate").value;
+            var DateLiquidate = document.getElementById("DateLiquidate").value;
+            var Reason = $("#listReason :selected").val();
+            var DKCB = document.getElementById("fieldkcb").value;
+            var Copynumber = document.getElementById("txtSDKCB").value;
+
+            $.ajax({
+                url: "/Acquisition/Liquidate",
+                data: JSON.stringify({ Copynumber, DKCB, Liquidate,DateLiquidate,Reason}),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    alert('Bạn đã thanh lý sản phẩm thành công');
+                },
+                error: function () {
+                    alert('Thanh lý sản phẩm  không thành công');
+                }
+
+            });
+
+        }
+
+
+
+                //
+    </script>

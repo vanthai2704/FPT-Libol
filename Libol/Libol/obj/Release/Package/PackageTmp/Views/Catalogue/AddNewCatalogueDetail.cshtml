@@ -1,0 +1,487 @@
+﻿@using System.Linq;
+@using Libol.Models;
+@using Libol.EntityResult;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #textColorInput {
+        color: red;
+    }
+
+    label {
+        text-align: right;
+    }
+    .affix {
+        top: 20px;
+        z-index: 9999 !important;
+    }
+    .btn-circle.btn-xl {
+        width: 70px;
+        height: 70px;
+        padding: 10px 16px;
+        font-size: 24px;
+        line-height: 1.33;
+        border-radius: 35px;
+    }
+</style>
+<h4 style="margin:1rem">Biên Mục Chi Tiết</h4>
+<nav class="col-sm-3">
+    <div class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
+        <button type="button" class="btn btn-warning btn-circle btn-xl">
+            +
+        </button>
+    </div>
+</nav>
+<form action="~/Catalogue/AddNewCatalogue" method="post">
+    
+
+        @{
+            SP_CATA_GET_CONTENTS_OF_ITEMS_Result Leader = ViewData["Leader"] as SP_CATA_GET_CONTENTS_OF_ITEMS_Result;
+            List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> Contents = ViewData["ListContent"] as List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result>;
+            List<SP_CATA_GET_MODIFIED_FIELDS_Result> Fields = ViewData["listField"] as List<SP_CATA_GET_MODIFIED_FIELDS_Result>;
+            //Merge 2 List Content + Des
+            var res = Contents.Zip(Fields, (c, f) => new { Content = c, Field = f });
+        }
+
+        <div id="formCreated">
+
+            @{
+                <label class='control-label align-self-center font-weight-bold'>000 : Leader </label> <br>
+                <div class="form-group row col-12">
+                    <label class='control-label col-md-2 align-self-center font-weight-bold'>000</label>
+                    @Html.TextBox(Leader.Content, Leader.Content, new { @class = "form-control col-md-9", @id = Leader.IDSort })
+                </div>
+                foreach (var item in res)
+                {
+                    if (item.Content.Ind != "")
+                    {
+                        <label class='control-label align-self-center font-weight-bold'>@item.Content.IDSort : @item.Field.VietFieldName</label> <br>
+                        <div class="form-group row col-12">
+
+                            <label class='control-label col-md-2 align-self-center font-weight-bold'>@item.Content.IDSort </label>
+                            @Html.TextBox(item.Content.FieldCode, item.Content.Content, new { @class = "form-control col-md-9", @id = item.Content.IDSort })
+                            @Html.TextBox(item.Content.Ind, item.Content.Ind, new { @class = "form-control col-md-1", @id = item.Content.IDSort, @maxlength = 2 })
+
+                        </div>
+                    }
+                    else
+                    {
+                        <label class='control-label align-self-center font-weight-bold'>@item.Content.IDSort : @item.Field.VietFieldName</label> <br>
+                        <div class="form-group row col-12">
+                            <label class='control-label col-md-2 align-self-center font-weight-bold'>@item.Content.IDSort </label>
+                            @Html.TextBox(item.Content.FieldCode, item.Content.Content, new { @class = "form-control col-md-9", @id = item.Content.IDSort })
+                        </div>
+                    }
+
+                }
+
+            }
+
+            <label class='control-label align-self-center font-weight-bold' id="lbAdd">CÁC TRƯỜNG THÊM MỚI</label> <br>
+
+        </div>
+
+
+
+        <div class="form-group col-md-12 form-inline">
+            <div class="form-row col-md-12 text-center">
+                <div style="margin : auto">
+                    <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Cập Nhập" onclick="Update();" />
+                    @*<button disabled type="button" id="btnReset" class="btn btn-primary form-control">Đặt Lại</button>*@
+                    <button type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#centralModalSm" data-backdrop="static">Thêm Trường</button>
+                </div>
+            </div>
+        </div>
+</form>
+
+
+
+
+
+<!--The Modal -->
+@*Tìm Kiếm Nhãn Trường*@
+<div class="modal fade" id="centralModalSm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thêm Mới Trường</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="text" class="col-md-10 form-control" id="txtSearch" placeholder="">
+                    <button type="button" class="col-md-1 btn-success form-control" onclick="SearchFields()">Search</button>
+                </div>
+                <br>
+                <br>
+                <div class="table-responsive col-sm-10 offset-sm-1">
+                    <table class="table table-hover table-bordered" id="table">
+                        @*<tr><td class="nr"><strong> Doanhdq</strong></td><td class="nr">Doanhdq</td><td><button type="button" class="use-address" /></td></tr>*@
+                    </table>
+                </div>
+
+                <div id="resultas"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnAddField" onclick="" hidden>Thêm Trường</button>
+                @*<button type="button" class="btn btn-success" onclick="location.href='/Catalogue/AddNewCatalogue';">Biên Mục Mới</button>*@
+                @*<button type="button" class="btn btn-secondary" id="btnShelf">Xếp Giá</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--The Modal -->
+@*Thông báo Update thành công*@
+<div class="modal fade" id="modalSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Cập Nhập Thành Công</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Mã Tài Liệu : <label class='col-md-2 align-self-center font-weight-bold' id="codeId"></label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="confirm" onclick="location.reload()">Xác Nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#lbAdd').hide();
+    var tempArrTempFieldName = ["000"];
+    $(document).ready(function () {
+        debugger;
+        $('#001').prop('disabled', true);
+        var arrListFieldName = @Html.Raw(Json.Encode(ViewBag.listField));
+        $.each(arrListFieldName, function (i, item) {
+        tempArrTempFieldName.push(item.FieldCode);
+        });
+
+        });
+</script>
+
+<script>
+
+
+    function SearchFields() {
+        $('#table').empty();
+        $('#centralModalSm').modal({ backdrop: 'static', keyboard: false });
+        var strSearch = $('#txtSearch').val();
+        $.ajax({
+            url: "/Catalogue/SearchField",
+            type: "POST",
+            data: JSON.stringify({ strSearch: strSearch }),
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (listRs) {
+                debugger;
+                $('#table').append("<tr class='table-success'><th scope='col'> Nhãn Trường</th ><th scope='col'>Mô Tả</th><th scope='col'>Hành Động</th></tr>")
+                if (listRs.length >= 0) {
+                    for (var i = 0; i < listRs.length; i++) {
+                        $('#table').append("<tr><td class='clFieldCode'><strong>" + listRs[i].FieldCode + "</strong></td><td class='clFieldName'>" + listRs[i].VietFieldName + "</td><td><button type='button' class='use-address btn-success'>Thêm</button></td></tr>");
+                    }
+                }
+
+                $(".use-address").click(function () {
+
+                    var $FieldCode = $(this).closest("tr")   // Finds the closest row <tr>
+                        .find(".clFieldCode")     // Gets a descendent with class="nr"
+                        .text();         // Retrieves the text within <td>
+
+                    var $FieldName = $(this).closest("tr")   // Finds the closest row <tr>
+                        .find(".clFieldName")     // Gets a descendent with class="nr"
+                        .text();         // Retrieves the text within <td>
+
+
+
+
+                    var result = confirm("Bạn có chắc chắn muốn thêm trường " + $FieldCode + "?");
+                    if (result) {
+                        if (!tempArrTempFieldName.includes($FieldCode)) {
+                            $('#lbAdd').show(0);
+                            $("#formCreated").append("<label class='control-label align-self-center font-weight-bold'>" + $FieldCode + " : " + $FieldName + " </label> <br> <div class='form-group row col-12'> <label class='control-label col-md-2 align-self-center font-weight-bold'>" + $FieldCode + "</label> <input class='form-control col-md-9' id='" + $FieldCode + "'  type='text'>");
+                            tempArrTempFieldName.push($FieldCode);
+                            alert("Thêm mới trường " + $FieldCode + " thành công !");
+                            $(this).closest("tr").empty();
+                        } else {
+                            alert("Trường " + $FieldCode + " đã tồn tại !");
+                        }
+                    }
+
+                });
+            },
+            error: function (errorThrown) {
+                alert(errorThrown);
+            }
+
+        });
+    }
+</script>
+
+
+
+
+
+<script>
+    function Update() {
+        //List get Data form ViewBag
+
+
+        //array chứa field và giá trị các trường đã được gộp các $ với nhau
+        var arrFieldName = [];
+        var arrFieldValue = [];
+
+        //array chứa field và các giá trị tương ứng như khi show
+        var arrFieldOrg = [];
+        var arrValueOrg = [];
+
+        //GET Inf Lan 1 : Lấy các thông tin nguyên bản - thực hiện UpdateBlockField
+        $.each(tempArrTempFieldName, function (i, FieldName) {
+            var strValue = $("#" + FieldName).val();
+            //TÁCH CÁC TRƯỜNG LẶP THÀNH 1 HÀNG RIÊNG BIỆT
+            if (strValue.indexOf("::") != -1) {
+                var arrValues = strValue.split("::");
+                $.each(arrValues, function (i, value) {
+                    arrFieldOrg.push(FieldName);
+                    arrValueOrg.push(value)
+                });
+            }
+            else {
+                arrFieldOrg.push(FieldName);
+                arrValueOrg.push(strValue)
+            }
+
+        });
+
+        //*******************************************GET Values from Input by FieldName*************************************************
+
+        //GET Inf Lan 2 : Lấy các thông tin nguyên bản - thực hiện Update các thông tin liên quan khác , tương tự như tạo mới Biên mục sơ lược
+        $.each(tempArrTempFieldName, function (i, FieldName) {
+
+            var strValue = $("#" + FieldName).val();
+
+            if (FieldName === '245') {
+
+                var arrIndex = [];
+                for (var i = 1; i < strValue.length; i++) {
+                    if (strValue[i] === '$') {
+                        arrIndex.push(i);
+                        //debugger;
+                    }
+                }
+                //debugger;
+                for (var i = 0; i < arrIndex.length; i++) {
+                    var deleted = 0;
+                    if (strValue[arrIndex[i] - 1 - deleted] === '/' || strValue[arrIndex[i] - 1 - deleted] === '.' || strValue[arrIndex[i] - 1 - deleted] === ',') {
+                        //var x = strValue.substring(0, arrIndex[i] - 1 - deleted);
+                        //var y = strValue.substring(arrIndex[i] - deleted);
+                        strValue = strValue.substring(0, arrIndex[i] - 1 - deleted) + strValue.substring(arrIndex[i] - deleted);
+                        deleted++;
+                        //debugger;
+                    }
+                }
+                debugger;
+            }
+
+            if (FieldName === '260') {
+                var arrIndex = [];
+                for (var i = 1; i < strValue.length; i++) {
+                    if (strValue[i] === '$') {
+                        arrIndex.push(i);
+                    }
+                }
+                for (var i = 0; i < arrIndex.length; i++) {
+                    if (strValue[arrIndex[i] - 1 - i] === ':' || strValue[arrIndex[i] - 1 - i] === ',') {
+                        //var x = strValue.substring(0, arrIndex[i] - 1 - i);
+                        //var y = strValue.substring(arrIndex[i] - i);
+                        strValue = strValue.substring(0, arrIndex[i] - 1 - i) + strValue.substring(arrIndex[i] - i);
+                    }
+                }
+                //debugger;
+            }
+
+            if (FieldName === '300') {
+                var arrIndex = [];
+                for (var i = 1; i < strValue.length; i++) {
+                    if (strValue[i] === '$') {
+                        arrIndex.push(i);
+                    }
+                }
+
+                for (var i = 0; i < arrIndex.length; i++) {
+                    if (strValue[arrIndex[i] - 1 - i] === ':' || strValue[arrIndex[i] - 1 - i] === '+' || strValue[arrIndex[i] - 1 - i] === ';') {
+                        strValue = strValue.substring(0, arrIndex[i] - 1 - i) + strValue.substring(arrIndex[i] - i);
+
+                    }
+                }
+
+            }
+            //TÁCH CÁC TRƯỜNG LẶP THÀNH 1 HÀNG RIÊNG BIỆT
+            if (strValue.indexOf("::") != -1) {
+                var arrValues = strValue.split("::");
+                $.each(arrValues, function (i, value) {
+                    arrFieldName.push(FieldName);
+                    arrFieldValue.push(value)
+                });
+            }
+            else {
+                arrFieldName.push(FieldName);
+                arrFieldValue.push(strValue)
+            }
+
+        });
+        debugger;
+        //array chứa fieldName và Field tương tự như khi biên mục sơ lượcc (Input chuẩn để update)
+        var arrFieldNameFinal = [];
+        var arrFieldValueFinal = [];
+
+        $.each(arrFieldValue, function (index, value) {
+            if (value.indexOf("$") >= 0) {
+                var arrTemp = value.split("$");
+                //Loc value null
+                arrTemp = arrTemp.filter(function (v) { return v !== '' });
+
+                $.each(arrTemp, function (i, valTemp) {
+                    arrFieldNameFinal.push(arrFieldName[index] + '$' + valTemp.substring(0, 1));
+                    arrFieldValueFinal.push(valTemp.substring(1));
+                });
+            }
+            else {
+                arrFieldNameFinal.push(arrFieldName[index]);
+                arrFieldValueFinal.push(arrFieldValue[index]);
+            }
+        });
+        debugger
+
+        //***********************************DONE CHUẨN HÓA CHUỖI TRƯỚC KHI UPDATE **************************************************
+        //UPDATE Item
+
+        $.ajax({
+            url: "/Catalogue/InsertOrUpdateCatalogue",
+            type: "POST",
+            data: JSON.stringify({ listFieldsName: arrFieldNameFinal, listFieldsValue: arrFieldValueFinal, listFieldsOrg: arrFieldOrg, listValuesOrg: arrValueOrg }),
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                //pop up Modal succes
+                $('#modalSuccess').modal({ backdrop: 'static' })
+                $('#modalSuccess').modal('toggle');
+                $('#codeId').text(Data[0]);
+                $('#btnShelf').click(function () {
+                    window.location.href = '/Shelf/Index?Code=' + Data[0] ;
+                    //window.location.href = '/Shelf/Index?Code=' + Data[0] + '&ItemID=' + Data[1];
+                });
+
+            },
+            error: function (errorThrown) {
+                alert(errorThrown);
+            }
+
+        });
+
+
+
+
+
+
+
+
+    }
+
+
+</script>
+
+
+
+
+@*START------------SCRIPT FOR DATATABLES*@
+<link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
+<link rel="stylesheet" type="text/css" href="~/Content/DataTables/Select-1.3.0/css/select.bootstrap4.css">
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/DataTables-1.10.18/js/dataTables.bootstrap4.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Content/DataTables/Select-1.3.0/js/dataTables.select.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#table_account thead tr').clone(true).appendTo('#table_account thead');
+        $('#table_account thead tr:eq(1) th').each(function (i) {
+            if (i != 0) {
+                var title = $(this).text();
+                $(this).html('<input class="form-control" type="text" placeholder="Tìm ' + title + '" />');
+
+                $('input', this).on('keyup change', function () {
+                    if (table.column(i).search() !== this.value) {
+                        table
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            } else {
+                $(this).html('');
+            }
+        });
+        var table = $('#table_account').DataTable({
+            "processing": true,
+            "serverSide": true,
+            ajax: {
+                url: "/Management/Account",
+                type: 'POST',
+            },
+            columns: [
+                {
+                    "data": null,
+                    "defaultContent": ""
+                },
+                {
+                    "data": "Username",
+                    "render": function (data, type, row, meta) {
+                        if (type === 'display') {
+                            data = '<a href="/Management/Account?username=' + data + '">' + data + '</a>';
+                        }
+
+                        return data;
+                    }
+                },
+                { "data": "Name" },
+            ],
+
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']],
+            orderCellsTop: true,
+
+        });
+
+        $('#table_account').on('click', '#select_all', function () {
+            if ($('#select_all:checked').val() === 'on') {
+                table.rows({ search: 'applied' }).select();
+            }
+            else {
+                table.rows().deselect();
+            }
+        });
+    });
+
+</script>
+@*END------------SCRIPT FOR DATATABLES*@
+
+
+
+

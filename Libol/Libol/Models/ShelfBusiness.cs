@@ -158,7 +158,7 @@ namespace Libol.Models
             currentHolding.Price = holding.Price;
             currentHolding.Rate = db.ACQ_CURRENCY.Where( c=>c.CurrencyCode == holding.Currency).Select( d=>d.Rate).Single();
           //  currentHolding.Reason = holding.Reason;
-            currentHolding.ReceiptedDate = DateTime.ParseExact(holding.ReceiptedDate,"dd/MM/yyyy",null) ;
+           // currentHolding.ReceiptedDate = DateTime.ParseExact(holding.ReceiptedDate,"dd/MM/yyyy",null) ;
             currentHolding.RecordNumber = holding.RecordNumber;
             currentHolding.Shelf = holding.Shelf;
          //   currentHolding.UseCount = holding.UseCount;
@@ -170,7 +170,7 @@ namespace Libol.Models
             currentHolding.CallNumber = holding.CallNumber;
            // currentHolding.Availlable = holding.Availlable;
           //  currentHolding.AcquiredSourceID = holding.AcquiredSourceID;
-            currentHolding.AcquiredDate = DateTime.ParseExact(holding.AcquiredDate, "dd/MM/yyyy", null);
+            currentHolding.AcquiredDate = DateTime.ParseExact(holding.AcquiredDate, "yyyy-MM-dd", null);
             //   currentHolding.Acquired = holding.Acquired;
             try
             {
@@ -208,7 +208,7 @@ namespace Libol.Models
                 case "011": return "<p style='color: #28a745'>Lưu thông<p>";
                 case "001": return "Khóa";
                 case "010": return "<p style='color: #dc3545'>Chưa kiểm nhận<p>";
-                case "111": return "<p style='color: #ffc107'>Đang cho mượn<p>";
+                case "111": return "<p style='color: #deaa0f'>Đang cho mượn<p>";
                 case "110": return "<p style='color: #dc3545'>Chưa kiểm nhận<p>";
                 case "000": return "<p style='color: #dc3545'>Chưa kiểm nhận<p>";
                 case "101": return "<p style='color: #dc3545'>Khóa<p>";
