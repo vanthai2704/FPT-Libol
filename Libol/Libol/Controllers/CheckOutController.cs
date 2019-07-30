@@ -16,7 +16,7 @@ namespace Libol.Controllers
         private LibolEntities db = new LibolEntities();
         CheckOutBusiness checkOutBusiness = new CheckOutBusiness();
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
-        private static string strTransactionIDs = "";
+        private static string strTransactionIDs = "0";
         private static string patroncode = "0";
         private static string fullname = "";
         FormatHoldingTitle f = new FormatHoldingTitle();
@@ -24,56 +24,11 @@ namespace Libol.Controllers
         [AuthAttribute(ModuleID = 3, RightID = "57")]
         public ActionResult Index(string PatronCode)
         {
+            strTransactionIDs = "0";
             patroncode = "0";
-            if (!String.IsNullOrEmpty(PatronCode))
-            {
-                patroncode = PatronCode;
-            }
             ViewBag.HiddenPatronCode = PatronCode;
+            ViewBag.HiddenCheckduplicate = "";
             return View();
-        }
-
-        // GET: CheckOutSuccess
-        [HttpPost]
-        public PartialViewResult CheckOutSuccess(
-            string strFullName,
-            string strPatronCode,
-            string strFixDueDate,
-            int intLoanMode,
-            int intHoldIgnore,
-            string strCopyNumbers,
-            string strCheckOutDate
-            )
-        {
-            string CopyNumber = strCopyNumbers.Trim();
-            getpatrondetail(strPatronCode);
-            int success= db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strFixDueDate, strCheckOutDate, intHoldIgnore,
-               new ObjectParameter("intOutValue", typeof(int)),
-                new ObjectParameter("intOutID", typeof(int)));
-            string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
-           
-            if (success == -1) 
-            {
-                if (patroncode != strPatronCode)
-                {
-                    strTransactionIDs = "0";
-                }
-                ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
-            }
-            else
-            {
-                if (patroncode == strPatronCode)
-                {
-                    strTransactionIDs = strTransactionIDs + "," + lastid;
-                }
-                else
-                {
-                    strTransactionIDs = lastid;
-                }
-            }
-            getcurrentloandetail();
-            patroncode = strPatronCode;
-            return PartialView("_checkoutSuccess");
         }
 
         [HttpPost]
@@ -95,15 +50,94 @@ namespace Libol.Controllers
             return PartialView("_showPatronInfo");
         }
 
+        // GET: CheckOutSuccess
+        [HttpPost]
+        public PartialViewResult CheckOutSuccess(
+            string strFullName,
+            string strPatronCode,
+            string strFixDueDate,
+            int intLoanMode,
+            int intHoldIgnore,
+            string strCopyNumbers,
+            string strCheckOutDate,
+            bool boolAllowDuplacate
+            )
+        {
+            bool duplicate = false;
+            int PatronID = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First().ID;
+            var cIR_LOANs = db.CIR_LOAN.Where(a => a.PatronID == PatronID).ToList();
+            string CopyNumber = strCopyNumbers.Trim();
+            List<int?> ItemIds = new List<int?>();
+            getpatrondetail(strPatronCode);
+            if (db.HOLDINGs.Where(a => a.CopyNumber == strCopyNumbers).Count() == 0)
+            {
+                ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
+                ViewBag.HiddenCheckduplicate = "";
+            }
+            else
+            {
+                int ItemID = db.HOLDINGs.Where(a => a.CopyNumber == strCopyNumbers).First().ItemID;
+                foreach (CIR_LOAN loan in cIR_LOANs)
+                {
+                    ItemIds.Add(loan.ItemID);
+                }
+                foreach (int? id in ItemIds)
+                {
+                    if (ItemID == id)
+                    {
+                        duplicate = true;
+                    }
+                }
+                if (duplicate == true && boolAllowDuplacate == false)
+                {
+                    ViewBag.HiddenCheckduplicate = "duplicate";
+                }
+                else
+                {
+                    int success = db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strFixDueDate, strCheckOutDate, intHoldIgnore,
+                       new ObjectParameter("intOutValue", typeof(int)),
+                        new ObjectParameter("intOutID", typeof(int)));
+                    string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
+
+                    if (success == -1)
+                    {
+                        if (patroncode != strPatronCode)
+                        {
+                            strTransactionIDs = "0";
+                        }
+                        ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
+                    }
+                    else
+                    {
+                        if (patroncode == strPatronCode)
+                        {
+                            strTransactionIDs = strTransactionIDs + "," + lastid;
+                        }
+                        else
+                        {
+                            strTransactionIDs = lastid;
+                        }
+                    }
+                    ViewBag.HiddenCheckduplicate = "";
+                }
+            }
+            ViewBag.HiddenDuplicateCopyNumber = CopyNumber;
+            getcurrentloandetail();
+            patroncode = strPatronCode;
+            return PartialView("_checkoutSuccess");
+        }
+
+
+
         //thu hồi 1 ấn phẩm vừa mượn
-        public PartialViewResult Rollbackacheckout (string strCopyNumbers)
+        public PartialViewResult Rollbackacheckout(string strCopyNumbers)
         {
             db.SP_CHECKIN((int)Session["UserID"], 1, 0, strCopyNumbers, DateTime.Now.ToString("MM/dd/yyyy"),
                new ObjectParameter("strTransIDs", typeof(string)),
                new ObjectParameter("strPatronCode", typeof(string)),
                new ObjectParameter("intError", typeof(int)));
 
-            strTransactionIDs = strTransactionIDs.Replace(","+ strCopyNumbers, "");
+            strTransactionIDs = strTransactionIDs.Replace("," + strCopyNumbers, "");
             getcurrentloandetail();
             getpatrondetail(patroncode);
             return PartialView("_checkoutSuccess");
@@ -113,7 +147,7 @@ namespace Libol.Controllers
         public PartialViewResult ChangeNote(string strCopyNumber, string strNote, string strDueDate)
         {
             int lngTransactionID = db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumber).First().ID;
-            db.SP_UPDATE_CURRENT_LOAN(lngTransactionID, strNote,"");
+            db.SP_UPDATE_CURRENT_LOAN(lngTransactionID, strNote, "");
             getcurrentloandetail();
             getpatrondetail(patroncode);
             return PartialView("_checkoutSuccess");
@@ -131,10 +165,11 @@ namespace Libol.Controllers
                 fullname = strFullName;
                 ViewBag.listpatron = searchPatronBusiness.FPT_SP_ILL_SEARCH_PATRONs(strFullName, "").Where(a => a.DOB != null).ToList();
             }
-            
+
             return PartialView("_findByCardNumber");
         }
         [HttpGet]
+
         public PartialViewResult FindByCardNumber()
         {
             ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
@@ -199,7 +234,7 @@ namespace Libol.Controllers
             int owningcount = 0;
             foreach (SP_GET_PATRON_ONLOAN_COPIES_Result a in patronloaninfo)
             {
-                if((DateTime.Now - a.DUEDATE.Value).Days > 0)
+                if ((DateTime.Now - a.DUEDATE.Value).Days > 0)
                 {
                     owningcount = owningcount + 1;
                 }

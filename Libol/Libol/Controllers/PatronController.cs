@@ -539,7 +539,7 @@ namespace Libol.Controllers
                     }
                     DateTime strExpiredDate = DateTime.Now;
                     strExpiredDate= strExpiredDate.AddYears(4);
-                    NewPatron(p.strCode, DateTime.Now.ToShortDateString(), strExpiredDate.ToShortDateString(), DateTime.Now.ToShortDateString(), strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString("yyyy-dd-MM"), null, null, null, null, null, p.strMobile
+                    NewPatron(p.strCode, DateTime.Now.ToShortDateString(), strExpiredDate.ToShortDateString(), DateTime.Now.ToShortDateString(), strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString("yyyy-dd-MM"), null, null, null, "Đại học FPT", null, p.strMobile
                         , p.strEmail, null, intPatronGroupID, null, 0, null, p.strAddress, 1, p.strCity, 209, "", 0, intCollegeID, intFacultyID, p.strGrade, p.strClass);
                 }
                 ViewBag.Notify = "Danh sách đã được thêm vào hệ thống!";
