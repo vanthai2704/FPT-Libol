@@ -12,7 +12,7 @@ namespace Libol.Models
         public string CopyNumber { get; set; }
         public Nullable<System.DateTime> CheckOutDate { get; set; }
         public Nullable<System.DateTime> DueDate { get; set; }
-        public Int16 RenewCount { get; set; }    
+        public Nullable<System.Int16> RenewCount { get; set; }    
         public string Serial { get; set; }
         public string FullName { get; set; }
         public float? Price { get; set; }
