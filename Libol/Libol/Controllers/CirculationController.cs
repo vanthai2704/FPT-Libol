@@ -10,6 +10,7 @@ using System.Reflection;
 using Excel = Microsoft.Office.Interop.Excel;
 
 using Libol.SupportClass;
+using System.Data.Entity.SqlServer;
 
 namespace Libol.Controllers
 {
@@ -55,6 +56,7 @@ namespace Libol.Controllers
             ViewData["lib"] = lib;
             return View();
         }
+        [HttpPost]
         public PartialViewResult GetOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strDueDateFrom, string strDueDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
@@ -62,61 +64,98 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
 
-            List<GET_PATRON_ONLOANINFOR_Result> result = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
-            foreach (var item in result)
-            {
-                item.Content = GetContent(item.Content);
-            }
-            ViewBag.Result = result;
-            //Count number of Patrons
-            Dictionary<string, int> PatronCount = new Dictionary<string, int>();
-            foreach (var item in result)
-            {
-                if (!String.IsNullOrEmpty(item.FullName))
-                {
-                    if (!PatronCount.ContainsKey(item.FullName))
-                    {
-                        PatronCount.Add(item.FullName, 1);
-                    }
-                    else
-                    {
-                        PatronCount[item.FullName] += 1;
-                    }
-                }
-            }
-            ViewBag.PatronCount = PatronCount.Count;
+            var result = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
+
+            ViewBag.PatronCount = result.Select(a => a.FullName).Distinct().Count();
+            ViewBag.Count = result.Count();
             return PartialView("GetOnLoanStats");
         }
+
+        [HttpPost]
+        public JsonResult GetPatronOnLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strDueDateFrom, string strDueDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        {
+            int LibID = 0;
+            int LocID = 0;
+            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
+            var patronLoanInfors = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
+            var search = patronLoanInfors.Where(a => true);
+            var sorting = search;
+            var paging = sorting.Skip(model.start).Take(model.length).ToList();
+            List<GET_PATRON_ONLOANINFOR_Result_2> result = new List<GET_PATRON_ONLOANINFOR_Result_2>();
+            foreach (var i in paging)
+            {
+                result.Add(new GET_PATRON_ONLOANINFOR_Result_2()
+                {
+                    Content = GetContent(i.Content),
+                    CopyNumber = i.CopyNumber,
+                    CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
+                    DueDate = i.DueDate.Value.ToString("dd/MM/yyyy"),
+                    RenewCount = i.RenewCount,
+                    Serial = i.Serial,
+                    FullName = i.FullName,
+                    Price = i.Price.ToString() + " " + i.Currency,
+                    Currency = i.Currency
+                });
+            }
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = patronLoanInfors.Count(),
+                recordsFiltered = search.Count(),
+                data = result
+            });
+        }
+
+        [HttpPost]
         public PartialViewResult GetFilteredOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            List<GET_PATRON_RENEW_ONLOAN_INFOR_Result> result = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
-            foreach (var item in result)
-            {
-                item.Content = GetContent(item.Content);
-            }
-            ViewBag.Result = result;
-            //Count number of Patrons
-            Dictionary<string, int> PatronCount = new Dictionary<string, int>();
-            foreach (var item in result)
-            {
-                if (!String.IsNullOrEmpty(item.FullName))
-                {
-                    if (!PatronCount.ContainsKey(item.FullName))
-                    {
-                        PatronCount.Add(item.FullName, 1);
-                    }
-                    else
-                    {
-                        PatronCount[item.FullName] += 1;
-                    }
-                }
-            }
-            ViewBag.PatronCount = PatronCount.Count;
+            var result = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
+            ViewBag.PatronCount = result.Select(a => a.FullName).Distinct().Count();
+            ViewBag.Count = result.Count();
             return PartialView("GetFilteredOnLoanStats");
+        }
+
+        [HttpPost]
+        public JsonResult GetPatronRenewOnLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        {
+            int LibID = 0;
+            int LocID = 0;
+            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
+            var patronLoanInfors = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
+            var search = patronLoanInfors.Where(a => true);
+            var sorting = search;
+            var paging = sorting.Skip(model.start).Take(model.length).ToList();
+            List<GET_PATRON_RENEW_ONLOAN_INFOR_Result_2> result = new List<GET_PATRON_RENEW_ONLOAN_INFOR_Result_2>();
+            foreach (var i in paging)
+            {
+                result.Add(new GET_PATRON_RENEW_ONLOAN_INFOR_Result_2()
+                {
+                    Content = GetContent(i.Content),
+                    CopyNumber = i.CopyNumber,
+                    CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
+                    DueDate = i.DueDate.Value.ToString("dd/MM/yyyy"),
+                    FullName = i.FullName,
+                    RenewDate = i.RenewDate.Value.ToString("dd/MM/yyyy"),
+                    OverDueDateNew = i.OverDueDateNew.Value.ToString("dd/MM/yyyy"),
+                    OverDueDateOld = i.OverDueDateOld.Value.ToString("dd/MM/yyyy"),
+                    CheckInDate = "",
+                    Price = i.Price.ToString() + " " + i.Currency,
+                    Currency = i.Currency
+                });
+            }
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = patronLoanInfors.Count(),
+                recordsFiltered = search.Count(),
+                data = result
+            });
         }
         //-------------------END OF ONLOAN REPORT---------------------
         [AuthAttribute(ModuleID = 3, RightID = "67")]
@@ -165,31 +204,50 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            List<GET_PATRON_LOANINFOR_Result> result = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
-            foreach (var item in result)
-            {
-                item.Content = GetContent(item.Content);
-            }
-            ViewBag.Result = result;
-            //Count number of Patrons
-            Dictionary<string, int> PatronCount = new Dictionary<string, int>();
-            foreach (var item in result)
-            {
-                if (!String.IsNullOrEmpty(item.FullName))
-                {
-                    if (!PatronCount.ContainsKey(item.FullName))
-                    {
-                        PatronCount.Add(item.FullName, 1);
-                    }
-                    else
-                    {
-                        PatronCount[item.FullName] += 1;
-                    }
-                }
-            }
-            ViewBag.PatronCount = PatronCount.Count;
+            var result = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
+            ViewBag.PatronCount = result.Select(a => a.FullName).Distinct().Count();
+            ViewBag.Count = result.Count();
             return PartialView("GetLoanStats");
         }
+        [HttpPost]
+        public JsonResult GetPatronLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        {
+            int LibID = 0;
+            int LocID = 0;
+            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
+            var patronLoanInfors = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
+            var search = patronLoanInfors.Where(a => true);
+            var sorting = search;
+            var paging = sorting.Skip(model.start).Take(model.length).ToList();
+            List<GET_PATRON_LOANINFOR_Result_2> result = new List<GET_PATRON_LOANINFOR_Result_2>();
+            foreach (var i in paging)
+            {
+                result.Add(new GET_PATRON_LOANINFOR_Result_2()
+                {
+                    Content = GetContent(i.Content),
+                    CopyNumber = i.CopyNumber,
+                    CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
+                    CheckInDate = i.CheckInDate.Value.ToString("dd/MM/yyyy"),
+                    RenewCount = i.RenewCount,
+                    Serial = i.Serial,
+                    FullName = i.FullName,
+                    OverdueDays = i.OverdueDays,
+                    OverdueFine = i.OverdueFine,
+                    Price = i.Price.ToString() + " " + i.Currency,
+                    Currency = i.Currency
+                });
+            }
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = patronLoanInfors.Count(),
+                recordsFiltered = search.Count(),
+                data = result
+            });
+        }
+
+
         [HttpPost]
         public PartialViewResult GetFilteredLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
@@ -197,37 +255,51 @@ namespace Libol.Controllers
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            List<GET_PATRON_RENEW_LOAN_INFOR_Result> result = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
+            var result = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
 
-            foreach (var item in result)
-            {
-                item.Content = GetContent(item.Content);
-                if ((item.CheckInDate - item.OverDueDateNew).Days > item.OverdueDays)
-                {
-                    item.OverdueDays = 0;
-                    item.OverdueFine = 0;
-                }
-
-            }
-            ViewBag.Result = result;
-            //Count number of Patrons
-            Dictionary<string, int> PatronCount = new Dictionary<string, int>();
-            foreach (var item in result)
-            {
-                if (!String.IsNullOrEmpty(item.FullName))
-                {
-                    if (!PatronCount.ContainsKey(item.FullName))
-                    {
-                        PatronCount.Add(item.FullName, 1);
-                    }
-                    else
-                    {
-                        PatronCount[item.FullName] += 1;
-                    }
-                }
-            }
-            ViewBag.PatronCount = PatronCount.Count;
+            ViewBag.PatronCount = result.Select(a => a.FullName).Distinct().Count();
+            ViewBag.Count = result.Count();
             return PartialView("GetFilteredLoanStats");
+        }
+
+        [HttpPost]
+        public JsonResult GetPatronRenewLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        {
+            int LibID = 0;
+            int LocID = 0;
+            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
+            var patronLoanInfors = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
+            var search = patronLoanInfors.Where(a => true);
+            var sorting = search;
+            var paging = sorting.Skip(model.start).Take(model.length).ToList();
+            List<GET_PATRON_RENEW_LOAN_INFOR_Result_2> result = new List<GET_PATRON_RENEW_LOAN_INFOR_Result_2>();
+
+            foreach (var i in paging)
+            {
+                result.Add(new GET_PATRON_RENEW_LOAN_INFOR_Result_2()
+                {
+                    Content = GetContent(i.Content),
+                    CopyNumber = i.CopyNumber,
+                    CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
+                    CheckInDate = i.CheckInDate.ToString("dd/MM/yyyy"),
+                    FullName = i.FullName,
+                    RenewDate = i.RenewDate.ToString("dd/MM/yyyy"),
+                    OverDueDateNew = i.OverDueDateNew.ToString("dd/MM/yyyy"),
+                    OverDueDateOld = i.OverDueDateOld.ToString("dd/MM/yyyy"),
+                    OverdueDays = ((i.CheckInDate - i.OverDueDateNew).Days > i.OverdueDays) ? 0 : i.OverdueDays,
+                    OverdueFine = ((i.CheckInDate - i.OverDueDateNew).Days > i.OverdueDays) ? "0" : i.OverdueFine.ToString("#.##"),
+                    Price = i.Price.ToString() + " " + i.Currency,
+                    Currency = i.Currency
+                });
+            }
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = patronLoanInfors.Count(),
+                recordsFiltered = search.Count(),
+                data = result
+            });
         }
         //-------------------END OF LOAN HISTORY REPORT---------------------
         public ActionResult StatisticAnnual()
@@ -584,5 +656,64 @@ namespace Libol.Controllers
             });
         }
 
+    }
+
+    public class GET_PATRON_LOANINFOR_Result_2
+    {
+        public string Content { get; set; }
+        public string CopyNumber { get; set; }
+        public string CheckOutDate { get; set; }
+        public string CheckInDate { get; set; }
+        public int? RenewCount { get; set; }
+        public string Serial { get; set; }
+        public string FullName { get; set; }
+        public int? OverdueDays { get; set; }
+        public decimal OverdueFine { get; set; }
+        public string Price { get; set; }
+        public string Currency { get; set; }
+    }
+
+    public class GET_PATRON_RENEW_LOAN_INFOR_Result_2
+    {
+        public string Content { get; set; }
+        public string CopyNumber { get; set; }
+        public string CheckOutDate { get; set; }
+        public string CheckInDate { get; set; }
+        public string FullName { get; set; }
+        public string RenewDate { get; set; }
+        public string OverDueDateNew { get; set; }
+        public string OverDueDateOld { get; set; }
+        public int? OverdueDays { get; set; }
+        public string OverdueFine { get; set; }
+        public string Price { get; set; }
+        public string Currency { get; set; }
+    }
+
+    public class GET_PATRON_ONLOANINFOR_Result_2
+    {
+        public string Content { get; set; }
+        public string CopyNumber { get; set; }
+        public string CheckOutDate { get; set; }
+        public string DueDate { get; set; }
+        public Nullable<System.Int16> RenewCount { get; set; }
+        public string Serial { get; set; }
+        public string FullName { get; set; }
+        public string Price { get; set; }
+        public string Currency { get; set; }
+    }
+
+    public class GET_PATRON_RENEW_ONLOAN_INFOR_Result_2
+    {
+        public string Content { get; set; }
+        public string CopyNumber { get; set; }
+        public string CheckOutDate { get; set; }
+        public string DueDate { get; set; }
+        public string FullName { get; set; }
+        public string RenewDate { get; set; }
+        public string OverDueDateNew { get; set; }
+        public string OverDueDateOld { get; set; }
+        public string CheckInDate { get; set; }
+        public string Price { get; set; }
+        public string Currency { get; set; }
     }
 }

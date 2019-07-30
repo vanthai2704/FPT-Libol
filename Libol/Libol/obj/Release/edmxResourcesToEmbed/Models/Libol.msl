@@ -9899,14 +9899,6 @@
       </ResultMapping>
     </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" />
-    <FunctionImportMapping FunctionImportName="FPT_SP_CATA_CHECK_EXIST_TITLE_2019" FunctionName="LibolModel.Store.FPT_SP_CATA_CHECK_EXIST_TITLE_2019">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_CHECK_EXIST_TITLE_2019_Result">
-          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-          <ScalarProperty Name="Content" ColumnName="Content" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM">
       <ResultMapping>
         <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result">
@@ -10075,23 +10067,7 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_LOCK_STATISTIC" FunctionName="LibolModel.Store.FPT_GET_PATRON_LOCK_STATISTIC" />
     <FunctionImportMapping FunctionImportName="FPT_SP_UPDATE_UNLOCK_PATRON_CARD" FunctionName="LibolModel.Store.FPT_SP_UPDATE_UNLOCK_PATRON_CARD" />
-    <EntitySetMapping Name="FPT_RECOMMEND">
-      <EntityTypeMapping TypeName="LibolModel.FPT_RECOMMEND">
-        <MappingFragment StoreEntitySet="FPT_RECOMMEND">
-          <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <AssociationSetMapping Name="FPT_RECOMMEND_ITEM" TypeName="LibolModel.FPT_RECOMMEND_ITEM" StoreEntitySet="FPT_RECOMMEND_ITEM">
-      <EndProperty Name="ITEM">
-        <ScalarProperty Name="ID" ColumnName="ItemID" />
-      </EndProperty>
-      <EndProperty Name="FPT_RECOMMEND">
-        <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
-      </EndProperty>
-    </AssociationSetMapping>
     <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_RECOMMENDID" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_RECOMMENDID">
       <ResultMapping>
         <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result">
@@ -10110,5 +10086,324 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_CATA_GET_CONTENTS_OF_ITEMS" FunctionName="LibolModel.Store.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result">
+          <ScalarProperty Name="IDSort" ColumnName="IDSort" />
+          <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+          <ScalarProperty Name="Ind" ColumnName="Ind" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_LANGUAGE_DETAILS_STATISTIC" FunctionName="LibolModel.Store.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="ISOCode" ColumnName="ISOCode" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_LANGUAGE_STATISTIC" FunctionName="LibolModel.Store.FPT_ACQ_LANGUAGE_STATISTIC">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_LANGUAGE_STATISTIC_Result">
+          <ScalarProperty Name="TotalBook" ColumnName="TotalBook" />
+          <ScalarProperty Name="TotalCopies" ColumnName="TotalCopies" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_BBK" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_BBK">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_BBK_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DDC" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DDC">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DDC_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DIC40" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DIC40">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC40_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DIC41" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DIC41">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC41_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DIC42" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DIC42">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC42_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_DIC43" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_DIC43">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_DIC43_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+          <ScalarProperty Name="NAME" ColumnName="NAME" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_LOC" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_LOC">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_LOC_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="CODE" ColumnName="CODE" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_NLM" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_NLM">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_NLM_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_SERIALS" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_SH" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_SH">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_SH_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_UDC" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_UDC">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="FPT_RECOMMEND">
+      <EntityTypeMapping TypeName="LibolModel.FPT_RECOMMEND">
+        <MappingFragment StoreEntitySet="FPT_RECOMMEND">
+          <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="FPT_RECOMMEND_ITEM" TypeName="LibolModel.FPT_RECOMMEND_ITEM" StoreEntitySet="FPT_RECOMMEND_ITEM">
+      <EndProperty Name="ITEM">
+        <ScalarProperty Name="ID" ColumnName="ItemID" />
+      </EndProperty>
+      <EndProperty Name="FPT_RECOMMEND">
+        <ScalarProperty Name="RecommendID" ColumnName="RecommendID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_LOCK_STATISTIC1" FunctionName="LibolModel.Store.FPT_GET_PATRON_LOCK_STATISTIC" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_REMOVED_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="CopyNumber" ColumnName="CopyNumber" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="LibID" ColumnName="LibID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="LoanTypeID" ColumnName="LoanTypeID" />
+          <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="AcquiredDate" ColumnName="AcquiredDate" />
+          <ScalarProperty Name="RemovedDate" ColumnName="RemovedDate" />
+          <ScalarProperty Name="Volume" ColumnName="Volume" />
+          <ScalarProperty Name="UseCount" ColumnName="UseCount" />
+          <ScalarProperty Name="PoID" ColumnName="PoID" />
+          <ScalarProperty Name="DateLastUsed" ColumnName="DateLastUsed" />
+          <ScalarProperty Name="CallNumber" ColumnName="CallNumber" />
+          <ScalarProperty Name="AcquiredSourceID" ColumnName="AcquiredSourceID" />
+          <ScalarProperty Name="LiquidCode" ColumnName="LiquidCode" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+          <ScalarProperty Name="REASON_ID" ColumnName="REASON_ID" />
+          <ScalarProperty Name="REASON1" ColumnName="REASON1" />
+          <ScalarProperty Name="LibName" ColumnName="LibName" />
+          <ScalarProperty Name="LibName1" ColumnName="LibName1" />
+          <ScalarProperty Name="LocName" ColumnName="LocName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_PAGING" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_PAGING">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_REMOVED_PAGING_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="CopyNumber" ColumnName="CopyNumber" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="LibID" ColumnName="LibID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="LoanTypeID" ColumnName="LoanTypeID" />
+          <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="AcquiredDate" ColumnName="AcquiredDate" />
+          <ScalarProperty Name="RemovedDate" ColumnName="RemovedDate" />
+          <ScalarProperty Name="Volume" ColumnName="Volume" />
+          <ScalarProperty Name="UseCount" ColumnName="UseCount" />
+          <ScalarProperty Name="PoID" ColumnName="PoID" />
+          <ScalarProperty Name="DateLastUsed" ColumnName="DateLastUsed" />
+          <ScalarProperty Name="CallNumber" ColumnName="CallNumber" />
+          <ScalarProperty Name="AcquiredSourceID" ColumnName="AcquiredSourceID" />
+          <ScalarProperty Name="LiquidCode" ColumnName="LiquidCode" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+          <ScalarProperty Name="REASON_ID" ColumnName="REASON_ID" />
+          <ScalarProperty Name="REASON1" ColumnName="REASON1" />
+          <ScalarProperty Name="LibName" ColumnName="LibName" />
+          <ScalarProperty Name="LibName1" ColumnName="LibName1" />
+          <ScalarProperty Name="LocName" ColumnName="LocName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_PAGING_v2" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_PAGING_v2" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_WITH_ID" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_WITH_ID">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_REMOVED_WITH_ID_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="CopyNumber" ColumnName="CopyNumber" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="LibID" ColumnName="LibID" />
+          <ScalarProperty Name="LocationID" ColumnName="LocationID" />
+          <ScalarProperty Name="LoanTypeID" ColumnName="LoanTypeID" />
+          <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="AcquiredDate" ColumnName="AcquiredDate" />
+          <ScalarProperty Name="RemovedDate" ColumnName="RemovedDate" />
+          <ScalarProperty Name="Volume" ColumnName="Volume" />
+          <ScalarProperty Name="UseCount" ColumnName="UseCount" />
+          <ScalarProperty Name="PoID" ColumnName="PoID" />
+          <ScalarProperty Name="DateLastUsed" ColumnName="DateLastUsed" />
+          <ScalarProperty Name="CallNumber" ColumnName="CallNumber" />
+          <ScalarProperty Name="AcquiredSourceID" ColumnName="AcquiredSourceID" />
+          <ScalarProperty Name="LiquidCode" ColumnName="LiquidCode" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+          <ScalarProperty Name="REASON_ID" ColumnName="REASON_ID" />
+          <ScalarProperty Name="REASON1" ColumnName="REASON1" />
+          <ScalarProperty Name="LocName" ColumnName="LocName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_HOLDING_LIBLOCUSER_SEL" FunctionName="LibolModel.Store.FPT_SP_HOLDING_LIBLOCUSER_SEL">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_HOLDING_LIBLOCUSER_SEL_Result">
+          <ScalarProperty Name="LOCNAME" ColumnName="LOCNAME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="LibID" ColumnName="LibID" />
+          <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_HOLDING_REMOVED_ITEM_DEL" FunctionName="LibolModel.Store.FPT_SP_HOLDING_REMOVED_ITEM_DEL" />
+    <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_BY_ITEMID" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_BY_ITEMID" />
+    <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_ONLOAN" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_ONLOAN" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_ITEM" FunctionName="LibolModel.Store.FPT_SP_GET_ITEM" />
   </EntityContainerMapping>
 </Mapping>

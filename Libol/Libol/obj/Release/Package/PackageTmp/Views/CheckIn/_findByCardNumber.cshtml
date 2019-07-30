@@ -23,7 +23,7 @@
                     {
                         "data": "Code",
                         "render": function (data, type, row, meta) {
-                            data = '<a href="#" onclick="getPatronInfo(' + "'" + data + "'" + ')">' + data + '</a>';
+                            data = '<a href="/CheckIn?PatronCode=' + data + '">' + data + '</a>';
                             return data;
                         }
                     },
