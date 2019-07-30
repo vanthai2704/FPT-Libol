@@ -36,16 +36,15 @@ namespace Libol.Controllers
 
             if (!string.IsNullOrEmpty(code))
             {
-                ViewBag.content = getContentShelf(code);
                 var item = db.ITEMs.Where(i => i.Code.Equals(code)).FirstOrDefault();
                 if (item == null)
                 {
                     ViewBag.AlertMessage = "Mã tài liệu không tồn tại";
                     return View();
                 }
+                ViewBag.content = getContentShelf(code);
                 int itemID = item.ID;
                 ViewBag.itemID = itemID;
-                
             }
 
             return View();

@@ -50,10 +50,10 @@
                     type: 'POST',
                     "data": function (d) {
                         d.libraryID = document.getElementById("iddd").value,
-                        d.PatronCode = document.getElementById("PatronCodeFilter").value,
-                        d.Note = document.getElementById("NoteFilter").value,
-                        d.StartedDate = document.getElementById("LockDateFromFilter").value,
-                        d.FinishDate = document.getElementById("LockDateToFilter").value
+                            d.PatronCode = document.getElementById("PatronCodeFilter").value,
+                            d.Note = document.getElementById("NoteFilter").value,
+                            d.StartedDate = document.getElementById("LockDateFromFilter").value,
+                            d.FinishDate = document.getElementById("LockDateToFilter").value
                     }
                 },
                 columnDefs: [{
@@ -84,7 +84,7 @@
                                 "'" + full.FinishDate + "'," +
                                 "'" + full.LockedDays + "'," +
                                 "'" + full.Note
-                                + "'" + ')">Edit</button>';
+                                + "'" + ')">Sửa</button>';
                         }
                     },
                 ],
@@ -92,11 +92,18 @@
                 buttons: [
                     {
                         extend: 'print',
-                        title: function () { var printTitle = 'Danh sách bạn đọc bị khóa'; return printTitle; }
+                        title: function () { var printTitle = 'Danh sách bạn đọc bị khóa'; return printTitle; },
+                        action: newExportAction,
+                        exportOptions: {
+                            columns: 'th:not(.notexport)'
+                        }
                     },
                     {
                         extend: 'excel',
-                        action: newExportAction
+                        action: newExportAction,
+                        exportOptions: {
+                            columns: 'th:not(.notexport)'
+                        }
                     },
                     'csv',
                     'pdf',
@@ -273,7 +280,7 @@
 
             $.ajax({
                 url: "/Circulation/LockCardPatron",
-                data: JSON.stringify({ libraryID, PatronCode, Note, StartedDate, FinishDate}),
+                data: JSON.stringify({ libraryID, PatronCode, Note, StartedDate, FinishDate }),
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
@@ -308,7 +315,7 @@
             </div>
             <div class="form-group row col-12">
                 <label class="control-label col-md-6 align-self-center">Số ngày : </label>
-                <input type="text" class="form-control col-md-2" id="LockedDays">
+                <input type="number" class="form-control col-md-2" id="LockedDays" value="2000">
 
             </div>
         </div>
@@ -355,7 +362,7 @@
                 <input type="date" class="form-control" id="LockDateToFilter" name="LockDateToFilter" value="@Request.Form["LockDateToFilter"]">
             </div>
         </div>
-        <button id="Find" type="submit" class="btn btn-primary" >Lọc</button>
+        <button id="Find" type="submit" class="btn btn-primary">Lọc</button>
 
         <div id="ContentStatLockPatron">
             <table id="table" class="table table-striped table-bordered datatables" style="border-collapse: collapse;" border="1">
@@ -367,8 +374,8 @@
                         <th>Đến ngày</th>
                         <th>Số ngày</th>
                         <th>Lý do</th>
-                        <th style="text-align: center;"><input type="checkbox" id="select_all" /></th>
-                        <th>Sửa</th>
+                        <th style="text-align: center;" class="notexport"><input type="checkbox" id="select_all" /></th>
+                        <th class="notexport">Sửa</th>
                     </tr>
                 </thead>
 
@@ -386,47 +393,48 @@
         </div>
     </div>
 
-    <div id="myModal" class="modal face" role="dialog">
 
-        <!-- Modal content -->
-        <div class="modal-content col-6" role="dialog">
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <h2 class="" modal-title">Sửa thông tin thẻ bị khóa</h2>
-            </div>
-            <div class="modal-body">
-                <div class="form-group ">
-                    <label for="txtFullName">Full Name:</label>
-                    <input type="text" class="form-control" id="txtFullName" disabled>
+
+    <div class="modal" id="myModal">
+        <div class="modal-dialog" style="max-width: 550px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Sửa thông tin thẻ bị khóa</h4>
+                    <button type="button" class="close" onclick="CancelUpdate()">&times;</button>
                 </div>
-                <div class="form-group ">
-                    <label for="txtPatronCode">Số thẻ bạn đọc:</label>
-                    <input type="text" class="form-control" id="txtPatronCode" disabled>
+                <div class="modal-body">
+                    <div class="form-group ">
+                        <label for="txtFullName">Họ và tên:</label>
+                        <input type="text" class="form-control" id="txtFullName" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label for="txtPatronCode">Số thẻ bạn đọc:</label>
+                        <input type="text" class="form-control" id="txtPatronCode" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label for="txtStartdate">Từ ngày:</label>
+                        <input type="text" class="form-control" id="txtStartdate" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label for="txtFinishdate">Đến ngày:</label>
+                        <input type="text" class="form-control" id="txtFinishdate" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label for="txtLockedDay">Số ngày:</label>
+                        <input type="text" class="form-control" id="txtLockedDay">
+                    </div>
+                    <div class="form-group ">
+                        <label for="txtNote">Lý do: </label>
+                        <input type="text" class="form-control" id="txtNote">
+                    </div>
                 </div>
-                <div class="form-group ">
-                    <label for="txtStartdate">Từ ngày:</label>
-                    <input type="text" class="form-control" id="txtStartdate" disabled>
+                <div class="modal-footer">
+                    <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="Save()">Lưu</button>
+                    <button type="button" class="btn btn-danger" style="float: right" onclick="CancelUpdate()">Hủy bỏ</button>
                 </div>
-                <div class="form-group ">
-                    <label for="txtFinishdate">Đến ngày:</label>
-                    <input type="text" class="form-control" id="txtFinishdate" disabled>
-                </div>
-                <div class="form-group ">
-                    <label for="txtLockedDay">Số ngày:</label>
-                    <input type="text" class="form-control" id="txtLockedDay">
-                </div>
-                <div class="form-group ">
-                    <label for="txtNote">Lý do: </label>
-                    <input type="text" class="form-control" id="txtNote">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="Save()">Lưu</button>
-                <button class="btn btn-danger" style="float: right" onclick="CancelUpdate()">Hủy bỏ</button>
             </div>
         </div>
-
     </div>
 }
 
-<input type="hidden" value="@ViewBag.iddd" id="iddd"/>
+<input type="hidden" value="@ViewBag.iddd" id="iddd" />

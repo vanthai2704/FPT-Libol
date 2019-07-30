@@ -1,6 +1,6 @@
 ﻿@using Libol.Models;
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Xếp giá";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -121,11 +121,16 @@
 
     }
 
-    <label class="col-md-12" style="color:red" AutoSize="true">@ViewBag.content</label>
-    @if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
+    @if (ViewBag.content != null)
     {
-        <span style="color:red">@ViewBag.AlertMessage</span>
+        <div style=" margin-top: 0.5rem;">@ViewBag.content.Split('@')[0]<strong>@ViewBag.content.Split('@')[1]</strong>@ViewBag.content.Split('@')[2]</div>
+        <div>@ViewBag.content.Split('@')[3]</div>
+        if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
+        {
+            <span style="color:red">@ViewBag.AlertMessage</span>
+        }
     }
+
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12">
             <div class="form-group col-md-6">
@@ -479,7 +484,7 @@
                 { "data": "AcquiredDate", "name": "AcquiredDate" },
                 { "data": "AcquiredSource", "name": "AcquiredSource" },
                 { "data": "Note", "name": "Note" },
-                { "data": "Status", "orderable": "false" },
+                { "data": "Status", "name": "Status", "orderable": "false" },
                 {
                     "render": function (data, type, full, meta) {
                         return '<button class="btn btn-info" style="font-size: 13px"  onclick="ShowUpdateForm(' + "'"
@@ -758,6 +763,16 @@
         document.getElementById("SearchCodePopup").style.display = "none";
     }
 
+    function ResetFields() {
+        document.getElementById("txtTitle2").value ="";
+        document.getElementById("txtCopyNumber2").value = "";
+        document.getElementById("txtAuthor2").value = "";
+        document.getElementById("txtPublisher2").value = "";
+        document.getElementById("txtYear2").value = "";
+        document.getElementById("txtISBN2").value = "";
+        document.getElementById("result-search-table").style.display = "none";
+    }
+
     function SearchItem() {
 
 
@@ -955,7 +970,7 @@
         </div>
         <div style="text-align: center; border-top: 1px solid rgb(222, 226, 230);border-bottom: 2px solid black;padding:10px 0 10px 0;margin:10px 0 10px 0">
             <button class="btn btn-success " onclick="SearchItem()">Tìm</button>
-            <button class="btn btn-primary" onclick="CancelUpdate()">Đặt lại</button>
+            <button class="btn btn-primary" onclick="ResetFields()">Đặt lại</button>
             <button class="btn btn-danger" onclick="CloseSearchCodeForm()">Đóng</button>
         </div>
 
