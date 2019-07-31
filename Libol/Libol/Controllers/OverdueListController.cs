@@ -60,14 +60,24 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult OverdueListResult(string strPatronIDs,string txtSoThe, string txtTenBanDoc, int ddlNhomBanDoc, int ddlTruong, int ddlKhoa, string txtKhoaHoc, string txtLopHoc, int ddlLib, int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)
         {
+            
             string whereCondition = ProcessCondition( txtSoThe,  txtTenBanDoc,  ddlNhomBanDoc,  ddlTruong,  ddlKhoa,  txtKhoaHoc,  txtLopHoc,  ddlLib,  ddlLoc,  txtTenTaiLieu,  txtSDKCB,  txtNgayMuonTu,  txtNgayMuonDen,  txtNgayTraTu,  txtNgayTraDen,  txtSoNgayQuaHan,  txtSoNgayQuaHanDen);
-            ViewBag.listOverdue = GET_LIST_OVERDUELIST_GETINFOR((int)Session["UserID"], "", whereCondition).ToList();
+            List<SP_CIR_OVERDUELIST_GETINFOR_Result> list = GET_LIST_OVERDUELIST_GETINFOR((int)Session["UserID"], "", whereCondition).ToList();
+            List<SP_CIR_OVERDUELIST_GETINFOR_Result> list1 = new List<SP_CIR_OVERDUELIST_GETINFOR_Result>();
+            foreach (SP_CIR_OVERDUELIST_GETINFOR_Result item in list)
+            {
+                if (item.OverdueDate != 0)
+                {
+                    list1.Add(item);
+                }
+            }
+            ViewBag.listOverdue = list1;
             return PartialView("_OverdueListResult");
         }
 
         public List<SP_CIR_OVERDUELIST_GETINFOR_Result> GET_LIST_OVERDUELIST_GETINFOR(Nullable<int> intUserID, string strPatronIDs, string whereCondition)
         {
-            List<SP_CIR_OVERDUELIST_GETINFOR_Result> list = db.Database.SqlQuery<SP_CIR_OVERDUELIST_GETINFOR_Result>("SP_CIR_OVERDUELIST_GETINFOR {0}, {1}, {2}",
+            List<SP_CIR_OVERDUELIST_GETINFOR_Result> list = db.Database.SqlQuery<SP_CIR_OVERDUELIST_GETINFOR_Result>("FPT_SP_CIR_OVERDUELIST_GETINFOR {0}, {1}, {2}",
                 new object[] { intUserID, strPatronIDs, whereCondition }).ToList();
             List<SP_CIR_OVERDUELIST_GETINFOR_Result> sP_CIR_OVERDUELISTs = new List<SP_CIR_OVERDUELIST_GETINFOR_Result>();
             foreach(SP_CIR_OVERDUELIST_GETINFOR_Result item in list)
@@ -98,14 +108,11 @@ namespace Libol.Controllers
                     PatronCode = item.PatronCode,
                     PatronGroupID = item.PatronGroupID,
                     PatronID = item.PatronID,
-                    Penati = item.Penati
+                    Penati = item.Penati,
+                    Price = item.Price
                 });
             }
             return sP_CIR_OVERDUELISTs;
-        }
-
-        private void GetlistOverdue(int intUserID,string patronids, string whereCondition) {
-
         }
 
         private string ProcessCondition(string txtSoThe, string txtTenBanDoc,int ddlNhomBanDoc,int ddlTruong,int ddlKhoa, string txtKhoaHoc, string txtLopHoc,int ddlLib,int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)

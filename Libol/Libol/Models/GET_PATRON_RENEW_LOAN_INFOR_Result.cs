@@ -16,7 +16,7 @@ namespace Libol.Models
         public DateTime RenewDate { get; set; }
         public DateTime OverDueDateNew { get; set; }
         public DateTime OverDueDateOld { get; set; }
-        public int OverdueDays { get; set; }
+        public int? OverdueDays { get; set; }
         public decimal OverdueFine { get; set; }
         public float? Price { get; set; }
         public string Currency { get; set; }

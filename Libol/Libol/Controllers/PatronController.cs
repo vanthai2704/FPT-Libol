@@ -139,15 +139,26 @@ namespace Libol.Controllers
             {
                 InvalidFields += "strLastIssuedDate-";
             }
-            if (intCollegeID == -1)
+            //if (intCollegeID == -1)
+            //{
+            //    InvalidFields += "college-";
+            //}
+            //if (intFacultyID == -1)
+            //{
+            //    InvalidFields += "faculty-";
+            //}
+            if (String.IsNullOrEmpty(strWorkPlace))
             {
-                InvalidFields += "college-";
+                InvalidFields += "strWorkPlace-";
             }
-            if (intFacultyID == -1)
+            if (String.IsNullOrEmpty(strAddress))
             {
-                InvalidFields += "faculty-";
+                InvalidFields += "strAddress-";
             }
-
+            if (String.IsNullOrEmpty(strEmail))
+            {
+                InvalidFields += "strEmail-";
+            }
 
             if (InvalidFields != "")
             {
@@ -164,6 +175,14 @@ namespace Libol.Controllers
                 {
                     CodeError = 2,
                     Data = "Bạn đọc với số thẻ " + strCode + " đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }else
+            if (db.CIR_PATRON.Where(a => a.Code != strCode && a.Email == strEmail).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Email " + strEmail + " không hợp lệ!"
                 }, JsonRequestBehavior.AllowGet);
             }
             else
@@ -254,15 +273,26 @@ namespace Libol.Controllers
             {
                 InvalidFields += "strLastIssuedDate-";
             }
-            if (intCollegeID == -1)
+            //if (intCollegeID == -1)
+            //{
+            //    InvalidFields += "college-";
+            //}
+            //if (intFacultyID == -1)
+            //{
+            //    InvalidFields += "faculty-";
+            //}
+            if (String.IsNullOrEmpty(strWorkPlace))
             {
-                InvalidFields += "college-";
+                InvalidFields += "strWorkPlace-";
             }
-            if (intFacultyID == -1)
+            if (String.IsNullOrEmpty(strAddress))
             {
-                InvalidFields += "faculty-";
+                InvalidFields += "strAddress-";
             }
-
+            if (String.IsNullOrEmpty(strEmail))
+            {
+                InvalidFields += "strEmail-";
+            }
 
             if (InvalidFields != "")
             {
@@ -279,6 +309,15 @@ namespace Libol.Controllers
                 {
                     CodeError = 2,
                     Data = "Bạn đọc với số thẻ " + strCode + " đã tồn tại!"
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            if (db.CIR_PATRON.Where(a => a.Code != strCode && a.Email == strEmail).Count() > 0)
+            {
+                return Json(new Result()
+                {
+                    CodeError = 2,
+                    Data = "Email " + strEmail + " không hợp lệ!"
                 }, JsonRequestBehavior.AllowGet);
             }
             else
@@ -500,7 +539,7 @@ namespace Libol.Controllers
                     }
                     DateTime strExpiredDate = DateTime.Now;
                     strExpiredDate= strExpiredDate.AddYears(4);
-                    NewPatron(p.strCode, DateTime.Now.ToShortDateString(), strExpiredDate.ToShortDateString(), DateTime.Now.ToShortDateString(), strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString("yyyy-dd-MM"), null, null, null, null, null, p.strMobile
+                    NewPatron(p.strCode, DateTime.Now.ToShortDateString(), strExpiredDate.ToShortDateString(), DateTime.Now.ToShortDateString(), strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString("yyyy-dd-MM"), null, null, null, "Đại học FPT", null, p.strMobile
                         , p.strEmail, null, intPatronGroupID, null, 0, null, p.strAddress, 1, p.strCity, 209, "", 0, intCollegeID, intFacultyID, p.strGrade, p.strClass);
                 }
                 ViewBag.Notify = "Danh sách đã được thêm vào hệ thống!";

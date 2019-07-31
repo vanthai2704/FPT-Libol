@@ -17,6 +17,14 @@
     .form-control {
         font-size: 0.8rem !important;
     }
+
+    table th {
+        font-size: 14px;
+    }
+
+    table td {
+        font-size: 13px;
+    }
 </style>
 <h4 style="margin-top: 20px;margin-bottom: 20px;">Thông tin thẻ bạn đọc quá hạn</h4>
 
@@ -115,16 +123,17 @@
             <input class="form-control col-md-3" type="date" id="txtNgayMuonDen" />
         </div>
         <div class="form-group row col-12">
-            <label class="control-label col-md-3 align-self-center">Ngày phải trả từ: </label>
+            <label class="control-label col-md-3 align-self-center">Ngày trả từ: </label>
             <input class="form-control col-md-3" type="date" id="txtNgayTraTu" />
             <label class="control-label col-md-2 align-self-center">Đến: </label>
             <input class="form-control col-md-3" type="date" id="txtNgayTraDen" />
         </div>
         <div class="form-group row col-12">
-            <label class="control-label col-md-3 align-self-center">Số ngày quá hạn từ: </label>
+            <label class="control-label col-md-3 align-self-center">Quá hạn từ: </label>
             <input type="number" class="form-control col-md-3" id="txtSoNgayQuaHan">
             <label class="control-label col-md-2 align-self-center">Đến: </label>
             <input type="number" class="form-control col-md-3" id="txtSoNgayQuaHanDen">
+            <label class="control-label col-md-1 align-self-center">(ngày) </label>
         </div>
     </div>
 </div>
@@ -242,9 +251,9 @@
         document.getElementById("txtNgayTraDen").value = "mm/dd/yyyy";
         document.getElementById("txtSoNgayQuaHan").value = "";
         document.getElementById("txtSoNgayQuaHanDen").value = "";
-        document.getElementById("intPatronGroupID").innerHTML = "<option value='-1'>----- Chọn -----</option>";
-        document.getElementById("college").innerHTML = "<option value='-1'>----- Chọn -----</option>";
-        document.getElementById("intLibID").innerHTML = "<option value='-1'>----- Chọn -----</option>";
+        document.getElementById("intPatronGroupID").value = -1;
+        document.getElementById("college").value = -1;
+        document.getElementById("intLibID").value = -1;
         document.getElementById("faculty").innerHTML = "<option value='-1'>----- Chọn -----</option>";
         document.getElementById("intLocID").innerHTML = "<option value='-1'>----- Chọn -----</option>";
     }

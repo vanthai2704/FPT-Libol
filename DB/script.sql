@@ -537,7 +537,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_LOANINFOR]
 	@strSerial nvarchar(50),
 	@intUserID int
 AS
-	DECLARE @strSql varchar(1000)
+	DECLARE @strSql varchar(2000)
 	DECLARE @strJoinSQL varchar(1000)
 	DECLARE @strLikeSql varchar(1000)
 	DECLARE @strSelectedTabs varchar(500)
@@ -632,7 +632,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_ONLOANINFOR]
 	@strSerial nvarchar(50),
 	@intUserID int
 AS
-	DECLARE @strSql varchar(1000)
+	DECLARE @strSql varchar(2000)
 	DECLARE @strJoinSQL varchar(1000)
 	DECLARE @strLikeSql varchar(1000)
 	DECLARE @strSelectedTabs varchar(500)
@@ -728,7 +728,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_RENEW_LOAN_INFOR]
 	@strCheckInDateTo varchar(30),
 	@intUserID int
 AS
-	DECLARE @strSql varchar(1000)
+	DECLARE @strSql varchar(2000)
 	DECLARE @strSql2 varchar(1000)
 	DECLARE @strJoinSQL varchar(1000)
 	DECLARE @strLikeSql varchar(1000)
@@ -828,7 +828,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_RENEW_ONLOAN_INFOR]
 	@strCheckInDateTo varchar(30),
 	@intUserID int
 AS
-	DECLARE @strSql varchar(1000)
+	DECLARE @strSql varchar(2000)
 	DECLARE @strSql2 varchar(1000)
 	DECLARE @strJoinSQL varchar(1000)
 	DECLARE @strLikeSql varchar(1000)
@@ -2195,59 +2195,7 @@ CREATE PROCEDURE [dbo].[FPT_SP_UPDATE_UNLOCK_PATRON_CARD]
 AS
 	UPDATE [CIR_PATRON_LOCK] SET LockedDays = @lockedDay, Note = @Note WHERE PatronCode = @strPatronCode
 
-GO
-/****** Object:  StoredProcedure [dbo].[FPT_GET_PATRON_LOCK_STATISTIC]    Script Date: 7/22/2019 5:39:35 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
-CREATE PROCEDURE [dbo].[FPT_GET_PATRON_LOCK_STATISTIC]
--- Purpose: Get patron lock statistic
--- Created AnNXT
--- Date 14/07/2019
--- ModifyDate:
-	@strPatronCode  varchar(50),
-	--@strNote nvarchar(200),
-	@strLockDateFrom varchar(30),
-	@strLockDateTo varchar(30),
-	@intCollegeID int
-AS
-	DECLARE @strSql varchar(1000)
-	DECLARE @strJoinSQL varchar(1000)
-	DECLARE @strLikeSql varchar(1000)
-	
-	SET @strSql = 'SELECT CPL.PatronCode, CPL.StartedDate, CPL.Note, CP.FirstName + '' '' + CP.MiddleName + '' '' + CP.LastName as FullName, CPL.StartedDate + CPL.LockedDays as FinishDate, CPL.LockedDays '
-	SET @strLikeSql = '1 =1 AND '
-	SET @strJoinSQL = ''
-
-	SET @strJoinSQL = @strJoinSQL + ' FROM CIR_PATRON_LOCK CPL, CIR_PATRON CP'
-	SET @strLikeSql = @strLikeSql + ' UPPER(CPL.PatronCode)=UPPER(CP.Code) AND'
-	
-	IF NOT @strPatronCode = ''
-		SET @strLikeSql = @strLikeSql + ' UPPER(CPL.PatronCode)=''' + UPPER(@strPatronCode) + ''' AND'
-	
-	IF NOT @intCollegeID = 0
-		BEGIN
-			SET @strSql = @strSql + ', CDC.COLLEGE'
-			SET @strJoinSQL = @strJoinSQL + ', CIR_PATRON_UNIVERSITY CPU, CIR_DIC_COLLEGE CDC'
-			SET @strLikeSql = @strLikeSql + ' CP.ID = CPU.PATRONID AND CPU.COLLEGEID = CDC.ID AND CPU.COLLEGEID = ' + CAST(@intCollegeID AS VARCHAR(20)) + ' AND'
-		END
-	
-	--IF NOT @strNote = ''	
-	--	BEGIN
-	--		SET @strNote = UPPER(@strNote)
-	--		SET @strLikeSQL = @strLikeSQL + ' UPPER(CPL.Note)=N'''+ @strNote +''' AND'
-	--	END
-	
-	IF NOT @strLockDateFrom = ''
-		SET @strLikeSql = @strLikeSql + ' CPL.StartedDate >= ''' + @strLockDateFrom + ''' AND'
-	IF NOT @strLockDateTo = ''
-		SET @strLikeSql = @strLikeSql + ' CPL.StartedDate <= ''' + @strLockDateTo + ''' AND'
-	
-	SET @strSql = @strSql + @strJoinSQL + ' WHERE ' +@strLikeSQL
-	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) + ' ORDER BY CPL.StartedDate DESC'
-EXEC (@stRSql)
 
 GO
 /****** Object:  Table [dbo].[FPT_RECOMMEND]    Script Date: 7/13/2019 5:03:11 PM ******/
@@ -3395,7 +3343,7 @@ ELSE
 	
 
 
-
+go
 -- thêm dữ liệu vào bảng để tạo form biên mục--
 INSERT [dbo].[MARC_WORKSHEET] ([ID], [Name], [Creator], [CreatedDate], [LastModifiedDate], [Note]) VALUES (14, N'Mẫu biên mục Sách (2019)', N'Nguyễn Thị Thơi', CAST(N'2019-06-13T00:00:00.000' AS DateTime), CAST(N'2019-06-13T00:00:00.000' AS DateTime), NULL)
 INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (14, N'001', 1, NULL, 0, NULL)
@@ -3438,3 +3386,1443 @@ INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultV
 INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (14, N'927', 1, NULL, 0, NULL)
 
 ------	
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_LANGUAGE_DETAILS_STATISTIC]    Script Date: 07/26/2019 20:23:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_LANGUAGE_DETAILS_STATISTIC]
+	@strTypeSelect VARCHAR(20),
+	@intLibraryID int
+AS
+BEGIN	
+	IF @strTypeSelect='ITEM'
+		BEGIN
+			IF NOT @intLibraryID = 0
+				SELECT sum(A.Total) as Total,A.ISOCode FROM (SELECT Count(Distinct A.ItemID) AS Total,ISNULL(C.ISOCode,'Không XĐ')AS ISOCode FROM HOLDING A,ITEM_LANGUAGE B,CAT_DIC_LANGUAGE C WHERE B.LanguageID=C.ID AND A.ItemID=B.ItemID AND A.LibID = @intLibraryID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.ISOCode) A GROUP BY A.ISOCode ORDER BY Total DESC
+			ELSE 
+				SELECT sum(A.Total) as Total,A.ISOCode FROM (SELECT Count(*) AS Total,ISNULL(B.ISOCode,'Không XĐ')AS ISOCode FROM ITEM_LANGUAGE A,CAT_DIC_LANGUAGE B  WHERE A.LanguageID=B.ID AND Right(A.FieldCode,2)='$a'  GROUP BY B.ISOCode) A GROUP BY A.ISOCode ORDER BY Total DESC
+		END	
+	IF @strTypeSelect='COPY'
+		BEGIN
+			IF NOT @intLibraryID = 0
+				SELECT sum(A.Total) as Total,A.ISOCode FROM (SELECT Count(*) AS Total,ISNULL(C.ISOCode,'Không XĐ')AS ISOCode FROM HOLDING A,ITEM_LANGUAGE B,CAT_DIC_LANGUAGE C WHERE B.LanguageID=C.ID AND A.ItemID=B.ItemID AND A.LibID = @intLibraryID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.ISOCode) A GROUP BY A.ISOCode ORDER BY Total DESC
+			ELSE 
+				SELECT sum(A.Total) as Total,A.ISOCode FROM (SELECT Count(*) AS Total,ISNULL(C.ISOCode,'Không XĐ')AS ISOCode FROM HOLDING A,ITEM_LANGUAGE B,CAT_DIC_LANGUAGE C WHERE B.LanguageID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.ISOCode) A GROUP BY A.ISOCode ORDER BY Total DESC
+		END
+	
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_LANGUAGE_STATISTIC]    Script Date: 07/26/2019 20:24:01 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_LANGUAGE_STATISTIC]
+	@intLibraryID int
+AS
+BEGIN
+	BEGIN
+		IF NOT @intLibraryID = 0
+			SELECT A.*,B.* FROM(SELECT  Count(Distinct ItemID) AS TotalBook FROM HOLDING WHERE LibID = @intLibraryID) A,(SELECT  Count (*) AS TotalCopies FROM HOLDING WHERE LibID = @intLibraryID) B    
+		ELSE 
+			SELECT A.*,B.* FROM(SELECT  Count(*) AS TotalBook FROM ITEM) A,(SELECT  Count (*) AS TotalCopies FROM HOLDING) B    
+	END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR]    Script Date: 07/26/2019 20:24:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO TÁC GIẢ
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM HOLDING A,ITEM_AUTHOR B,CAT_DIC_AUTHOR C 
+			WHERE B.AuthorID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ')AS AccessEntry 
+				FROM ITEM_AUTHOR B,CAT_DIC_AUTHOR C 
+			WHERE B.AuthorID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_BBK]    Script Date: 07/26/2019 20:24:29 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO BBK
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_BBK]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_BBK B,CAT_DIC_CLASS_BBK C 
+			WHERE B.BBKID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_BBK B,CAT_DIC_CLASS_BBK C 
+			WHERE B.BBKID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY]    Script Date: 07/26/2019 20:24:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO COUNTRY
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_COUNTRY B,CAT_DIC_COUNTRY C 
+			WHERE B.CountryID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_COUNTRY B,CAT_DIC_COUNTRY C 
+			WHERE B.CountryID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DDC]    Script Date: 07/26/2019 20:24:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO DDC
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DDC]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DDC B,CAT_DIC_CLASS_DDC C 
+			WHERE B.DDCID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DDC B,CAT_DIC_CLASS_DDC C 
+			WHERE B.DDCID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DIC40]    Script Date: 07/26/2019 20:24:58 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO Chỉ số ISBN
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DIC40]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DICTIONARY40 B,DICTIONARY40 C 
+			WHERE B.DICTIONARY40ID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DICTIONARY40 B,DICTIONARY40 C 
+			WHERE B.DICTIONARY40ID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DIC41]    Script Date: 07/26/2019 20:25:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO Giá tiền
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DIC41]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DICTIONARY41 B,DICTIONARY41 C 
+			WHERE B.DICTIONARY41ID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DICTIONARY41 B,DICTIONARY41 C 
+			WHERE B.DICTIONARY41ID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DIC42]    Script Date: 07/26/2019 20:25:16 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO Khổ cỡ
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DIC42]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DICTIONARY42 B,DICTIONARY42 C 
+			WHERE B.DICTIONARY42ID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$c'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DICTIONARY42 B,DICTIONARY42 C 
+			WHERE B.DICTIONARY42ID=C.ID AND Right(B.Fieldcode,2)='$c'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DIC43]    Script Date: 07/26/2019 20:25:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO Mã xếp giá
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_DIC43]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DICTIONARY43 B,DICTIONARY43 C 
+			WHERE B.DICTIONARY43ID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DICTIONARY43 B,DICTIONARY43 C 
+			WHERE B.DICTIONARY43ID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW]    Script Date: 07/26/2019 20:25:32 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO DẠNG TÀI LIỆU
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW]
+@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL AS Total, B.CODE AS AccessEntry, B.NAME FROM(SELECT COUNT(H.ITEMID) AS TOTAL, I.TYPEID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY I.TYPEID) A, (SELECT DISTINCT(I.TYPEID) AS ID, C.TYPECODE AS CODE, ISNULL(C.TYPENAME,'Không XĐ') AS NAME FROM ITEM I, CAT_DIC_ITEM_TYPE C WHERE I.TYPEID = C.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL as Total, B.CODE AS AccessEntry, B.NAME FROM(SELECT COUNT(DISTINCT H.ITEMID) AS TOTAL, I.TYPEID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY I.TYPEID) A, (SELECT DISTINCT(I.TYPEID) AS ID, C.TYPECODE AS CODE, ISNULL(C.TYPENAME,'Không XĐ') AS NAME 
+			FROM ITEM I, CAT_DIC_ITEM_TYPE C WHERE I.TYPEID = C.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD]    Script Date: 07/26/2019 20:25:40 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO TỪ KHOÁ
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM HOLDING A,ITEM_KEYWORD B,CAT_DIC_KEYWORD C 
+			WHERE B.KeyWordID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_KEYWORD B,CAT_DIC_KEYWORD C 
+			WHERE B.KeyWordID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE]    Script Date: 07/26/2019 20:25:52 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO LANGUAGE
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_LANGUAGE B,CAT_DIC_LANGUAGE C 
+			WHERE B.LanguageID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_LANGUAGE B,CAT_DIC_LANGUAGE C 
+			WHERE B.LanguageID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW]    Script Date: 07/26/2019 20:26:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO DẠNG TÀI LIỆU
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW]
+	@intType int
+AS
+BEGIN
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL AS Total, B.CODE AS AccessEntry, B.NAME FROM(SELECT COUNT(H.ITEMID) AS TOTAL, H.LIBID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY H.LIBID) A, (SELECT DISTINCT(H.LIBID) AS ID, L.CODE AS CODE, ISNULL(L.ACCESSENTRY,'Không XĐ') AS NAME FROM HOLDING H, HOLDING_LIBRARY L WHERE H.LIBID = L.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL AS Total, B.CODE AS AccessEntry, B.NAME FROM(SELECT COUNT(DISTINCT H.ITEMID) AS TOTAL, H.LIBID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY H.LIBID) A, (SELECT DISTINCT(H.LIBID) AS ID, L.CODE AS CODE, ISNULL(L.ACCESSENTRY,'Không XĐ') AS NAME FROM HOLDING H, HOLDING_LIBRARY L WHERE H.LIBID = L.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+	
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_LOC]    Script Date: 07/26/2019 20:26:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO LOC
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_LOC]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_LOC B,CAT_DIC_CLASS_LOC C 
+			WHERE B.LOCID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_LOC B,CAT_DIC_CLASS_LOC C 
+			WHERE B.LOCID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW]    Script Date: 07/26/2019 20:26:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO VẬT MANG TIN
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW]
+	@intType int
+AS
+BEGIN
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL as Total, B.CODE, B.NAME as AccessEntry FROM(SELECT COUNT(I.MEDIUMID) AS TOTAL, I.MEDIUMID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY I.MEDIUMID) A, (SELECT DISTINCT(I.MEDIUMID) AS ID, C.CODE AS CODE, ISNULL(C.DESCRIPTION,C.ACCESSENTRY) AS NAME FROM ITEM I, CAT_DIC_MEDIUM C WHERE I.MEDIUMID = C.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL as Total, B.CODE, B.NAME as AccessEntry FROM(SELECT COUNT(I.MEDIUMID) AS TOTAL, I.MEDIUMID AS ID
+			FROM ITEM I
+			GROUP BY I.MEDIUMID) A, (SELECT DISTINCT(I.MEDIUMID) AS ID, C.CODE AS CODE, ISNULL(C.DESCRIPTION,C.ACCESSENTRY) AS NAME FROM ITEM I, CAT_DIC_MEDIUM C WHERE I.MEDIUMID = C.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_NLM]    Script Date: 07/26/2019 20:26:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO NLM
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_NLM]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_NLM B,CAT_DIC_CLASS_NLM C 
+			WHERE B.NLMID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_NLM B,CAT_DIC_CLASS_NLM C 
+			WHERE B.NLMID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET]    Script Date: 07/26/2019 20:26:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO OAI Set
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_OAI_SET B,CAT_DIC_OAI_SET C 
+			WHERE B.OaiID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_OAI_SET B,CAT_DIC_OAI_SET C 
+			WHERE B.OaiID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER]    Script Date: 07/26/2019 20:26:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO NHÀ XUẤT BẢN
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM HOLDING A,ITEM_PUBLISHER B,CAT_DIC_PUBLISHER C 
+			WHERE B.PublisherID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$b'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_PUBLISHER B,CAT_DIC_PUBLISHER C 
+			WHERE B.PublisherID=C.ID AND Right(B.Fieldcode,2)='$b'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_SERIALS]    Script Date: 07/26/2019 20:26:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO SERIALS
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_SERIALS]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_SERIES B,CAT_DIC_SERIES C 
+			WHERE B.SeriesID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_SERIES B,CAT_DIC_SERIES C 
+			WHERE B.SeriesID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_SH]    Script Date: 07/26/2019 20:27:06 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO TIÊU ĐỀ ĐỀ MỤC
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_SH]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM HOLDING A,ITEM_SH B,CAT_DIC_SH C 
+				WHERE B.SHID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ')AS AccessEntry 
+				FROM ITEM_SH B,CAT_DIC_SH C 
+				WHERE B.SHID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT]    Script Date: 07/26/2019 20:27:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO Chuyen_nganh_luan_an
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_THESIS_SUBJECT B,CAT_DIC_THESIS_SUBJECT C 
+			WHERE B.SubjectID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_THESIS_SUBJECT B,CAT_DIC_THESIS_SUBJECT C 
+			WHERE B.SubjectID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_UDC]    Script Date: 07/26/2019 20:27:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO UDC
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20_BY_UDC]
+	@intType int
+AS
+BEGIN 
+	IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_UDC B,CAT_DIC_CLASS_UDC C 
+			WHERE B.UDCID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_UDC B,CAT_DIC_CLASS_UDC C 
+			WHERE B.UDCID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_GET_PATRON_LOCK_STATISTIC]    Script Date: 07/27/2019 14:34:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create PROCEDURE [dbo].[FPT_GET_PATRON_LOCK_STATISTIC]
+-- Purpose: Get patron lock statistic
+-- Created AnNXT
+-- Date 14/07/2019
+-- ModifyDate:
+	@strPatronCode  varchar(50),
+	@strNote nvarchar(200),
+	@strLockDateFrom varchar(30),
+	@strLockDateTo varchar(30),
+	@intCollegeID int
+AS
+	DECLARE @strSql nvarchar(2000)
+	DECLARE @strJoinSQL nvarchar(1000)
+	DECLARE @strLikeSql nvarchar(1000)
+	
+	SET @strSql = 'SELECT CPL.PatronCode, CPL.StartedDate, CPL.Note,  ISNULL(CP.FirstName,'''') + '' '' + ISNULL(CP.MiddleName,'''') + '' '' + ISNULL(CP.LastName,'''') as FullName, CPL.StartedDate + CPL.LockedDays as FinishDate, CPL.LockedDays '
+	SET @strLikeSql = '1 =1 AND '
+	SET @strJoinSQL = ''
+
+	SET @strJoinSQL = @strJoinSQL + ' FROM CIR_PATRON_LOCK CPL, CIR_PATRON CP'
+	SET @strLikeSql = @strLikeSql + ' UPPER(CPL.PatronCode)=UPPER(CP.Code) AND'
+	
+	IF NOT @strPatronCode = ''
+		SET @strLikeSql = @strLikeSql + ' UPPER(CPL.PatronCode)=''' + UPPER(@strPatronCode) + ''' AND'
+	
+	IF NOT @intCollegeID = 0
+		BEGIN
+			SET @strSql = @strSql + ', CDC.COLLEGE'
+			SET @strJoinSQL = @strJoinSQL + ', CIR_PATRON_UNIVERSITY CPU, CIR_DIC_COLLEGE CDC'
+			SET @strLikeSql = @strLikeSql + ' CP.ID = CPU.PATRONID AND CPU.COLLEGEID = CDC.ID AND CPU.COLLEGEID = ' + CAST(@intCollegeID AS VARCHAR(20)) + ' AND'
+		END
+	
+	IF NOT @strNote = ''	
+		BEGIN
+			SET @strLikeSQL = @strLikeSQL + ' CPL.Note LIKE N''%' + @strNote + '%'' AND'
+		END
+	
+	IF NOT @strLockDateFrom = ''
+		SET @strLikeSql = @strLikeSql + ' CPL.StartedDate >= ''' + @strLockDateFrom + ''' AND'
+		
+	IF NOT @strLockDateTo = ''
+		SET @strLikeSql = @strLikeSql + ' CPL.StartedDate <= ''' + @strLockDateTo + ''' AND'
+	
+	SET @strSql = @strSql + @strJoinSQL + ' WHERE ' +@strLikeSQL
+	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) + ' ORDER BY CPL.StartedDate DESC'
+EXEC (@stRSql)
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED]    Script Date: 07/28/2019 10:32:40 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Purpose: Select holidng_remove information
+-- In: some infor
+-- Creator: Vantd
+-- CreatedDate: 09/03/2005
+-- LastModifiedDate: 02/12/2005 by Sondp
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	SET @strSQL='SELECT HOLDING_REMOVED.*,LEFT(FIELD200S.Content,50) AS Content,
+		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON '
+
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND HOLDING_REMOVED.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING_REMOVED.LibID 
+			AND HOLDING_REMOVED.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			SET @strSQL=@strSQL + ',Code AS LibName'
+		END
+	ELSE
+		SET @strSQL=@strSQL + ','' '' AS LibName'
+
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING_REMOVED.LocationID 
+			AND HOLDING_REMOVED.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+
+		END
+
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+	SET @strTable = @strTable + ' '
+
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+PRINT @strSQL + @strTable + @strWhere
+	EXECUTE(@strSQL + @strTable + @strWhere)
+	
+	
+	GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING]    Script Date: 7/24/2019 02:52:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- Purpose: Select holidng_remove information
+-- In: some infor
+-- Creator: Vantd
+-- CreatedDate: 09/03/2005
+-- LastModifiedDate: 02/12/2005 by Sondp
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000),
+	@numberIndex NVARCHAR(500),
+	@numberRecordPerPage NVARCHAR(500)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	DECLARE @strPaging NVARCHAR(1000)
+	DECLARE @numberIndexs int
+	DECLARE @numberRecordPerPages int
+
+	SET @numberIndexs = CAST(@numberIndex as int)
+	SET @numberRecordPerPages = CAST(@numberRecordPerPage as int)
+
+
+	SET @strSQL='SELECT HOLDING_REMOVED.*,LEFT(FIELD200S.Content,50) AS Content,
+		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON '
+
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND HOLDING_REMOVED.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING_REMOVED.LibID 
+			AND HOLDING_REMOVED.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			SET @strSQL=@strSQL + ',Code AS LibName'
+		END
+	ELSE
+		SET @strSQL=@strSQL + ','' '' AS LibName'
+
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING_REMOVED.LocationID 
+			AND HOLDING_REMOVED.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+
+		END
+
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+	SET @strTable = @strTable + ' '
+
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+
+	SET @strPaging = ' ORDER BY HOLDING_REMOVED.ID ASC
+						OFFSET ' + CAST(@numberRecordPerPages*(@numberIndexs-1) as char)
+						+' ROWS FETCH NEXT '+ @numberRecordPerPage +' ROWS ONLY;'
+
+
+PRINT @strSQL + @strTable + @strWhere + @strPaging
+	EXECUTE(@strSQL + @strTable + @strWhere + @strPaging)
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 7/28/2019 04:21:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		<ducnv>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ DANH MỤC SÁCH NHẬP
+-- =============================================
+CREATE  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
+
+      @strFromDate VARCHAR(30),
+
+      @strToDate  VARCHAR(30),
+
+      @intLocationID    int,
+      
+      @intLibraryID int
+
+AS   
+
+      DECLARE @strSQL NVARCHAR(1000)
+
+      SET @strSQL=''
+
+      SET @strSQL=@strSQL + 'SELECT I.ID,I.Code, U.DKCB, F.Content 
+      FROM ITEM I
+      join FIELD200S F on I.ID=F.ITEMID
+join (SELECT distinct ItemID ,
+STUFF(( SELECT  '', '' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID
+FOR
+XML PATH('''')
+), 1, 1, '''') AS DKCB
+FROM HOLDING D2
+GROUP BY ItemID) as U on I.ID = U.ItemID
+WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15) '
+
+      If @strFromDate<>''
+
+            SET @strSQL=@strSQL + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
+
+      If @strToDate<>''
+
+            SET @strSQL=@strSQL + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
+
+      If @intLocationID <>0
+
+            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+            
+       If @intLocationID =0
+
+            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+
+
+    --print(@strSQL)
+
+      EXEC(@strSQL)
+      
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING_v2]    Script Date: 7/28/2019 04:21:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- Purpose: Select holidng_remove information
+-- In: some infor
+-- Creator: Vantd
+-- CreatedDate: 09/03/2005
+-- LastModifiedDate: 02/12/2005 by Sondp
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING_v2]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000),
+	@numberIndex NVARCHAR(500),
+	@numberRecordPerPage NVARCHAR(500)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	DECLARE @strPaging NVARCHAR(1000)
+	DECLARE @numberIndexs int
+	DECLARE @numberRecordPerPages int
+	DECLARE @strfinal NVARCHAR(4000)
+
+	SET @numberIndexs = CAST(@numberIndex as int)
+	SET @numberRecordPerPages = CAST(@numberRecordPerPage as int)
+
+
+	SET @strSQL='SELECT ROW_NUMBER() OVER (ORDER BY hr.ID) AS Seq, hr.*,LEFT(FIELD200S.Content,50) AS Content,
+		hr.REASON as REASON_ID '
+
+	SET @strTable=' FROM (HOLDING_REMOVED hr Join HOLDING_LOCATION hl on hl.id = hr.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON hrr '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=hr.ItemID 
+		AND hrr.ID=hr.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND hr.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=hr.LibID 
+			AND hr.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			SET @strSQL=@strSQL + ',Code AS LibName'
+		END
+	ELSE
+		SET @strSQL=@strSQL + ','' '' AS LibName'
+
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=hr.LocationID 
+			AND hr.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+
+		END
+
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+
+	SET @strTable = @strTable + ' '
+
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+
+	SET @strfinal = 'select a.*, hrr.REASON as REASON_DETAIL from ('+ @strSQL + @strTable + @strWhere + ' ) 
+					a join HOLDING_REMOVE_REASON hrr on a.REASON_ID = hrr.ID 
+					where a.Seq between ' + CAST(@numberRecordPerPages*(@numberIndexs-1)+1 as char)
+						+  ' and ' + CAST(@numberRecordPerPages*(@numberIndexs) as char)
+PRINT @strfinal
+	EXECUTE(@strfinal)
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT]    Script Date: 7/24/2019 02:52:47 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- Purpose: Select holidng_remove information
+-- In: some infor
+-- Creator: Vantd
+-- CreatedDate: 09/03/2005
+-- LastModifiedDate: 02/12/2005 by Sondp
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_TOTAL_AMOUNT]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	SET @strSQL='SELECT COUNT(HOLDING_REMOVED.ID) as Total '
+
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND HOLDING_REMOVED.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING_REMOVED.LibID 
+			AND HOLDING_REMOVED.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			
+		END
+
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING_REMOVED.LocationID 
+			AND HOLDING_REMOVED.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+
+		END
+
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+	SET @strTable = @strTable + ' '
+
+PRINT @strSQL + @strTable + @strWhere
+	EXECUTE(@strSQL + @strTable + @strWhere)
+
+
+
+
+
+      GO
+/****** Object:  StoredProcedure [dbo].[FPT_COUNT_COPYNUMBER_BY_ITEMID]    Script Date: 07/28/2019 10:38:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<ducnv>
+-- Create date: <Create Date,,>
+-- Description:	<ĐẾM SỐ LƯỢNG ĐANG KÝ CÁ BIỆT TRONG KHO,,>
+-- =============================================
+Create PROCEDURE [dbo].[FPT_COUNT_COPYNUMBER_BY_ITEMID] 
+@itemID int,
+ @intLocationID int,
+  @intLibraryID int
+	-- Add the parameters for the stored procedure here
+	
+AS
+DECLARE @strSQL NVARCHAR(1000)
+SET @strSQL=''
+
+      SET @strSQL=@strSQL +'SELECT COUNT(COPYNUMBER) as SLuong FROM HOLDING WHERE ITEMID = ' +convert(nvarchar,@itemID)
+
+	If @intLocationID <>0
+		 SET @strSQL=@strSQL +' AND  LocationID = ' +convert(nvarchar,@intLocationID)
+	If @intLocationID =0
+		SET @strSQL=@strSQL +' AND LibID = ' + convert(nvarchar,@intLibraryID)
+--print(@strSQL)
+
+      EXEC(@strSQL)
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_WITH_ID]    Script Date: 7/24/2019 02:53:23 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_WITH_ID]
+	@strID	NVARCHAR(100)	
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+	SET @strSQL='SELECT HOLDING_REMOVED.*,LEFT(FIELD200S.Content,50) AS Content,
+		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON '
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason and HOLDING_REMOVED.ID = ' + @strID
+	SET @strTable = @strTable + ' '
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+PRINT @strSQL + @strTable + @strWhere
+	EXECUTE(@strSQL + @strTable + @strWhere)
+	
+	
+	
+	
+	GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_HOLDING_REMOVED_ITEM_DEL]    Script Date: 7/26/2019 12:28:11 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROC [dbo].[FPT_SP_HOLDING_REMOVED_ITEM_DEL]
+-- Purpose: Del data in tables HOLDING_REMOVED_...
+-- ---------   ------  -------------------------------------------
+ @strId	varchar(150)
+AS
+BEGIN TRAN DELETE_TRAN
+	DELETE FROM HOLDING_REMOVED WHERE ID = @strId
+IF @@Error>0 
+BEGIN
+	ROLLBACK TRAN DELETE_TRAN
+	RETURN
+END
+COMMIT TRAN
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_COUNT_COPYNUMBER_ONLOAN]    Script Date: 07/28/2019 10:41:12 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		<DUCNV>
+-- Create date: <Create Date,,>
+-- Description:	<SỐ LƯỢNG ĐANG MƯỢN,,>
+-- =============================================
+Create PROCEDURE [dbo].[FPT_COUNT_COPYNUMBER_ONLOAN] 
+@itemID int,
+ @intLocationID int,
+  @intLibraryID int
+	-- Add the parameters for the stored procedure here
+	
+AS
+DECLARE @strSQL NVARCHAR(1000)
+SET @strSQL=''
+
+      SET @strSQL=@strSQL +'SELECT COUNT(COPYNUMBER) as SLuong FROM CIR_LOAN WHERE ITEMID = ' +convert(nvarchar,@itemID)
+
+	If @intLocationID <>0
+		 SET @strSQL=@strSQL + ' AND ITEMID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+	If @intLocationID =0
+		SET @strSQL=@strSQL + ' AND ITEMID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+--print(@strSQL)
+
+      EXEC(@strSQL)
+	  
+	 
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_HOLDING_LIBLOCUSER_SEL]    Script Date: 7/26/2019 01:23:44 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+Create PROCEDURE [dbo].[FPT_SP_HOLDING_LIBLOCUSER_SEL](@intLibID int)
+AS
+	SELECT CODE + ':' + SYMBOL AS LOCNAME, 
+		B.ID AS ID, REPLACE(CAST(A.ID AS CHAR(3)) + ':' + CAST(B.ID AS CHAR(3)), ' ', '') AS GroupID, 
+		A.ID AS LibID, B.Symbol, A.Code
+	FROM HOLDING_LIBRARY A, HOLDING_LOCATION B 
+	WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.LibID = @intLibID
+	ORDER BY B.LibID, B.Symbol	 
+	  
+	  
+	  
+	  
+	  
+GO
+/****** Object:  StoredProcedure [dbo].[SP_CIR_OVERDUELIST_GETINFOR]    */
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE   PROCEDURE [dbo].[FPT_SP_CIR_OVERDUELIST_GETINFOR]      
+--purpose: select overdue items                       
+--creator:Nhatnh                      
+--createdDate:31/7/2019                      
+ @intUserID INT,                      
+ @strPatronIDs VARCHAR(1000),                    
+  @whereCondition NVARCHAR(1000)                     
+AS                      
+ DECLARE @strSQL NVARCHAR(4000)                      
+ SET @strSQL = ''                  
+ SET @strSQL = '(SELECT L.ID AS LOANID, HD.LibID, HD.LocationID AS LocID,HD.Price, CDC.College, CDF.Faculty, CPU.Grade, CPU.Class, CPU.FacultyID, CPU.CollegeID, P.PatronGroupID, L.LocationID, L.CheckOutDate AS CheckOutDate, L.DueDate AS CheckInDate, F.Content AS MainTitle, L.CopyNumber, P.ID AS PatronID, IsNull(P.FirstName,'''') + ''' + ' ' + ''' + IsNull(P.MiddleName,'''') + ''' + ' ' + ''' + IsNull(P.LastName,'''') AS Name,P.Email,'                 
+    --TINH SO NGAY QUA HAN, VA TRU DI NGAY THU 7 VA CHU NHAT                      
+ +'OverdueDate=DATEDIFF(DAY,L.DueDate,GETDATE()), '                      
+ +'T.OverdueFine*floor(DATEDIFF(DAY,L.DueDate,GETDATE())) AS Penati, P.Code As PatronCode, P.Code,I.code as ItemCode FROM  CIR_LOAN L INNER JOIN CIR_PATRON P ON L.PatronID= P.ID INNER JOIN ITEM I ON L.ItemID=I.ID LEFT JOIN Field200s F ON I.ID=F.ItemID AND F.FieldCode=245 LEFT JOIN CIR_LOAN_TYPE T ON L.LoanTypeID=T.ID LEFT JOIN CIR_PATRON_UNIVERSITY CPU ON CPU.PatronID=P.ID LEFT JOIN CIR_DIC_FACULTY CDF ON CDF.ID=CPU.FacultyID LEFT JOIN CIR_DIC_COLLEGE CDC ON CDC.ID=CPU.CollegeID LEFT JOIN HOLDING HD ON HD.CopyNumber = L.CopyNumber WHERE  L.DueDate<=GETDATE()'                     
+                      
+ IF @strPatronIDs=''                       
+  SET @strSQL= @strSQL + ' AND P.ID IN (SELECT DISTINCT L.PatronID FROM CIR_LOAN L WHERE L.DueDate<GETDATE())) A, '                      
+ ELSE                      
+  SET @strSQL= @strSQL + ' AND P.ID IN (' + @strPatronIDs + ')) A, '                      
+ -- Get Location, Library                       
+ SET @strSQL= 'SELECT A.*, B.LibCode, B.LocCode FROM ' + @strSQL + '(SELECT H.Symbol AS LocCode, H.ID, L.Code AS LibCode FROM HOLDING_LOCATION H, HOLDING_LIBRARY L WHERE H.LibID=L.ID AND H.ID IN(SELECT LocationID FROM SYS_USER_CIR_LOCATION WHERE UserID=' 
+ + CAST(@intUserID AS NVARCHAR(4)) + ')) B WHERE A.LocationID=B.ID ' + @whereCondition + ' ORDER BY PatronCode '       
+ EXEC(@strSQL)	  

@@ -14,5 +14,6 @@ namespace Libol.Models
         public string FullName { get; set; }
         public DateTime FinishDate { get; set; }
         public int LockedDays { get; set; }
+        public string College { get; set; }
     }
 }

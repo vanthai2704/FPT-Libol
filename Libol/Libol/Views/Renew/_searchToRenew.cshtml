@@ -1,4 +1,23 @@
-﻿@*START------------SCRIPT FOR DATATABLES*@
+﻿<style>
+    #myModal3 th {
+        font-size: 12px;
+    }
+
+    #myModal3 td {
+        font-size: 11px;
+    }
+
+    .columnleft {
+        text-align: right;
+        width: 70px;
+        float: right;
+    }
+
+    table {
+        width: 100%;
+    }
+</style>
+@*START------------SCRIPT FOR DATATABLES*@
 <link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
 <link rel="stylesheet" type="text/css" href="~/Content/DataTables/Select-1.3.0/css/select.bootstrap4.css">
 <link rel="stylesheet" type="text/css" href="~/Content/DataTables/dataTables.checkboxes.css">
@@ -42,6 +61,7 @@
                 { "data": "RenewCount" },
                 { "data": "Renewals" },
                 { "data": "7" },
+                { "data": "8" }
             ],
             select: {
                 style: 'multi'
@@ -51,11 +71,53 @@
 
         });
     });
+
+    function QuinkCheckInAndCheckOut(patroncode, copynumber) {
+        document.getElementById("QuinkCheckInAndCheckOutCopyNumber").value = copynumber;
+        document.getElementById("QuinkCheckInAndCheckOutPatronCode").value = patroncode;
+
+        $("#ModalQuinkCheckInAndCheckOut").modal("show");
+    }
+
+    function CancelUpdate() {
+        $("#ModalQuinkCheckInAndCheckOut").modal("hide");
+    }
+    function ContinueUpdate() {
+        $("#ModalQuinkCheckInAndCheckOut").modal("hide");
+        var empObj = {
+            strCopynumber: document.getElementById("QuinkCheckInAndCheckOutCopyNumber").value,
+            strPatronCode: document.getElementById("QuinkCheckInAndCheckOutPatronCode").value,
+            strDueDate: document.getElementById("txtDueDate").value,
+            strCheckOutDate: document.getElementById("txtCheckOutDate").value
+        };
+        $.ajax({
+            url: "/Renew/QuinkCheckInAndCheckOut",
+            data: JSON.stringify(empObj),
+            contentType: "application/json;charset=utf-8",
+            type: "POST",
+            success: function (result) {
+                getrenewtable()
+                $("#success").html(result);
+            },
+            error: function (errormessage) {
+            }
+        });
+
+    }
+
 </script>
 @*END------------SCRIPT FOR DATATABLES*@
 
+@if (ViewBag.active == 0)
+{
+    <label class="col-form-label">
+        Tình trạng:
+        <strong style="color:red;">Thẻ khóa</strong> <a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal3">Chi tiết</a>
+    </label>
+}
 @if (ViewBag.ContentRenew.Count > 0)
 {
+
     <table id="table_loadrenew" class="table table-striped table-bordered datatables">
         <thead>
             <tr>
@@ -67,7 +129,8 @@
                 <th>Bạn đọc</th>
                 <th>Đã gia hạn</th>
                 <th>Số lượt gia hạn tối đa</th>
-                <th>Số ngày quá hạn</th>
+                <th>Ghi chú</th>
+                <th>Mượn nhanh</th>
             </tr>
         </thead>
         <tbody>
@@ -77,15 +140,102 @@
                     <td></td>
                     <td>@item.ID</td>
                     <td>@item.DueDate</td>
-                    <td>@item.Content</td>
+                    <td><span>@item.Content</span><br><span style="color:red"> @item.CopyNumber</span></td>
                     <td>@item.DateRange</td>
-                    <td>@item.FullName</td>
+                    <td>@item.FullName (@item.Code)</td>
                     <td>@item.RenewCount</td>
                     <td>@item.Renewals</td>
-                    <td style="color:red">@item.Note</td>
+                    <td><label style="display:inline;"><span>@item.Note</span><span style="color:red"> @item.OverDueDates</span></label></td>
+                    <td>
+                        @if (@item.RenewCount.Equals(item.Renewals))
+                        {<a href="#" onclick="QuinkCheckInAndCheckOut('@item.Code', '@item.CopyNumber')">Mượn lại</a>}
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 }
-    <input type="hidden" value="@ViewBag.message" id="hiddenmessage">
+
+@* modal xác nhận ghi mượn nhanh*@
+<div class="modal" id="ModalQuinkCheckInAndCheckOut">
+    <div class="modal-dialog" style="max-width: 550px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thông tin ghi mượn nhanh</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <label>Số thẻ:</label>
+                    <input type="text" class="form-control" id="QuinkCheckInAndCheckOutPatronCode" disabled>
+                </div>
+                <div class="form-group ">
+                    <label>ĐKCB:</label>
+                    <input type="text" class="form-control" id="QuinkCheckInAndCheckOutCopyNumber" disabled>
+                </div>
+                <div class="form-group ">
+                    <label>Ngày mượn:</label>
+                    <input type="date" class="form-control" id="txtCheckOutDate" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" disabled>
+                </div>
+                <div class="form-group ">
+                    <label>Hạn trả:</label>
+                    <input type="date" class="form-control" id="txtDueDate">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="ContinueUpdate()">Tiếp tục ghi mượn</button>
+                <button type="button" class="btn btn-danger" style="float: right" onclick="CancelUpdate()">Hủy bỏ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.active == 0)
+{
+    <!-- The Modal Black Patron Detail -->
+    <div class="modal" id="myModal3">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Thông tin chi tiết bạn đọc đang bị khóa</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group ">
+                        <label>Họ tên:</label>
+                        <input type="text" class="form-control" value="@ViewBag.Name" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label>Số thẻ:</label>
+                        <input type="text" class="form-control" value="@ViewBag.strCode" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label>Ngày bị khóa:</label>
+                        <input type="text" class="form-control" value="@ViewBag.blackstartdate.ToString("dd/MM/yyyy")" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label>Đến hết ngày:</label>
+                        <input type="text" class="form-control" value="@ViewBag.blackenddate.ToString("dd/MM/yyyy")" disabled>
+                    </div>
+                    <div class="form-group ">
+                        <label>Lý do khóa thẻ:</label>
+                        <textarea class="form-control" disabled>@ViewBag.blackNote</textarea>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+<input type="hidden" value="@ViewBag.message" id="hiddenmessage">

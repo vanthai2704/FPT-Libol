@@ -36,10 +36,15 @@ namespace Libol.Controllers
 
             if (!string.IsNullOrEmpty(code))
             {
+                var item = db.ITEMs.Where(i => i.Code.Equals(code)).FirstOrDefault();
+                if (item == null)
+                {
+                    ViewBag.AlertMessage = "Mã tài liệu không tồn tại";
+                    return View();
+                }
                 ViewBag.content = getContentShelf(code);
-                int itemID = db.ITEMs.Where(i => i.Code.Equals(code)).Single().ID;
+                int itemID = item.ID;
                 ViewBag.itemID = itemID;
-                
             }
 
             return View();
@@ -166,7 +171,7 @@ namespace Libol.Controllers
                 {
                     field520 = shelfBusiness.GetContent(item.Content);
                 }
-                contentOutput = field020 + field022 + field100 + field110 + field245 + field250 + field260 + field300 + field490 + "\n\t" + field520;
+                contentOutput = field022 + field100 + field110 +"@"+ field245+"@" + field250 + field260 + field300 + field490 + "@" + field520 + field020;
             }
             return contentOutput;
         }
@@ -437,6 +442,17 @@ namespace Libol.Controllers
                             }).ToList();
                     }
                 }
+                else if (sortColumn.Equals("Status"))
+                {
+                    if (sortColumnDir.Equals("asc"))
+                    {
+                        holdings = db.HOLDINGs.Where(h => h.ItemID == itemID).OrderBy( o => o.Acquired ).ThenBy( o => o.InCirculation ).ThenBy(o=> o.InUsed).ToList();
+                    }
+                    else 
+                    {
+                        holdings = db.HOLDINGs.Where(h => h.ItemID == itemID).OrderByDescending(o => o.Acquired).ThenByDescending(o => o.InCirculation).ThenByDescending(o => o.InUsed).ToList();
+                    }
+                }
                 #endregion  
                 else
                     holdings = db.HOLDINGs.SqlQuery("Select * from HOLDING where ItemID=" + itemID + " order by " + sortColumn + " " + sortColumnDir).ToList();
@@ -445,10 +461,8 @@ namespace Libol.Controllers
             //Search    
             if (!string.IsNullOrEmpty(searchValue))
             {
-                holdings = holdings.Where(m => m.CopyNumber.Contains(searchValue)).ToList();
+                holdings = holdings.Where(m => m.CopyNumber.ToLower().Contains(searchValue.ToLower())).ToList();
             }
-
-            
 
             //total number of rows count     
             RecordsTotal = holdings.Count();
@@ -490,7 +504,7 @@ namespace Libol.Controllers
         public JsonResult SearchItem(string title,string copynumber, string author,string publisher,string year,string isbn)
         {
             List<SP_GET_TITLES_Result> data= null;
-            string message = shelfBusiness.SearchItem(title, copynumber, author, publisher, year, isbn, ref data);
+            string message = shelfBusiness.SearchItem(title.Trim(), copynumber.Trim(), author.Trim(), publisher.Trim(), year.Trim(), isbn.Trim(), ref data);
             return Json(new { Message = message, data = data }, JsonRequestBehavior.AllowGet);
         }
 

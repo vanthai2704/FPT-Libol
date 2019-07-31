@@ -1,10 +1,14 @@
-﻿@{
-    Libol.Models.SP_GET_PATRON_INFOR_Result patroninfo = (Libol.Models.SP_GET_PATRON_INFOR_Result)ViewData["patroninfo"];
-}
-<head>
+﻿<head>
     <style>
         .columnleft {
             float: right;
+        }
+        #myModal th {
+            font-size: 12px;
+        }
+
+        #myModal td {
+            font-size: 11px;
         }
     </style>
     <link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
@@ -27,7 +31,7 @@
                 columns: [
                     {
                         "render": function (data, type, full, meta) {
-                            return '<a href="#" onclick="rollbackacheckout(' + "'" + full.Copynumber + "'," +')"><strong>Thu hồi</strong></a>';
+                            return '<a href="#" onclick="rollbackacheckout(' + "'" + full.Copynumber + "'," + ')"><strong>Thu hồi</strong></a>';
                         }
                     },
                     { "data": "Title" },
@@ -60,6 +64,12 @@
                     table.rows().deselect();
                 }
             });
+
+
+            if ($("#hiddenCheckduplicate").val() != '') {
+                document.getElementById("notifyMessage").innerText = "Bạn đọc này hiện đang mượn ấn phẩm cùng loại";
+                $("#ModalCheckduplicate").modal("show");
+            }
         });
 
         function ShowUpdateForm(
@@ -85,7 +95,7 @@
             $("#myModal1").modal("show");
         }
 
-        function CancelUpdate() {
+        function Cancel() {
             $("#myModal1").modal("hide");
         }
         function Save() {
@@ -94,7 +104,7 @@
             var copyNumber = document.getElementById("txtCopyNumber").value;
             var duedate = document.getElementById("txtDueDate").value;
             var empObj = {
-                strCopyNumber : copyNumber,
+                strCopyNumber: copyNumber,
                 strNote: note,
                 strDueDate: duedate
             };
@@ -105,7 +115,7 @@
                 data: JSON.stringify(empObj),
                 success: function (result) {
                     $("#contentcheckout").html(result);
-                    
+
                 },
                 error: function (errormessage) {
                 }
@@ -128,6 +138,40 @@
                 }
             });
         }
+
+        function CancelUpdate() {
+            $("#ModalCheckduplicate").modal("hide");
+        }
+        function ContinueUpdate() {
+            $("#ModalCheckduplicate").modal("hide");
+            var empObj = {
+                strFullName: '',
+                strPatronCode: document.getElementById("strPatronCode").value,
+                strFixDueDate: document.getElementById("strDueDate").value,
+                intLoanMode: 1,
+                intHoldIgnore: 0,
+                strCopyNumbers: document.getElementById("hiddenDuplicateCopyNumber").value,
+                strCheckOutDate: document.getElementById("strCheckoutDate").value,
+                boolAllowDuplacate : 1
+            };
+            $.ajax({
+                url: "CheckOut/CheckOutSuccess",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                success: function (result) {
+                    $("#contentcheckout").html(result)
+                    if (document.getElementById("hiddenmessage").value != "") {
+                        alert(document.getElementById("hiddenmessage").value);
+                    }
+                    document.getElementById("strCopyNumber").value = "";
+                    document.getElementById("strCopyNumber").focus();
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        }
     </script>
 </head>
 <h4 style="margin-top:1rem;">Ghi mượn ấn phẩm</h4>
@@ -136,7 +180,14 @@
     <div class="col-7">
         <div class="form-row">
             <div class="col-2" style="padding-top:5px;">
-                <img src="~/Content/Images/NoImage.png" />
+                @if (String.IsNullOrEmpty(ViewBag.PatronDetail.strPortrait))
+                {
+                    <img src="~/Content/ImagePatron/NoImage.png" style="width: 90px;height: 130px;" id="avatarImage" />
+                }
+                else
+                {
+                    <img src="~/Content/ImagePatron/@ViewBag.PatronDetail.strPortrait" style="width: 90px;height: 130px;" id="avatarImage" />
+                }
             </div>
             <div class="col">
                 <div class="form-row">
@@ -181,13 +232,13 @@
                     @foreach (var item in ViewBag.currentloaninfo)
                     {
                         <tr>
-                            <td></td>
+                            <td><a>Thu hồi</a></td>
                             <td>@item.Title</td>
                             <td>@item.Copynumber</td>
                             <td>@item.CheckoutDate</td>
                             <td>@item.DueDate</td>
                             <td>@item.Note</td>
-                            <td>...</td>
+                            <td><button class="btn btn-info">Sửa</button></td>
                         </tr>
                     }
                 </tbody>
@@ -201,155 +252,178 @@
 
 
 <!-- The Modal -->
-    <div class="modal" id="myModal">
-        <div class="modal-dialog" style="max-width: 550px;">
-            <div class="modal-content">
+<div class="modal" id="myModal">
+    <div class="modal-dialog" style="max-width: 500px;">
+        <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Thông tin chi tiết của bạn đọc</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <h5>
-                        Thông tin cơ bản
-                    </h5>
-                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
-                        <table>
-                            <tr>
-                                <td class="columnleft">Họ tên: </td>
-                                <td><strong>@ViewBag.PatronDetail.Name</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Dân tộc: </td>
-                                <td><strong>@ViewBag.PatronDetail.intEthnicID</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Ngày sinh: </td>
-                                <td><strong>@ViewBag.PatronDetail.strDOB</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Giới tính: </td>
-                                <td>
-                                    <strong>@ViewBag.PatronDetail.Sex</strong>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Trình độ văn hóa </td>
-                                <td><strong>@ViewBag.PatronDetail.strEducationlevel</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Số thẻ: </td>
-                                <td><strong>@ViewBag.PatronDetail.strCode</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Ngày cấy thẻ: </td>
-                                <td><strong>@ViewBag.PatronDetail.strValidDate</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Ngày hết hạn thẻ: </td>
-                                <td><strong>@ViewBag.PatronDetail.strExpiredDate</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">nhóm bạn đọc: </td>
-                                <td><strong>@ViewBag.PatronDetail.intPatronGroupID</strong></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <h5>
-                        Nghề nghiệp
-                    </h5>
-                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
-                        <table>
-                            <tr>
-                                <td class="columnleft">Khoa: </td>
-                                <td><strong>@ViewBag.PatronDetail.intFacultyID</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Nhóm nghề nghiệp: </td>
-                                <td><strong>@ViewBag.PatronDetail.intOccupationID</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Trường: </td>
-                                <td><strong>@ViewBag.PatronDetail.intCollegeID</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Địa chỉ nơi làm việc: </td>
-                                <td><strong>@ViewBag.PatronDetail.strWorkPlace</strong></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <h5>
-                        Thông tin liên lạc
-                    </h5>
-                    <div class="col" style="padding-left:50px; padding-bottom:10px;">
-                        <table>
-                            <tr>
-                                <td class="columnleft">Địa chỉ: </td>
-                                <td><strong>@ViewBag.PatronDetail.strAddress</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">SĐT cố định: </td>
-                                <td><strong>@ViewBag.PatronDetail.strTelephone</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">SĐT di động: </td>
-                                <td><strong>@ViewBag.PatronDetail.strMobile</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="columnleft">Email: </td>
-                                <td><strong>@ViewBag.PatronDetail.strEmail</strong></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-    <div id="myModal1" class="modal" >
-
-        <!-- Modal content -->
-        <div class="modal-content col-6" >
+            <!-- Modal Header -->
             <div class="modal-header">
-                <h2 class="" modal-title">Sửa thông tin ấn phẩm vừa mượn</h2>
+                <h4 class="modal-title">Thông tin chi tiết của bạn đọc</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
+
+            <!-- Modal body -->
             <div class="modal-body">
-                <div class="form-group ">
-                    <label for="txtFullName">Nhan đề:</label>
-                    <input type="text" class="form-control" id="txtTitle" disabled>
+                <h5>
+                    Thông tin cơ bản
+                </h5>
+                <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                    <table>
+                        <tr>
+                            <td class="columnleft">Họ tên: </td>
+                            <td><strong>@ViewBag.PatronDetail.Name</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Dân tộc: </td>
+                            <td><strong>@ViewBag.PatronDetail.intEthnicID</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Ngày sinh: </td>
+                            <td><strong>@ViewBag.PatronDetail.strDOB</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Giới tính: </td>
+                            <td>
+                                <strong>@ViewBag.PatronDetail.Sex</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Trình độ văn hóa </td>
+                            <td><strong>@ViewBag.PatronDetail.strEducationlevel</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Số thẻ: </td>
+                            <td><strong>@ViewBag.PatronDetail.strCode</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Ngày cấy thẻ: </td>
+                            <td><strong>@ViewBag.PatronDetail.strValidDate</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Ngày hết hạn thẻ: </td>
+                            <td><strong>@ViewBag.PatronDetail.strExpiredDate</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">nhóm bạn đọc: </td>
+                            <td><strong>@ViewBag.PatronDetail.intPatronGroupID</strong></td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="form-group ">
-                    <label for="txtPatronCode">ĐKCB:</label>
-                    <input type="text" class="form-control" id="txtCopyNumber" disabled>
+                <h5>
+                    Nghề nghiệp
+                </h5>
+                <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                    <table>
+                        <tr>
+                            <td class="columnleft">Khoa: </td>
+                            <td><strong>@ViewBag.PatronDetail.intFacultyID</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Nhóm nghề nghiệp: </td>
+                            <td><strong>@ViewBag.PatronDetail.intOccupationID</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Trường: </td>
+                            <td><strong>@ViewBag.PatronDetail.intCollegeID</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Địa chỉ nơi làm việc: </td>
+                            <td><strong>@ViewBag.PatronDetail.strWorkPlace</strong></td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="form-group ">
-                    <label for="txtStartdate">Ngày mượn:</label>
-                    <input type="text" class="form-control" id="txtCheckOutDate" disabled>
-                </div>
-                <div class="form-group ">
-                    <label for="txtFinishdate">Hạn trả:</label>
-                    <input type="text" class="form-control" id="txtDueDate" disabled>
-                </div>
-                <div class="form-group ">
-                    <label for="txtLockedDay">Ghi chú:</label>
-                    <input type="text" class="form-control" id="txtNote">
+                <h5>
+                    Thông tin liên lạc
+                </h5>
+                <div class="col" style="padding-left:50px; padding-bottom:10px;">
+                    <table>
+                        <tr>
+                            <td class="columnleft">Địa chỉ: </td>
+                            <td><strong>@ViewBag.PatronDetail.strAddress</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">SĐT cố định: </td>
+                            <td><strong>@ViewBag.PatronDetail.strTelephone</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">SĐT di động: </td>
+                            <td><strong>@ViewBag.PatronDetail.strMobile</strong></td>
+                        </tr>
+                        <tr>
+                            <td class="columnleft">Email: </td>
+                            <td><strong>@ViewBag.PatronDetail.strEmail</strong></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
+
+            <!-- Modal footer -->
             <div class="modal-footer">
-                <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="Save()">Lưu</button>
-                <button class="btn btn-danger" style="float: right" onclick="CancelUpdate()">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="myModal1" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content col-6">
+        <div class="modal-header">
+            <h2 class="" modal-title">Sửa thông tin ấn phẩm vừa mượn</h2>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group ">
+                <label for="txtFullName">Nhan đề:</label>
+                <input type="text" class="form-control" id="txtTitle" disabled>
+            </div>
+            <div class="form-group ">
+                <label for="txtPatronCode">ĐKCB:</label>
+                <input type="text" class="form-control" id="txtCopyNumber" disabled>
+            </div>
+            <div class="form-group ">
+                <label for="txtStartdate">Ngày mượn:</label>
+                <input type="text" class="form-control" id="txtCheckOutDate" disabled>
+            </div>
+            <div class="form-group ">
+                <label for="txtFinishdate">Hạn trả:</label>
+                <input type="text" class="form-control" id="txtDueDate" disabled>
+            </div>
+            <div class="form-group ">
+                <label for="txtLockedDay">Ghi chú:</label>
+                <input type="text" class="form-control" id="txtNote">
             </div>
         </div>
-
+        <div class="modal-footer">
+            <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="Save()">Lưu</button>
+            <button class="btn btn-danger" style="float: right" onclick="Cancel()">Hủy bỏ</button>
+        </div>
     </div>
+
+</div>
+
+@* modal xác nhận ghi mượn*@
+<div class="modal" id="ModalCheckduplicate">
+    <div class="modal-dialog" style="max-width: 550px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Xác nhận ghi mượn</h4>
+                <button type="button" class="close" onclick="CancelUpdate()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="notifyMessage" style="color:red;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="ContinueUpdate()">Tiếp tục ghi mượn</button>
+                <button type="button" class="btn btn-danger" style="float: right" onclick="CancelUpdate()">Hủy bỏ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" value="@ViewBag.message" id="hiddenmessage">
+<input type="hidden" value="@ViewBag.HiddenCheckduplicate" id="hiddenCheckduplicate" />
+<input type="hidden" value="@ViewBag.HiddenDuplicateCopyNumber" id="hiddenDuplicateCopyNumber" />

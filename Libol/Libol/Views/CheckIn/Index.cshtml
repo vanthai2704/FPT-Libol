@@ -78,7 +78,7 @@
                         <div class="col">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck1" checked>
-                                <label class="form-check-label" for="exampleCheck1">Đề ghi thu phí quá hạn</label>
+                                <label class="form-check-label" for="exampleCheck1">Đề nghị thu phí quá hạn</label>
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" type="text" id="strCopyNumber" onkeypress="checkin(event)" /></div>
+                        <div class="col"><input class="form-control" type="text" id="strCopyNumber" onchange="checkinbyDKCB()" autofocus /></div>
                         <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
@@ -111,9 +111,56 @@
         </div>
         <div class="col" id="contentcheckin"></div>
     </div>
+    <input type="hidden" value="@ViewBag.HiddenPatronCode" id="hiddenPatronCode" />
+
 </body>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        if ($("#hiddenPatronCode").val() != '') {
+            document.getElementById("strPatronCode").value = $("#hiddenPatronCode").val();
+            var empObj = {
+                strPatronCode: $("#hiddenPatronCode").val(),
+            };
+            $.ajax({
+                url: "/CheckIn/CheckInByCardNumber",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                beforeSend: function (request) {
+                    $.blockUI({
+                        css: {
+                            border: 'none',
+                            padding: '15px',
+                            backgroundColor: '#000',
+                            '-webkit-border-radius': '10px',
+                            '-moz-border-radius': '10px',
+                            opacity: .5,
+                            color: '#fff'
+                        }
+                    });
+                },
+                complete: function (request, json) {
+
+                },
+                success: function (result) {
+                    $("#contentcheckin").html(result);
+                    $.unblockUI()
+                    if (document.getElementById("hiddenmessage").value != "") {
+                        alert(document.getElementById("hiddenmessage").value);
+                    }
+                    document.getElementById("strCopyNumber").focus();
+                },
+                error: function (errormessage) {
+                    console.log("abcssd");
+                    $.unblockUI()
+                    document.getElementById("strCopyNumber").focus();
+                },
+
+            });
+        }
+    });
+
 
     function findByCardNumber() {
         $.ajax({
@@ -147,9 +194,7 @@
 
     function checkinByCardNumber() {
         var empObj = {
-            strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strCheckinDate").value
         };
         $.ajax({
             url: "/CheckIn/CheckInByCardNumber",
@@ -175,18 +220,18 @@
             success: function (result) {
                 $("#contentcheckin").html(result);
                 $.unblockUI()
+                if (document.getElementById("hiddenmessage").value != "") {
+                    alert(document.getElementById("hiddenmessage").value);
+                }
+                document.getElementById("strCopyNumber").focus();
             },
             error: function (errormessage) {
                 console.log("abcssd");
                 $.unblockUI()
-            }
+                document.getElementById("strCopyNumber").focus();
+            },
+            
         });
-    }
-
-    function checkin(e) {
-        if (e.keyCode == 13) {
-            checkinbyDKCB()
-        }
     }
 
 
@@ -291,9 +336,15 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
+                document.getElementById("strCopyNumber").value = "";
+                document.getElementById("strCopyNumber").focus();
             },
             error: function (errormessage) {
                 console.log("error");
+                document.getElementById("strCopyNumber").focus();
             }
         });
     }
@@ -322,11 +373,67 @@
             type: "POST",
             success: function (result) {
                 $("#contentcheckin").html(result)
+                if (document.getElementById("hiddenmessage1").value != "") {
+                    alert(document.getElementById("hiddenmessage1").value);
+                }
+                document.getElementById("strCopyNumber").value = "";
+                document.getElementById("strCopyNumber").focus();
             },
             error: function (errormessage) {
                 console.log("error");
+                document.getElementById("strCopyNumber").focus();
             }
         });
     }
+
+    //function CancelUpdate() {
+    //    document.getElementById("myModal").style.display = "none";
+    //}
+    //function Save() {
+    //    var patronCode = document.getElementById("txtPatronCode").value;
+    //    var lockDays = document.getElementById("txtLockedDay").value;
+    //    var note = document.getElementById("txtNote").value;
+    //    $.ajax({
+    //        url: "/Circulation/UpdatedLockCardPatron",
+    //        data: JSON.stringify({ patronCode: patronCode, lockDays: lockDays, note: note }),
+    //        type: "POST",
+    //        contentType: "application/json;charset=utf-8",
+    //        dataType: "json",
+    //        success: function () {
+    //            alert('Bạn đã Update trạng thái khóa thẻ thành công');
+    //            $('#table').DataTable().ajax.reload(null, false);
+    //        },
+    //        error: function () {
+    //            alert('Update trạng thái khóa thẻ không thành công');
+    //        }
+
+    //    });
+    //}
+
+    //function ShowUpdateForm(PatronCode,
+    //    FullName,
+    //    StartedDate,
+    //    FinishDate,
+    //    LockedDays,
+    //    Note
+    //) {
+
+    //    PatronCode_Update = PatronCode;
+    //    FullName_Update = FullName;
+    //    StartedDate_Update = StartedDate;
+    //    FinishDate_Update = FinishDate;
+    //    LockedDays_Update = LockedDays;
+    //    Note_Update = Note;
+
+    //    document.getElementById("txtFullName").value = FullName;
+    //    document.getElementById("txtPatronCode").value = PatronCode;
+    //    document.getElementById("txtStartdate").value = StartedDate;
+    //    document.getElementById("txtFinishdate").value = FinishDate;
+    //    document.getElementById("txtLockedDay").value = LockedDays;
+    //    document.getElementById("txtNote").value = Note;
+
+    //    document.getElementById("myModal").style.display = "block";
+    //}
+
 </script>
 
