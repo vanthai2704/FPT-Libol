@@ -44,6 +44,7 @@
     });
     var Data;
     function Search() {
+        debugger;
         $('#table').empty();
         var strCode = $('#txtCode').val();
         var strCN = $('#txtCN').val();
@@ -61,6 +62,7 @@
                     var code;
                     if (inforList[i].FieldCode == '001') code = inforList[i].Content;
                     if (inforList[i].FieldCode == '245') {
+                        //lọc các kí tự $
                         $('#table').append("<tr><td> <strong><a href='/Catalogue/AddNewCatalogueDetail?ID=" + inforList[i].ItemID + "'>" + code + "</strong></td><td>" + inforList[i].Content + "</td></tr>");
                     }
                 }
