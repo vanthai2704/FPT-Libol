@@ -113,7 +113,11 @@
         <div class="col" id="contentcheckout">
         </div>
     </div>
-    <input type="hidden" value="@ViewBag.HiddenPatronCode" id="hiddenPatronCode"/>
+
+    
+
+    <input type="hidden" value="@ViewBag.HiddenPatronCode" id="hiddenPatronCode" />
+    
 </body>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -161,6 +165,7 @@
                 }
             });
         }
+
     });
 
     function checkout(e) {
@@ -177,7 +182,8 @@
             intLoanMode: 1,
             intHoldIgnore: 0,
             strCopyNumbers: document.getElementById("strCopyNumber").value,
-            strCheckOutDate: document.getElementById("strCheckoutDate").value
+            strCheckOutDate: document.getElementById("strCheckoutDate").value,
+            boolAllowDuplacate: 0
         };
         $.ajax({
             url: "CheckOut/CheckOutSuccess",
@@ -233,6 +239,7 @@
                 }
                 else {
                     document.getElementById("strCopyNumber").disabled = false;
+                    document.getElementById("strCopyNumber").value = "";
                     document.getElementById("strCopyNumber").focus();
                 }
             },
@@ -321,6 +328,7 @@
         });
 
     }
+
 
 </script>
 
