@@ -71,14 +71,19 @@ namespace Libol.Controllers
             string CopyNumber = strCopyNumbers.Trim();
             List<int?> ItemIds = new List<int?>();
             getpatrondetail(PatronCode);
-            if (db.HOLDINGs.Where(a => a.CopyNumber == strCopyNumbers).Count() == 0)
+            if (db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).Count() == 0)
             {
-                ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
+                ViewBag.message = "ĐKCB không đúng";
+                ViewBag.HiddenCheckduplicate = "";
+            }
+            else if (db.CIR_LOAN.Where(a => a.CopyNumber == CopyNumber).Count() !=0)
+            {
+                ViewBag.message = "ĐKCB đang được ghi mượn";
                 ViewBag.HiddenCheckduplicate = "";
             }
             else
             {
-                int ItemID = db.HOLDINGs.Where(a => a.CopyNumber == strCopyNumbers).First().ItemID;
+                int ItemID = db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).First().ItemID;
                 foreach (CIR_LOAN loan in cIR_LOANs)
                 {
                     ItemIds.Add(loan.ItemID);

@@ -120,7 +120,15 @@ namespace Libol.Controllers
                             db.SP_RENEW_ITEM(intLoanID[i], intAddTime, intTimeUnit, strFixedDueDate);
                         }
                     }
-                    ViewBag.message = "Gia hạn thành công( " + (intLoanID.Length - codeErrorCount) + " ) bản ghi" + "" + " gia hạn thất bại( " + codeErrorCount + " )bản ghi";
+                    if(codeErrorCount == 0)
+                    {
+                        ViewBag.message = "Gia hạn thành công"; 
+                    }
+                    else
+                    {
+                        ViewBag.message = "Gia hạn thất bại( " + codeErrorCount + " )bản ghi";
+                    }
+                    
                 }
             }
             getcontentrenew((int)Session["UserID"], Type, CodeVal);
