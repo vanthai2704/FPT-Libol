@@ -35,14 +35,14 @@ namespace Libol.Controllers
         public PartialViewResult CheckOutCardInfo(string strPatronCode)
         {
             string Patroncode = strPatronCode.Trim();
-            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == Patroncode).Where(a => a.isLocked == 1).Count() == 0)
+            if (db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).Count() == 0)
             {
                 ViewBag.active = 1;
             }
             else
             {
                 ViewBag.active = 0;
-                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == Patroncode).First().Note;
+                ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().Note;
                 ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().StartedDate;
                 ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().LockedDays);
             }
