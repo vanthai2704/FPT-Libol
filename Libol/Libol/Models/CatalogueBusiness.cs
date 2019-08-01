@@ -70,6 +70,16 @@ namespace Libol.Models
                 inforList = inforList.Concat(db.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(item.ToString(), 0).ToList()).ToList();
             }
 
+            //Loc $a $b trong title
+            foreach (FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result item in inforList)
+            {
+                if(item.FieldCode == "245")
+                {
+                    item.Content = new FormatHoldingTitle().OnFormatHoldingTitle(item.Content);
+                }
+            }
+            
+
             return inforList;
         }
 
