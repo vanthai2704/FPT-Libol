@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-
+using Libol.SupportClass;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -90,16 +90,17 @@ namespace Libol.Models
             }
             foreach (FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result item in inforList)
             {
-                int index = 0;
-                string value = item.Content;
-                while (true)
-                {
-                    index = value.IndexOf("$");
-                    if (index == -1) break;
-                    value = value.Substring(0, index) + " " + value.Substring(index + 2, value.Length - index - 2);
-                }
+                //int index = 0;
+                //string value = item.Content;
+                ////Loc ki tu $x 
+                //while (true)
+                //{
+                //    index = value.IndexOf("$");
+                //    if (index == -1) break;
+                //    value = value.Substring(0, index) + " " + value.Substring(index + 2);
+                //}
 
-                item.Content = value;
+                item.Content = new FormatHoldingTitle().OnFormatHoldingTitle(item.Content);
 
             }
             return inforList;
@@ -929,5 +930,19 @@ namespace Libol.Models
             return ID.ToString();
         }
 
+        ////Loc cac ki tu $x 
+        //public string ParseValue(string value)
+        //{
+        //    int index = 0;
+        //    //Loc ki tu $x 
+        //    while (true)
+        //    {
+        //        index = value.IndexOf("$");
+        //        if (index == -1) break;
+        //        value = value.Substring(0, index)  + value.Substring(index + 2);
+        //    }
+
+        //    return value;
+        //}
     }
 }
