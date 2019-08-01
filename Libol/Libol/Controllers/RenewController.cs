@@ -14,8 +14,9 @@ namespace Libol.Controllers
     {
         private LibolEntities db = new LibolEntities();
         RenewBusiness renewBusiness = new RenewBusiness();
-        private static Byte Type = 0;
+        private static byte Type = 0;
         private static string CodeVal = "";
+        private static string CodetogetLock = "";
         FormatHoldingTitle f = new FormatHoldingTitle();
 
         [AuthAttribute(ModuleID = 3, RightID = "149")]
@@ -25,9 +26,31 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult SearchToRenew(Byte intType, string strCodeVal)
+        public PartialViewResult SearchToRenew(byte intType, string strCodeVal)
         {
             CodeVal = strCodeVal.Trim();
+            if(intType == 1)
+            {
+                CheckLockPatron(CodeVal);
+                CodetogetLock = CodeVal;
+            }
+            else if (intType == 3)
+            {
+                if(db.CIR_LOAN.Where(a => a.CopyNumber == CodeVal).Count() != 0)
+                {
+                    string pccode = db.CIR_LOAN.Where(a => a.CopyNumber == CodeVal).First().CIR_PATRON.Code;
+                    CheckLockPatron(pccode);
+                    CodetogetLock = pccode;
+                }
+                else
+                {
+                    ViewBag.active = 1;
+                }
+            }
+            else
+            {
+                ViewBag.active = 1;
+            }
             getcontentrenew((int)Session["UserID"], intType, CodeVal);
             Type = intType;
             return PartialView("_searchToRenew");
@@ -100,13 +123,19 @@ namespace Libol.Controllers
                     ViewBag.message = "Gia hạn thành công( " + (intLoanID.Length - codeErrorCount) + " ) bản ghi" + "" + " gia hạn thất bại( " + codeErrorCount + " )bản ghi";
                 }
             }
-
             getcontentrenew((int)Session["UserID"], Type, CodeVal);
+            CheckLockPatron(CodetogetLock);
             return PartialView("_searchToRenew");
         }
 
-        public void QuinkCheckInAndCheckOut(string strCopynumber, string strPatronCode, string strDueDate, string strCheckOutDate)
+        public JsonResult QuinkCheckInAndCheckOut(string strCopynumber, string strPatronCode, string strDueDate, string strCheckOutDate)
         {
+            // ham nay khong can Trim() vi bien chuyen vao da dk format dung
+            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Where(a => a.isLocked == 1).Count() != 0)
+            {
+                ViewBag.message = "Mượn lại thất bại vì thẻ đang bị khóa";
+            }
+            else { 
             db.SP_CHECKIN((int)Session["UserID"], 1, 0, strCopynumber, strCheckOutDate,
                     new ObjectParameter("strTransIDs", typeof(string)),
                     new ObjectParameter("strPatronCode", typeof(string)),
@@ -115,9 +144,11 @@ namespace Libol.Controllers
                        new ObjectParameter("intOutValue", typeof(int)),
                         new ObjectParameter("intOutID", typeof(int)));
             ViewBag.message = "Mượn lại thành công";
+            }
+            return Json(ViewBag.message);
         }
 
-        public void getcontentrenew(int intUserID, Byte intType, string strCodeVal)
+        private void getcontentrenew(int intUserID, Byte intType, string strCodeVal)
         {
             List<SP_CIR_GET_RENEW_Result> results = renewBusiness.FPT_SP_CIR_GET_RENEW(intUserID, intType, strCodeVal);
             List<CustomRenew> customRenews = new List<CustomRenew>();
@@ -139,6 +170,25 @@ namespace Libol.Controllers
                 });
             }
             ViewBag.ContentRenew = customRenews;
+        }
+
+
+        private void CheckLockPatron(string code)
+        {
+            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == code).Where(a => a.isLocked == 1).Count() == 0)
+            {
+                ViewBag.active = 1;
+            }
+            else
+            {
+                ViewBag.active = 0;
+                CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == code).First();
+                ViewBag.Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName;
+                ViewBag.strCode = code;
+                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == code).First().Note;
+                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().StartedDate;
+                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().LockedDays);
+            }
         }
 
     }

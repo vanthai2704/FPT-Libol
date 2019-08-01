@@ -4793,3 +4793,36 @@ AS
 	WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.LibID = @intLibID
 	ORDER BY B.LibID, B.Symbol	 
 	  
+	  
+	  
+	  
+	  
+GO
+/****** Object:  StoredProcedure [dbo].[SP_CIR_OVERDUELIST_GETINFOR]    */
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE   PROCEDURE [dbo].[FPT_SP_CIR_OVERDUELIST_GETINFOR]      
+--purpose: select overdue items                       
+--creator:Nhatnh                      
+--createdDate:31/7/2019                      
+ @intUserID INT,                      
+ @strPatronIDs VARCHAR(1000),                    
+  @whereCondition NVARCHAR(1000)                     
+AS                      
+ DECLARE @strSQL NVARCHAR(4000)                      
+ SET @strSQL = ''                  
+ SET @strSQL = '(SELECT L.ID AS LOANID, HD.LibID, HD.LocationID AS LocID,HD.Price, CDC.College, CDF.Faculty, CPU.Grade, CPU.Class, CPU.FacultyID, CPU.CollegeID, P.PatronGroupID, L.LocationID, L.CheckOutDate AS CheckOutDate, L.DueDate AS CheckInDate, F.Content AS MainTitle, L.CopyNumber, P.ID AS PatronID, IsNull(P.FirstName,'''') + ''' + ' ' + ''' + IsNull(P.MiddleName,'''') + ''' + ' ' + ''' + IsNull(P.LastName,'''') AS Name,P.Email,'                 
+    --TINH SO NGAY QUA HAN, VA TRU DI NGAY THU 7 VA CHU NHAT                      
+ +'OverdueDate=DATEDIFF(DAY,L.DueDate,GETDATE()), '                      
+ +'T.OverdueFine*floor(DATEDIFF(DAY,L.DueDate,GETDATE())) AS Penati, P.Code As PatronCode, P.Code,I.code as ItemCode FROM  CIR_LOAN L INNER JOIN CIR_PATRON P ON L.PatronID= P.ID INNER JOIN ITEM I ON L.ItemID=I.ID LEFT JOIN Field200s F ON I.ID=F.ItemID AND F.FieldCode=245 LEFT JOIN CIR_LOAN_TYPE T ON L.LoanTypeID=T.ID LEFT JOIN CIR_PATRON_UNIVERSITY CPU ON CPU.PatronID=P.ID LEFT JOIN CIR_DIC_FACULTY CDF ON CDF.ID=CPU.FacultyID LEFT JOIN CIR_DIC_COLLEGE CDC ON CDC.ID=CPU.CollegeID LEFT JOIN HOLDING HD ON HD.CopyNumber = L.CopyNumber WHERE  L.DueDate<=GETDATE()'                     
+                      
+ IF @strPatronIDs=''                       
+  SET @strSQL= @strSQL + ' AND P.ID IN (SELECT DISTINCT L.PatronID FROM CIR_LOAN L WHERE L.DueDate<GETDATE())) A, '                      
+ ELSE                      
+  SET @strSQL= @strSQL + ' AND P.ID IN (' + @strPatronIDs + ')) A, '                      
+ -- Get Location, Library                       
+ SET @strSQL= 'SELECT A.*, B.LibCode, B.LocCode FROM ' + @strSQL + '(SELECT H.Symbol AS LocCode, H.ID, L.Code AS LibCode FROM HOLDING_LOCATION H, HOLDING_LIBRARY L WHERE H.LibID=L.ID AND H.ID IN(SELECT LocationID FROM SYS_USER_CIR_LOCATION WHERE UserID=' 
+ + CAST(@intUserID AS NVARCHAR(4)) + ')) B WHERE A.LocationID=B.ID ' + @whereCondition + ' ORDER BY PatronCode '       
+ EXEC(@strSQL)	  

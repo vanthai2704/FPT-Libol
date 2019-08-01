@@ -26,19 +26,20 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult CheckInByCardNumber( string strPatronCode)
         {
-            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Where(a => a.isLocked == 1).Count() == 0)
+            string pcode = strPatronCode.Trim();
+            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == pcode).Where(a => a.isLocked == 1).Count() == 0)
             {
                 ViewBag.active = 1;
             }
             else
             {
                 ViewBag.active = 0;
-                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).First().Note;
-                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().StartedDate;
-                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().LockedDays);
+                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == pcode).First().Note;
+                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().StartedDate;
+                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().LockedDays);
             }
 
-            getpatrondetail(strPatronCode);
+            getpatrondetail(pcode);
            
             return PartialView("_checkinByCardNumber");
         }
@@ -105,6 +106,7 @@ namespace Libol.Controllers
            string strCheckInDate
        )
         {
+            string pcode = strPatronCode.Trim();
             int success = -1;
             foreach (string CopyNumber in strCopyNumbers)
             {
@@ -113,7 +115,7 @@ namespace Libol.Controllers
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
             }
-            getpatrondetail(strPatronCode);
+            getpatrondetail(pcode);
             if (success == -1)
             {
                 ViewBag.message = "Ghi trả thất bại";
@@ -151,11 +153,6 @@ namespace Libol.Controllers
             return PartialView("_findByCardNumber");
         }
 
-        public JsonResult GetPatronSearchDetail(string code)
-        {
-            getpatrondetail(code);
-            return Json(ViewBag.PatronDetail, JsonRequestBehavior.AllowGet);
-        }
 
         public void getpatrondetail(string strPatronCode)
         {

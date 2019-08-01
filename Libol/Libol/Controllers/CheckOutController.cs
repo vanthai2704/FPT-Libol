@@ -34,19 +34,20 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult CheckOutCardInfo(string strPatronCode)
         {
-            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Where(a => a.isLocked == 1).Count() == 0)
+            string Patroncode = strPatronCode.Trim();
+            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == Patroncode).Where(a => a.isLocked == 1).Count() == 0)
             {
                 ViewBag.active = 1;
             }
             else
             {
                 ViewBag.active = 0;
-                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).First().Note;
-                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().StartedDate;
-                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().LockedDays);
+                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == Patroncode).First().Note;
+                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().StartedDate;
+                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().LockedDays);
             }
 
-            getpatrondetail(strPatronCode);
+            getpatrondetail(Patroncode);
             return PartialView("_showPatronInfo");
         }
 
@@ -63,12 +64,13 @@ namespace Libol.Controllers
             bool boolAllowDuplacate
             )
         {
+            string PatronCode = strPatronCode.Trim();
             bool duplicate = false;
-            int PatronID = db.CIR_PATRON.Where(a => a.Code == strPatronCode).First().ID;
+            int PatronID = db.CIR_PATRON.Where(a => a.Code == PatronCode).First().ID;
             var cIR_LOANs = db.CIR_LOAN.Where(a => a.PatronID == PatronID).ToList();
             string CopyNumber = strCopyNumbers.Trim();
             List<int?> ItemIds = new List<int?>();
-            getpatrondetail(strPatronCode);
+            getpatrondetail(PatronCode);
             if (db.HOLDINGs.Where(a => a.CopyNumber == strCopyNumbers).Count() == 0)
             {
                 ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
@@ -94,14 +96,14 @@ namespace Libol.Controllers
                 }
                 else
                 {
-                    int success = db.SP_CHECKOUT(strPatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strDueDate, strCheckOutDate, intHoldIgnore,
+                    int success = db.SP_CHECKOUT(PatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strDueDate, strCheckOutDate, intHoldIgnore,
                        new ObjectParameter("intOutValue", typeof(int)),
                         new ObjectParameter("intOutID", typeof(int)));
                     string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
 
                     if (success == -1)
                     {
-                        if (patroncode != strPatronCode)
+                        if (patroncode != PatronCode)
                         {
                             strTransactionIDs = "0";
                         }
@@ -109,7 +111,7 @@ namespace Libol.Controllers
                     }
                     else
                     {
-                        if (patroncode == strPatronCode)
+                        if (patroncode == PatronCode)
                         {
                             strTransactionIDs = strTransactionIDs + "," + lastid;
                         }
@@ -123,7 +125,7 @@ namespace Libol.Controllers
             }
             ViewBag.HiddenDuplicateCopyNumber = CopyNumber;
             getcurrentloandetail();
-            patroncode = strPatronCode;
+            patroncode = PatronCode;
             return PartialView("_checkoutSuccess");
         }
 
@@ -176,11 +178,6 @@ namespace Libol.Controllers
             return PartialView("_findByCardNumber");
         }
 
-        public JsonResult GetPatronSearchDetail(string code)
-        {
-            getpatrondetail(code);
-            return Json(ViewBag.PatronDetail, JsonRequestBehavior.AllowGet);
-        }
 
         public void getpatrondetail(string strPatronCode)
         {

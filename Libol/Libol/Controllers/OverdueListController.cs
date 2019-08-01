@@ -77,7 +77,7 @@ namespace Libol.Controllers
 
         public List<SP_CIR_OVERDUELIST_GETINFOR_Result> GET_LIST_OVERDUELIST_GETINFOR(Nullable<int> intUserID, string strPatronIDs, string whereCondition)
         {
-            List<SP_CIR_OVERDUELIST_GETINFOR_Result> list = db.Database.SqlQuery<SP_CIR_OVERDUELIST_GETINFOR_Result>("SP_CIR_OVERDUELIST_GETINFOR {0}, {1}, {2}",
+            List<SP_CIR_OVERDUELIST_GETINFOR_Result> list = db.Database.SqlQuery<SP_CIR_OVERDUELIST_GETINFOR_Result>("FPT_SP_CIR_OVERDUELIST_GETINFOR {0}, {1}, {2}",
                 new object[] { intUserID, strPatronIDs, whereCondition }).ToList();
             List<SP_CIR_OVERDUELIST_GETINFOR_Result> sP_CIR_OVERDUELISTs = new List<SP_CIR_OVERDUELIST_GETINFOR_Result>();
             foreach(SP_CIR_OVERDUELIST_GETINFOR_Result item in list)
@@ -108,7 +108,8 @@ namespace Libol.Controllers
                     PatronCode = item.PatronCode,
                     PatronGroupID = item.PatronGroupID,
                     PatronID = item.PatronID,
-                    Penati = item.Penati
+                    Penati = item.Penati,
+                    Price = item.Price
                 });
             }
             return sP_CIR_OVERDUELISTs;
