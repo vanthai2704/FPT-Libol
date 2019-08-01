@@ -62,7 +62,7 @@
             <td>@string.Format("{0:dd/MM/yyyy}", @item.CheckOutDate)</td>
             <td>@string.Format("{0:dd/MM/yyyy}", @item.CheckInDate)</td>
             <td>@item.CopyNumber</td>
-            <td>@item.Price</td>
+            <td>@item.Price @item.Currency</td>
             <td style="color:red">@item.OverdueDate</td>
             <td style="color:red">@String.Format("{0:00.}",item.Penati)</td>
         </tr>

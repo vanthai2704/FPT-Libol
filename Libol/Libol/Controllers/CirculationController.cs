@@ -80,7 +80,17 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
             var patronLoanInfors = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
-            var sorting = search;
+            if (model.search.value != null)
+            {
+                string searchValue = model.search.value;
+                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
+                    || (a.Currency ?? "").ToUpper().Contains(searchValue.ToUpper())
+                );
+            }
+            var sorting = search.OrderBy(a => a.CopyNumber);
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<GET_PATRON_ONLOANINFOR_Result_2> result = new List<GET_PATRON_ONLOANINFOR_Result_2>();
             foreach (var i in paging)
@@ -129,7 +139,17 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
             var patronLoanInfors = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
-            var sorting = search;
+            if (model.search.value != null)
+            {
+                string searchValue = model.search.value;
+                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
+                    || (a.Currency ?? "").ToUpper().Contains(searchValue.ToUpper())
+                );
+            }
+            var sorting = search.OrderBy(a => a.CopyNumber);
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<GET_PATRON_RENEW_ONLOAN_INFOR_Result_2> result = new List<GET_PATRON_RENEW_ONLOAN_INFOR_Result_2>();
             foreach (var i in paging)
@@ -149,6 +169,7 @@ namespace Libol.Controllers
                     Currency = i.Currency
                 });
             }
+            
             return Json(new
             {
                 draw = model.draw,
@@ -218,7 +239,17 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
             var patronLoanInfors = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
-            var sorting = search;
+            if (model.search.value != null)
+            {
+                string searchValue = model.search.value;
+                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
+                    || (a.Currency ?? "").ToUpper().Contains(searchValue.ToUpper())
+                );
+            }
+            var sorting = search.OrderBy(a => a.CopyNumber);
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<GET_PATRON_LOANINFOR_Result_2> result = new List<GET_PATRON_LOANINFOR_Result_2>();
             foreach (var i in paging)
@@ -271,7 +302,17 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
             var patronLoanInfors = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
-            var sorting = search;
+            if (model.search.value != null)
+            {
+                string searchValue = model.search.value;
+                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
+                    || (a.Currency ?? "").ToUpper().Contains(searchValue.ToUpper())
+                );
+            }
+            var sorting = search.OrderBy(a => a.CopyNumber);
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<GET_PATRON_RENEW_LOAN_INFOR_Result_2> result = new List<GET_PATRON_RENEW_LOAN_INFOR_Result_2>();
 

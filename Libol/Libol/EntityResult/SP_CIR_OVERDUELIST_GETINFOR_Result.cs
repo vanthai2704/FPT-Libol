@@ -12,6 +12,7 @@ namespace Libol.EntityResult
         public int LocID { get; set; }
         public Single Price { get; set; }
         public string College { get; set; }
+        public string Currency { get; set; }
         public string Faculty { get; set; }
         public string Grade { get; set; }
         public string Class { get; set; }
