@@ -102,7 +102,7 @@
             <div style="margin : auto">
                 <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới" onclick="doWork();" />
                 <button disabled type="button" id="btnReset" class="btn btn-primary form-control" onclick="reset();">Đặt Lại</button>
-                <button disabled type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal">Thêm Trường</button>
+                @*<button disabled type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal">Thêm Trường</button>*@
             </div>
         </div>
     </div>
@@ -195,7 +195,7 @@
                 document.getElementById("lb245a").style.color = "red";
                 document.getElementById("btnCreate").disabled = false;
                 document.getElementById("btnReset").disabled = false;
-                document.getElementById("btnAddField").disabled = false;
+                //document.getElementById("btnAddField").disabled = false;
                 $(document).ready(function () {
                     //check tittle
                     $("#245a").focusout(function () {
