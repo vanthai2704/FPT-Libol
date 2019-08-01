@@ -5,7 +5,7 @@
 
 <!DOCTYPE html>
 <head>
-    <style>        
+    <style>
         .hide {
             display: none;
         }
@@ -109,8 +109,10 @@
         </td>
     </tr>
 </table>
-<div style="margin-top:20px;" class="btn-group d-xl-flex justify-content-xl-center" role="group">
-    <button id="ExportReporttoExcel" type="button" style="margin-right:20px;">Lưu vào file excel</button>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <button type="button" id="ExportReporttoExcel" class="btn btn-primary">Lưu vào file excel</button>
+    </div>
 </div>
 <script type="text/javascript">
     google.charts.load("current", { packages: ['corechart'] });
@@ -161,7 +163,7 @@
             return;
         var len = table.rows.length;
         var arr = [["Ngôn ngữ", "Số bản ấn phẩm", { role: "style" }]];
-        for (var i = 1; i < len; i++) {   
+        for (var i = 1; i < len; i++) {
             if (table.rows[i].classList.contains("hide")) continue;
             arr.push([table.rows[i].cells[0].innerHTML, parseInt(table.rows[i].cells[1].innerHTML), "aquamarine1"]);
         }
