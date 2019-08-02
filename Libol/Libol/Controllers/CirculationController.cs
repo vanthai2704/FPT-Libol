@@ -7,10 +7,8 @@ using Libol.Models;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Reflection;
-using Excel = Microsoft.Office.Interop.Excel;
 
 using Libol.SupportClass;
-using System.Data.Entity.SqlServer;
 
 namespace Libol.Controllers
 {
@@ -19,6 +17,7 @@ namespace Libol.Controllers
         LibolEntities le = new LibolEntities();
         CirculationBusiness cb = new CirculationBusiness();
         PatronBusiness pb = new PatronBusiness();
+        FormatHoldingTitle format = new FormatHoldingTitle();
         //int UserID = 49;
         public string GetContent(string copynumber)
         {
@@ -74,7 +73,7 @@ namespace Libol.Controllers
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                search = search.Where(a => (format.OnFormatHoldingTitle(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
@@ -156,7 +155,7 @@ namespace Libol.Controllers
             {
                 result.Add(new GET_PATRON_ONLOANINFOR_Result_2()
                 {
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
                     CheckOutDate = i.CheckOutDate == null ? "": i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
                     DueDate = i.DueDate == null ? "": i.DueDate.Value.ToString("dd/MM/yyyy"),
@@ -196,7 +195,7 @@ namespace Libol.Controllers
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                search = search.Where(a => (format.OnFormatHoldingTitle(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
@@ -313,7 +312,7 @@ namespace Libol.Controllers
             {
                 result.Add(new GET_PATRON_RENEW_ONLOAN_INFOR_Result_2()
                 {
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
                     CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
                     DueDate = i.DueDate.Value.ToString("dd/MM/yyyy"),
@@ -394,7 +393,7 @@ namespace Libol.Controllers
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                search = search.Where(a => (format.OnFormatHoldingTitle(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
@@ -500,7 +499,7 @@ namespace Libol.Controllers
             {
                 result.Add(new GET_PATRON_LOANINFOR_Result_2()
                 {
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
                     CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
                     CheckInDate = i.CheckInDate.Value.ToString("dd/MM/yyyy"),
@@ -551,7 +550,7 @@ namespace Libol.Controllers
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                search = search.Where(a => (format.OnFormatHoldingTitle(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
@@ -682,7 +681,7 @@ namespace Libol.Controllers
             {
                 result.Add(new GET_PATRON_RENEW_LOAN_INFOR_Result_2()
                 {
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
                     CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
                     CheckInDate = i.CheckInDate.ToString("dd/MM/yyyy"),

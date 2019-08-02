@@ -15,7 +15,7 @@ namespace Libol.Controllers
         LibolEntities le = new LibolEntities();
         AcquisitionBusiness ab = new AcquisitionBusiness();
         List<Temper> listTempt = new List<Temper>();
-        
+        FormatHoldingTitle format = new FormatHoldingTitle();
 
         public string GetContent(string copynumber)
         {
@@ -1685,9 +1685,76 @@ namespace Libol.Controllers
                     || a.CopyNumber.ToUpper().Contains(searchValue.ToUpper())
                     || a.Content.ToUpper().Contains(searchValue.ToUpper())
                     || a.Price.ToString().ToUpper().Contains(searchValue.ToUpper())
+                    || a.RemovedDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
                 );
             }
-            var sorting = search.OrderBy(a => a.LocName);
+            var sorting = search.OrderBy(a => false);
+            if (model.order[0].column == 0)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.LibName);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.LibName);
+                }
+            }
+            else if (model.order[0].column == 1)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.LocName);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.LocName);
+                }
+            }
+            else if (model.order[0].column == 2)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CopyNumber);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CopyNumber);
+                }
+            }
+            else if (model.order[0].column == 3)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Content);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Content);
+                }
+            }
+            else if (model.order[0].column == 4)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.RemovedDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.RemovedDate);
+                }
+            }
+            else if (model.order[0].column == 5)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Price);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Price);
+                }
+            }
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<FPT_GET_LIQUIDBOOKS_Result_2> result = new List<FPT_GET_LIQUIDBOOKS_Result_2>();
             foreach (var i in paging)
@@ -1697,7 +1764,7 @@ namespace Libol.Controllers
                     LibName = i.LibName,
                     LocName = i.LocName,
                     CopyNumber = i.CopyNumber,
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     RemovedDate = i.RemovedDate.Value.ToString("dd/MM/yyyy"),
                     Price = i.Price.ToString("#.##")
                 });
@@ -1711,7 +1778,7 @@ namespace Libol.Controllers
                 draw = model.draw,
                 recordsTotal = copy.Count(),
                 recordsFiltered = search.Count(),
-                total = total,
+                total,
                 data = result
             });
         }
