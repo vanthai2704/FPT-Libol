@@ -109,7 +109,8 @@ namespace Libol.Controllers
                     PatronGroupID = item.PatronGroupID,
                     PatronID = item.PatronID,
                     Penati = item.Penati,
-                    Price = item.Price
+                    Price = item.Price,
+                    Currency = item.Currency
                 });
             }
             return sP_CIR_OVERDUELISTs;

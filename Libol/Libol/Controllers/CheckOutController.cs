@@ -35,14 +35,14 @@ namespace Libol.Controllers
         public PartialViewResult CheckOutCardInfo(string strPatronCode)
         {
             string Patroncode = strPatronCode.Trim();
-            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == Patroncode).Where(a => a.isLocked == 1).Count() == 0)
+            if (db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).Count() == 0)
             {
                 ViewBag.active = 1;
             }
             else
             {
                 ViewBag.active = 0;
-                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == Patroncode).First().Note;
+                ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().Note;
                 ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().StartedDate;
                 ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().LockedDays);
             }
@@ -71,14 +71,19 @@ namespace Libol.Controllers
             string CopyNumber = strCopyNumbers.Trim();
             List<int?> ItemIds = new List<int?>();
             getpatrondetail(PatronCode);
-            if (db.HOLDINGs.Where(a => a.CopyNumber == strCopyNumbers).Count() == 0)
+            if (db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).Count() == 0)
             {
-                ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
+                ViewBag.message = "ĐKCB không đúng";
+                ViewBag.HiddenCheckduplicate = "";
+            }
+            else if (db.CIR_LOAN.Where(a => a.CopyNumber == CopyNumber).Count() !=0)
+            {
+                ViewBag.message = "ĐKCB đang được ghi mượn";
                 ViewBag.HiddenCheckduplicate = "";
             }
             else
             {
-                int ItemID = db.HOLDINGs.Where(a => a.CopyNumber == strCopyNumbers).First().ItemID;
+                int ItemID = db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).First().ItemID;
                 foreach (CIR_LOAN loan in cIR_LOANs)
                 {
                     ItemIds.Add(loan.ItemID);

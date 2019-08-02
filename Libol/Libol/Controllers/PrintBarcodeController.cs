@@ -195,18 +195,20 @@ namespace Libol.Controllers
             {
                 if(i*2 + 1== Items.Length)
                 {
-                    Data += Template.Replace("<$copynumber1$>", Items[i * 2].CopyNumber).Replace("<$copynumber2$>", Items[i * 2].CopyNumber);
+                    Data += Template.Replace("<$copynumber1$>", Items[i * 2].CopyNumber).Replace("<$copynumber2$>", Items[i * 2].CopyNumber)
+                        .Replace("<$COPYNUMBER1$>", Items[i * 2].CopyNumber).Replace("<$COPYNUMBER2$>", Items[i * 2].CopyNumber);
                 }
                 else
                 {
-                    Data += Template.Replace("<$copynumber1$>", Items[i * 2].CopyNumber).Replace("<$copynumber2$>", Items[i * 2 + 1].CopyNumber);
+                    Data += Template.Replace("<$copynumber1$>", Items[i * 2].CopyNumber).Replace("<$copynumber2$>", Items[i * 2 + 1].CopyNumber)
+                        .Replace("<$COPYNUMBER1$>", Items[i * 2].CopyNumber).Replace("<$COPYNUMBER2$>", Items[i * 2 + 1].CopyNumber);
                 }
             }
             
             var string_with_your_data = Data;
             var byteArray = Encoding.ASCII.GetBytes(string_with_your_data);
             var stream = new MemoryStream(byteArray);
-            return File(stream, "text/plain", "file_to_print.txt");
+            return File(stream, "text/plain", "barcode.txt");
         }
 
     }
