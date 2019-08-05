@@ -15,7 +15,8 @@ namespace Libol.Controllers
         LibolEntities le = new LibolEntities();
         AcquisitionBusiness ab = new AcquisitionBusiness();
         List<Temper> listTempt = new List<Temper>();
-        
+        FormatHoldingTitle format = new FormatHoldingTitle();
+
         public string GetContent(string copynumber)
         {
             string validate = copynumber.Replace("$a", " ");
@@ -37,7 +38,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> lib = new List<SelectListItem>();
             lib.Add(new SelectListItem { Text = "Hãy chọn thư viện", Value = "" });
-            foreach (var l in le.SP_HOLDING_LIB_SEL((int) Session["UserID"]).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -46,14 +47,17 @@ namespace Libol.Controllers
         }
 
         //GET LOCATIONS BY LIBRARY
-        public JsonResult GetLocations(int id)
+        public JsonResult GetLocations(string id)
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL((int)Session["UserID"], id).ToList())
+            if (!String.IsNullOrEmpty(id))
             {
-                loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
-            }
+                foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL((int)Session["UserID"], Int32.Parse(id)).ToList())
+                {
+                    loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
+                }
+            }            
             return Json(new SelectList(loc, "Value", "Text"));
         }
 
@@ -657,7 +661,7 @@ namespace Libol.Controllers
                                     if (indexGan > 0)
                                     {
                                         int ck = arrDKCBs.Length;
-                                         if (indexGan < ck)
+                                        if (indexGan < ck)
                                         {
                                             strghep = strghep + "-" + ganString + ",";
 
@@ -1575,7 +1579,7 @@ namespace Libol.Controllers
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.SP_HOLDING_LIB_SEL((int) Session["UserID"]).ToList())
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
@@ -1588,7 +1592,7 @@ namespace Libol.Controllers
             int LibID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             ViewBag.Result = le.FPT_ACQ_LANGUAGE_STATISTIC(LibID).First();
-            ViewBag.ItemDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("ITEM",LibID);
+            ViewBag.ItemDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("ITEM", LibID);
             ViewBag.CopyDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("COPY", LibID);
             return PartialView("GetLanguageStats");
         }
@@ -1602,7 +1606,7 @@ namespace Libol.Controllers
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
-            ViewData["lib"] = lib;            
+            ViewData["lib"] = lib;
             return View();
         }
         [HttpPost]
@@ -1653,17 +1657,133 @@ namespace Libol.Controllers
         }
         public PartialViewResult GetLiquidationStats(string strLiquidID, string strLibID, string strLocID, string strFromDate, string strToDate)
         {
+            //int LibID = 0;
+            //int LocID = 0;
+            //if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            //if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
+            //ViewBag.Result = ab.FPT_GET_LIQUIDBOOKS_LIST(strLiquidID, LibID, LocID, strFromDate, strToDate, (int)Session["UserID"]);
+            //foreach(var item in ViewBag.Result)
+            //{
+            //    item.Content = GetContent(item.Content);
+            //}
+            ViewBag.LiquidCode = strLiquidID;
+            return PartialView("GetLiquidationStats");
+        }
+
+        [HttpPost]
+        public JsonResult GetLiquidationInfo(DataTableAjaxPostModel model, string strLiquidID, string strLibID, string strLocID, string strFromDate, string strToDate)
+        {
             int LibID = 0;
             int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            ViewBag.Result = ab.FPT_GET_LIQUIDBOOKS_LIST(strLiquidID, LibID, LocID, strFromDate, strToDate, (int)Session["UserID"]);
-            foreach(var item in ViewBag.Result)
+            var copy = ab.FPT_GET_LIQUIDBOOKS_LIST(strLiquidID, LibID, LocID, strFromDate, strToDate, (int)Session["UserID"]);
+            var search = copy.Where(a => true);
+            decimal total = 0;
+            if (model.search.value != null)
             {
-                item.Content = GetContent(item.Content);
+                string searchValue = model.search.value;
+                search = search.Where(a => a.LibName.ToUpper().Contains(searchValue.ToUpper())
+                    || a.LocName.ToUpper().Contains(searchValue.ToUpper())
+                    || a.CopyNumber.ToUpper().Contains(searchValue.ToUpper())
+                    || a.Content.ToUpper().Contains(searchValue.ToUpper())
+                    || a.Price.ToString().ToUpper().Contains(searchValue.ToUpper())
+                    || a.RemovedDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
+                );
             }
-            ViewBag.LiquidCode = strLiquidID;
-            return PartialView("GetLiquidationStats");
+            var sorting = search.OrderBy(a => false);
+            if (model.order[0].column == 0)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.LibName);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.LibName);
+                }
+            }
+            else if (model.order[0].column == 1)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.LocName);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.LocName);
+                }
+            }
+            else if (model.order[0].column == 2)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CopyNumber);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CopyNumber);
+                }
+            }
+            else if (model.order[0].column == 3)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Content);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Content);
+                }
+            }
+            else if (model.order[0].column == 4)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.RemovedDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.RemovedDate);
+                }
+            }
+            else if (model.order[0].column == 5)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Price);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Price);
+                }
+            }
+            var paging = sorting.Skip(model.start).Take(model.length).ToList();
+            List<FPT_GET_LIQUIDBOOKS_Result_2> result = new List<FPT_GET_LIQUIDBOOKS_Result_2>();
+            foreach (var i in paging)
+            {
+                result.Add(new FPT_GET_LIQUIDBOOKS_Result_2()
+                {
+                    LibName = i.LibName,
+                    LocName = i.LocName,
+                    CopyNumber = i.CopyNumber,
+                    Content = format.OnFormatHoldingTitle(i.Content),
+                    RemovedDate = i.RemovedDate.Value.ToString("dd/MM/yyyy"),
+                    Price = i.Price.ToString("#.##")
+                });
+            }
+            foreach (var i in search)
+            {
+                total += i.Price;
+            }
+            return Json(new
+            {
+                draw = model.draw,
+                recordsTotal = copy.Count(),
+                recordsFiltered = search.Count(),
+                total,
+                data = result
+            });
         }
         public ActionResult RecomendReport()
         {
@@ -2529,7 +2649,7 @@ namespace Libol.Controllers
 
 
         public ActionResult StatisticTop20()
-        {            
+        {
             List<SelectListItem> cat = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Hãy chọn tiêu chí", Value = "" }
@@ -2545,14 +2665,14 @@ namespace Libol.Controllers
         public PartialViewResult GetTop20Stats(string strCatID)
         {
             int id = 0;
-            if(!String.IsNullOrEmpty(strCatID)) id = Int32.Parse(strCatID);
+            if (!String.IsNullOrEmpty(strCatID)) id = Int32.Parse(strCatID);
             CAT_DIC_LIST list = le.CAT_DIC_LIST.Where(a => a.ID == id).First();
             switch (list.ID)
             {
                 case 0:
                     ViewBag.Result = null;
                     break;
-                case 1:                    
+                case 1:
                     ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(1).ToList();
                     ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(0).ToList();
                     break;
@@ -2639,11 +2759,11 @@ namespace Libol.Controllers
                 case 43:
                     ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC43(1).ToList();
                     ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC43(0).ToList();
-                    break;                
+                    break;
             }
             ViewBag.Category = list.Name;
             ViewBag.Total = le.FPT_ACQ_LANGUAGE_STATISTIC(0).First();
-            return PartialView("GetTop20Stats");           
+            return PartialView("GetTop20Stats");
         }
 
         //statistic book in
@@ -2722,18 +2842,18 @@ namespace Libol.Controllers
                                 }
                             }
                             namXB = Strdigit;
-                            if(namXB != "")
+                            if (namXB != "")
                             {
                                 nam = Convert.ToInt32(namXB);
                             }
-                           
+
                             if (vitriB > -1)
                             {
-                                if(vitriB< vitriC)
+                                if (vitriB < vitriC)
                                 {
                                     nhaXB = items.Content.Substring(vitriB, vitriC - vitriB - 2);
                                 }
-                                else if(vitriB > vitriC)
+                                else if (vitriB > vitriC)
                                 {
                                     nhaXB = items.Content.Substring(vitriB);
                                 }
@@ -2781,7 +2901,7 @@ namespace Libol.Controllers
                 remainingNum = countCopy - borrowNum;
 
                 listItem.Add(new FPT_SP_GET_ITEM_Result(item.ID, StrTitle, item.Code, tGia, noiXB, nhaXB, nam, countCopy, item.DKCB, borrowNum, remainingNum));
-                
+
             }
 
 
@@ -3058,5 +3178,28 @@ namespace Libol.Controllers
 
 
     }
-
+    public class FPT_GET_LIQUIDBOOKS_Result_2
+    {
+        public string Reason { get; set; }
+        public string Content { get; set; }
+        public Nullable<System.Int32> AcquiredSourceID { get; set; }
+        public string CallNumber { get; set; }
+        public string CopyNumber { get; set; }
+        public int ID { get; set; }
+        public int ItemID { get; set; }
+        public int LibID { get; set; }
+        public string LiquidCode { get; set; }
+        public int LoanType { get; set; }
+        public int LocID { get; set; }
+        public Nullable<System.Int32> POID { get; set; }
+        public string Price { get; set; }
+        public string Shelf { get; set; }
+        public Nullable<System.Int32> UseCount { get; set; }
+        public string Volumn { get; set; }
+        public string AcquiredDate { get; set; }
+        public string RemovedDate { get; set; }
+        public string DateLastUsed { get; set; }
+        public string LibName { get; set; }
+        public string LocName { get; set; }
+    }
 }

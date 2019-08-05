@@ -176,11 +176,10 @@ else
             </tr>
         </table>
     </div>
-    <hr />
-
-    <div class="btn-group d-xl-flex justify-content-xl-center" role="group">
-        <button id="print" type="button" style="margin-right:20px;">In</button>
-        <button id="ExportReporttoExcel" type="button" style="margin-right:20px;">Lưu vào file excel</button>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button type="button" id="ExportReporttoExcel" class="btn btn-primary">Lưu vào file excel</button>
+        </div>
     </div>
 }
 <script type="text/javascript">
@@ -310,19 +309,4 @@ else
         var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values3"));
         chart.draw(view, options);
     }
-</script>
-<script type="text/javascript">
-
-    //Nhấn btn in
-    $(document).ready(function () {
-        $("#print").click(function () {
-            //$('#pageNavPosition').hide();
-            var divToPrint = document.getElementById("Main");
-            newWin = window.open("");
-            newWin.document.write(divToPrint.outerHTML);
-            newWin.print();
-            newWin.close();
-            //$('#pageNavPosition').show();
-        });
-    });
 </script>

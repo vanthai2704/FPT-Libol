@@ -16,37 +16,40 @@ namespace Libol.Controllers
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
         FormatHoldingTitle f = new FormatHoldingTitle();
         private static string fullname = "";
+        private static string sessionpcode = "";
+
         [AuthAttribute(ModuleID = 3, RightID = "58")]
         public ActionResult Index(string PatronCode)
         {
+            sessionpcode = "";
             ViewBag.HiddenPatronCode = PatronCode;
             return View();
         }
 
         [HttpPost]
-        public PartialViewResult CheckInByCardNumber( string strPatronCode)
+        public PartialViewResult CheckInByCardNumber(string strPatronCode)
         {
-            if (db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).Where(a => a.isLocked == 1).Count() == 0)
+            string pcode = strPatronCode.Trim();
+            if (db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).Count() == 0)
             {
                 ViewBag.active = 1;
             }
             else
             {
                 ViewBag.active = 0;
-                ViewBag.blackNote = db.GET_BLACK_PATRON_INFOR().Where(a => a.code == strPatronCode).First().Note;
-                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().StartedDate;
-                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == strPatronCode).First().LockedDays);
+                ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().Note;
+                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().StartedDate;
+                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().LockedDays);
             }
 
-            getpatrondetail(strPatronCode);
-           
+            getpatrondetail(pcode);
+
             return PartialView("_checkinByCardNumber");
         }
 
         [HttpPost]
         public PartialViewResult CheckInByDKCB(
             string strFullName,
-            string strPatronCode,
             string strFixDueDate,
             int intType,
             int intAutoPaid,
@@ -56,10 +59,21 @@ namespace Libol.Controllers
         {
             string CopyNumber = strCopyNumbers.Trim();
             int success = -1;
-            if (db.CIR_LOAN.Where(a => a.CopyNumber == CopyNumber).Count() == 0)
+            if (!sessionpcode.Equals(""))
             {
-                ViewBag.message = "ĐKCB không đúng hoặc chưa được ghi mượn";
+                getpatrondetail(sessionpcode);
+            }
+            else
+            {
                 ViewBag.PatronDetail = null;
+            }
+            if (db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).Count() == 0)
+            {
+                ViewBag.message = "ĐKCB không đúng";
+            }
+            else if (db.CIR_LOAN.Where(a => a.CopyNumber == CopyNumber).Count() == 0)
+            {
+                ViewBag.message = "ĐKCB chưa được ghi mượn";
             }
             else
             {
@@ -68,7 +82,6 @@ namespace Libol.Controllers
                     new ObjectParameter("strTransIDs", typeof(string)),
                     new ObjectParameter("strPatronCode", typeof(string)),
                     new ObjectParameter("intError", typeof(int)));
-                getpatrondetail(patroncode);
                 if (success == -1)
                 {
                     ViewBag.CurrentCheckin = null;
@@ -88,8 +101,9 @@ namespace Libol.Controllers
                         CheckInDate = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().CheckInDate.ToString("dd/MM/yyyy"),
                         OverdueFine = db.CIR_LOAN_HISTORY.Where(a => a.ID == lastid).First().OverdueFine.ToString()
                     };
+                    sessionpcode = patroncode;
                 }
-               
+                getpatrondetail(patroncode);
             }
             return PartialView("_checkinByDKCB");
         }
@@ -105,6 +119,7 @@ namespace Libol.Controllers
            string strCheckInDate
        )
         {
+            string pcode = strPatronCode.Trim();
             int success = -1;
             foreach (string CopyNumber in strCopyNumbers)
             {
@@ -113,7 +128,7 @@ namespace Libol.Controllers
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
             }
-            getpatrondetail(strPatronCode);
+            getpatrondetail(pcode);
             if (success == -1)
             {
                 ViewBag.message = "Ghi trả thất bại";
@@ -151,11 +166,6 @@ namespace Libol.Controllers
             return PartialView("_findByCardNumber");
         }
 
-        public JsonResult GetPatronSearchDetail(string code)
-        {
-            getpatrondetail(code);
-            return Json(ViewBag.PatronDetail, JsonRequestBehavior.AllowGet);
-        }
 
         public void getpatrondetail(string strPatronCode)
         {

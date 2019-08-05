@@ -55,6 +55,21 @@
         a.nav-link:hover {
             background-color: #d8491f;
         }
+
+        .dropdown:hover > .dropdown-menu {
+            display: block;
+            margin-top:0;
+        }
+
+        .dropdown-item:hover > .dropdown-menu {
+            display: block;
+            margin-left:0;
+        }
+        
+        a{
+            cursor:pointer;
+        }
+
     </style>
     <script>
         $(function () {
@@ -66,6 +81,7 @@
                 }
             });
         });
+        
     </script>
     @*START------------SCRIPT FOR LOGIN FUNCTION*@
     <script>
@@ -112,13 +128,13 @@
                 <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown00" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quản lý</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown00" aria-haspopup="true" aria-expanded="false">Quản lý</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown00">
                                 <a class="dropdown-item" href="/Management/Account">Quản lý tài khoản</a>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bạn đọc</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" aria-haspopup="true" aria-expanded="false">Bạn đọc</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
 
                                 <a class="dropdown-item" href="/Patron/PatronProfile">Hồ sơ</a>
@@ -131,43 +147,51 @@
                             <a class="nav-link" href="/Catalogue/MainTab">Biên mục</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown03" aria-haspopup="true" aria-expanded="false">Mượn trả</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown03">
                                 <a class="dropdown-item" href="/CheckOut">Ghi mượn</a>
                                 <a class="dropdown-item" href="/CheckIn">Ghi trả</a>
                                 <a class="dropdown-item" href="/Renew/Renew">Gia hạn</a>
                                 <a class="dropdown-item" href="/OverdueList/OverdueList">Quá hạn</a>
                                 <a class="dropdown-item" href="/Circulation/LockPatronStats">Chính sách</a>
-                                <div class="dropdown-item dropright dropdown-toggle" data-toggle="dropdown">
-                                    <a>Báo cáo</a>
+                                <div class="dropdown-item dropright">
+                                    <a class="dropdown-toggle">Báo cáo </a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/ReportLoanCopy')">Từng mượn</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/ReportOnLoanCopy')">Đang mượn</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticYear')">Hàng năm</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticMonth')">Hàng tháng</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticTopPatron')">Top bạn đọc</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticTopCopy')">Top ấn phẩm</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticPatronGroup')">Nhóm bạn đọc</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/ReportLoanCopy')">Báo cáo từng mượn</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/ReportOnLoanCopy')">Báo cáo đang mượn</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item dropright">
+                                    <a class="dropdown-toggle">Thống kê </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticYear')">Thống kê hàng năm</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticMonth')">Thống kê hàng tháng</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticTopPatron')">Thống kê top bạn đọc</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticTopCopy')">Thống kê top ấn phẩm</a>
+                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticPatronGroup')">Thống kê nhóm bạn đọc</a>
                                     </div>
                                 </div>
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bổ sung</a>
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown04" aria-haspopup="true" aria-expanded="false">Bổ sung</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown04">
                                 <a class="dropdown-item" href="/Acquired/Index">Bổ sung</a>
-                                <a class="dropdown-item" href="/AcquireReport/AcquisitionIndex">Báo cáo</a>
-                                <a class="dropdown-item" href="/AcquireReport/AcquireStatisticIndex">Thống kê</a>
-                                <div class="dropdown-item dropright dropdown-toggle" data-toggle="dropdown">
-                                    <a>Báo cáo</a>
+                                <div class="dropdown-item dropright">
+                                    <a class="dropdown-toggle">Báo cáo </a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/Index')">Danh mục sách nhập</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/Index')">Báo cáo bổ sung</a>
                                         <a class="dropdown-item" onclick="GoTo('/AcquireReport/RecomendReport')">Báo cáo đề nghị</a>
-                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticYear')">Hàng năm</a>
-                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticMonth')">Hàng tháng</a>
                                         <a class="dropdown-item" onclick="GoTo('/AcquireReport/LiquidationStats')">Báo cáo ĐKCB bị hủy</a>
-                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticTop20')">Thống kê Top 20</a>
-                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/LanguageStat')">Báo cáo theo mã ngôn ngữ</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item dropright">
+                                    <a class="dropdown-toggle">Thống kê </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticYear')">Thống kê hàng năm</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticMonth')">Thống kê hàng tháng</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/StatisticTop20')">Thống kê top 20</a>
+                                        <a class="dropdown-item" onclick="GoTo('/AcquireReport/LanguageStat')">Thống kê theo mã ngôn ngữ</a>
                                     </div>
                                 </div>
                                 <a class="dropdown-item" href="#">Kho</a>

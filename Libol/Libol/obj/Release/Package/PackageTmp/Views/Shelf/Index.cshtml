@@ -1,6 +1,6 @@
 ﻿@using Libol.Models;
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Xếp giá";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -121,7 +121,12 @@
 
     }
 
-    <label class="col-md-12" style="color:red" AutoSize="true">@ViewBag.content</label>
+    @if (ViewBag.content != null)
+    {
+        <div style=" margin-top: 0.5rem;">@ViewBag.content.Split('@')[0]<strong>@ViewBag.content.Split('@')[1]</strong>@ViewBag.content.Split('@')[2]</div>
+        <div>@ViewBag.content.Split('@')[3]</div>
+
+    }
     @if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
     {
         <span style="color:red">@ViewBag.AlertMessage</span>
@@ -145,7 +150,7 @@
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
                 <label class="col-md-6">Nguồn bổ sung</label>
-                <select class="form-control" name="nbsList" id="nbsList">
+                <select class="form-control" name="nbsList" id="nbsList" style="width: 191px">
                     @{
                         foreach (ACQ_ACQUIRE_SOURCE item in listNBS)
                         {
@@ -169,7 +174,7 @@
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
                 <label class="col-md-6">Ngày bổ sung</label>
-                <div class="form-group"><input class="form-control" type="date" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" id="acquiredDate" /></div>
+                <div class="form-group"><input class="form-control" type="date" style="width: 191px" value="@string.Format("{0:yyyy-MM-dd}", System.DateTime.Now)" id="acquiredDate" /></div>
             </div>
             <div class="form-group col-md-8">
                 <label class="col-md-3">Đơn giá</label>
@@ -197,7 +202,7 @@
         <div class="form-row col-md-12 form-inline">
             <div class="form-group col-md-4">
                 <label class="col-md-6">Số chứng từ</label>
-                <input type="text" class="form-control" id="txtSCT" placeholder="1234">
+                <input type="text" style="width: 191px" class="form-control" id="txtSCT" placeholder="1234">
             </div>
             <div class="form-group col-md-8">
                 <label class="col-md-3">Ngày chứng từ</label>
@@ -207,9 +212,9 @@
 
         <label style="margin-top:10px"><h5>Thông tin vị trí xếp giá</h5></label>
         <div class="form-row col-md-12 form-inline">
-            <div class="form-group col-md-2">
-                <label class="">Thư viện</label>
-                <select class="form-control" name="libraryList" id="libraryList" onchange="SelectHolding();">
+            <div class="form-group col-md-4">
+                <label class="col-6">Thư viện</label>
+                <select class="form-control col-5" name="libraryList" id="libraryList" onchange="SelectHolding();">
                     <option value="-1">----- Chọn -----</option>
                     @{
                         foreach (HOLDING_LIBRARY item in listHoldingLibrary)
@@ -220,30 +225,30 @@
                 </select>
             </div>
             <div class="form-group col-md-4">
-                <label>Kho</label>
-                <select class="form-control" name="HoldingList" id="HoldingList">
+                <label class="col-3">Kho</label>
+                <select class="form-control col-8" name="HoldingList" id="HoldingList">
                     <option value="-1">----- Chọn -----</option>
                 </select>
             </div>
             <div class="form-group col-md-3">
-                <label>Giá Sách</label>
-                <input type="text" class="form-control col-md-6" id="txtShelf">
+                <label class="col-4">Giá Sách</label>
+                <input type="text" class="form-control col-7" id="txtShelf">
             </div>
         </div>
         <div class="form-row col-md-12 form-inline">
-
-
             <div class="form-group col-md-4">
-                <label class="col-md-3">Đăng kí cá biệt</label>
-                <input type="text" class="form-control col-md-5" id="txtCopyNumber" readonly>
-                <button type="button" class="btn btn-primary form-control col-md-3" onclick="GenCopyNumber()">Sinh giá trị</button>
+                <label class="col-6">Số lượng</label>
+                <input type="text" class="form-control col-5" id="txtNumberOfCN">
+
             </div>
             <div class="form-group col-md-4">
-                <label class="col-md-4">Số lượng</label>
-                <input type="text" class="form-control col-md-3" id="txtNumberOfCN">
-                <button type="button" class="btn btn-primary form-control col-md-4" onclick="InsertHoldings()">Bổ sung</button>
+                <label class="col-3">Đăng kí cá biệt</label>
+                <input type="text" class="form-control col-5" id="txtCopyNumber" readonly>
+                <button type="button" class="btn btn-primary form-control col-3" onclick="GenCopyNumber()">Sinh giá trị</button>
             </div>
-
+        </div>
+        <div style="width: 100%;text-align:center">
+            <button type="button" class="btn btn-success form-control col-md-4" style="margin: 20px;width: 120px;" onclick="InsertHoldings()">Bổ sung</button>
         </div>
 
         <label style="margin-top:10px"><h5>Thông tin xếp giá hiện thời</h5></label>
@@ -479,7 +484,7 @@
                 { "data": "AcquiredDate", "name": "AcquiredDate" },
                 { "data": "AcquiredSource", "name": "AcquiredSource" },
                 { "data": "Note", "name": "Note" },
-                { "data": "Status", "orderable": "false" },
+                { "data": "Status", "name": "Status", "orderable": "false" },
                 {
                     "render": function (data, type, full, meta) {
                         return '<button class="btn btn-info" style="font-size: 13px"  onclick="ShowUpdateForm(' + "'"
@@ -758,6 +763,16 @@
         document.getElementById("SearchCodePopup").style.display = "none";
     }
 
+    function ResetFields() {
+        document.getElementById("txtTitle2").value ="";
+        document.getElementById("txtCopyNumber2").value = "";
+        document.getElementById("txtAuthor2").value = "";
+        document.getElementById("txtPublisher2").value = "";
+        document.getElementById("txtYear2").value = "";
+        document.getElementById("txtISBN2").value = "";
+        document.getElementById("result-search-table").style.display = "none";
+    }
+
     function SearchItem() {
 
 
@@ -955,7 +970,7 @@
         </div>
         <div style="text-align: center; border-top: 1px solid rgb(222, 226, 230);border-bottom: 2px solid black;padding:10px 0 10px 0;margin:10px 0 10px 0">
             <button class="btn btn-success " onclick="SearchItem()">Tìm</button>
-            <button class="btn btn-primary" onclick="CancelUpdate()">Đặt lại</button>
+            <button class="btn btn-primary" onclick="ResetFields()">Đặt lại</button>
             <button class="btn btn-danger" onclick="CloseSearchCodeForm()">Đóng</button>
         </div>
 

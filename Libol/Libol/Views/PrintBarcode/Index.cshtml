@@ -62,7 +62,7 @@
 
 </script>
 <h4 style="margin : 1rem">In mã vạch</h4>
-<form id="formPrintBarcode" action="/PrintBarcode/Print" target="_blank">
+<form id="formPrintBarcode" action="/PrintBarcode/Print">
     <div class="form-row">
         <div class="col-2">
             <div class="form-group">
@@ -90,12 +90,12 @@
                 <div class="col">
                     <div class="form-row">
                         <div class="col-4"><label class="col-form-label">Từ Mã tài liệu</label></div>
-                        <div class="col"><input type="text" class="form-control" name="strFromItemCode" id="strFromItemCode"/></div>
+                        <div class="col"><input type="text" class="form-control" name="strFromItemCode" id="strFromItemCode" onclick="checkformCheck1();"/></div>
                         <div class="col-1"><a href="#" onclick="ShowSearch('strFromItemCode')">Tìm</a></div>
                     </div>
                     <div class="form-row">
                         <div class="col-4"><label class="col-form-label">Tới Mã tài liệu</label></div>
-                        <div class="col"><input type="text" class="form-control" name="strToItemCode" id="strToItemCode"/></div>
+                        <div class="col"><input type="text" class="form-control" name="strToItemCode" id="strToItemCode" onclick="checkformCheck1();"/></div>
                         <div class="col-1"><a href="#" onclick="ShowSearch('strToItemCode')">Tìm</a></div>
                     </div>
                 </div>
@@ -106,18 +106,18 @@
                 </div>
                 <div class="col">
                     <div class="form-row">
-                        <div class="col-4"><label class="col-form-label">Từ ĐKCB</label></div>
-                        <div class="col"><input type="text" class="form-control" /></div>
+                        <div class="col-3"><label class="col-form-label float-right">Từ ĐKCB</label></div>
+                        <div class="col"><input type="text" class="form-control" name="strFromCopyNumber" onclick="checkformCheck2();" /></div>
                     </div>
                     <div class="form-row">
-                        <div class="col-4"><label class="col-form-label">Tới ĐKCB</label></div>
-                        <div class="col"><input type="text" class="form-control" /></div>
+                        <div class="col-3"><label class="col-form-label float-right">Tới ĐKCB</label></div>
+                        <div class="col"><input type="text" class="form-control" name="strToCopyNumber" onclick="checkformCheck2();" /></div>
                     </div>
                 </div>
             </div>
             <div class="form-row">
                 <div class="col">
-                    <div class="form-check"><input type="radio" class="form-check-input" name="intSelMode" value="2" id="formCheck-3" /><label class="form-check-label" for="formCheck-3">In theo mã Đăng ký cá biệt nhập dưới đây<br /></label></div><textarea class="form-control" name="strElse"></textarea>
+                    <div class="form-check"><input type="radio" class="form-check-input" name="intSelMode" value="2" id="formCheck-3" /><label class="form-check-label" for="formCheck-3">In theo mã Đăng ký cá biệt nhập dưới đây<br /></label></div><textarea class="form-control" name="strElse" onclick="checkformCheck3();"></textarea>
                 </div>
             </div>
         </div>
@@ -292,6 +292,15 @@
 </div>
 
 <script>
+    function checkformCheck1() {
+        document.getElementById("formCheck-1").checked = true;
+    }
+    function checkformCheck2() {
+        document.getElementById("formCheck-2").checked = true;
+    }
+    function checkformCheck3() {
+        document.getElementById("formCheck-3").checked = true;
+    }
     function ShowSearch(formItemCode) {
         document.getElementById("formItemCode").value = formItemCode;
         $("#modalSearch").modal();

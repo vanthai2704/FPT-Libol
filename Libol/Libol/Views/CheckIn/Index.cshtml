@@ -29,9 +29,17 @@
             }
 
             #sidebar-wrapper .list-group {
-                width: 20rem;
+                width: 18rem;
                 padding-left: 5px;
             }
+
+            #sidebar-wrapper label {
+                font-size: 13px;
+            }
+
+        label {
+            font-size: 13px;
+        }
 
 
         @@media (min-width: 768px) {
@@ -55,6 +63,10 @@
 
         td {
             font-size: 13px;
+        }
+
+        .form-control {
+            font-size: 0.8rem !important;
         }
     </style>
 </head>
@@ -97,11 +109,11 @@
                     </div>
                     <div class="form-row" style="margin-top: 0px;margin-bottom: 5px;">
                         <div class="col-3"><label class="col-form-label">ĐKCB:</label></div>
-                        <div class="col"><input class="form-control" type="text" id="strCopyNumber" onkeypress="checkin(event)" autofocus /></div>
+                        <div class="col"><input class="form-control" type="text" id="strCopyNumber" onchange="checkinbyDKCB()" autofocus /></div>
                         <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
-                        <div class="col"><button class="btn btn-primary" type="button" onclick="checkinbyDKCB()">Ghi trả</button></div>
+                        <div class="col-4"><button class="btn btn-primary form-control" type="button" onclick="checkinbyDKCB()">Ghi trả</button></div>
 
                     </div>
                 </div>
@@ -113,47 +125,6 @@
     </div>
     <input type="hidden" value="@ViewBag.HiddenPatronCode" id="hiddenPatronCode" />
 
-    @*// modal xác nhận ghi mượn*@
-    @*<div class="modal" id="myModal">
-        <div class="modal-dialog" style="max-width: 550px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Sửa thông tin thẻ bị khóa</h4>
-                    <button type="button" class="close" onclick="CancelUpdate()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group ">
-                        <label for="txtFullName">Họ và tên:</label>
-                        <input type="text" class="form-control" id="txtFullName" disabled>
-                    </div>
-                    <div class="form-group ">
-                        <label for="txtPatronCode">Số thẻ bạn đọc:</label>
-                        <input type="text" class="form-control" id="txtPatronCode" disabled>
-                    </div>
-                    <div class="form-group ">
-                        <label for="txtStartdate">Từ ngày:</label>
-                        <input type="text" class="form-control" id="txtStartdate" disabled>
-                    </div>
-                    <div class="form-group ">
-                        <label for="txtFinishdate">Đến ngày:</label>
-                        <input type="text" class="form-control" id="txtFinishdate" disabled>
-                    </div>
-                    <div class="form-group ">
-                        <label for="txtLockedDay">Số ngày:</label>
-                        <input type="text" class="form-control" id="txtLockedDay">
-                    </div>
-                    <div class="form-group ">
-                        <label for="txtNote">Lý do: </label>
-                        <input type="text" class="form-control" id="txtNote">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="Save()">Lưu</button>
-                    <button type="button" class="btn btn-danger" style="float: right" onclick="CancelUpdate()">Hủy bỏ</button>
-                </div>
-            </div>
-        </div>
-    </div>*@
 </body>
 
 <script type="text/javascript">
@@ -271,14 +242,8 @@
                 $.unblockUI()
                 document.getElementById("strCopyNumber").focus();
             },
-            
-        });
-    }
 
-    function checkin(e) {
-        if (e.keyCode == 13) {
-            checkinbyDKCB()
-        }
+        });
     }
 
 
@@ -369,7 +334,6 @@
     function checkinbyDKCB() {
         var empObj = {
             strFullName: '',
-            strPatronCode: document.getElementById("strPatronCode").value,
             strFixDueDate: document.getElementById("strCheckinDate").value,
             intType: 1,
             intAutoPaid: 0,
@@ -433,54 +397,6 @@
         });
     }
 
-    //function CancelUpdate() {
-    //    document.getElementById("myModal").style.display = "none";
-    //}
-    //function Save() {
-    //    var patronCode = document.getElementById("txtPatronCode").value;
-    //    var lockDays = document.getElementById("txtLockedDay").value;
-    //    var note = document.getElementById("txtNote").value;
-    //    $.ajax({
-    //        url: "/Circulation/UpdatedLockCardPatron",
-    //        data: JSON.stringify({ patronCode: patronCode, lockDays: lockDays, note: note }),
-    //        type: "POST",
-    //        contentType: "application/json;charset=utf-8",
-    //        dataType: "json",
-    //        success: function () {
-    //            alert('Bạn đã Update trạng thái khóa thẻ thành công');
-    //            $('#table').DataTable().ajax.reload(null, false);
-    //        },
-    //        error: function () {
-    //            alert('Update trạng thái khóa thẻ không thành công');
-    //        }
-
-    //    });
-    //}
-
-    //function ShowUpdateForm(PatronCode,
-    //    FullName,
-    //    StartedDate,
-    //    FinishDate,
-    //    LockedDays,
-    //    Note
-    //) {
-
-    //    PatronCode_Update = PatronCode;
-    //    FullName_Update = FullName;
-    //    StartedDate_Update = StartedDate;
-    //    FinishDate_Update = FinishDate;
-    //    LockedDays_Update = LockedDays;
-    //    Note_Update = Note;
-
-    //    document.getElementById("txtFullName").value = FullName;
-    //    document.getElementById("txtPatronCode").value = PatronCode;
-    //    document.getElementById("txtStartdate").value = StartedDate;
-    //    document.getElementById("txtFinishdate").value = FinishDate;
-    //    document.getElementById("txtLockedDay").value = LockedDays;
-    //    document.getElementById("txtNote").value = Note;
-
-    //    document.getElementById("myModal").style.display = "block";
-    //}
 
 </script>
 

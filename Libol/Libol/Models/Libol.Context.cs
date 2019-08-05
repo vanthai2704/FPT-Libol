@@ -22649,5 +22649,22 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_GET_ITEM", strFromDateParameter, strToDateParameter, intLocationIDParameter, intLibraryIDParameter);
         }
+    
+        public virtual int FPT_SP_CIR_OVERDUELIST_GETINFOR(Nullable<int> intUserID, string strPatronIDs, string whereCondition)
+        {
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var strPatronIDsParameter = strPatronIDs != null ?
+                new ObjectParameter("strPatronIDs", strPatronIDs) :
+                new ObjectParameter("strPatronIDs", typeof(string));
+    
+            var whereConditionParameter = whereCondition != null ?
+                new ObjectParameter("whereCondition", whereCondition) :
+                new ObjectParameter("whereCondition", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_CIR_OVERDUELIST_GETINFOR", intUserIDParameter, strPatronIDsParameter, whereConditionParameter);
+        }
     }
 }
