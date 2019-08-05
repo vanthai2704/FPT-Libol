@@ -172,7 +172,7 @@ namespace Libol.Controllers
                 {
                     field520 = shelfBusiness.GetContent(item.Content);
                 }
-                contentOutput = field022 + field100 + field110 +"@"+ field245+"@" + field250 + field260 + field300 + field490 + "@" + field520 + field020;
+                contentOutput = field022 + " " + field100 + " "+ field110 +" " +"@"+ field245 + " " + "@" + field250 + " " + field260 + " " + field300 + " " + field490 + " " + "@" + field520 + " " + field020;
             }
             return contentOutput;
         }

@@ -382,9 +382,62 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult LockCardPatron(string cardNumber, string startDate, int lockDays, string note)
         {
-            List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cardNumber, lockDays, startDate, note);
-            ViewData["listResult"] = listResult;
-            return Json(listResult, JsonRequestBehavior.AllowGet);
+            string[] myList = cardNumber.Split(' ');
+            int error = 0;
+            int mSuccess = 0;
+            string listSuccess = "";
+            string merror = "";
+            string locked = "";
+            if (myList.Length == 1)
+            {
+                string cnumber = myList[0];
+                if (le.CIR_PATRON.Where(a => a.Code == cnumber).Count() == 0)
+                {
+                    ViewBag.message = "Số thẻ " + myList[0] + " không tồn tại";
+                }
+                if(le.CIR_PATRON_LOCK.Where(a =>a.PatronCode == cnumber).Count() != 0)
+                {
+                    ViewBag.message = cnumber + " Đã bị khóa";
+                }
+                else
+                {
+                    ViewBag.message = "Khóa thẻ thành công !";
+                    List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(myList[0], lockDays, startDate, note);
+                }
+            }
+            else if (myList.Count() > 1)
+            {
+                foreach (string cnumber in myList)
+                {
+                    
+                     if (le.CIR_PATRON.Where(a => a.Code == cnumber).Count() == 0)
+                    {
+                        error = error + 1;
+                        merror = merror +" "+ cnumber;
+                    }
+                    else if(le.CIR_PATRON_LOCK.Where(a => a.PatronCode == cnumber).Count() != 0)
+                    {
+                        error = error + 1;
+                        locked = locked + " " + cnumber;
+                    }
+                    else
+                    {
+                        List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cnumber, lockDays, startDate, note);
+                        mSuccess = mSuccess + 1;
+                        listSuccess = listSuccess + " " + cnumber;
+                    }
+                }
+                if(error == 0)
+                {
+                    ViewBag.message = "Khóa thẻ thành công !!!";
+                }
+                else
+                {
+                    ViewBag.message = "Tổng số thẻ khóa thành công : "+ mSuccess + "\nSố thẻ khóa thành công : "+listSuccess+"\nSố thẻ không thể khóa : "+ error + "\nSố thẻ không tồn tại là : "+ merror +"\nSố thẻ đã bị khóa là : "+locked;
+                }
+            }
+
+            return Json(ViewBag.message, JsonRequestBehavior.AllowGet);
 
         }
         // Edit LockCard()
