@@ -12762,6 +12762,11 @@
       <Parameter Name="intLocationID" Mode="In" Type="Int32" />
       <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="FPT_SP_CIR_OVERDUELIST_GETINFOR">
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="strPatronIDs" Mode="In" Type="String" />
+      <Parameter Name="whereCondition" Mode="In" Type="String" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />

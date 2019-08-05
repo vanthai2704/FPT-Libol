@@ -32,7 +32,7 @@ namespace Libol.Controllers
 
         // Liquidate : thanh ly
         [HttpPost]
-        public JsonResult Liquidate(string Copynumber, string DKCB, string Liquidate, string DateLiquidate, int Reason)
+        public JsonResult Liquidate(string Copynumber, string DKCB, string Liquidate, string DateLiquidate, int Reason ,string selectfile)
         {
             string formatDKCB = DKCB.Replace('\n',',');
             ViewBag.Liquidate = db.SP_HOLDING_REMOVED_LIQUIDATE(Liquidate, DateLiquidate,Copynumber, formatDKCB, Reason, new ObjectParameter("intTotalItem", typeof(int)),
