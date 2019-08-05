@@ -2191,7 +2191,7 @@ CREATE PROCEDURE [dbo].[FPT_SP_UPDATE_UNLOCK_PATRON_CARD]
 -- ---------   ------  -------------------------------------------       
 	@strPatronCode varchar(500),
 	@lockedDay int,
-	@Note varchar(1000)
+	@Note nvarchar(1000)
 AS
 	UPDATE [CIR_PATRON_LOCK] SET LockedDays = @lockedDay, Note = @Note WHERE PatronCode = @strPatronCode
 

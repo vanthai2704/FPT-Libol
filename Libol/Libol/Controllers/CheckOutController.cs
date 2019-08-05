@@ -20,6 +20,7 @@ namespace Libol.Controllers
         private static string patroncode = "0";
         private static string fullname = "";
         FormatHoldingTitle f = new FormatHoldingTitle();
+        CirculationBusiness circulationBusiness = new CirculationBusiness();
 
         [AuthAttribute(ModuleID = 3, RightID = "57")]
         public ActionResult Index(string PatronCode)
@@ -44,6 +45,7 @@ namespace Libol.Controllers
                 ViewBag.active = 0;
                 ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().Note;
                 ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().StartedDate;
+                ViewBag.lockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().LockedDays;
                 ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().LockedDays);
             }
 
@@ -183,6 +185,15 @@ namespace Libol.Controllers
             return PartialView("_findByCardNumber");
         }
 
+        // Edit LockCard()
+        [HttpPost]
+        public JsonResult UpdatedLockCardPatron(string patronCode, int lockDays, string note)
+        {
+            string lnote = note.Trim();
+            List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> listResult = circulationBusiness.FPT_SP_UPDATE_UNLOCK_PATRON_CARD(patronCode, lockDays, lnote);
+            ViewData["listResult"] = listResult;
+            return Json(listResult, JsonRequestBehavior.AllowGet);
+        }
 
         public void getpatrondetail(string strPatronCode)
         {

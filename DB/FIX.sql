@@ -604,3 +604,22 @@ AS
  SET @strSQL= 'SELECT A.*, B.LibCode, B.LocCode FROM ' + @strSQL + '(SELECT H.Symbol AS LocCode, H.ID, L.Code AS LibCode FROM HOLDING_LOCATION H, HOLDING_LIBRARY L WHERE H.LibID=L.ID AND H.ID IN(SELECT LocationID FROM SYS_USER_CIR_LOCATION WHERE UserID=' 
  + CAST(@intUserID AS NVARCHAR(4)) + ')) B WHERE A.LocationID=B.ID ' + @whereCondition + ' ORDER BY PatronCode '       
  EXEC(@strSQL)	  
+
+
+ GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_UPDATE_UNLOCK_PATRON_CARD]  Script Date: 7/22/2019 7:22:16 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[FPT_SP_UPDATE_UNLOCK_PATRON_CARD]
+-- Purpose: Update Unlock Locked PatronCard
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- Trinhlv      300804  Create
+-- ---------   ------  -------------------------------------------       
+	@strPatronCode varchar(500),
+	@lockedDay int,
+	@Note nvarchar(1000)
+AS
+	UPDATE [CIR_PATRON_LOCK] SET LockedDays = @lockedDay, Note = @Note WHERE PatronCode = @strPatronCode
