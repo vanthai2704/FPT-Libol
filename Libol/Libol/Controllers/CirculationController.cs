@@ -7,10 +7,8 @@ using Libol.Models;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Reflection;
-using Excel = Microsoft.Office.Interop.Excel;
 
 using Libol.SupportClass;
-using System.Data.Entity.SqlServer;
 
 namespace Libol.Controllers
 {
@@ -19,6 +17,7 @@ namespace Libol.Controllers
         LibolEntities le = new LibolEntities();
         CirculationBusiness cb = new CirculationBusiness();
         PatronBusiness pb = new PatronBusiness();
+        FormatHoldingTitle format = new FormatHoldingTitle();
         //int UserID = 49;
         public string GetContent(string copynumber)
         {
@@ -59,15 +58,6 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult GetOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strDueDateFrom, string strDueDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
-            int LibID = 0;
-            int LocID = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-
-            var result = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
-
-            ViewBag.PatronCount = result.Select(a => a.FullName).Distinct().Count();
-            ViewBag.Count = result.Count();
             return PartialView("GetOnLoanStats");
         }
 
@@ -83,24 +73,92 @@ namespace Libol.Controllers
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                search = search.Where(a => (format.OnFormatHoldingTitle(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
                     || (a.Currency ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || a.CheckOutDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.DueDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
                 );
             }
-            var sorting = search.OrderBy(a => a.CopyNumber);
+            var sorting = search.OrderBy(a => false);
+            if (model.order[0].column == 0)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Content);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Content);
+                }
+            }
+            else if (model.order[0].column == 1)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CopyNumber);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CopyNumber);
+                }
+            }
+            else if (model.order[0].column == 2)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.FullName);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.FullName);
+                }
+            }
+            else if (model.order[0].column == 3)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CheckOutDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CheckOutDate);
+                }
+            }
+            else if (model.order[0].column == 4)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.DueDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.DueDate);
+                }
+            }
+            else if (model.order[0].column == 5)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Price);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Price);
+                }
+            }
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<GET_PATRON_ONLOANINFOR_Result_2> result = new List<GET_PATRON_ONLOANINFOR_Result_2>();
             foreach (var i in paging)
             {
                 result.Add(new GET_PATRON_ONLOANINFOR_Result_2()
                 {
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
-                    CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
-                    DueDate = i.DueDate.Value.ToString("dd/MM/yyyy"),
+                    CheckOutDate = i.CheckOutDate == null ? "": i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
+                    DueDate = i.DueDate == null ? "": i.DueDate.Value.ToString("dd/MM/yyyy"),
                     RenewCount = i.RenewCount,
                     Serial = i.Serial,
                     FullName = i.FullName,
@@ -113,20 +171,15 @@ namespace Libol.Controllers
                 draw = model.draw,
                 recordsTotal = patronLoanInfors.Count(),
                 recordsFiltered = search.Count(),
+                patronCount = search.Select(a => a.FullName).Distinct().Count(),
+                loanCount = search.Count(),
                 data = result
             });
         }
 
         [HttpPost]
         public PartialViewResult GetFilteredOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
-        {
-            int LibID = 0;
-            int LocID = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            var result = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
-            ViewBag.PatronCount = result.Select(a => a.FullName).Distinct().Count();
-            ViewBag.Count = result.Count();
+        {            
             return PartialView("GetFilteredOnLoanStats");
         }
 
@@ -142,21 +195,124 @@ namespace Libol.Controllers
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                search = search.Where(a => (format.OnFormatHoldingTitle(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
                     || (a.Currency ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || a.CheckOutDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.RenewDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.OverDueDateNew.Value.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.OverDueDateOld.Value.ToString("dd/MM/yyyy").Contains(searchValue)
                 );
             }
-            var sorting = search.OrderBy(a => a.CopyNumber);
+            var sorting = search.OrderBy(a => false);
+            if (model.order[0].column == 0)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Content);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Content);
+                }
+            }
+            else if (model.order[0].column == 1)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CopyNumber);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CopyNumber);
+                }
+            }
+            else if (model.order[0].column == 2)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.FullName);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.FullName);
+                }
+            }
+            else if (model.order[0].column == 3)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CheckOutDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CheckOutDate);
+                }
+            }
+            else if (model.order[0].column == 4)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.OverDueDateOld);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.OverDueDateOld);
+                }
+            }
+            else if (model.order[0].column == 5)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.OverDueDateNew);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.OverDueDateNew);
+                }
+            }
+            else if (model.order[0].column == 6)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => false);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => false);
+                }
+            }
+            else if (model.order[0].column == 7)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.RenewDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.RenewDate);
+                }
+            }
+            else if (model.order[0].column == 8)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Price);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Price);
+                }
+            }
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<GET_PATRON_RENEW_ONLOAN_INFOR_Result_2> result = new List<GET_PATRON_RENEW_ONLOAN_INFOR_Result_2>();
             foreach (var i in paging)
             {
                 result.Add(new GET_PATRON_RENEW_ONLOAN_INFOR_Result_2()
                 {
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
                     CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
                     DueDate = i.DueDate.Value.ToString("dd/MM/yyyy"),
@@ -169,12 +325,14 @@ namespace Libol.Controllers
                     Currency = i.Currency
                 });
             }
-            
+
             return Json(new
             {
                 draw = model.draw,
                 recordsTotal = patronLoanInfors.Count(),
                 recordsFiltered = search.Count(),
+                patronCount = search.Select(a => a.FullName).Distinct().Count(),
+                loanCount = search.Count(),
                 data = result
             });
         }
@@ -195,14 +353,17 @@ namespace Libol.Controllers
         }
 
         //GET LOCATIONS PREFIX BY LIBRARY
-        public JsonResult GetLocationsPrefix(int id)
+        public JsonResult GetLocationsPrefix(string id)
         {
             List<SelectListItem> LocPrefix = new List<SelectListItem>();
             LocPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
-            foreach (var lp in le.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL((int)Session["UserID"], id))
+            if(!String.IsNullOrEmpty(id))
             {
-                LocPrefix.Add(new SelectListItem { Text = Regex.Replace(lp.ToString(), @"[^0-9a-zA-Z]+", ""), Value = lp.ToString() });
-            }
+                foreach (var lp in le.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL((int)Session["UserID"], Int32.Parse(id)))
+                {
+                    LocPrefix.Add(new SelectListItem { Text = Regex.Replace(lp.ToString(), @"[^0-9a-zA-Z]+", ""), Value = lp.ToString() });
+                }
+            }            
             return Json(new SelectList(LocPrefix, "Value", "Text"));
         }
 
@@ -211,6 +372,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> LocByPrefix = new List<SelectListItem>();
             LocByPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
+            
             foreach (var lbp in le.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL((int)Session["UserID"], id, prefix))
             {
                 LocByPrefix.Add(new SelectListItem { Text = lbp.Symbol, Value = lbp.ID.ToString() });
@@ -221,13 +383,6 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult GetLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
-            int LibID = 0;
-            int LocID = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            var result = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
-            ViewBag.PatronCount = result.Select(a => a.FullName).Distinct().Count();
-            ViewBag.Count = result.Count();
             return PartialView("GetLoanStats");
         }
         [HttpPost]
@@ -242,21 +397,113 @@ namespace Libol.Controllers
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                search = search.Where(a => (format.OnFormatHoldingTitle(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
                     || (a.Currency ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || a.CheckOutDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.CheckInDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.OverdueDays.Value.ToString().Contains(searchValue)
+                    || a.OverdueFine.ToString().Contains(searchValue)
                 );
             }
-            var sorting = search.OrderBy(a => a.CopyNumber);
+            var sorting = search.OrderBy(a => false);
+            if (model.order[0].column == 0)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Content);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Content);
+                }
+            }
+            else if (model.order[0].column == 1)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CopyNumber);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CopyNumber);
+                }
+            }
+            else if (model.order[0].column == 2)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.FullName);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.FullName);
+                }
+            }
+            else if (model.order[0].column == 3)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CheckOutDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CheckOutDate);
+                }
+            }
+            else if (model.order[0].column == 4)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CheckInDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CheckInDate);
+                }
+            }
+            else if (model.order[0].column == 5)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.OverdueDays);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.OverdueDays);
+                }
+            }
+            else if (model.order[0].column == 6)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.OverdueFine);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.OverdueFine);
+                }
+            }
+            else if (model.order[0].column == 7)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Price);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Price);
+                }
+            }
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<GET_PATRON_LOANINFOR_Result_2> result = new List<GET_PATRON_LOANINFOR_Result_2>();
             foreach (var i in paging)
             {
                 result.Add(new GET_PATRON_LOANINFOR_Result_2()
                 {
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
                     CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
                     CheckInDate = i.CheckInDate.Value.ToString("dd/MM/yyyy"),
@@ -274,6 +521,8 @@ namespace Libol.Controllers
                 draw = model.draw,
                 recordsTotal = patronLoanInfors.Count(),
                 recordsFiltered = search.Count(),
+                patronCount = search.Select(a => a.FullName).Distinct().Count(),
+                loanCount = search.Count(),
                 data = result
             });
         }
@@ -282,14 +531,6 @@ namespace Libol.Controllers
         [HttpPost]
         public PartialViewResult GetFilteredLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
-            int LibID = 0;
-            int LocID = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            var result = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
-
-            ViewBag.PatronCount = result.Select(a => a.FullName).Distinct().Count();
-            ViewBag.Count = result.Count();
             return PartialView("GetFilteredLoanStats");
         }
 
@@ -301,18 +542,142 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
             var patronLoanInfors = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
+            foreach (var i in patronLoanInfors)
+            {
+                if ((i.CheckInDate - i.OverDueDateNew).Days > i.OverdueDays)
+                {
+                    i.OverdueDays = 0;
+                    i.OverdueFine = 0;
+                }
+            }
             var search = patronLoanInfors.Where(a => true);
             if (model.search.value != null)
             {
                 string searchValue = model.search.value;
-                search = search.Where(a => (GetContent(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
+                search = search.Where(a => (format.OnFormatHoldingTitle(a.Content) ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.CopyNumber ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || (a.FullName ?? "").ToUpper().Contains(searchValue.ToUpper())
                     || ((a.Price == 0) ? 0 : a.Price).ToString().ToUpper().Contains(searchValue.ToUpper())
                     || (a.Currency ?? "").ToUpper().Contains(searchValue.ToUpper())
+                    || a.CheckOutDate.Value.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.CheckInDate.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.OverdueDays.Value.ToString().Contains(searchValue)
+                    || a.OverdueFine.ToString().Contains(searchValue)
+                    || a.OverDueDateNew.ToString("dd/MM/yyyy").Contains(searchValue)
+                    || a.RenewDate.ToString("dd/MM/yyyy").Contains(searchValue)
                 );
             }
-            var sorting = search.OrderBy(a => a.CopyNumber);
+            var sorting = search.OrderBy(a => false);
+            if (model.order[0].column == 0)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Content);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Content);
+                }
+            }
+            else if (model.order[0].column == 1)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CopyNumber);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CopyNumber);
+                }
+            }
+            else if (model.order[0].column == 2)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.FullName);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.FullName);
+                }
+            }
+            else if (model.order[0].column == 3)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CheckOutDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CheckOutDate);
+                }
+            }
+            else if (model.order[0].column == 4)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.OverDueDateNew);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.OverDueDateNew);
+                }
+            }
+            else if (model.order[0].column == 5)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.CheckInDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.CheckInDate);
+                }
+            }
+            else if (model.order[0].column == 6)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.RenewDate);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.RenewDate);
+                }
+            }
+            else if (model.order[0].column == 7)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.OverdueDays);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.OverdueDays);
+                }
+            }
+            else if (model.order[0].column == 8)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.OverdueFine);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.OverdueFine);
+                }
+            }
+            else if (model.order[0].column == 9)
+            {
+                if (model.order[0].dir.Equals("asc"))
+                {
+                    sorting = search.OrderBy(a => a.Price);
+                }
+                else
+                {
+                    sorting = search.OrderByDescending(a => a.Price);
+                }
+            }
             var paging = sorting.Skip(model.start).Take(model.length).ToList();
             List<GET_PATRON_RENEW_LOAN_INFOR_Result_2> result = new List<GET_PATRON_RENEW_LOAN_INFOR_Result_2>();
 
@@ -320,7 +685,7 @@ namespace Libol.Controllers
             {
                 result.Add(new GET_PATRON_RENEW_LOAN_INFOR_Result_2()
                 {
-                    Content = GetContent(i.Content),
+                    Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
                     CheckOutDate = i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
                     CheckInDate = i.CheckInDate.ToString("dd/MM/yyyy"),
@@ -328,8 +693,8 @@ namespace Libol.Controllers
                     RenewDate = i.RenewDate.ToString("dd/MM/yyyy"),
                     OverDueDateNew = i.OverDueDateNew.ToString("dd/MM/yyyy"),
                     OverDueDateOld = i.OverDueDateOld.ToString("dd/MM/yyyy"),
-                    OverdueDays = ((i.CheckInDate - i.OverDueDateNew).Days > i.OverdueDays) ? 0 : i.OverdueDays,
-                    OverdueFine = ((i.CheckInDate - i.OverDueDateNew).Days > i.OverdueDays) ? "0" : i.OverdueFine.ToString("#.##"),
+                    OverdueDays = i.OverdueDays,
+                    OverdueFine = i.OverdueFine.ToString("#.##"),
                     Price = i.Price.ToString() + " " + i.Currency,
                     Currency = i.Currency
                 });
@@ -339,6 +704,8 @@ namespace Libol.Controllers
                 draw = model.draw,
                 recordsTotal = patronLoanInfors.Count(),
                 recordsFiltered = search.Count(),
+                patronCount = search.Select(a => a.FullName).Distinct().Count(),
+                loanCount = search.Count(),
                 data = result
             });
         }
@@ -371,14 +738,17 @@ namespace Libol.Controllers
             return View();
         }
         //GET LOCATIONS BY LIBRARY
-        public JsonResult GetLocations(int id)
+        public JsonResult GetLocations(string id)
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            foreach (var l in le.FPT_SP_CIR_LIBLOCUSER_SEL((int)Session["UserID"], id).ToList())
+            if (!String.IsNullOrEmpty(id))
             {
-                loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
-            }
+                foreach (var l in le.FPT_SP_CIR_LIBLOCUSER_SEL((int)Session["UserID"], Int32.Parse(id)).ToList())
+                {
+                    loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
+                }
+            }            
             return Json(new SelectList(loc, "Value", "Text"));
         }
         [HttpPost]
@@ -495,9 +865,62 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult LockCardPatron(string cardNumber, string startDate, int lockDays, string note)
         {
-            List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cardNumber, lockDays, startDate, note);
-            ViewData["listResult"] = listResult;
-            return Json(listResult, JsonRequestBehavior.AllowGet);
+            string[] myList = cardNumber.Split(' ');
+            int error = 0;
+            int mSuccess = 0;
+            string listSuccess = "";
+            string merror = "";
+            string locked = "";
+            if (myList.Length == 1)
+            {
+                string cnumber = myList[0];
+                if (le.CIR_PATRON.Where(a => a.Code == cnumber).Count() == 0)
+                {
+                    ViewBag.message = "Số thẻ " + myList[0] + " không tồn tại";
+                }
+                if(le.CIR_PATRON_LOCK.Where(a =>a.PatronCode == cnumber).Count() != 0)
+                {
+                    ViewBag.message = cnumber + " Đã bị khóa";
+                }
+                else
+                {
+                    ViewBag.message = "Khóa thẻ thành công !";
+                    List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(myList[0], lockDays, startDate, note);
+                }
+            }
+            else if (myList.Count() > 1)
+            {
+                foreach (string cnumber in myList)
+                {
+                    
+                     if (le.CIR_PATRON.Where(a => a.Code == cnumber).Count() == 0)
+                    {
+                        error = error + 1;
+                        merror = merror +" "+ cnumber;
+                    }
+                    else if(le.CIR_PATRON_LOCK.Where(a => a.PatronCode == cnumber).Count() != 0)
+                    {
+                        error = error + 1;
+                        locked = locked + " " + cnumber;
+                    }
+                    else
+                    {
+                        List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cnumber, lockDays, startDate, note);
+                        mSuccess = mSuccess + 1;
+                        listSuccess = listSuccess + " " + cnumber;
+                    }
+                }
+                if(error == 0)
+                {
+                    ViewBag.message = "Khóa thẻ thành công !!!";
+                }
+                else
+                {
+                    ViewBag.message = "Tổng số thẻ khóa thành công : "+ mSuccess + "\nSố thẻ khóa thành công : "+listSuccess+"\nSố thẻ không thể khóa : "+ error + "\nSố thẻ không tồn tại là : "+ merror +"\nSố thẻ đã bị khóa là : "+locked;
+                }
+            }
+
+            return Json(ViewBag.message, JsonRequestBehavior.AllowGet);
 
         }
         // Edit LockCard()

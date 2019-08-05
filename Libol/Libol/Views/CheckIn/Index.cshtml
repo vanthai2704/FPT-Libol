@@ -29,9 +29,17 @@
             }
 
             #sidebar-wrapper .list-group {
-                width: 20rem;
+                width: 18rem;
                 padding-left: 5px;
             }
+
+            #sidebar-wrapper label {
+                font-size: 13px;
+            }
+
+        label {
+            font-size: 13px;
+        }
 
 
         @@media (min-width: 768px) {
@@ -55,6 +63,10 @@
 
         td {
             font-size: 13px;
+        }
+
+        .form-control {
+            font-size: 0.8rem !important;
         }
     </style>
 </head>
@@ -101,7 +113,7 @@
                         <div class="col-4"><label class="col-form-label"><a href="/Catalogue/SearchCodeNumber">Tìm</a> | <a href="/Catalogue/AddNewCatalogue">Thêm</a></label></div>
                     </div>
                     <div class="form-row">
-                        <div class="col"><button class="btn btn-primary" type="button" onclick="checkinbyDKCB()">Ghi trả</button></div>
+                        <div class="col-4"><button class="btn btn-primary form-control" type="button" onclick="checkinbyDKCB()">Ghi trả</button></div>
 
                     </div>
                 </div>
@@ -230,7 +242,7 @@
                 $.unblockUI()
                 document.getElementById("strCopyNumber").focus();
             },
-            
+
         });
     }
 
