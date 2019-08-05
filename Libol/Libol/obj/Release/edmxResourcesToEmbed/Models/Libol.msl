@@ -10405,5 +10405,6 @@
     <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_BY_ITEMID" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_BY_ITEMID" />
     <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_ONLOAN" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_ONLOAN" />
     <FunctionImportMapping FunctionImportName="FPT_SP_GET_ITEM" FunctionName="LibolModel.Store.FPT_SP_GET_ITEM" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_CIR_OVERDUELIST_GETINFOR" FunctionName="LibolModel.Store.FPT_SP_CIR_OVERDUELIST_GETINFOR" />
   </EntityContainerMapping>
 </Mapping>
