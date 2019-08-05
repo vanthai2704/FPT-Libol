@@ -180,7 +180,9 @@
                 dataType: "json",
                 success: function (result) {
                     if (result != "") {
+                        //window.prompt("Copy to clipboard: Ctrl+C, Enter", result);
                         alert(result);
+                        //$("#myModal1").modal("show");
                     }
                     $('#table').DataTable().ajax.reload(null, false);
                 },
@@ -396,7 +398,7 @@
                     </div>
                     <div class="form-group ">
                         <label for="txtLockedDay">Số ngày:</label>
-                        <input type="text" class="form-control" id="txtLockedDay">
+                        <input type="number" class="form-control" id="txtLockedDay">
                     </div>
                     <div class="form-group ">
                         <label for="txtNote">Lý do: </label>
