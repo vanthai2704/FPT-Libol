@@ -353,14 +353,17 @@ namespace Libol.Controllers
         }
 
         //GET LOCATIONS PREFIX BY LIBRARY
-        public JsonResult GetLocationsPrefix(int id)
+        public JsonResult GetLocationsPrefix(string id)
         {
             List<SelectListItem> LocPrefix = new List<SelectListItem>();
             LocPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
-            foreach (var lp in le.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL((int)Session["UserID"], id))
+            if(!String.IsNullOrEmpty(id))
             {
-                LocPrefix.Add(new SelectListItem { Text = Regex.Replace(lp.ToString(), @"[^0-9a-zA-Z]+", ""), Value = lp.ToString() });
-            }
+                foreach (var lp in le.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL((int)Session["UserID"], Int32.Parse(id)))
+                {
+                    LocPrefix.Add(new SelectListItem { Text = Regex.Replace(lp.ToString(), @"[^0-9a-zA-Z]+", ""), Value = lp.ToString() });
+                }
+            }            
             return Json(new SelectList(LocPrefix, "Value", "Text"));
         }
 
@@ -369,6 +372,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> LocByPrefix = new List<SelectListItem>();
             LocByPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
+            
             foreach (var lbp in le.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL((int)Session["UserID"], id, prefix))
             {
                 LocByPrefix.Add(new SelectListItem { Text = lbp.Symbol, Value = lbp.ID.ToString() });
@@ -734,14 +738,17 @@ namespace Libol.Controllers
             return View();
         }
         //GET LOCATIONS BY LIBRARY
-        public JsonResult GetLocations(int id)
+        public JsonResult GetLocations(string id)
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            foreach (var l in le.FPT_SP_CIR_LIBLOCUSER_SEL((int)Session["UserID"], id).ToList())
+            if (!String.IsNullOrEmpty(id))
             {
-                loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
-            }
+                foreach (var l in le.FPT_SP_CIR_LIBLOCUSER_SEL((int)Session["UserID"], Int32.Parse(id)).ToList())
+                {
+                    loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
+                }
+            }            
             return Json(new SelectList(loc, "Value", "Text"));
         }
         [HttpPost]

@@ -47,14 +47,17 @@ namespace Libol.Controllers
         }
 
         //GET LOCATIONS BY LIBRARY
-        public JsonResult GetLocations(int id)
+        public JsonResult GetLocations(string id)
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL((int)Session["UserID"], id).ToList())
+            if (!String.IsNullOrEmpty(id))
             {
-                loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
-            }
+                foreach (var l in le.SP_HOLDING_LIBLOCUSER_SEL((int)Session["UserID"], Int32.Parse(id)).ToList())
+                {
+                    loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
+                }
+            }            
             return Json(new SelectList(loc, "Value", "Text"));
         }
 
