@@ -115,7 +115,6 @@
                 data: JSON.stringify(empObj),
                 success: function (result) {
                     $("#contentcheckout").html(result);
-
                 },
                 error: function (errormessage) {
                 }
@@ -170,6 +169,26 @@
                 error: function (errormessage) {
                     console.log("error");
                 }
+            });
+        }
+
+        function SaveEditLock() {
+            $("#myModal3").modal("hide");
+            var patronCode = document.getElementById("plockcode").value;
+            var lockDays = document.getElementById("plockday").value;
+            var note = document.getElementById("plocknote").value;
+            $.ajax({
+                url: "/CheckOut/UpdatedLockCardPatron",
+                data: JSON.stringify({ patronCode: patronCode, lockDays: lockDays, note: note }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    alert('Bạn đã Update trạng thái khóa thẻ thành công');
+                },
+                error: function () {
+                }
+
             });
         }
     </script>

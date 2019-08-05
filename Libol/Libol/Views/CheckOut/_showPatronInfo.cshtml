@@ -47,6 +47,26 @@
                 }
             });
         });
+
+        function SaveEditLock() {
+            $("#myModal3").modal("hide");
+            var patronCode = document.getElementById("plockcode").value;
+            var lockDays = document.getElementById("plockday").value;
+            var note = document.getElementById("plocknote").value;
+            $.ajax({
+                url: "/CheckOut/UpdatedLockCardPatron",
+                data: JSON.stringify({ patronCode: patronCode, lockDays: lockDays, note: note }),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    alert('Bạn đã Update trạng thái khóa thẻ thành công');
+                },
+                error: function () {
+                }
+
+            });
+        }
     </script>
 </head>
 @if (ViewBag.PatronDetail != null)
@@ -328,7 +348,7 @@
                         </div>
                         <div class="form-group ">
                             <label>Số thẻ:</label>
-                            <input type="text" class="form-control" value="@ViewBag.PatronDetail.strCode" disabled>
+                            <input type="text" class="form-control" value="@ViewBag.PatronDetail.strCode" disabled id="plockcode">
                         </div>
                         <div class="form-group ">
                             <label>Ngày bị khóa:</label>
@@ -339,14 +359,19 @@
                             <input type="text" class="form-control" value="@ViewBag.blackenddate.ToString("dd/MM/yyyy")" disabled>
                         </div>
                         <div class="form-group ">
-                            <label>Lý do khóa thẻ:</label>
-                            <textarea class="form-control" disabled>@ViewBag.blackNote</textarea>
+                            <label for="plockday">Số ngày:</label>
+                            <input type="text" class="form-control" value="@ViewBag.lockedDay" id="plockday">
+                        </div>
+                        <div class="form-group ">
+                            <label for="plocknote">Lý do khóa thẻ:</label>
+                            <textarea class="form-control" id="plocknote">@ViewBag.blackNote</textarea>
                         </div>
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-success " onclick="SaveEditLock()">Sửa</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Thoát</button>
                     </div>
 
                 </div>

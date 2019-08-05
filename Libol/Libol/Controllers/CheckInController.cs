@@ -15,6 +15,7 @@ namespace Libol.Controllers
         private LibolEntities db = new LibolEntities();
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
         FormatHoldingTitle f = new FormatHoldingTitle();
+        CirculationBusiness circulationBusiness = new CirculationBusiness();
         private static string fullname = "";
         private static string sessionpcode = "";
 
@@ -39,11 +40,12 @@ namespace Libol.Controllers
                 ViewBag.active = 0;
                 ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().Note;
                 ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().StartedDate;
+                ViewBag.lockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().LockedDays;
                 ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().LockedDays);
             }
 
             getpatrondetail(pcode);
-
+            sessionpcode = pcode;
             return PartialView("_checkinByCardNumber");
         }
 
@@ -128,7 +130,7 @@ namespace Libol.Controllers
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
             }
-            getpatrondetail(pcode);
+            getpatrondetail(sessionpcode);
             if (success == -1)
             {
                 ViewBag.message = "Ghi trả thất bại";
@@ -164,6 +166,16 @@ namespace Libol.Controllers
             ViewBag.listpatron = new List<FPT_SP_ILL_SEARCH_PATRON_Result>();
             ViewBag.PatronDetail = null;
             return PartialView("_findByCardNumber");
+        }
+
+        // Edit LockCard()
+        [HttpPost]
+        public JsonResult UpdatedLockCardPatron(string patronCode, int lockDays, string note)
+        {
+            string lnote = note.Trim();
+            List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> listResult = circulationBusiness.FPT_SP_UPDATE_UNLOCK_PATRON_CARD(patronCode, lockDays, lnote);
+            ViewData["listResult"] = listResult;
+            return Json(listResult, JsonRequestBehavior.AllowGet);
         }
 
 
