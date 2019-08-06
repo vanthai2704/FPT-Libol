@@ -22420,7 +22420,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOCK_STATISTIC1", strPatronCodeParameter, strNoteParameter, strLockDateFromParameter, strLockDateToParameter, intCollegeIDParameter);
         }
     
-        public virtual ObjectResult<FPT_SP_GET_HOLDING_REMOVED_Result> FPT_SP_GET_HOLDING_REMOVED(string intLibID, string intLocID, string strShelf, string strCopyNumber, string strCallNumber, string strVolume, string strTitle)
+        public virtual ObjectResult<FPT_SP_GET_HOLDING_REMOVED_Result> FPT_SP_GET_HOLDING_REMOVED(string intLibID, string intLocID, string strShelf, string strCopyNumber, string strCallNumber, string strLiquidCode, string strVolume, string strTitle, string strPrice, Nullable<System.DateTime> strDateFrom, Nullable<System.DateTime> strDateTo, string strDateType, string strReason)
         {
             var intLibIDParameter = intLibID != null ?
                 new ObjectParameter("intLibID", intLibID) :
@@ -22442,6 +22442,10 @@ namespace Libol.Models
                 new ObjectParameter("strCallNumber", strCallNumber) :
                 new ObjectParameter("strCallNumber", typeof(string));
     
+            var strLiquidCodeParameter = strLiquidCode != null ?
+                new ObjectParameter("strLiquidCode", strLiquidCode) :
+                new ObjectParameter("strLiquidCode", typeof(string));
+    
             var strVolumeParameter = strVolume != null ?
                 new ObjectParameter("strVolume", strVolume) :
                 new ObjectParameter("strVolume", typeof(string));
@@ -22450,7 +22454,27 @@ namespace Libol.Models
                 new ObjectParameter("strTitle", strTitle) :
                 new ObjectParameter("strTitle", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_REMOVED_Result>("FPT_SP_GET_HOLDING_REMOVED", intLibIDParameter, intLocIDParameter, strShelfParameter, strCopyNumberParameter, strCallNumberParameter, strVolumeParameter, strTitleParameter);
+            var strPriceParameter = strPrice != null ?
+                new ObjectParameter("strPrice", strPrice) :
+                new ObjectParameter("strPrice", typeof(string));
+    
+            var strDateFromParameter = strDateFrom.HasValue ?
+                new ObjectParameter("strDateFrom", strDateFrom) :
+                new ObjectParameter("strDateFrom", typeof(System.DateTime));
+    
+            var strDateToParameter = strDateTo.HasValue ?
+                new ObjectParameter("strDateTo", strDateTo) :
+                new ObjectParameter("strDateTo", typeof(System.DateTime));
+    
+            var strDateTypeParameter = strDateType != null ?
+                new ObjectParameter("strDateType", strDateType) :
+                new ObjectParameter("strDateType", typeof(string));
+    
+            var strReasonParameter = strReason != null ?
+                new ObjectParameter("strReason", strReason) :
+                new ObjectParameter("strReason", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_REMOVED_Result>("FPT_SP_GET_HOLDING_REMOVED", intLibIDParameter, intLocIDParameter, strShelfParameter, strCopyNumberParameter, strCallNumberParameter, strLiquidCodeParameter, strVolumeParameter, strTitleParameter, strPriceParameter, strDateFromParameter, strDateToParameter, strDateTypeParameter, strReasonParameter);
         }
     
         public virtual ObjectResult<FPT_SP_GET_HOLDING_REMOVED_PAGING_Result> FPT_SP_GET_HOLDING_REMOVED_PAGING(string intLibID, string intLocID, string strShelf, string strCopyNumber, string strCallNumber, string strVolume, string strTitle, string numberIndex, string numberRecordPerPage)
@@ -22918,6 +22942,32 @@ namespace Libol.Models
         public virtual ObjectResult<FPT_SP_HOLDING_LIB_SEL_Result> FPT_SP_HOLDING_LIB_SEL()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_HOLDING_LIB_SEL_Result>("FPT_SP_HOLDING_LIB_SEL");
+        }
+    
+        public virtual int FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER(string strCopyNumber)
+        {
+            var strCopyNumberParameter = strCopyNumber != null ?
+                new ObjectParameter("strCopyNumber", strCopyNumber) :
+                new ObjectParameter("strCopyNumber", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER", strCopyNumberParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_GET_ITEM_INFOR_Result> FPT_SP_GET_ITEM_INFOR(Nullable<int> intItemID, Nullable<int> intLocationID, Nullable<int> intLibraryID)
+        {
+            var intItemIDParameter = intItemID.HasValue ?
+                new ObjectParameter("intItemID", intItemID) :
+                new ObjectParameter("intItemID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_ITEM_INFOR_Result>("FPT_SP_GET_ITEM_INFOR", intItemIDParameter, intLocationIDParameter, intLibraryIDParameter);
         }
     }
 }

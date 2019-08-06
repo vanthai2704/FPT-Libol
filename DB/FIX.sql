@@ -748,3 +748,67 @@ PRINT @strSQL + @strTable + @strWhere
 	EXECUTE(@strSQL + @strTable + @strWhere)
 GO
 
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 07/28/2019 17:32:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		<ducnv>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ DANH MỤC SÁCH NHẬP
+-- =============================================
+ALTER  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
+
+      @strFromDate VARCHAR(30),
+
+      @strToDate  VARCHAR(30),
+
+      @intLocationID    int,
+      
+      @intLibraryID int
+
+AS   
+
+      DECLARE @strSQL NVARCHAR(1000)
+	  DECLARE @strLike NVARCHAR(1000)
+	  DECLARE @strJoin NVARCHAR(1000)
+      SET @strSQL=''
+      SET @strJoin=''
+	  SET @strLike = ''
+      SET @strSQL=@strSQL + 'SELECT I.ID,I.Code, U.DKCB, F.Content 
+      FROM ITEM I
+      join FIELD200S F on I.ID=F.ITEMID
+join (SELECT distinct ItemID ,
+STUFF(( SELECT  '', '' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID'
+SET @strJoin = @strJoin+ 'FOR XML PATH('''')), 1, 1, '''') AS DKCB FROM HOLDING D2 GROUP BY ItemID) as U on I.ID = U.ItemID
+WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15)'
+
+      If @strFromDate<>''
+
+            SET @strJoin=@strJoin + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
+
+      If @strToDate<>''
+
+            SET @strJoin=@strJoin + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
+
+      If @intLocationID <>0
+		BEGIN
+            SET @strJoin=@strJoin + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+            SET @strLike = @strLike + ' AND D1.LocationID=' +convert(nvarchar,@intLocationID)
+        END    
+       If @intLocationID =0
+		BEGIN
+            SET @strJoin=@strJoin + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+			SET @strLike = @strLike + ' AND D1.LibID=' +convert(nvarchar,@intLibraryID)
+		END
+		SET @strSQL = @strSQL+ @strLike + @strJoin
+    --print(@strSQL)
+
+      EXEC(@strSQL)
+      
+

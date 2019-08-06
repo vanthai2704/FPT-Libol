@@ -4461,7 +4461,7 @@ PRINT @strSQL + @strTable + @strWhere + @strPaging
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 7/28/2019 04:21:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 07/28/2019 17:32:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4472,7 +4472,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	THỐNG KÊ DANH MỤC SÁCH NHẬP
 -- =============================================
-CREATE  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
+Create  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
 
       @strFromDate VARCHAR(30),
 
@@ -4485,44 +4485,43 @@ CREATE  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
 AS   
 
       DECLARE @strSQL NVARCHAR(1000)
-
+	  DECLARE @strLike NVARCHAR(1000)
+	  DECLARE @strJoin NVARCHAR(1000)
       SET @strSQL=''
-
+      SET @strJoin=''
+	  SET @strLike = ''
       SET @strSQL=@strSQL + 'SELECT I.ID,I.Code, U.DKCB, F.Content 
       FROM ITEM I
       join FIELD200S F on I.ID=F.ITEMID
 join (SELECT distinct ItemID ,
 STUFF(( SELECT  '', '' + CopyNumber
 FROM HOLDING D1
-WHERE D1.ItemID = D2.ItemID
-FOR
-XML PATH('''')
-), 1, 1, '''') AS DKCB
-FROM HOLDING D2
-GROUP BY ItemID) as U on I.ID = U.ItemID
-WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15) '
+WHERE D1.ItemID = D2.ItemID'
+SET @strJoin = @strJoin+ 'FOR XML PATH('''')), 1, 1, '''') AS DKCB FROM HOLDING D2 GROUP BY ItemID) as U on I.ID = U.ItemID
+WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15)'
 
       If @strFromDate<>''
 
-            SET @strSQL=@strSQL + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
+            SET @strJoin=@strJoin + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
 
       If @strToDate<>''
 
-            SET @strSQL=@strSQL + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
+            SET @strJoin=@strJoin + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
 
       If @intLocationID <>0
-
-            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
-            
+		BEGIN
+            SET @strJoin=@strJoin + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+            SET @strLike = @strLike + ' AND D1.LocationID=' +convert(nvarchar,@intLocationID)
+        END    
        If @intLocationID =0
-
-            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
-
-
+		BEGIN
+            SET @strJoin=@strJoin + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+			SET @strLike = @strLike + ' AND D1.LibID=' +convert(nvarchar,@intLibraryID)
+		END
+		SET @strSQL = @strSQL+ @strLike + @strJoin
     --print(@strSQL)
 
       EXEC(@strSQL)
-      
 
 GO
 /****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING_v2]    Script Date: 7/28/2019 04:21:02 PM ******/
@@ -5450,9 +5449,92 @@ AS
 	FROM HOLDING_LIBRARY 
 	WHERE LocalLib = 1 
 	ORDER BY Code
-
+GO
 
 GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM_INFOR]    Script Date: 07/28/2019 17:31:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		<DUCNV>
+-- Create date: <Create Date,,>
+-- Description:	list item information and count number of copynumber
+-- InUsed 
+-- =1: dang muon 
+-- =============================================
+CREATE procedure [dbo].[FPT_SP_GET_ITEM_INFOR] 
+	@intItemID int,
+	@intLocationID int,
+	@intLibraryID int
+AS
+If @intLocationID <>0
+SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (020, 022) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (041) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (044) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field100s WHERE FieldCode IN (100, 110, 111) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 245 AND ItemID = @intItemID 
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 250 AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 260 AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field300s WHERE FieldCode = 300 AND ItemID = @intItemID
+UNION SELECT COUNT(COPYNUMBER) AS ItemID,'soluong' AS FieldCode,'SLuongDKrongKho' AS Content, 'inex' as Indicators FROM HOLDING WHERE ITEMID = @intItemID AND  LocationID =@intLocationID
+UNION SELECT COUNT(COPYNUMBER) AS ItemID, 'luongmuon' AS FieldCode,'SLuongDKCBtrongKho' AS Content,'index' as Indicators FROM HOLDING WHERE ITEMID =@intItemID AND  LocationID = @intLocationID
+	
+If @intLocationID =0
+SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (020, 022) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (041) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (044) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field100s WHERE FieldCode IN (100, 110, 111) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 245 AND ItemID = @intItemID 
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 250 AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 260 AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field300s WHERE FieldCode = 300 AND ItemID = @intItemID
+  UNION SELECT COUNT(COPYNUMBER) AS ItemID,'soluong' AS FieldCode,'SLuongDKrongKho' AS Content,'inex' as Indicators FROM HOLDING WHERE ITEMID = @intItemID AND  LibID =@intLibraryID
+ UNION SELECT COUNT(COPYNUMBER) AS ItemID,'luongmuon' AS FieldCode,'SLuongDKCBtrongKho' AS Content,'index' as Indicators FROM HOLDING WHERE ITEMID =@intItemID AND  LibID = @intLibraryID
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER]    Script Date: 08/06/2019 17:39:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/******/
+CREATE PROCEDURE [dbo].[FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER]
+	@strCopyNumber VARCHAR(50)
+AS
+
+	DECLARE @strSQL VARCHAR(8000)
+	DECLARE @strJoinSQL varchar(1000)
+	DECLARE @strLikeSql varchar(1000)
+	SET @strSQL = 'SELECT HRR.Reason,
+	REPLACE(REPLACE(REPLACE(REPLACE(F.Content,''$a'',''''),''$b'','' ''),''$c'','' ''),''$n'','' '') as Content,
+	HR.CopyNumber,
+	HR.LiquidCode,
+	HR.Price,HR.UseCount,
+	HR.RemovedDate' 
+	
+	SET @strLikeSql = '1 =1 AND '
+	SET @strJoinSQL = ''
+	
+	SET @strJoinSQL = @strJoinSQL + ' FROM HOLDING_REMOVED HR LEFT JOIN FIELD200S F ON HR.ItemID = F.ItemID AND F.FieldCode=''245'' '
+	SET @strJoinSQL = @strJoinSQL + ' LEFT JOIN HOLDING_REMOVE_REASON HRR ON HR.Reason=HRR.ID '
+	--SET @strJoinSQL = @strJoinSQL + ' LEFT JOIN HOLDING_LIBRARY HL ON HR.LibID = HL.ID '
+	--SET @strJoinSQL = @strJoinSQL + ' LEFT JOIN HOLDING_LOCATION HLC ON HR.LocationID = HLC.ID '
+		
+	IF NOT @strCopyNumber=''
+		BEGIN
+			SET @strLikeSql=@strLikeSql+' CopyNumber='''+@strCopyNumber+''' AND '
+		END
+	
+	
+	SET @strSql = @strSql + @strJoinSQL + ' WHERE ' +@strLikeSQL
+	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) 
+EXEC(@strSQL)
+PRINT(@strSQL)
+
+
 
 
 

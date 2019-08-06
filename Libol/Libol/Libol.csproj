@@ -203,6 +203,7 @@
     <Compile Include="Controllers\ShelfController.cs" />
     <Compile Include="EntityResult\FPT_COUNT_COPYNUMBER_BY_ITEMID_Result.cs" />
     <Compile Include="EntityResult\FPT_COUNT_COPYNUMBER_ONLOAN_Result.cs" />
+    <Compile Include="EntityResult\FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_CATA_SEARCH_MARC_FIELDS_Results.cs" />
     <Compile Include="EntityResult\FPT_SP_GET_ITEM_Result.cs" />
@@ -236,6 +237,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_GET_HOLDING_REMOVED_WITH_ID_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_GET_ITEM_INFOR_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_HOLDING_LIBLOCUSER_SEL_Result.cs">
@@ -2506,6 +2510,8 @@
     <Content Include="Views\Shelf\LiquidationOrLostPartialView.cshtml" />
     <Content Include="Views\Shelf\NotYetChecked.cshtml" />
     <Content Include="Views\Shelf\NotYetCheckedPartialView.cshtml" />
+    <Content Include="Views\Circulation\CopyNumberLiquidationStats.cshtml" />
+    <Content Include="Views\Circulation\GetCopyNumberLiquidationStats.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />

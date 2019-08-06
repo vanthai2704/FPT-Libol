@@ -5649,6 +5649,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strDateTo" Type="varchar" Mode="In" />
           <Parameter Name="intUserID" Type="int" Mode="In" />
         </Function>
+        <Function Name="FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="FPT_GET_LOCFULLNAME_LIBUSER_SEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intUserID" Type="int" Mode="In" />
           <Parameter Name="intLibID" Type="int" Mode="In" />
@@ -5829,8 +5832,14 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strShelf" Type="nvarchar" Mode="In" />
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
           <Parameter Name="strCallNumber" Type="nvarchar" Mode="In" />
+          <Parameter Name="strLiquidCode" Type="nvarchar" Mode="In" />
           <Parameter Name="strVolume" Type="nvarchar" Mode="In" />
           <Parameter Name="strTitle" Type="nvarchar" Mode="In" />
+          <Parameter Name="strPrice" Type="nvarchar" Mode="In" />
+          <Parameter Name="strDateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="strDateTo" Type="datetime" Mode="In" />
+          <Parameter Name="strDateType" Type="nvarchar" Mode="In" />
+          <Parameter Name="strReason" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strLibID" Type="nvarchar" Mode="In" />
@@ -5873,6 +5882,11 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
         <Function Name="FPT_SP_GET_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strFromDate" Type="varchar" Mode="In" />
           <Parameter Name="strToDate" Type="varchar" Mode="In" />
+          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_GET_ITEM_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intItemID" Type="int" Mode="In" />
           <Parameter Name="intLocationID" Type="int" Mode="In" />
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
         </Function>
@@ -25760,8 +25774,14 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strShelf" Mode="In" Type="String" />
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="strCallNumber" Mode="In" Type="String" />
+            <Parameter Name="strLiquidCode" Mode="In" Type="String" />
             <Parameter Name="strVolume" Mode="In" Type="String" />
             <Parameter Name="strTitle" Mode="In" Type="String" />
+            <Parameter Name="strPrice" Mode="In" Type="String" />
+            <Parameter Name="strDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="strDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="strDateType" Mode="In" Type="String" />
+            <Parameter Name="strReason" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_SP_GET_HOLDING_REMOVED_PAGING" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_REMOVED_PAGING_Result)">
             <Parameter Name="intLibID" Mode="In" Type="String" />
@@ -25893,6 +25913,14 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intMode" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_SP_HOLDING_LIB_SEL" ReturnType="Collection(LibolModel.FPT_SP_HOLDING_LIB_SEL_Result)" />
+          <FunctionImport Name="FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER">
+          <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_GET_ITEM_INFOR" ReturnType="Collection(LibolModel.FPT_SP_GET_ITEM_INFOR_Result)">
+            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -30882,6 +30910,12 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="LibName" Nullable="true" MaxLength="134" />
           <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
           <Property Type="Int32" Name="ID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="FPT_SP_GET_ITEM_INFOR_Result">
+          <Property Type="Int32" Name="ItemID" Nullable="true" />
+          <Property Type="String" Name="FieldCode" Nullable="false" MaxLength="9" />
+          <Property Type="String" Name="Content" Nullable="false" MaxLength="800" />
+          <Property Type="String" Name="Indicators" Nullable="true" MaxLength="5" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -41324,6 +41358,17 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
                 <ScalarProperty Name="LibName" ColumnName="LibName" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER" FunctionName="LibolModel.Store.FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER" />
+          <FunctionImportMapping FunctionImportName="FPT_SP_GET_ITEM_INFOR" FunctionName="LibolModel.Store.FPT_SP_GET_ITEM_INFOR">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_ITEM_INFOR_Result">
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Indicators" ColumnName="Indicators" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
