@@ -22666,5 +22666,258 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_CIR_OVERDUELIST_GETINFOR", intUserIDParameter, strPatronIDsParameter, whereConditionParameter);
         }
+    
+        public virtual ObjectResult<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result> FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV(Nullable<int> intLibID, Nullable<int> intLocID, string strShelf, Nullable<int> intMode)
+        {
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            var intLocIDParameter = intLocID.HasValue ?
+                new ObjectParameter("intLocID", intLocID) :
+                new ObjectParameter("intLocID", typeof(int));
+    
+            var strShelfParameter = strShelf != null ?
+                new ObjectParameter("strShelf", strShelf) :
+                new ObjectParameter("strShelf", typeof(string));
+    
+            var intModeParameter = intMode.HasValue ?
+                new ObjectParameter("intMode", intMode) :
+                new ObjectParameter("intMode", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result>("FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV", intLibIDParameter, intLocIDParameter, strShelfParameter, intModeParameter);
+        }
+    
+        public virtual int FPT_SP_GET_HOLDING_IDs_v1(string intLibID, string intLocID, string strShelf, string intMode, string intCountOnly, string numberIndex, string numberRecordPerPage)
+        {
+            var intLibIDParameter = intLibID != null ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(string));
+    
+            var intLocIDParameter = intLocID != null ?
+                new ObjectParameter("intLocID", intLocID) :
+                new ObjectParameter("intLocID", typeof(string));
+    
+            var strShelfParameter = strShelf != null ?
+                new ObjectParameter("strShelf", strShelf) :
+                new ObjectParameter("strShelf", typeof(string));
+    
+            var intModeParameter = intMode != null ?
+                new ObjectParameter("intMode", intMode) :
+                new ObjectParameter("intMode", typeof(string));
+    
+            var intCountOnlyParameter = intCountOnly != null ?
+                new ObjectParameter("intCountOnly", intCountOnly) :
+                new ObjectParameter("intCountOnly", typeof(string));
+    
+            var numberIndexParameter = numberIndex != null ?
+                new ObjectParameter("numberIndex", numberIndex) :
+                new ObjectParameter("numberIndex", typeof(string));
+    
+            var numberRecordPerPageParameter = numberRecordPerPage != null ?
+                new ObjectParameter("numberRecordPerPage", numberRecordPerPage) :
+                new ObjectParameter("numberRecordPerPage", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_GET_HOLDING_IDs_v1", intLibIDParameter, intLocIDParameter, strShelfParameter, intModeParameter, intCountOnlyParameter, numberIndexParameter, numberRecordPerPageParameter);
+        }
+    
+        public virtual int FPT_SP_GET_HOLDING_IDs_v1_searching(string intLibID, string intLocID, string strShelf, string strCopyNumber, string strCallNumber, string strVolume, string strTitle, string intMode, string intCountOnly, string numberIndex, string numberRecordPerPage)
+        {
+            var intLibIDParameter = intLibID != null ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(string));
+    
+            var intLocIDParameter = intLocID != null ?
+                new ObjectParameter("intLocID", intLocID) :
+                new ObjectParameter("intLocID", typeof(string));
+    
+            var strShelfParameter = strShelf != null ?
+                new ObjectParameter("strShelf", strShelf) :
+                new ObjectParameter("strShelf", typeof(string));
+    
+            var strCopyNumberParameter = strCopyNumber != null ?
+                new ObjectParameter("strCopyNumber", strCopyNumber) :
+                new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var strCallNumberParameter = strCallNumber != null ?
+                new ObjectParameter("strCallNumber", strCallNumber) :
+                new ObjectParameter("strCallNumber", typeof(string));
+    
+            var strVolumeParameter = strVolume != null ?
+                new ObjectParameter("strVolume", strVolume) :
+                new ObjectParameter("strVolume", typeof(string));
+    
+            var strTitleParameter = strTitle != null ?
+                new ObjectParameter("strTitle", strTitle) :
+                new ObjectParameter("strTitle", typeof(string));
+    
+            var intModeParameter = intMode != null ?
+                new ObjectParameter("intMode", intMode) :
+                new ObjectParameter("intMode", typeof(string));
+    
+            var intCountOnlyParameter = intCountOnly != null ?
+                new ObjectParameter("intCountOnly", intCountOnly) :
+                new ObjectParameter("intCountOnly", typeof(string));
+    
+            var numberIndexParameter = numberIndex != null ?
+                new ObjectParameter("numberIndex", numberIndex) :
+                new ObjectParameter("numberIndex", typeof(string));
+    
+            var numberRecordPerPageParameter = numberRecordPerPage != null ?
+                new ObjectParameter("numberRecordPerPage", numberRecordPerPage) :
+                new ObjectParameter("numberRecordPerPage", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_GET_HOLDING_IDs_v1_searching", intLibIDParameter, intLocIDParameter, strShelfParameter, strCopyNumberParameter, strCallNumberParameter, strVolumeParameter, strTitleParameter, intModeParameter, intCountOnlyParameter, numberIndexParameter, numberRecordPerPageParameter);
+        }
+    
+        public virtual int FPT_SP_GET_HOLDING_IDs_v1_searching_with_id(string strItemID, string intMode, string intCountOnly, string numberIndex, string numberRecordPerPage)
+        {
+            var strItemIDParameter = strItemID != null ?
+                new ObjectParameter("strItemID", strItemID) :
+                new ObjectParameter("strItemID", typeof(string));
+    
+            var intModeParameter = intMode != null ?
+                new ObjectParameter("intMode", intMode) :
+                new ObjectParameter("intMode", typeof(string));
+    
+            var intCountOnlyParameter = intCountOnly != null ?
+                new ObjectParameter("intCountOnly", intCountOnly) :
+                new ObjectParameter("intCountOnly", typeof(string));
+    
+            var numberIndexParameter = numberIndex != null ?
+                new ObjectParameter("numberIndex", numberIndex) :
+                new ObjectParameter("numberIndex", typeof(string));
+    
+            var numberRecordPerPageParameter = numberRecordPerPage != null ?
+                new ObjectParameter("numberRecordPerPage", numberRecordPerPage) :
+                new ObjectParameter("numberRecordPerPage", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_GET_HOLDING_IDs_v1_searching_with_id", strItemIDParameter, intModeParameter, intCountOnlyParameter, numberIndexParameter, numberRecordPerPageParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS_Result> FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS(string strLibID, string strLocID)
+        {
+            var strLibIDParameter = strLibID != null ?
+                new ObjectParameter("strLibID", strLibID) :
+                new ObjectParameter("strLibID", typeof(string));
+    
+            var strLocIDParameter = strLocID != null ?
+                new ObjectParameter("strLocID", strLocID) :
+                new ObjectParameter("strLocID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS_Result>("FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS", strLibIDParameter, strLocIDParameter);
+        }
+    
+        public virtual int FPT_SP_HOLDING_DEL(string strID)
+        {
+            var strIDParameter = strID != null ?
+                new ObjectParameter("strID", strID) :
+                new ObjectParameter("strID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_HOLDING_DEL", strIDParameter);
+        }
+    
+        public virtual int FPT_SP_HOLDING_REMOVED_INS(Nullable<int> intItemID, Nullable<int> intlibID, Nullable<int> intLocationID, string strCopyNumber, Nullable<System.DateTime> strAcquiredDate, Nullable<System.DateTime> strRemovedDate, Nullable<int> intReasonID, Nullable<double> dblPrice, string strShelf, string strVolume, Nullable<int> intLoanTypeID, Nullable<int> intUseCount, Nullable<int> intPoID, Nullable<System.DateTime> strDateLastUsed, string strCallNumber, Nullable<int> intAcquiredSourceID, string strLiquidCode)
+        {
+            var intItemIDParameter = intItemID.HasValue ?
+                new ObjectParameter("intItemID", intItemID) :
+                new ObjectParameter("intItemID", typeof(int));
+    
+            var intlibIDParameter = intlibID.HasValue ?
+                new ObjectParameter("intlibID", intlibID) :
+                new ObjectParameter("intlibID", typeof(int));
+    
+            var intLocationIDParameter = intLocationID.HasValue ?
+                new ObjectParameter("intLocationID", intLocationID) :
+                new ObjectParameter("intLocationID", typeof(int));
+    
+            var strCopyNumberParameter = strCopyNumber != null ?
+                new ObjectParameter("strCopyNumber", strCopyNumber) :
+                new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var strAcquiredDateParameter = strAcquiredDate.HasValue ?
+                new ObjectParameter("strAcquiredDate", strAcquiredDate) :
+                new ObjectParameter("strAcquiredDate", typeof(System.DateTime));
+    
+            var strRemovedDateParameter = strRemovedDate.HasValue ?
+                new ObjectParameter("strRemovedDate", strRemovedDate) :
+                new ObjectParameter("strRemovedDate", typeof(System.DateTime));
+    
+            var intReasonIDParameter = intReasonID.HasValue ?
+                new ObjectParameter("intReasonID", intReasonID) :
+                new ObjectParameter("intReasonID", typeof(int));
+    
+            var dblPriceParameter = dblPrice.HasValue ?
+                new ObjectParameter("dblPrice", dblPrice) :
+                new ObjectParameter("dblPrice", typeof(double));
+    
+            var strShelfParameter = strShelf != null ?
+                new ObjectParameter("strShelf", strShelf) :
+                new ObjectParameter("strShelf", typeof(string));
+    
+            var strVolumeParameter = strVolume != null ?
+                new ObjectParameter("strVolume", strVolume) :
+                new ObjectParameter("strVolume", typeof(string));
+    
+            var intLoanTypeIDParameter = intLoanTypeID.HasValue ?
+                new ObjectParameter("intLoanTypeID", intLoanTypeID) :
+                new ObjectParameter("intLoanTypeID", typeof(int));
+    
+            var intUseCountParameter = intUseCount.HasValue ?
+                new ObjectParameter("intUseCount", intUseCount) :
+                new ObjectParameter("intUseCount", typeof(int));
+    
+            var intPoIDParameter = intPoID.HasValue ?
+                new ObjectParameter("intPoID", intPoID) :
+                new ObjectParameter("intPoID", typeof(int));
+    
+            var strDateLastUsedParameter = strDateLastUsed.HasValue ?
+                new ObjectParameter("strDateLastUsed", strDateLastUsed) :
+                new ObjectParameter("strDateLastUsed", typeof(System.DateTime));
+    
+            var strCallNumberParameter = strCallNumber != null ?
+                new ObjectParameter("strCallNumber", strCallNumber) :
+                new ObjectParameter("strCallNumber", typeof(string));
+    
+            var intAcquiredSourceIDParameter = intAcquiredSourceID.HasValue ?
+                new ObjectParameter("intAcquiredSourceID", intAcquiredSourceID) :
+                new ObjectParameter("intAcquiredSourceID", typeof(int));
+    
+            var strLiquidCodeParameter = strLiquidCode != null ?
+                new ObjectParameter("strLiquidCode", strLiquidCode) :
+                new ObjectParameter("strLiquidCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_HOLDING_REMOVED_INS", intItemIDParameter, intlibIDParameter, intLocationIDParameter, strCopyNumberParameter, strAcquiredDateParameter, strRemovedDateParameter, intReasonIDParameter, dblPriceParameter, strShelfParameter, strVolumeParameter, intLoanTypeIDParameter, intUseCountParameter, intPoIDParameter, strDateLastUsedParameter, strCallNumberParameter, intAcquiredSourceIDParameter, strLiquidCodeParameter);
+        }
+    
+        public virtual int FPT_SP_HOLDING_UPDATE(string strID, string locid, string libid, string strCopyNumber, string intMode)
+        {
+            var strIDParameter = strID != null ?
+                new ObjectParameter("strID", strID) :
+                new ObjectParameter("strID", typeof(string));
+    
+            var locidParameter = locid != null ?
+                new ObjectParameter("locid", locid) :
+                new ObjectParameter("locid", typeof(string));
+    
+            var libidParameter = libid != null ?
+                new ObjectParameter("libid", libid) :
+                new ObjectParameter("libid", typeof(string));
+    
+            var strCopyNumberParameter = strCopyNumber != null ?
+                new ObjectParameter("strCopyNumber", strCopyNumber) :
+                new ObjectParameter("strCopyNumber", typeof(string));
+    
+            var intModeParameter = intMode != null ?
+                new ObjectParameter("intMode", intMode) :
+                new ObjectParameter("intMode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_HOLDING_UPDATE", strIDParameter, locidParameter, libidParameter, strCopyNumberParameter, intModeParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SP_HOLDING_LIB_SEL_Result> FPT_SP_HOLDING_LIB_SEL()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_HOLDING_LIB_SEL_Result>("FPT_SP_HOLDING_LIB_SEL");
+        }
     }
 }
