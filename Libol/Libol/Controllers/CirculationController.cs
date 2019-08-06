@@ -157,8 +157,8 @@ namespace Libol.Controllers
                 {
                     Content = format.OnFormatHoldingTitle(i.Content),
                     CopyNumber = i.CopyNumber,
-                    CheckOutDate = i.CheckOutDate == null ? "": i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
-                    DueDate = i.DueDate == null ? "": i.DueDate.Value.ToString("dd/MM/yyyy"),
+                    CheckOutDate = i.CheckOutDate == null ? "" : i.CheckOutDate.Value.ToString("dd/MM/yyyy"),
+                    DueDate = i.DueDate == null ? "" : i.DueDate.Value.ToString("dd/MM/yyyy"),
                     RenewCount = i.RenewCount,
                     Serial = i.Serial,
                     FullName = i.FullName,
@@ -179,7 +179,7 @@ namespace Libol.Controllers
 
         [HttpPost]
         public PartialViewResult GetFilteredOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
-        {            
+        {
             return PartialView("GetFilteredOnLoanStats");
         }
 
@@ -357,13 +357,13 @@ namespace Libol.Controllers
         {
             List<SelectListItem> LocPrefix = new List<SelectListItem>();
             LocPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
-            if(!String.IsNullOrEmpty(id))
+            if (!String.IsNullOrEmpty(id))
             {
                 foreach (var lp in le.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL((int)Session["UserID"], Int32.Parse(id)))
                 {
                     LocPrefix.Add(new SelectListItem { Text = Regex.Replace(lp.ToString(), @"[^0-9a-zA-Z]+", ""), Value = lp.ToString() });
                 }
-            }            
+            }
             return Json(new SelectList(LocPrefix, "Value", "Text"));
         }
 
@@ -372,7 +372,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> LocByPrefix = new List<SelectListItem>();
             LocByPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
-            
+
             foreach (var lbp in le.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL((int)Session["UserID"], id, prefix))
             {
                 LocByPrefix.Add(new SelectListItem { Text = lbp.Symbol, Value = lbp.ID.ToString() });
@@ -748,7 +748,7 @@ namespace Libol.Controllers
                 {
                     loc.Add(new SelectListItem { Text = l.Symbol, Value = l.ID.ToString() });
                 }
-            }            
+            }
             return Json(new SelectList(loc, "Value", "Text"));
         }
         [HttpPost]
@@ -871,6 +871,7 @@ namespace Libol.Controllers
             string listSuccess = "";
             string merror = "";
             string locked = "";
+            string numLoan = "";
             if (myList.Length == 1)
             {
                 string cnumber = myList[0];
@@ -878,13 +879,21 @@ namespace Libol.Controllers
                 {
                     ViewBag.message = "Số thẻ " + myList[0] + " không tồn tại";
                 }
-                if(le.CIR_PATRON_LOCK.Where(a =>a.PatronCode == cnumber).Count() != 0)
+                else if (le.CIR_PATRON_LOCK.Where(a => a.PatronCode == cnumber).Count() != 0)
                 {
                     ViewBag.message = cnumber + " Đã bị khóa";
                 }
                 else
                 {
-                    ViewBag.message = "Khóa thẻ thành công !";
+                    int pID = le.CIR_PATRON.Where(a => a.Code == cnumber).First().ID;
+                    if (le.CIR_LOAN.Where(a => a.PatronID == pID).Count() != 0)
+                    {
+                        ViewBag.message = "Khóa thẻ thành công !" + "\nSố thẻ đang mượn sách là : " + cnumber;
+                    }
+                    else
+                    {
+                        ViewBag.message = "Khóa thẻ thành công !";
+                    }
                     List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(myList[0], lockDays, startDate, note);
                 }
             }
@@ -892,31 +901,37 @@ namespace Libol.Controllers
             {
                 foreach (string cnumber in myList)
                 {
-                    
-                     if (le.CIR_PATRON.Where(a => a.Code == cnumber).Count() == 0)
+
+                    if (le.CIR_PATRON.Where(a => a.Code == cnumber).Count() == 0)
                     {
                         error = error + 1;
-                        merror = merror +" "+ cnumber;
+                        merror = merror + " " + cnumber;
                     }
-                    else if(le.CIR_PATRON_LOCK.Where(a => a.PatronCode == cnumber).Count() != 0)
+                    else if (le.CIR_PATRON_LOCK.Where(a => a.PatronCode == cnumber).Count() != 0)
                     {
                         error = error + 1;
                         locked = locked + " " + cnumber;
                     }
                     else
                     {
+                        int pID = le.CIR_PATRON.Where(a => a.Code == cnumber).First().ID;
+                        if (le.CIR_LOAN.Where(a => a.PatronID == pID).Count() != 0)
+                        {
+                            numLoan = numLoan + " " + cnumber;
+                        }
                         List<SP_LOCK_PATRON_CARD_Result> listResult = cb.GET_SP_LOCK_PATRON_CARD_LIST(cnumber, lockDays, startDate, note);
                         mSuccess = mSuccess + 1;
                         listSuccess = listSuccess + " " + cnumber;
                     }
                 }
-                if(error == 0)
+                if (error == 0)
                 {
-                    ViewBag.message = "Khóa thẻ thành công !!!";
+                        ViewBag.message = "Khóa thẻ thành công !" + "\nSố thẻ đang mượn sách là : " + numLoan;
+
                 }
                 else
                 {
-                    ViewBag.message = "Tổng số thẻ khóa thành công : "+ mSuccess + "\nSố thẻ khóa thành công : "+listSuccess+"\nSố thẻ không thể khóa : "+ error + "\nSố thẻ không tồn tại là : "+ merror +"\nSố thẻ đã bị khóa là : "+locked;
+                    ViewBag.message = "Tổng số thẻ khóa thành công : " + mSuccess + "\nSố thẻ đang mượn sách là : " + numLoan + "\nSố thẻ không thể khóa : " + error + "\nSố thẻ không tồn tại là : " + merror + "\nSố thẻ đã bị khóa là : " + locked;
                 }
             }
 

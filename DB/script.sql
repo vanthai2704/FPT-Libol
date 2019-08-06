@@ -2080,14 +2080,19 @@ where D2.ItemID = @ItemID
 GROUP BY ItemID
 END
 
+
 go
 /******/
 Create PROCEDURE [dbo].[SP_HOLDING_LIBLOCUSER_SEL](@intUserID int,@intLibID int)
 AS
-	SELECT CODE + ':' + SYMBOL AS LOCNAME, B.ID AS ID, REPLACE(CAST(A.ID AS CHAR(3)) + ':' + CAST(B.ID AS CHAR(3)), ' ', '') AS GroupID, A.ID AS LibID, B.Symbol, A.Code
+	SELECT CODE + ':' + SYMBOL AS LOCNAME, B.ID AS ID, REPLACE(CAST(A.ID AS CHAR(3)) + ':' + CAST(B.ID AS CHAR(3)), ' ', '') AS GroupID, 
+	A.ID AS LibID, B.Symbol, A.Code
 	FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_LOCATION C 
 	WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocID AND C.UserID = @intUserID AND B.LibID = @intLibID
 	ORDER BY B.LibID, B.Symbol
+
+
+
 
 go
 /******/
@@ -2191,7 +2196,7 @@ CREATE PROCEDURE [dbo].[FPT_SP_UPDATE_UNLOCK_PATRON_CARD]
 -- ---------   ------  -------------------------------------------       
 	@strPatronCode varchar(500),
 	@lockedDay int,
-	@Note varchar(1000)
+	@Note nvarchar(1000)
 AS
 	UPDATE [CIR_PATRON_LOCK] SET LockedDays = @lockedDay, Note = @Note WHERE PatronCode = @strPatronCode
 
@@ -4234,31 +4239,40 @@ EXEC (@stRSql)
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED]    Script Date: 07/28/2019 10:32:40 ******/
+
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED]    Script Date: 8/6/2019 07:55:08 AM ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
+
 -- Purpose: Select holidng_remove information
--- In: some infor
--- Creator: Vantd
--- CreatedDate: 09/03/2005
--- LastModifiedDate: 02/12/2005 by Sondp
+-- @strDateType: 1 - ngày nhận sách, 2 - ngày xóa sách, 3 - ngày gần nhất mà quyển sách được mượn
 CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED]
 	@intLibID	NVARCHAR(100),
 	@intLocID	NVARCHAR(100),
 	@strShelf	NVARCHAR(10),
 	@strCopyNumber	VARCHAR(33),
 	@strCallNumber	NVARCHAR(32),
+	@strLiquidCode NVARCHAR(100),
 	@strVolume	NVARCHAR(32),
-	@strTitle	NVARCHAR(1000)
+	@strTitle	NVARCHAR(1000),
+	@strPrice	NVARCHAR(1000),
+	@strDateFrom DAtetime,
+	@strDateTo DAtetime, 
+	@strDateType NVARCHAR(1000),
+	@strReason NVARCHAR(100)
 AS
 	DECLARE @strSQL NVARCHAR(4000)
 	DECLARE @strWhere NVARCHAR(4000)
 	DECLARE @strTable	NVARCHAR(1000)
+
+
+
 	SET @strSQL='SELECT HOLDING_REMOVED.*,LEFT(FIELD200S.Content,50) AS Content,
-		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON '
+		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON as Reson_detail '
 
 	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
 
@@ -4281,17 +4295,18 @@ AS
 			SET @strSQL=@strSQL + ',Code AS LibName'
 		END
 	ELSE
-		SET @strSQL=@strSQL + ','' '' AS LibName'
-
+		BEGIN
+			SET @strSQL=@strSQL + ',Code AS LibName '
+			SET @strTable = @strTable + ' , HOLDING_LIBRARY  '
+			SET @strWhere = @strWhere + ' AND HOLDING_LIBRARY.ID = HOLDING_REMOVED.LibID '
+		END
 	IF @intLocID<>0 
 		BEGIN
 			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING_REMOVED.LocationID 
 			AND HOLDING_REMOVED.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
 			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
 				SET @strTable= @strTable + ',HOLDING_LOCATION '			
-
 		END
-
 
 	IF @strShelf<>''
 		BEGIN
@@ -4308,11 +4323,44 @@ AS
 		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
 	IF @strTitle<>''
 		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+	IF @strPrice<>''
+		SET @strWhere= @strWhere + ' And Price = ' + @strPrice + ' '
+	IF @strLiquidCode <>''
+		SET @strWhere = @strWhere + ' And LiquidCode = ''' + @strLiquidCode + ''''
 	SET @strTable = @strTable + ' '
 
 	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+
+	if @strReason<>'-1'
+		SET @strWhere = @strWhere + ' and HOLDING_REMOVED.Reason = ' + @strReason + ' ' 
+
+	if @strDateType=1
+		begin
+			if Convert(nvarchar,@strDateFrom,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.AcquiredDate >=''' + Convert(nvarchar,@strDateFrom,23) +'''' 
+			if Convert(nvarchar,@strDateTo,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.AcquiredDate <=''' + Convert(nvarchar,DATEADD(DAY,1,@strDateTo),23) +''''
+		end
+	else if @strDateType=2
+		begin 
+			if Convert(nvarchar,@strDateFrom,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.RemovedDate >=''' + Convert(nvarchar,@strDateFrom,23) +'''' 
+			if Convert(nvarchar,@strDateTo,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.RemovedDate <''' + Convert(nvarchar,DATEADD(DAY,1,@strDateTo),23) +''''
+		end
+	else if @strDateType = 3
+		begin 
+			if Convert(nvarchar,@strDateFrom,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.DateLastUsed >=''' + Convert(nvarchar,@strDateFrom,23) +'''' 
+			if Convert(nvarchar,@strDateTo,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.DateLastUsed <''' + Convert(nvarchar,DATEADD(DAY,1,@strDateTo),23) +''''
+		end
+
 PRINT @strSQL + @strTable + @strWhere
 	EXECUTE(@strSQL + @strTable + @strWhere)
+GO
+
+
 	
 	
 	GO
@@ -4712,7 +4760,7 @@ AS
 	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
 PRINT @strSQL + @strTable + @strWhere
 	EXECUTE(@strSQL + @strTable + @strWhere)
-	
+go	
 	
 	
 	
@@ -4736,6 +4784,7 @@ BEGIN
 	RETURN
 END
 COMMIT TRAN
+
 
 
 
@@ -4792,7 +4841,7 @@ AS
 	FROM HOLDING_LIBRARY A, HOLDING_LOCATION B 
 	WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.LibID = @intLibID
 	ORDER BY B.LibID, B.Symbol	 
-	  
+go	  
 	  
 	  
 	  
@@ -4826,3 +4875,586 @@ AS
  SET @strSQL= 'SELECT A.*, B.LibCode, B.LocCode FROM ' + @strSQL + '(SELECT H.Symbol AS LocCode, H.ID, L.Code AS LibCode FROM HOLDING_LOCATION H, HOLDING_LIBRARY L WHERE H.LibID=L.ID AND H.ID IN(SELECT LocationID FROM SYS_USER_CIR_LOCATION WHERE UserID=' 
  + CAST(@intUserID AS NVARCHAR(4)) + ')) B WHERE A.LocationID=B.ID ' + @whereCondition + ' ORDER BY PatronCode '       
  EXEC(@strSQL)	  
+ 
+ 
+ go
+ /****** Object:  StoredProcedure [dbo].[FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV]    Script Date: 8/6/2019 07:56:19 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+--SP_GET_GENERAL_LOC_INFOR 20,31,'noname',1
+
+--@intMode
+--	=1: Trong kho
+--	=0: Chua kiem nhan
+-- InUsed:
+-- =1: dang muon
+-- =0: khong muon
+-- InCirculation:
+-- =0: dang khoa
+CREATE   PROCEDURE [dbo].[FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV] 
+	@intLibID	INT,
+	@intLocID	INT,
+	@strShelf	NVARCHAR(10),
+	@intMode	INT
+AS
+	IF @intLibID<>0
+		BEGIN
+			IF @intLocID<>0
+				BEGIN
+					IF @strShelf<>''
+						BEGIN
+							IF @strShelf='noname'
+								BEGIN
+									SELECT 'LIB' AS Type,Code AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING_LIBRARY WHERE ID=@intLibID
+									UNION SELECT 'LOC' AS Type,Symbol AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING_LOCATION WHERE ID=@intLocID AND LibID=@intLibID
+									UNION SELECT 'SUMCOPY' AS Type, RTRIM(CAST(COUNT(*) AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID  AND Acquired = @intMode
+									UNION SELECT 'SUMITEM' AS Type, RTRIM(CAST(COUNT(DISTINCT ItemID)AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID  AND Acquired = @intMode
+									UNION SELECT 'CountLocked' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INCIRCULATION = 0 AND Acquired = @intMode
+									UNION SELECT 'CountCir' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INUSED = 1
+									UNION SELECT TOP 1 'INVENTORY' AS Type, Name AS VALUE, OpenedDate ,ClosedDate FROM INVENTORY,HOLDING_INVENTORY WHERE INVENTORY.ID=HOLDING_INVENTORY.InventoryID AND  LocationID=@intLocID AND LibID=@intLibID  ORDER BY OpenedDate  DESC
+								END
+							ELSE
+								BEGIN
+									SELECT 'LIB' AS Type,Code AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING_LIBRARY WHERE ID=@intLibID
+									UNION SELECT 'LOC' AS Type,Symbol AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING_LOCATION WHERE ID=@intLocID AND LibID=@intLibID
+									UNION SELECT 'SUMCOPY' AS Type, RTRIM(CAST(COUNT(*) AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND Shelf=@strShelf AND Acquired = @intMode
+									UNION SELECT 'SUMITEM' AS Type, RTRIM(CAST(COUNT(DISTINCT ItemID)AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND Shelf=@strShelf AND Acquired = @intMode
+									UNION SELECT 'CountLocked' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INCIRCULATION = 0 AND Acquired = @intMode
+									UNION SELECT 'CountCir' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INUSED = 1 AND Acquired = @intMode
+									UNION SELECT TOP 1 'INVENTORY' AS Type, Name AS VALUE, OpenedDate ,ClosedDate FROM INVENTORY,HOLDING_INVENTORY WHERE INVENTORY.ID=HOLDING_INVENTORY.InventoryID AND  LocationID=@intLocID AND LibID=@intLibID AND Shelf=@strShelf ORDER BY OpenedDate DESC								
+								END
+						END
+					ELSE
+						BEGIN
+							SELECT 'LIB' AS Type,Code AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING_LIBRARY WHERE ID=@intLibID
+							UNION SELECT 'LOC' AS Type,Symbol AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING_LOCATION WHERE ID=@intLocID AND LibID=@intLibID
+							UNION SELECT 'SUMCOPY' AS Type, RTRIM(CAST(COUNT(*) AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND InCirculation = @intMode AND Acquired = @intMode
+							UNION SELECT 'SUMITEM' AS Type, RTRIM(CAST(COUNT(DISTINCT ItemID)AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND Acquired = @intMode
+							UNION SELECT 'CountLocked' AS Type,RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INCIRCULATION = 0 AND Acquired = @intMode
+							UNION SELECT 'CountCir' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INUSED = 1 AND Acquired = @intMode	
+							UNION SELECT TOP 1 'INVENTORY' AS Type, Name AS VALUE, OpenedDate ,ClosedDate FROM INVENTORY,HOLDING_INVENTORY WHERE INVENTORY.ID=HOLDING_INVENTORY.InventoryID AND  LocationID=@intLocID AND LibID=@intLibID ORDER BY OpenedDate  DESC
+						END								
+				END
+			ELSE
+				BEGIN
+					SELECT 'LIB' AS Type,Code AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING_LIBRARY WHERE ID=@intLibID
+					UNION SELECT 'SUMCOPY' AS Type, RTRIM(CAST(COUNT(*) AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING WHERE LibID=@intLibID AND Acquired = @intMode
+					UNION SELECT 'SUMITEM' AS Type, RTRIM(CAST(COUNT(DISTINCT ItemID)AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING WHERE LibID=@intLibID AND Acquired = @intMode
+					UNION SELECT 'CountLocked' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LibID=@intLibID AND INCIRCULATION = 0 AND Acquired = @intMode
+					UNION SELECT 'CountCir' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LibID=@intLibID AND INUSED = 1	AND Acquired = @intMode		
+					UNION SELECT TOP 1 'INVENTORY' AS Type, Name AS VALUE, OpenedDate ,ClosedDate FROM INVENTORY,HOLDING_INVENTORY WHERE INVENTORY.ID=HOLDING_INVENTORY.InventoryID AND LibID=@intLibID ORDER BY OpenedDate  DESC
+				END
+		END
+
+set ANSI_NULLS ON
+set QUOTED_IDENTIFIER ON
+
+GO
+
+
+
+go
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_IDs_v1]    Script Date: 8/6/2019 07:56:01 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- intMode = 0: trong kho
+-- intMode = 1: dang cho muon
+-- intMode = 2: dang khoa
+-- intMode = 3: chua kiem nhan
+CREATE PROC [dbo].[FPT_SP_GET_HOLDING_IDs_v1]
+	@intLibID	NVARCHAR(500),
+	@intLocID	NVARCHAR(500),
+	@strShelf	NVARCHAR(10),
+	@intMode	NVARCHAR(500),
+	@intCountOnly 	NVARCHAR(500),
+	@numberIndex NVARCHAR(500),
+	@numberRecordPerPage NVARCHAR(500)
+AS
+	DECLARE @strSQL VARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)	
+	DECLARE @strTable	VARCHAR(1000)	
+	DECLARE @strfinal NVARCHAR(4000)
+	DECLARE @numberIndexs int
+	DECLARE @numberRecordPerPages int
+	
+	IF @intCountOnly=1 
+	BEGIN
+		SET @strSQL='SELECT Count(*) AS Total'
+		SET @strTable=' FROM HOLDING,FIELD200S'
+		SET @strWhere=' WHERE FIELD200S.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING.ItemID'
+		IF @intLibID>0 
+			SET @strWhere=@strWhere + ' AND Holding.LibID=' + @intLibID 
+		IF @intLocID>0 
+			SET @strWhere=@strWhere + ' AND Holding.LocationID=' + @intLocID				
+		
+	END
+	ELSE 
+		BEGIN
+			SET @strSQL='SELECT DISTINCT Acquired,ROW_NUMBER() OVER (ORDER BY HOLDING.CopyNumber) AS Seq,
+			HOLDING.ID,HOLDING.LibID,HOLDING.LocationID,
+			Content,ISNULL(Volume,'''') AS Volume,AcquiredDate,
+			CopyNumber,ISNULL(CallNumber,'''') AS CallNumber,
+			ISNULL(Shelf,'''') AS Shelf,InUsed,
+			InCirculation,ISNULL(Note,'''') AS Note,DateLastUsed,Price,UseCount'
+			SET @strTable=' FROM HOLDING,FIELD200S'
+			SET @strWhere=' WHERE FIELD200S.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING.ItemID'
+
+			SET @strTable= @strTable + ',HOLDING_LOCATION '	
+			SET @strTable= @strTable + ',HOLDING_LIBRARY '
+			SET @strSQL=@strSQL + ', Code AS LibName '
+			SET @strSQL=@strSQL + ',Symbol AS LocName '
+
+			if @intLocID <>'' -- co locid, search theo ca libid va locid
+				begin
+					BEGIN
+						SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING.LibID 
+						AND HOLDING.LibID=' + @intLibID 
+						SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING.LocationID 
+						AND HOLDING.LocationID=' + @intLocID
+					END
+				end
+			else		-- khong co locid, chi search theo libid
+				begin        
+						SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING.LibID 
+						AND HOLDING.LibID=' + @intLibID 
+						SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING.LocationID '
+				end		
+		END
+
+	IF @strShelf='noname' SET @strWhere=@strWhere + ' AND(Holding.Shelf='''' OR Holding.Shelf IS NULL)'
+	ELSE IF @strShelf<>'' SET @strWhere=@strWhere + ' AND Holding.Shelf LIKE ''' + @strShelf + ''''
+	IF @intMode=0
+		SET @strWhere= @strWhere + ' AND Acquired=1' --Trong kho
+	IF @intMode=1
+		SET @strWhere= @strWhere + ' AND InUsed=1' --dang cho muon
+	IF @intMode=2
+		SET @strWhere= @strWhere + ' AND InCirculation=0' -- Dang khoa
+	IF @intMode=3		
+		SET @strWhere= @strWhere + ' AND Acquired=0' -- chua kiem nhan	
+	-- debug
+	IF @numberIndex <> '' AND @numberRecordPerPage <> ''
+	BEGIN
+		SET @numberIndexs = CAST(@numberIndex as int)
+		SET @numberRecordPerPages = CAST(@numberRecordPerPage as int)
+		SET @strfinal = 'select a.* from ('+ @strSQL + @strTable + @strWhere + ' ) a 
+				where a.Seq between ' + CAST(@numberRecordPerPages*(@numberIndexs-1)+1 as char)
+					+  ' and ' + CAST(@numberRecordPerPages*(@numberIndexs) as char)
+	END
+	ELSE 
+		SET @strfinal = @strSQL + @strTable + @strWhere
+	PRINT @strfinal
+	EXECUTE(@strfinal)	
+
+GO
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_IDs_v1_searching]    Script Date: 8/6/2019 07:56:10 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- intMode = 0: trong kho
+-- intMode = 1: dang cho muon
+-- intMode = 2: dang khoa
+-- intMode = 3: chua kiem nhan
+CREATE PROC [dbo].[FPT_SP_GET_HOLDING_IDs_v1_searching]
+	@intLibID	NVARCHAR(500),
+	@intLocID	NVARCHAR(500),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000),
+	@intMode	NVARCHAR(500),
+	@intCountOnly 	NVARCHAR(500),
+	@numberIndex NVARCHAR(500),
+	@numberRecordPerPage NVARCHAR(500)
+AS
+	DECLARE @strSQL VARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)	
+	DECLARE @strTable	VARCHAR(1000)	
+	DECLARE @strfinal NVARCHAR(4000)
+	DECLARE @numberIndexs int
+	DECLARE @numberRecordPerPages int
+	
+	IF @intCountOnly=1 
+	BEGIN
+		SET @strSQL='SELECT Count(*) AS Total'
+		SET @strTable=' FROM HOLDING,FIELD200S'
+		SET @strWhere=' WHERE FIELD200S.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING.ItemID'
+		IF @intLibID>0 
+			SET @strWhere=@strWhere + ' AND Holding.LibID=' + @intLibID 
+		IF @intLocID>0 
+			SET @strWhere=@strWhere + ' AND Holding.LocationID=' + @intLocID				
+		
+	END
+	ELSE 
+		BEGIN
+			SET @strSQL='SELECT DISTINCT Acquired,ROW_NUMBER() OVER (ORDER BY HOLDING.CopyNumber) AS Seq,
+			HOLDING.ID,HOLDING.LibID,HOLDING.LocationID,
+			Content,ISNULL(Volume,'''') AS Volume,AcquiredDate,
+			CopyNumber,ISNULL(CallNumber,'''') AS CallNumber,
+			ISNULL(Shelf,'''') AS Shelf,InUsed,
+			InCirculation,ISNULL(Note,'''') AS Note,DateLastUsed,Price,UseCount'
+			SET @strTable=' FROM HOLDING,FIELD200S'
+			SET @strWhere=' WHERE FIELD200S.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING.ItemID'
+
+			SET @strTable= @strTable + ',HOLDING_LOCATION '	
+			SET @strTable= @strTable + ',HOLDING_LIBRARY '
+			SET @strSQL=@strSQL + ', Code AS LibName '
+			SET @strSQL=@strSQL + ',Symbol AS LocName '
+
+			if @intLocID <>'' -- co locid, search theo ca libid va locid
+				begin
+					BEGIN
+						SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING.LibID 
+						AND HOLDING.LibID=' + @intLibID 
+						SET @strWhere= @strWhere + ' HOLDING.LocationID=' + @intLocID
+					END
+				end
+			else if @intLibID <> ''		-- khong co locid, chi search theo libid
+				begin        
+						SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING.LibID 
+						AND HOLDING.LibID=' + @intLibID 
+				end	
+			else
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING.LocationID AND HOLDING_LIBRARY.ID=HOLDING.LibID '
+					
+		END
+
+	IF @strShelf='noname' SET @strWhere=@strWhere + ' AND(Holding.Shelf='''' OR Holding.Shelf IS NULL)'
+	ELSE IF @strShelf<>'' SET @strWhere=@strWhere + ' AND Holding.Shelf LIKE ''' + @strShelf + ''''
+	IF @intMode=0
+		SET @strWhere= @strWhere + ' AND Acquired=1' --Trong kho
+	IF @intMode=1
+		SET @strWhere= @strWhere + ' AND InUsed=1' --dang cho muon
+	IF @intMode=2
+		SET @strWhere= @strWhere + ' AND InCirculation=0' -- Dang khoa
+	IF @intMode=3		
+		SET @strWhere= @strWhere + ' AND Acquired=0' -- chua kiem nhan	
+	-- debug
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND HOLDING.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'') '
+	END
+	IF @numberIndex <> '' AND @numberRecordPerPage <> ''
+	BEGIN
+		SET @numberIndexs = CAST(@numberIndex as int)
+		SET @numberRecordPerPages = CAST(@numberRecordPerPage as int)
+		SET @strfinal = 'select a.* from ('+ @strSQL + @strTable + @strWhere + ' ) a 
+				where a.Seq between ' + CAST(@numberRecordPerPages*(@numberIndexs-1)+1 as char)
+					+  ' and ' + CAST(@numberRecordPerPages*(@numberIndexs) as char)
+	END
+	ELSE 
+		SET @strfinal = @strSQL + @strTable + @strWhere
+	PRINT @strfinal
+	EXECUTE(@strfinal)	
+
+GO
+
+
+
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_IDs_v1_searching_with_id]    Script Date: 8/6/2019 07:55:23 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- intMode = 0: trong kho
+-- intMode = 1: dang cho muon
+-- intMode = 2: dang khoa
+-- intMode = 3: chua kiem nhan
+CREATE PROC [dbo].[FPT_SP_GET_HOLDING_IDs_v1_searching_with_id]
+	@strItemID	NVARCHAR(500),
+	@intMode	NVARCHAR(500),
+	@intCountOnly 	NVARCHAR(500),
+	@numberIndex NVARCHAR(500),
+	@numberRecordPerPage NVARCHAR(500)
+AS
+	DECLARE @strSQL VARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)	
+	DECLARE @strTable	VARCHAR(1000)	
+	DECLARE @strfinal NVARCHAR(4000)
+	DECLARE @numberIndexs int
+	DECLARE @numberRecordPerPages int
+	
+	IF @intCountOnly=1 
+	BEGIN
+		SET @strSQL='SELECT Count(*) AS Total'
+		SET @strTable=' FROM HOLDING,FIELD200S'
+		SET @strWhere=' WHERE FIELD200S.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING.ItemID'
+		
+	END
+	ELSE 
+		BEGIN
+			SET @strSQL='SELECT DISTINCT Acquired,ROW_NUMBER() OVER (ORDER BY HOLDING.CopyNumber) AS Seq,
+			HOLDING.ID,HOLDING.LibID,HOLDING.LocationID,
+			Content,ISNULL(Volume,'''') AS Volume,AcquiredDate,
+			CopyNumber,ISNULL(CallNumber,'''') AS CallNumber,
+			ISNULL(Shelf,'''') AS Shelf,InUsed,
+			InCirculation,ISNULL(Note,'''') AS Note,DateLastUsed,Price,UseCount,HOLDING.ItemID, HOLDING.LoanTypeID,
+			HOLDING.POID, HOLDING.AcquiredSourceID
+			'
+			SET @strTable=' FROM HOLDING,FIELD200S'
+			SET @strWhere=' WHERE FIELD200S.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING.ItemID'
+
+			SET @strTable= @strTable + ',HOLDING_LOCATION '	
+			SET @strTable= @strTable + ',HOLDING_LIBRARY '
+			SET @strSQL=@strSQL + ', Code AS LibName '
+			SET @strSQL=@strSQL + ',Symbol AS LocName '
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING.LibID '
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING.LocationID '
+			SET @strWhere= @strWhere + ' AND HOLDING.ID=  ' + @strItemID
+		END
+
+
+	IF @intMode=0
+		SET @strWhere= @strWhere + ' AND Acquired=1' --Trong kho
+	IF @intMode=1
+		SET @strWhere= @strWhere + ' AND InUsed=1' --dang cho muon
+	IF @intMode=2
+		SET @strWhere= @strWhere + ' AND InCirculation=0' -- Dang khoa
+	IF @intMode=3		
+		SET @strWhere= @strWhere + ' AND Acquired=0' -- chua kiem nhan	
+	-- debug
+	IF @numberIndex <> '' AND @numberRecordPerPage <> ''
+	BEGIN
+		SET @numberIndexs = CAST(@numberIndex as int)
+		SET @numberRecordPerPages = CAST(@numberRecordPerPage as int)
+		SET @strfinal = 'select a.* from ('+ @strSQL + @strTable + @strWhere + ' ) a 
+				where a.Seq between ' + CAST(@numberRecordPerPages*(@numberIndexs-1)+1 as char)
+					+  ' and ' + CAST(@numberRecordPerPages*(@numberIndexs) as char)
+	END
+	ELSE 
+		SET @strfinal = @strSQL + @strTable + @strWhere
+	PRINT @strfinal
+	EXECUTE(@strfinal)	
+
+GO
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS]    Script Date: 8/6/2019 07:54:39 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS]
+	@strLibID	NVARCHAR(100),
+	@strLocID	NVARCHAR(100)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+
+	SET @strSQL = ' SELECT top 1 h.CopyNumber, hloc.Symbol '
+
+	SET @strTable = ' FROM HOLDING h, HOLDING_LOCATION hloc, HOLDING_LIBRARY hlib '
+
+	SET @strWhere = ' where h.LibID = hlib.ID and hloc.LibID = hlib.ID 
+	and h.LocationID = hloc.ID and hloc.ID =  ' + @strLocID 
+	+ ' and hlib.ID = ' + @strLibID + ' and h.Acquired=1 '
+	PRINT @strSQL + @strTable + @strWhere + ' order by h.CopyNumber DESC'
+	EXECUTE(@strSQL + @strTable + @strWhere + ' order by h.CopyNumber DESC ')
+GO
+
+
+
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[FPT_SP_HOLDING_DEL]    Script Date: 8/6/2019 07:56:57 AM ******/
+SET ANSI_NULLS OFF
+GO
+
+SET QUOTED_IDENTIFIER OFF
+GO
+
+
+
+CREATE PROCEDURE [dbo].[FPT_SP_HOLDING_DEL]
+	@strID 	NVARCHAR(1000)
+AS
+	DECLARE @strSql	NVARCHAR(4000)
+		
+	SET @strSql='DELETE FROM Holding WHERE ID = ' + @strID
+print(@strSql)
+
+EXECUTE(@strSql)
+GO
+
+
+
+
+
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[FPT_SP_HOLDING_REMOVED_INS]    Script Date: 8/6/2019 07:56:39 AM ******/
+SET ANSI_NULLS OFF
+GO
+
+SET QUOTED_IDENTIFIER OFF
+GO
+
+
+-- Creator Kiemdv
+-- Last Update 17/2/04 by Vantd
+CREATE PROCEDURE [dbo].[FPT_SP_HOLDING_REMOVED_INS]  
+	@intItemID 		INT, 
+	@intlibID 		INT, 
+	@intLocationID 		INT, 
+	@strCopyNumber 	VARCHAR(100), 
+	@strAcquiredDate	datetime,
+	@strRemovedDate	datetime,
+	@intReasonID		INT, 
+	@dblPrice		FLOAT,
+	@strShelf		NVARCHAR(10) ,
+	@strVolume		NVARCHAR(32), 
+	@intLoanTypeID	INT,
+	@intUseCount		INT,
+	@intPoID		INT,
+	@strDateLastUsed	datetime,
+	@strCallNumber		VARCHAR(32),
+	@intAcquiredSourceID 	INT,
+	@strLiquidCode VARCHAR(2000)
+AS
+	DECLARE @strSql	NVARCHAR(4000)
+	DECLARE @strFieldName VARCHAR(200)
+	DECLARE @strFieldValue VARCHAR(200)
+
+
+	BEGIN TRAN
+	INSERT INTO HOLDING_REMOVED 
+		(CopyNumber,ItemID, LibID, LocationID,LoanTypeID,Shelf,Price,Reason,AcquiredDate,RemovedDate,Volume,
+		UseCount,PoID,DateLastUsed,CallNumber,AcquiredSourceID,LiquidCode)
+	VALUES 
+		(@strCopyNumber,@intItemID, @intlibID,@intLocationID,@intLoanTypeID,@strShelf,@dblPrice,@intReasonID,@strAcquiredDate,
+		@strRemovedDate,@strVolume,@intUseCount,@intPoID,@strDateLastUsed,@strCallNumber,@intAcquiredSourceID,@strLiquidCode)
+
+	UPDATE HOLDING_LOCATION SET MaxNumber = MaxNumber - 1 WHERE ID = @intLocationID
+	IF @@ERROR > 0
+		ROLLBACK TRAN
+	ELSE
+		COMMIT TRAN
+GO
+
+
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[FPT_SP_HOLDING_UPDATE]    Script Date: 8/6/2019 07:55:42 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+-- intMode = 0: trong kho
+-- intMode = 1: dang cho muon
+-- intMode = 2: dang khoa
+-- intMode = 3: chua kiem nhan
+
+
+
+CREATE PROCEDURE [dbo].[FPT_SP_HOLDING_UPDATE]
+	@strID NVARCHAR(1000),
+	@locid NVARCHAR(1000),
+	@libid NVARCHAR(1000),
+	@strCopyNumber NVARCHAR(1000),
+	@intMode NVARCHAR(1000)
+AS
+	if @locid <> '' and @libid <> ''
+		begin
+			IF @intMode = '1' -- kiem nhan 
+				EXECUTE('UPDATE HOLDING SET Acquired = 1, LocationID = ' + @locid + ' , LibID = ' + @libid +' , CopyNumber = ''' + @strCopyNumber +'''  WHERE ID =' +@strID)
+			else if @intMode = '2' -- mo khoa sach
+				EXECUTE('UPDATE HOLDING SET InCirculation = 1, LocationID = ' + @locid + ' , LibID = ' + @libid +' , CopyNumber = ''' + @strCopyNumber +'''   WHERE ID =' +@strID)
+			else if @intMode = '3' -- khoa sach
+				EXECUTE('UPDATE HOLDING SET InCirculation = 0, LocationID = ' + @locid + ' , LibID = ' + @libid +' , CopyNumber = ''' + @strCopyNumber +'''   WHERE ID =' +@strID)
+			else if @intMode = '4' -- cho muon
+				EXECUTE('UPDATE HOLDING SET InUsed = 1, LocationID = ' + @locid + ' , LibID = ' + @libid +' , CopyNumber = ''' + @strCopyNumber +'''   WHERE ID =' +@strID)
+			else if @intMode = '5' -- thu hoi sach da cho muon
+				EXECUTE('UPDATE HOLDING SET InUsed = 0, LocationID = ' + @locid + ' , LibID = ' + @libid +' , CopyNumber = ''' + @strCopyNumber +'''   WHERE ID =' +@strID)
+		end
+	else
+		begin
+			IF @intMode = '1' -- kiem nhan 
+				EXECUTE('UPDATE HOLDING SET Acquired = 1 '+' , CopyNumber = ''' + @strCopyNumber +''' WHERE ID =' +@strID)
+			else if @intMode = '2' -- mo khoa sach
+				EXECUTE('UPDATE HOLDING SET InCirculation = 1 '+' , CopyNumber = ''' + @strCopyNumber +''' WHERE ID =' +@strID)
+			else if @intMode = '3' -- khoa sach
+				EXECUTE('UPDATE HOLDING SET InCirculation = 0 '+' , CopyNumber = ''' + @strCopyNumber +''' WHERE ID =' +@strID)
+			else if @intMode = '4' -- cho muon
+				EXECUTE('UPDATE HOLDING SET InUsed = 1 '+' , CopyNumber = ''' + @strCopyNumber +''' WHERE ID =' +@strID)
+			else if @intMode = '5' -- thu hoi sach da cho muon
+				EXECUTE('UPDATE HOLDING SET InUsed = 0 '+' , CopyNumber = ''' + @strCopyNumber +''' WHERE ID =' +@strID)
+		end
+GO
+
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[FPT_SP_HOLDING_LIB_SEL]    Script Date: 8/6/2019 07:52:24 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[FPT_SP_HOLDING_LIB_SEL]
+	
+AS	
+	SELECT Code + ': ' + Name as LibName, Code, ID 
+	FROM HOLDING_LIBRARY 
+	WHERE LocalLib = 1 
+	ORDER BY Code
+
+
+GO
+
+
+
+
+

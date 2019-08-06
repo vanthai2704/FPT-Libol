@@ -18,6 +18,7 @@ namespace Libol.Controllers
         private static string CodeVal = "";
         private static string CodetogetLock = "";
         FormatHoldingTitle f = new FormatHoldingTitle();
+        CirculationBusiness circulationBusiness = new CirculationBusiness();
 
         [AuthAttribute(ModuleID = 3, RightID = "149")]
         public ActionResult Renew()
@@ -156,6 +157,16 @@ namespace Libol.Controllers
             return Json(ViewBag.message);
         }
 
+        // Edit LockCard()
+        [HttpPost]
+        public JsonResult UpdatedLockCardPatron(string patronCode, int lockDays, string note)
+        {
+            string lnote = note.Trim();
+            List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> listResult = circulationBusiness.FPT_SP_UPDATE_UNLOCK_PATRON_CARD(patronCode, lockDays, lnote);
+            ViewData["listResult"] = listResult;
+            return Json(listResult, JsonRequestBehavior.AllowGet);
+        }
+
         private void getcontentrenew(int intUserID, Byte intType, string strCodeVal)
         {
             List<SP_CIR_GET_RENEW_Result> results = renewBusiness.FPT_SP_CIR_GET_RENEW(intUserID, intType, strCodeVal);
@@ -195,6 +206,7 @@ namespace Libol.Controllers
                 ViewBag.strCode = code;
                 ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().Note;
                 ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().StartedDate;
+                ViewBag.lockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().LockedDays;
                 ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().LockedDays);
             }
         }
