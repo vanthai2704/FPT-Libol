@@ -27,13 +27,13 @@
     }
 </style>
 <h4 style="margin:1rem">Biên Mục Chi Tiết</h4>
-<nav class="col-sm-3">
+@*<nav class="col-sm-3">
     <div class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
         <button type="button" class="btn btn-warning btn-circle btn-xl">
             +
         </button>
     </div>
-</nav>
+</nav>*@
 <form action="~/Catalogue/AddNewCatalogue" method="post">
     
 
@@ -172,7 +172,6 @@
 
 <script>
 
-
     function SearchFields() {
         $('#table').empty();
         $('#centralModalSm').modal({ backdrop: 'static', keyboard: false });
@@ -205,7 +204,7 @@
 
 
 
-                    var result = confirm("Bạn có chắc chắn muốn thêm trường " + $FieldCode + "?");
+                    var result = confirm("Bạn có chắc muốn thêm trường " + $FieldCode + "?");
                     if (result) {
                         if (!tempArrTempFieldName.includes($FieldCode)) {
                             $('#lbAdd').show(0);
@@ -280,6 +279,7 @@
                     }
                 }
                 //debugger;
+                //xóa các kí tự nối ngoại trừ trường hợp nhan đề song song và phụ đề ('=')
                 for (var i = 0; i < arrIndex.length; i++) {
                     var deleted = 0;
                     if (strValue[arrIndex[i] - 1 - deleted] === '/' || strValue[arrIndex[i] - 1 - deleted] === '.' || strValue[arrIndex[i] - 1 - deleted] === ',') {
@@ -354,13 +354,13 @@
                     arrFieldNameFinal.push(arrFieldName[index] + '$' + valTemp.substring(0, 1));
                     arrFieldValueFinal.push(valTemp.substring(1));
                 });
-            }
+            }   
             else {
                 arrFieldNameFinal.push(arrFieldName[index]);
                 arrFieldValueFinal.push(arrFieldValue[index]);
             }
         });
-        debugger
+        //debugger
 
         //***********************************DONE CHUẨN HÓA CHUỖI TRƯỚC KHI UPDATE **************************************************
         //UPDATE Item

@@ -56,7 +56,7 @@
             @{
                 foreach (CAT_DIC_RECORDTYPE recordType in ListRecordType)
                 {
-            <option value="@recordType.Code">@recordType.Code : @recordType.Description</option>
+                    <option value="@recordType.Code">@recordType.Code : @recordType.Description</option>
                 }
             }
         </select>
@@ -102,14 +102,10 @@
             <div style="margin : auto">
                 <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới" onclick="doWork();" />
                 <button disabled type="button" id="btnReset" class="btn btn-primary form-control" onclick="reset();">Đặt Lại</button>
-                @*<button disabled type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#myModal">Thêm Trường</button>*@
             </div>
         </div>
     </div>
 </form>
-
-
-
 
 
 <!--The Modal Insert Thành Công-->
@@ -140,14 +136,14 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Các Bản Ghi Có Nhan Đề Tương Tự</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Bản Ghi Có Nhan Đề Tương Tự</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form id="checkModalBody">
                 @*<div class='form-group row col-12'><label class='col-md-9'>Content here !!!</label><label class='col-md-3'><br /><button type='button' class='btn btn-primary form-control'>Sử Dụng Biểu Ghi</button><br /><br /><button type='button' class='btn btn-primary form-control'>Dùng Thông Tin</button></label></div>*@<hr>
-               
+
             </form>
         </div>
     </div>
@@ -155,14 +151,20 @@
 
 
 <script>
-    
+
     //get form 2019 to default
     $(document).ready(function () {
         $('#listMarcFormID option[value=14]').attr('selected', true);
+        $('#levelDir option[value=a]').attr('selected', true);
+        $('#recordTypeCode option[value=a]').attr('selected', true);
+        $('#itemTypeId option[value=1]').attr('selected', true);
+        $('#mediumId option[value=3]').attr('selected', true);
         SelectedForm();
+
     });
     var Data = [];
     function SelectedForm() {
+        
         Data = ["001"];
         var empObj = {
             intIsAuthority: 0,
@@ -186,7 +188,7 @@
                         html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Nhan Đề Song Song [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "1></input>     </div> " +
                             "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > Phụ Đề [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "2></input>     </div>";
                     }
-                    else if (!(item.FieldCode == '900' || item.FieldCode == '911' || item.FieldCode == '925' || item.FieldCode == '926' || item.FieldCode == '927' || item.FieldCode == '852$a')) {
+                    else if (!(item.FieldCode == '900' || item.FieldCode == '911' || item.FieldCode == '925' || item.FieldCode == '926' || item.FieldCode == '927' || item.FieldCode.startsWith('852') )) {
                         html += "<div class='form-group row col-12' id ='dv" + field + "'><label class='control-label col-md-5 align-self-center font-weight-bold'  id ='lb" + field + "' > " + item.VietFieldName + " [" + item.FieldCode + "]" + "</label><input type='text' class='form-control col-md-4' id=" + field + "></input> </div>";
                     }
                 });
@@ -195,7 +197,6 @@
                 document.getElementById("lb245a").style.color = "red";
                 document.getElementById("btnCreate").disabled = false;
                 document.getElementById("btnReset").disabled = false;
-                //document.getElementById("btnAddField").disabled = false;
                 $(document).ready(function () {
                     //check tittle
                     $("#245a").focusout(function () {
@@ -211,7 +212,7 @@
                 });
             },
             error: function (errorThrown) {
-                alert(errorThrown);
+                alert('LoadFormComplated Funtion Fail !!!' );
             }
 
         });
@@ -225,10 +226,10 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (listTitle) {
-                debugger;
+                //debugger;
                 if (listTitle.length > 0) {
 
-                    debugger;
+                    //debugger;
                     var distinct = $.grep(listTitle, function (v) {
                         return v.FieldCode === "001";
                     });
@@ -239,26 +240,29 @@
                     });
 
                     var html = '';
+
+                    $('#checkTTModal').modal({ backdrop: 'static', keyboard: false })
+                    $('#checkTTModal').modal('toggle');
                     $.each(arrId, function (i, item) {
-                        var strContent = i +1 + " : ";
+                        var strContent = i + 1 + " : ";
                         //get  Field 100
                         var field = $.grep(listTitle, function (v) {
                             return v.FieldCode === "100" && v.ItemID === item
                         });
                         if (field.length > 0)
-                        strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
+                            strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
                         //get Field 110
                         var field = $.grep(listTitle, function (v) {
                             return v.FieldCode === "110" && v.ItemID === item
                         });
                         if (field.length > 0)
-                        strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
+                            strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
                         //get Field 111
                         var field = $.grep(listTitle, function (v) {
                             return v.FieldCode === "111" && v.ItemID === item
                         });
                         if (field.length > 0)
-                        strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
+                            strContent = strContent + '<B>' + field[0].Content + '</B> </br>';
                         //get Field 245
                         var field = $.grep(listTitle, function (v) {
                             return v.FieldCode === "245" && v.ItemID === item
@@ -288,7 +292,7 @@
                             return v.FieldCode === "490" && v.ItemID === item
                         });
                         if (field.length > 0)
-                            strContent = strContent  + field[0].Content + '  </br>';
+                            strContent = strContent + field[0].Content + '  </br>';
                         //get Field 520
                         var field = $.grep(listTitle, function (v) {
                             return v.FieldCode === "520" && v.ItemID === item
@@ -312,29 +316,29 @@
                             return v.FieldCode === "022" && v.ItemID === item
                         });
                         if (field.length > 0)
-                            strContent = strContent +  field[0].Content + '  </br>';
+                            strContent = strContent + field[0].Content + '  </br>';
                         //get Field 6%
                         var field = $.grep(listTitle, function (v) {
-                            debugger;
-                            return (parseInt(v.FieldCode) >= 600 && parseInt(v.FieldCode) < 700 ) &&  v.ItemID === item
+                            //debugger;
+                            return (parseInt(v.FieldCode) >= 600 && parseInt(v.FieldCode) < 700) && v.ItemID === item
                         });
                         if (field.length > 0)
                             $.each(field, function (i, item) {
-                                strContent = strContent + parseInt(i+1)  + ' : ' + item.Content + '  </br>';
+                                strContent = strContent + parseInt(i + 1) + ' : ' + item.Content + '  </br>';
                             });
-                            
+
                         //get Field 700
                         var field = $.grep(listTitle, function (v) {
                             return v.FieldCode === "700" && v.ItemID === item
                         });
                         if (field.length > 0)
-                            strContent = strContent  + field[0].Content + '  </br>';
+                            strContent = strContent + field[0].Content + '  </br>';
                         //get Field 710
                         var field = $.grep(listTitle, function (v) {
                             return v.FieldCode === "710" && v.ItemID === item
                         });
                         if (field.length > 0)
-                            strContent = strContent  + field[0].Content + '  </br>';
+                            strContent = strContent + field[0].Content + '  </br>';
                         //get Field 082
                         var field = $.grep(listTitle, function (v) {
                             return v.FieldCode === "082" && v.ItemID === item
@@ -349,30 +353,162 @@
                             strContent = strContent + 'Call no. : <B>' + field[0].Content + '</B> </br>';
 
 
-                        html += "<div class='form-group row col-12'><label class='col-md-9 text-left'>" + strContent + "</label><label class='col-md-3'><br /><a type='button' class='btn btn-primary form-control' href='/Shelf/Index?Code=" + distinct[i].Content + "'>Sử Dụng Biểu Ghi</a><br /><br /><button type='button' class='btn btn-primary form-control'>Dùng Thông Tin</button></label></div><hr>"
+                        html += "<div class='form-group row col-12'><label class='col-md-9 text-left'>" + strContent + "</label><label class='col-md-3'><br /><a type='button' class='btn btn-primary form-control' href='/Shelf/Index?Code=" + distinct[i].Content + "'>Sử Dụng Biểu Ghi</a><br /><br /><button type='button' class='btn btn-primary form-control' id='reUse" + item + "' >Dùng Thông Tin</button></label></div><hr>"
+                        $('#checkModalBody').html(html);
                     });
-                    $('#checkModalBody').html(html);
 
-                    $('#checkTTModal').modal({ backdrop: 'static', keyboard: false })
-                    $('#checkTTModal').modal('toggle');
-                  
-
-
+                    //add event Click to reUse Item
+                    $.each(arrId, function (i, item) {
+                        document.getElementById("reUse" + item).onclick = function () { reUse(item) };
+                    });
                 }
                 else {
-                 
+
                 }
             },
             error: function (errorThrown) {
-                alert(errorThrown);
+                alert('CheCK Title Funtion Fail !!!');
             }
 
         });
     }
 
-    function reUseBM(code) {
-        debugger;
-        alert("dddddd");
+
+    //Reuse Item by ItemID
+    function reUse(code) {
+        $.ajax({
+            url: "/Catalogue/GetItemInf",
+            type: "POST",
+            data: JSON.stringify({ itemID: code }),
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (FormID) {
+                $('#checkTTModal').modal('hide');
+                $("#listMarcFormID option[value=" + FormID + "]").attr('selected', true);
+                SelectedForm();
+                loadContentReuse(code);
+
+            },
+            error: function (errorThrown) {
+                alert('GetItemInf Funtion Fail !!!');
+            }
+        });
+
+    }
+
+    function loadContentReuse(code) {
+        $.ajax({
+            url: "/Catalogue/ReUseGetContentByID",
+            type: "POST",
+            data: JSON.stringify({ itemID: code }),
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (listContent) {
+                var arrFieldNameFinal = [];
+                var arrFieldValueFinal = [];
+
+                $.each(listContent, function (index, value) {
+                    switch (value.IDSort) {
+                        case '000':
+                            $("#recordTypeCode option[value=" + value.Content.substring(6, 7) + "]").attr('selected', true);
+                            $("#dirCode option[value=" + value.Content.substring(7, 8) + "]").attr('selected', true);
+                            break;
+                        case '925':
+                            debugger;
+                            $("#mediumId option[value=" + value.Content + "]").attr('selected', true);
+                            break;
+                        case '926':
+                            $("#accessLevel option[value=" + value.Content + "]").attr('selected', true);
+                            break;
+                        case '927':
+                            $("#itemTypeId option[value=" + value.Content + "]").attr('selected', true);
+                            break;
+                        default:
+                            var tempContent = value.Content; 
+                            if (tempContent.indexOf("$") >= 0) {
+                                var arrTemp = tempContent.split("$");
+                                //Loc value null
+                                arrTemp = arrTemp.filter(function (v) { return v !== '' });
+                                $.each(arrTemp, function (i, valTemp) {
+                                    var FieldNameTemp = value.IDSort + valTemp.substring(0, 1);
+                                    //var x = arrFieldNameFinal[arrFieldNameFinal.length - 1];
+                                    //var y = arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1);
+
+                                    //Xóa bỏ kí tự nối với các trường hợp của trường 245 ngoại trừ các trường hợp NĐ song song và phụ đề
+                                    if (FieldNameTemp.startsWith('245') && FieldNameTemp != '245b') {
+                                        if (valTemp[valTemp.length - 1] == '/' || valTemp[valTemp.length - 1] == '.' || valTemp[valTemp.length - 1] == ',') {
+                                            valTemp = valTemp.substring(0, valTemp.length - 1);
+                                        }
+                                    }
+                                    //Phân biệt Nhan đề song song và Phụ đề bằng các kí tự nối 
+                                    //Nhan đề song song '='
+                                    //Phụ đề ':'
+                                    if (FieldNameTemp == '245b' && arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1) == '=') {
+                                        debugger;
+                                        FieldNameTemp = '245b1';
+                                        arrFieldValueFinal[arrFieldValueFinal.length - 1] = arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(0, arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1);
+                                        if (valTemp[valTemp.length - 1] == '/' || valTemp[valTemp.length - 1] == '.' || valTemp[valTemp.length - 1] == ',') {
+                                            valTemp = valTemp.substring(0, valTemp.length - 1);
+                                        }
+                                    }
+                                    if (FieldNameTemp == '245b' && arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1) == ':') {
+                                        debugger;
+                                         //&& arrFieldNameFinal[arrFieldNameFinal.length - 1] == '245a'
+                                        FieldNameTemp = '245b2';
+                                        arrFieldValueFinal[arrFieldValueFinal.length - 1] = arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(0, arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1);
+                                        if (valTemp[valTemp.length - 1] == '/' || valTemp[valTemp.length - 1] == '.' || valTemp[valTemp.length - 1] == ',') {
+                                            valTemp = valTemp.substring(0, valTemp.length - 1);
+                                        }
+                                    }
+                                    
+
+                                    //Xóa các kí tự nối của trường 260 và trường 300
+                                    if (FieldNameTemp.startsWith('260') || FieldNameTemp.startsWith('300')) {
+                                        if (valTemp[valTemp.length - 1] == ':' || valTemp[valTemp.length - 1] == '+' || valTemp[valTemp.length - 1] == ';' || valTemp[valTemp.length - 1] == ',') {
+                                            valTemp = valTemp.substring(0, valTemp.length - 1);
+                                        }
+                                    }
+                                    //Trường hợp trường lặp hoặc lặp trường con
+                                    if (arrFieldNameFinal.includes(FieldNameTemp)) {
+                                        var index = arrFieldNameFinal.indexOf(FieldNameTemp);
+                                        if (FieldNameTemp == '245b1' || FieldNameTemp == '245b2') {
+                                            arrFieldValueFinal[index] = arrFieldValueFinal[index] + '\\\\' + valTemp.substring(1);
+                                        }
+                                        else {
+                                            arrFieldValueFinal[index] = arrFieldValueFinal[index] + '::' + valTemp.substring(1);
+                                        }
+                                    } else {
+                                        arrFieldNameFinal.push(FieldNameTemp);
+                                        arrFieldValueFinal.push(valTemp.substring(1));
+                                    }
+                                });
+                            }
+                            else {
+                                arrFieldNameFinal.push(value.IDSort);
+                                arrFieldValueFinal.push(value.Content);
+                            }
+
+                            //Fill thông tin vào Form
+                            
+                            break;
+                    }
+
+
+                });
+                debugger;
+                $.each(arrFieldNameFinal, function (i, FieldCode) {
+
+                    var x = $("#" + FieldCode).length;
+                    if ($("#" + FieldCode).length) {
+                        $("#" + FieldCode).val(arrFieldValueFinal[i] + '');
+                    }
+                    debugger;
+                });
+            },
+            error: function (errorThrown) {
+                alert('loadContentReuse Funtion Fail !!!');
+            }
+        });
     }
 
     function checkItemNumber(value, code) {
@@ -397,12 +533,13 @@
 
             },
             error: function (errorThrown) {
-                alert(errorThrown);
+                alert('CheckItemNumber Funtion Fail !!!');
             }
 
         });
     }
 
+    //reset all value to blank
     function reset() {
         $(':input').val('');
     }
@@ -414,6 +551,7 @@
 
 
     function doWork() {
+        debugger;
         var arrFieldName = [];
         var arrFieldValue = [];
         arrFieldName.push('FormId');
@@ -436,6 +574,7 @@
                     arrFieldValue.push($("#mediumId :selected").val());
                     break;
                 case '927':
+                    debugger;
                     arrFieldName.push(item);
                     arrFieldValue.push($("#itemTypeId :selected").val());
                     break;
@@ -488,13 +627,13 @@
                     window.location.href = '/Shelf/Index?Code=' + Data[0];
                 });
                 $('#btnDetail').click(function () {
-                    window.location.href = '/Catalogue/AddNewCatalogueDetail?ID='+ Data[1];
+                    window.location.href = '/Catalogue/AddNewCatalogueDetail?ID=' + Data[1];
                 });
-                
+
 
             },
             error: function (errorThrown) {
-                alert(errorThrown);
+                alert('Dowork Funtion Fail !!');
             }
 
         });

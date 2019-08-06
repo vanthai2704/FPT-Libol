@@ -100,16 +100,6 @@ namespace Libol.Models
             }
             foreach (FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result item in inforList)
             {
-                //int index = 0;
-                //string value = item.Content;
-                ////Loc ki tu $x 
-                //while (true)
-                //{
-                //    index = value.IndexOf("$");
-                //    if (index == -1) break;
-                //    value = value.Substring(0, index) + " " + value.Substring(index + 2);
-                //}
-
                 item.Content = new FormatHoldingTitle().OnFormatHoldingTitle(item.Content);
 
             }
