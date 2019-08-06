@@ -78,20 +78,26 @@ namespace Libol.Controllers
             return Json(formComplated, JsonRequestBehavior.AllowGet);
         }
 
-        //----------------Add Item For Detail -----------
-        //---------------------------------------------
-
         [HttpPost]
-        public JsonResult AuthorListAll()
+        public JsonResult GetItemInf(string itemID)
         {
-            //catalogueBusiness.InsertControlField();
-            //string a = db.CAT_DIC_AUTHOR.Where(id => id.DisplayEntry == "Nguyễn Viết Kính").Select(id =>id.ID).FirstOrDefault().ToString();
-            //List<string> authors = db.CAT_DIC_AUTHOR.Select(row => row.DisplayEntry).ToList();
-            return Json("Doanhdq", JsonRequestBehavior.AllowGet);
+            int ID = Int32.Parse(itemID);
+            int FormID  = db.ITEMs.First(i => i.ID == ID).FormID;
+            return Json(FormID, JsonRequestBehavior.AllowGet);
+        }
+
+        //Get Content of Item by ID to reuse
+        [HttpPost]
+        public JsonResult ReUseGetContentByID(string itemID)
+        {
+            List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(itemID);
+            return Json(listContent, JsonRequestBehavior.AllowGet);
         }
 
 
 
+        //----------------Add Item For Detail -----------
+        //---------------------------------------------
 
         [HttpPost]
         public JsonResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue , List<string> listFieldsOrg  , List<string> listValuesOrg)
