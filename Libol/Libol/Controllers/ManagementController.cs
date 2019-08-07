@@ -124,7 +124,7 @@ namespace Libol.Controllers
                     Data = "Người dùng với tên đăng nhập <strong style='color:black; '>" + Username + "</strong> đã tồn tại!"
                 }, JsonRequestBehavior.AllowGet);
             }
-            if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.Email == Email).Count() > 0)
+            if (!String.IsNullOrEmpty(Email) && db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.Email == Email).Count() > 0)
             {
                 return Json(new Result()
                 {
@@ -244,7 +244,7 @@ namespace Libol.Controllers
                     Data = "Người dùng với tên đăng nhập <strong style='color:black; '>" + Username + "</strong> đã tồn tại!"
                 }, JsonRequestBehavior.AllowGet);
             }
-            if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID != ID).Where(a => a.Email == Email).Count() > 0)
+            if (!String.IsNullOrEmpty(Email) && db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID != ID).Where(a => a.Email == Email).Count() > 0)
             {
                 return Json(new Result()
                 {
