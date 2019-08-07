@@ -9,6 +9,7 @@ using System.IO;
 using System.Reflection;
 
 using Libol.SupportClass;
+using Libol.EntityResult;
 
 namespace Libol.Controllers
 {
@@ -1135,6 +1136,44 @@ namespace Libol.Controllers
             });
         }
 
+
+        // list liquid copynumber
+        public ActionResult CopyNumberLiquidationStats()
+        {
+
+            return View();
+        }
+
+        public PartialViewResult GetCopyNumberLiquidationStats(string strDKCBID)
+        {
+            strDKCBID = strDKCBID.Trim();
+            string[] myList = strDKCBID.Split(' ');
+            List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result> listResult = new List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result>();
+            if (myList.Length != 0)
+            {
+                foreach (var cnumber in myList)
+                {
+                    List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result> list = cb.FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_LIST(cnumber);
+                    if(list.Count > 0)
+                    {
+                        foreach (var item in list)
+                        {
+                            item.Content = GetContent(item.Content);
+                            listResult.Add(
+                                new FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result(
+                                    item.Reason, item.Content, item.CopyNumber,
+                                    item.LiquidCode, item.Price, item.UseCount, item.RemovedDate));
+                        }
+                    }
+                    
+                }
+                
+
+            }
+
+             ViewBag.Result = listResult;
+            return PartialView("GetCopyNumberLiquidationStats");
+        }
     }
 
     public class GET_PATRON_LOANINFOR_Result_2

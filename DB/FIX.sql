@@ -623,3 +623,192 @@ ALTER PROCEDURE [dbo].[FPT_SP_UPDATE_UNLOCK_PATRON_CARD]
 	@Note nvarchar(1000)
 AS
 	UPDATE [CIR_PATRON_LOCK] SET LockedDays = @lockedDay, Note = @Note WHERE PatronCode = @strPatronCode
+
+
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED]    Script Date: 8/6/2019 07:55:08 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- Purpose: Select holidng_remove information
+-- @strDateType: 1 - ngày nhận sách, 2 - ngày xóa sách, 3 - ngày gần nhất mà quyển sách được mượn
+ALTER PROCEDURE [dbo].[FPT_SP_GET_HOLDING_REMOVED]
+	@intLibID	NVARCHAR(100),
+	@intLocID	NVARCHAR(100),
+	@strShelf	NVARCHAR(10),
+	@strCopyNumber	VARCHAR(33),
+	@strCallNumber	NVARCHAR(32),
+	@strLiquidCode NVARCHAR(100),
+	@strVolume	NVARCHAR(32),
+	@strTitle	NVARCHAR(1000),
+	@strPrice	NVARCHAR(1000),
+	@strDateFrom DAtetime,
+	@strDateTo DAtetime, 
+	@strDateType NVARCHAR(1000),
+	@strReason NVARCHAR(100)
+AS
+	DECLARE @strSQL NVARCHAR(4000)
+	DECLARE @strWhere NVARCHAR(4000)
+	DECLARE @strTable	NVARCHAR(1000)
+
+
+
+	SET @strSQL='SELECT HOLDING_REMOVED.*,LEFT(FIELD200S.Content,50) AS Content,
+		HOLDING_REMOVED.REASON as REASON_ID,HOLDING_REMOVE_REASON.REASON as Reson_detail '
+
+	SET @strTable=' FROM (HOLDING_REMOVED Join HOLDING_LOCATION hl on hl.id = HOLDING_REMOVED.LocationID) ,FIELD200S,HOLDING_REMOVE_REASON '
+
+	SET @strWhere=' WHERE Field200s.FieldCode=''245'' AND FIELD200S.ItemID=HOLDING_REMOVED.ItemID 
+		AND HOLDING_REMOVE_REASON.ID=HOLDING_REMOVED.Reason'
+
+	IF @strTitle<>'' 
+	BEGIN
+		SET @strTable=@strTable + ', ITEM_TITLE'	
+		SET @strWhere=@strWhere + ' AND HOLDING_REMOVED.ItemID=ITEM_TITLE.ItemID AND ITEM_TITLE.FieldCode=''245'''
+	END
+
+	IF @intLibID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LIBRARY.ID=HOLDING_REMOVED.LibID 
+			AND HOLDING_REMOVED.LibID=' + RTrim(CAST(@intLibID AS CHAR))
+
+			IF PATINDEX('%,HOLDING_LIBRARY%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LIBRARY'
+			SET @strSQL=@strSQL + ',Code AS LibName'
+		END
+	ELSE
+		BEGIN
+			SET @strSQL=@strSQL + ',Code AS LibName '
+			SET @strTable = @strTable + ' , HOLDING_LIBRARY  '
+			SET @strWhere = @strWhere + ' AND HOLDING_LIBRARY.ID = HOLDING_REMOVED.LibID '
+		END
+	IF @intLocID<>0 
+		BEGIN
+			SET @strWhere= @strWhere + ' AND HOLDING_LOCATION.ID=HOLDING_REMOVED.LocationID 
+			AND HOLDING_REMOVED.LocationID=' + RTrim(CAST(@intLocID AS CHAR))
+			IF PATINDEX('%, HOLDING_LOCATION%',@strTable)=0
+				SET @strTable= @strTable + ',HOLDING_LOCATION '			
+		END
+
+	IF @strShelf<>''
+		BEGIN
+			IF @strShelf='noname'
+				SET @strWhere= @strWhere + ' AND (Shelf IS NULL  OR RTrim(LTrim(Shelf)) ='''')'
+			ELSE
+				SET @strWhere= @strWhere + ' AND Shelf LIKE ''' + @strShelf + ''''
+		END
+	IF @strCopyNumber<>''
+		SET @strWhere= @strWhere + ' AND CopyNumber LIKE ''' + @strCopyNumber + ''''
+	IF @strCallNumber<>''
+		SET @strWhere= @strWhere + ' AND CallNumber LIKE ''' + @strCallNumber + ''''
+	IF @strVolume<>''
+		SET @strWhere= @strWhere + ' AND Volume LIKE ''' + @strVolume + ''''
+	IF @strTitle<>''
+		SET @strWhere= @strWhere + ' AND CONTAINS(Title,''"' + @strTitle +  '"'')'
+	IF @strPrice<>''
+		SET @strWhere= @strWhere + ' And Price = ' + @strPrice + ' '
+	IF @strLiquidCode <>''
+		SET @strWhere = @strWhere + ' And LiquidCode = ''' + @strLiquidCode + ''''
+	SET @strTable = @strTable + ' '
+
+	SET @strSQL=@strSQL + ', hl.Symbol AS LocName'
+
+	if @strReason<>'-1'
+		SET @strWhere = @strWhere + ' and HOLDING_REMOVED.Reason = ' + @strReason + ' ' 
+
+	if @strDateType=1
+		begin
+			if Convert(nvarchar,@strDateFrom,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.AcquiredDate >=''' + Convert(nvarchar,@strDateFrom,23) +'''' 
+			if Convert(nvarchar,@strDateTo,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.AcquiredDate <=''' + Convert(nvarchar,DATEADD(DAY,1,@strDateTo),23) +''''
+		end
+	else if @strDateType=2
+		begin 
+			if Convert(nvarchar,@strDateFrom,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.RemovedDate >=''' + Convert(nvarchar,@strDateFrom,23) +'''' 
+			if Convert(nvarchar,@strDateTo,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.RemovedDate <''' + Convert(nvarchar,DATEADD(DAY,1,@strDateTo),23) +''''
+		end
+	else if @strDateType = 3
+		begin 
+			if Convert(nvarchar,@strDateFrom,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.DateLastUsed >=''' + Convert(nvarchar,@strDateFrom,23) +'''' 
+			if Convert(nvarchar,@strDateTo,23) <> ''
+				SET @strWhere = @strWhere + ' and HOLDING_REMOVED.DateLastUsed <''' + Convert(nvarchar,DATEADD(DAY,1,@strDateTo),23) +''''
+		end
+
+PRINT @strSQL + @strTable + @strWhere
+	EXECUTE(@strSQL + @strTable + @strWhere)
+GO
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 07/28/2019 17:32:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		<ducnv>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ DANH MỤC SÁCH NHẬP
+-- =============================================
+ALTER  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
+
+      @strFromDate VARCHAR(30),
+
+      @strToDate  VARCHAR(30),
+
+      @intLocationID    int,
+      
+      @intLibraryID int
+
+AS   
+
+      DECLARE @strSQL NVARCHAR(1000)
+	  DECLARE @strLike NVARCHAR(1000)
+	  DECLARE @strJoin NVARCHAR(1000)
+      SET @strSQL=''
+      SET @strJoin=''
+	  SET @strLike = ''
+      SET @strSQL=@strSQL + 'SELECT I.ID,I.Code, U.DKCB, F.Content 
+      FROM ITEM I
+      join FIELD200S F on I.ID=F.ITEMID
+join (SELECT distinct ItemID ,
+STUFF(( SELECT  '', '' + CopyNumber
+FROM HOLDING D1
+WHERE D1.ItemID = D2.ItemID'
+SET @strJoin = @strJoin+ 'FOR XML PATH('''')), 1, 1, '''') AS DKCB FROM HOLDING D2 GROUP BY ItemID) as U on I.ID = U.ItemID
+WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15)'
+
+      If @strFromDate<>''
+
+            SET @strJoin=@strJoin + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
+
+      If @strToDate<>''
+
+            SET @strJoin=@strJoin + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
+
+      If @intLocationID <>0
+		BEGIN
+            SET @strJoin=@strJoin + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+            SET @strLike = @strLike + ' AND D1.LocationID=' +convert(nvarchar,@intLocationID)
+        END    
+       If @intLocationID =0
+		BEGIN
+            SET @strJoin=@strJoin + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+			SET @strLike = @strLike + ' AND D1.LibID=' +convert(nvarchar,@intLibraryID)
+		END
+		SET @strSQL = @strSQL+ @strLike + @strJoin
+    --print(@strSQL)
+
+      EXEC(@strSQL)
+      
+

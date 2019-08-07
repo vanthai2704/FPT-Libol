@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Libol.EntityResult;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -72,6 +73,14 @@ namespace Libol.Models
         {
             List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> list = db.Database.SqlQuery<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result>("FPT_SP_UPDATE_UNLOCK_PATRON_CARD {0}, {1}, {2}",
                 new object[] { PatronCode, intLockedDays, strNote}).ToList();
+            return list;
+        }
+
+        //list liquid copynumber
+        public List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result> FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_LIST(string dkcb)
+        {
+            List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result> list = db.Database.SqlQuery<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result>("FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER {0}",
+                new object[] { dkcb }).ToList();
             return list;
         }
     }
