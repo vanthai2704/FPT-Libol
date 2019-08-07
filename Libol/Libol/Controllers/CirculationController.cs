@@ -31,7 +31,7 @@ namespace Libol.Controllers
 
             return validate.Trim();
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "0")]
         public ActionResult Index()
         {
             return View();
@@ -42,7 +42,7 @@ namespace Libol.Controllers
             return View();
         }
 
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "21")]
         public ActionResult ReportOnLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -334,7 +334,7 @@ namespace Libol.Controllers
             });
         }
         //-------------------END OF ONLOAN REPORT---------------------
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "21")]
         public ActionResult ReportLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -716,7 +716,7 @@ namespace Libol.Controllers
             ViewData["lib"] = lib;
             return View();
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticYear()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -794,7 +794,7 @@ namespace Libol.Controllers
             ViewBag.UsingResult = cb.GET_FPT_CIR_MONTH_STATISTIC_LIST(LibID, LocID, Type, 1, strInYear, (int)Session["UserID"]);
             return PartialView("GetMonthStats");
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticMonth()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -809,7 +809,7 @@ namespace Libol.Controllers
             return View();
         }
 
-        [AuthAttribute(ModuleID = 3, RightID = "72")]
+        [AuthAttribute(ModuleID = 3, RightID = "19")]
         public ActionResult LockPatronStats()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -976,7 +976,7 @@ namespace Libol.Controllers
             return PartialView("GetLockPatronStats");
         }
 
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticPatronGroup()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1006,7 +1006,7 @@ namespace Libol.Controllers
 
             return PartialView("DisplayPatronGroup");
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticTopPatron()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1032,7 +1032,7 @@ namespace Libol.Controllers
             ViewBag.test = result;
             return PartialView("DisplayTopPatron");
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticTopCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1088,11 +1088,11 @@ namespace Libol.Controllers
             }
             if (!String.IsNullOrEmpty(PatronCode))
             {
-                search = search.Where(a => a.PatronCode.Contains(PatronCode));
+                search = search.Where(a => a.PatronCode.ToLower().Contains(PatronCode.ToLower()));
             }
             if (!String.IsNullOrEmpty(Note))
             {
-                search = search.Where(a => a.Note.Contains(Note));
+                search = search.Where(a => a.Note.ToLower().Contains(Note.ToLower()));
             }
             if (!String.IsNullOrEmpty(StartedDate))
             {
@@ -1130,6 +1130,7 @@ namespace Libol.Controllers
 
 
         // list liquid copynumber
+        [AuthAttribute(ModuleID = 3, RightID = "25")]
         public ActionResult CopyNumberLiquidationStats()
         {
 

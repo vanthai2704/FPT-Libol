@@ -9,13 +9,13 @@ using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
-    public class OverdueListController : BaseController
+    public class OverdueListController : Controller
     {
         private LibolEntities db = new LibolEntities();
         FormatHoldingTitle f = new FormatHoldingTitle();
         ShelfBusiness shelfBusiness = new ShelfBusiness();
 
-        [AuthAttribute(ModuleID = 3, RightID = "0")]
+        [AuthAttribute(ModuleID = 3, RightID = "20")]
         public ActionResult OverdueList()
         {
             ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();

@@ -41,8 +41,96 @@ CREATE TABLE SYS_USER_GOOGLE_ACCOUNT(
 )
 
 GO
-
 /******/
+CREATE TABLE FPT_SYS_USER_RIGHT(
+	[ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[ModuleID] [int] NOT NULL,
+	[Right] [nvarchar](100) NOT NULL,
+	[IsBasic] [bit] NOT NULL
+)
+GO
+/******/
+
+CREATE TABLE FPT_SYS_USER_RIGHT_DETAIL(
+	[RightID] [int] NOT NULL FOREIGN KEY REFERENCES FPT_SYS_USER_RIGHT(ID),
+	[UserID] [int] NOT NULL,
+	[ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY	
+)
+GO
+/******/
+
+CREATE PROCEDURE [dbo].[FPT_SP_ADMIN_GRANT_RIGHTS]
+	@intUID int,
+	@intRightID int
+AS
+	INSERT INTO FPT_SYS_USER_RIGHT_DETAIL (UserID, RightID) VALUES (@intUID,@intRightID)
+GO
+/******/
+
+
+CREATE  PROCEDURE [dbo].[FPT_SP_ADMIN_UPDATE_USER]
+	@intUID int,
+	@intISLDAP int,
+	@strName NVarchar(100),
+	@strUserName varchar(100),
+	@strPassword varchar(100),
+	@intCatModule int,
+	@intPatModule int,
+	@intCirModule int,
+	@intAcqModule int,
+	@intSerModule int,
+	@intILLModule int,
+	@intDelModule int,
+	@intAdmModule int,
+	@intParentID int,
+	@intOutVal int OUT
+AS
+	DECLARE @strUserNameTemp varchar(100)
+	DECLARE @strLDAPAdsPath varchar(100)
+
+	SET @intOutVal = 0
+
+	SELECT @strUserNameTemp = UserName FROM SYS_USER Where ID = @intUID
+	SELECT @strLDAPAdsPath = ISNULL(LDAPAdsPath, '') FROM SYS_USER WHERE ID = @intUID 
+	IF @strUserNameTemp = 'Admin'
+		SET @strUserName = 'Admin'
+	ELSE
+	   BEGIN
+	   	IF @intISLDAP = 0
+			SELECT @intOutVal = ISNULL(Count(UserName),0) FROM SYS_USER WHERE UserName = @strUserName AND ID <> @intUID	
+		ELSE
+			SELECT @intOutVal = ISNULL(Count(UserName),0) FROM SYS_USER WHERE UserName = @strUserName AND ID <> @intUID AND LDAPAdsPath = @strLDAPAdsPath
+	   END 	
+
+	IF @intOutVal = 0 
+	   BEGIN
+		IF @strPassword <> '' 
+			UPDATE SYS_USER SET Name = @strName,
+			        Username = @strUserName, Password = @strPassword,
+				Priority = @intCatModule ,AcqModule= @intAcqModule, 
+				SerModule= @intSerModule , CirModule = @intCirModule,
+				PatModule= @intPatModule, CatModule= @intCatModule,
+				ILLModule= @intILLModule, DelModule= @intDelModule, 
+				AdmModule = @intAdmModule, ParentID = @intParentID 
+				WHERE ID = @intUID
+		ELSE
+			UPDATE SYS_USER SET Name = @strName,
+			        Username = @strUserName,
+				Priority = @intCatModule,AcqModule= @intAcqModule, 
+				SerModule= @intSerModule , CirModule = @intCirModule,
+				PatModule= @intPatModule,CatModule= @intCatModule  ,
+				ILLModule= @intILLModule, DelModule= @intDelModule, 
+				AdmModule = @intAdmModule, ParentID = @intParentID 
+				WHERE ID = @intUID
+
+		DELETE FROM FPT_SYS_USER_RIGHT_DETAIL WHERE UserID = @intUID
+		DELETE FROM SYS_USER_LOCATION WHERE UserID = @intUID
+		DELETE FROM SYS_USER_CIR_LOCATION WHERE UserID = @intUID
+		DELETE FROM SYS_USER_SER_LOCATION WHERE UserID = @intUID
+	   END
+GO
+
+
 create PROCEDURE [dbo].[FPT_SP_CATA_GET_MARC_FORM]
 -- ---------   ------  -------------------------------------------
 	@intFormID	int,
@@ -156,7 +244,7 @@ CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_ACCEPT]
 	@intModuleID int,
 	@intUserID int
 AS
-SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT_DETAIL D JOIN SYS_USER_RIGHT R ON D.RightID = R.ID
+SELECT R.ID, R.[Right] FROM FPT_SYS_USER_RIGHT_DETAIL D JOIN FPT_SYS_USER_RIGHT R ON D.RightID = R.ID
 WHERE D.UserID = @intUserID AND R.ModuleID = @intModuleID
 
 go
@@ -167,11 +255,11 @@ CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_DENY]
 	@intUserParentID int
 AS
 
-SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT R 
-JOIN SYS_USER_RIGHT_DETAIL D ON R.ID = D.RightID 
+SELECT R.ID, R.[Right] FROM FPT_SYS_USER_RIGHT R 
+JOIN FPT_SYS_USER_RIGHT_DETAIL D ON R.ID = D.RightID 
 WHERE R.ModuleID = @intModuleID AND D.UserID = @intUserParentID AND R.ID 
 NOT IN (
-	SELECT U.ID FROM SYS_USER_RIGHT_DETAIL D JOIN SYS_USER_RIGHT U ON D.RightID = U.ID
+	SELECT U.ID FROM FPT_SYS_USER_RIGHT_DETAIL D JOIN FPT_SYS_USER_RIGHT U ON D.RightID = U.ID
 	WHERE D.UserID = @intUserID AND U.ModuleID = @intModuleID
 )
 
@@ -183,8 +271,8 @@ CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_WHEN_CREATE]
 	@IsBasic int
 AS
 
-SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT R 
-JOIN SYS_USER_RIGHT_DETAIL D ON R.ID = D.RightID 
+SELECT R.ID, R.[Right] FROM FPT_SYS_USER_RIGHT R 
+JOIN FPT_SYS_USER_RIGHT_DETAIL D ON R.ID = D.RightID 
 JOIN SYS_USER E ON D.UserID = E.ID 
 WHERE D.UserID = @intParentID AND R.ModuleID = @intModuleID AND R.IsBasic = @IsBasic
 
@@ -2100,10 +2188,10 @@ CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_DENY_ADMIN]
 	@intModuleID int
 AS
 
-SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT R 
+SELECT R.ID, R.[Right] FROM FPT_SYS_USER_RIGHT R 
 WHERE R.ModuleID = @intModuleID AND R.ID 
 NOT IN (
-	SELECT U.ID FROM SYS_USER_RIGHT_DETAIL D JOIN SYS_USER_RIGHT U ON D.RightID = U.ID
+	SELECT U.ID FROM FPT_SYS_USER_RIGHT_DETAIL D JOIN FPT_SYS_USER_RIGHT U ON D.RightID = U.ID
 	WHERE D.UserID = 1 AND U.ModuleID = @intModuleID
 )
 
@@ -5536,7 +5624,72 @@ PRINT(@strSQL)
 
 
 
+/****************************** DATA FOR PERMISSION **********************************/
+USE [Libol]
+GO
+SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT] ON 
 
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (1, 2, N'FPT - Tra cứu bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (2, 2, N'FPT - Nhập hồ sơ bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (3, 2, N'FPT - Sửa hồ sơ bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (4, 2, N'FPT - Thêm bạn đọc theo lô', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (5, 2, N'FPT - Xóa hồ sơ bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (6, 6, N'FPT - Phân quyền cho phân hệ biên mục', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (7, 6, N'FPT - Phân quyền cho phân hệ bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (8, 6, N'FPT - Phân quyền cho phân hệ mượn trả', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (9, 6, N'FPT - Phân quyền cho phân hệ bổ sung', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (10, 6, N'FPT - Phân quyền cho phân hệ ấn phẩm định kỳ', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (11, 6, N'FPT - Phân quyền cho phân hệ ILL', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (12, 6, N'FPT - Phân quyền cho phân hệ phát hành', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (13, 1, N'FPT - Tạo mới bản ghi biên mục', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (15, 1, N'FPT - Sửa bản ghi biên mục', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (16, 3, N'FPT- Ghi mượn', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (17, 3, N'FPT - Ghi trả', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (18, 3, N'FPT - Gia hạn', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (19, 3, N'FPT - Khoá thẻ', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (20, 3, N'FPT - Quá hạn', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (21, 3, N'FPT - Báo cáo', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (23, 3, N'FPT - Thống kê', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (25, 3, N'FPT - Kiểm tra thanh lý', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (26, 4, N'FPT - Xếp giá', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (27, 4, N'FPT - Báo cáo', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (28, 4, N'FPT - Thống kê', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (29, 4, N'FPT - Kho', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (30, 4, N'FPT - In mã vạch', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (31, 4, N'FPT - In nhãn gáy', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (32, 4, N'FPT - Thanh lý', 1)
+SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT] OFF
+SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ON 
 
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (13, 1, 31)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (15, 1, 32)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (1, 1, 33)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (2, 1, 34)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (3, 1, 35)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (4, 1, 36)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (5, 1, 37)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (16, 1, 38)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (17, 1, 39)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (18, 1, 40)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (19, 1, 41)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (20, 1, 42)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (21, 1, 43)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (23, 1, 44)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (25, 1, 45)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (26, 1, 46)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (27, 1, 47)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (28, 1, 48)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (29, 1, 49)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (30, 1, 50)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (31, 1, 51)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (32, 1, 52)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (6, 1, 53)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (7, 1, 54)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (8, 1, 55)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (9, 1, 56)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (10, 1, 57)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (11, 1, 58)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (12, 1, 59)
+SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] OFF
 
 

@@ -187,7 +187,6 @@
     <Compile Include="Controllers\AcquireReportController.cs" />
     <Compile Include="Controllers\AcquisitionController.cs" />
     <Compile Include="Controllers\CirculationController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CatalogueController.cs" />
     <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
@@ -246,6 +245,12 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_HOLDING_LIB_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SYS_USER_RIGHT.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SYS_USER_RIGHT_DETAIL.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_GET_LOCKEDPATRONS_Result2.cs" />

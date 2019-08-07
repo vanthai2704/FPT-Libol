@@ -179,7 +179,7 @@
             </div>
 
             <h5>Quyền truy cập vào các phân hệ</h5>
-            @if (((List<Int32>)Session["RightIDs"]).Contains(199))
+            @if (((List<Int32>)Session["RightIDs"]).Contains(6))
             {
                 <div class="form-row">
                     <div class="col"><label class="col-form-label float-right">Biên mục</label></div>
@@ -199,7 +199,7 @@
                     <div class="col"><a href="#" onclick="ShowRight(1)">Các quyền</a></div>
                 </div>
             }
-            @if (((List<Int32>)Session["RightIDs"]).Contains(200))
+            @if (((List<Int32>)Session["RightIDs"]).Contains(7))
             {
                 <div class="form-row">
                     <div class="col"><label class="col-form-label float-right">Bạn đọc</label></div>
@@ -219,7 +219,7 @@
                     <div class="col"><a href="#" onclick="ShowRight(2)">Các quyền</a></div>
                 </div>
             }
-            @if (((List<Int32>)Session["RightIDs"]).Contains(201))
+            @if (((List<Int32>)Session["RightIDs"]).Contains(8))
             {
                 <div class="form-row">
                     <div class="col"><label class="col-form-label float-right">Mượn trả</label></div>
@@ -239,7 +239,7 @@
                     <div class="col"><a href="#" onclick="ShowRight(3)">Các quyền</a></div>
                 </div>
             }
-            @if (((List<Int32>)Session["RightIDs"]).Contains(202))
+            @if (((List<Int32>)Session["RightIDs"]).Contains(9))
             {
                 <div class="form-row">
                     <div class="col"><label class="col-form-label float-right">Bổ sung</label></div>
@@ -259,7 +259,7 @@
                     <div class="col"><a href="#" onclick="ShowRight(4)">Các quyền</a></div>
                 </div>
             }
-            @if (((List<Int32>)Session["RightIDs"]).Contains(203))
+            @if (((List<Int32>)Session["RightIDs"]).Contains(10))
             {
                 <div class="form-row">
                     <div class="col"><label class="col-form-label float-right">Ấn phẩm định kỳ</label></div>
@@ -279,7 +279,7 @@
                     <div class="col"><a href="#" onclick="ShowRight(5)">Các quyền</a></div>
                 </div>
             }
-            @if (((List<Int32>)Session["RightIDs"]).Contains(204))
+            @if (((List<Int32>)Session["RightIDs"]).Contains(11))
             {
                 <div class="form-row">
                     <div class="col"><label class="col-form-label float-right">ILL</label></div>
@@ -299,7 +299,7 @@
                     <div class="col"><a href="#" onclick="ShowRight(8)">Các quyền</a></div>
                 </div>
             }
-            @if (((List<Int32>)Session["RightIDs"]).Contains(205))
+            @if (((List<Int32>)Session["RightIDs"]).Contains(12))
             {
                 <div class="form-row">
                     <div class="col"><label class="col-form-label float-right">Sưu tập số</label></div>
@@ -513,6 +513,30 @@
         var module8 = $('#module8').val();
         var module9 = $('#module9').val();
         var module6 = $('#module6').val();
+        if (module1 == null) {
+            module1 = 0;
+        }
+        if (module2 == null) {
+            module2 = 0;
+        }
+        if (module3 == null) {
+            module3 = 0;
+        }
+        if (module4 == null) {
+            module4 = 0;
+        }
+        if (module5 == null) {
+            module5 = 0;
+        }
+        if (module8 == null) {
+            module8 = 0;
+        }
+        if (module9 == null) {
+            module9 = 0;
+        }
+        if (module6 == null) {
+            module6 = 0;
+        }
         var rights = GetAcceptRights(right1) +
             GetAcceptRights(right2) +
             GetAcceptRights(right3) +
@@ -589,6 +613,30 @@
         var module8 = $('#module8').val();
         var module9 = $('#module9').val();
         var module6 = $('#module6').val();
+        if (module1 == null) {
+            module1 = 0;
+        }
+        if (module2 == null) {
+            module2 = 0;
+        }
+        if (module3 == null) {
+            module3 = 0;
+        }
+        if (module4 == null) {
+            module4 = 0;
+        }
+        if (module5 == null) {
+            module5 = 0;
+        }
+        if (module8 == null) {
+            module8 = 0;
+        }
+        if (module9 == null) {
+            module9 = 0;
+        }
+        if (module6 == null) {
+            module6 = 0;
+        }
         var rights = GetAcceptRights(right1) +
             GetAcceptRights(right2) +
             GetAcceptRights(right3) +

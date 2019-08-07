@@ -11,7 +11,7 @@ using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
-    public class CheckOutController : BaseController
+    public class CheckOutController : Controller
     {
         private LibolEntities db = new LibolEntities();
         CheckOutBusiness checkOutBusiness = new CheckOutBusiness();
@@ -22,7 +22,7 @@ namespace Libol.Controllers
         FormatHoldingTitle f = new FormatHoldingTitle();
         CirculationBusiness circulationBusiness = new CirculationBusiness();
 
-        [AuthAttribute(ModuleID = 3, RightID = "57")]
+        [AuthAttribute(ModuleID = 3, RightID = "16")]
         public ActionResult Index(string PatronCode)
         {
             strTransactionIDs = "0";

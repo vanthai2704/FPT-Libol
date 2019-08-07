@@ -402,6 +402,9 @@
         <EntityTypeShape EntityType="LibolModel.SYS_USER_GOOGLE_ACCOUNT" Width="1.5" PointX="5.375" PointY="27.75" />
         <EntityTypeShape EntityType="LibolModel.FPT_RECOMMEND" Width="1.5" PointX="15.375" PointY="27.875" />
         <AssociationConnector Association="LibolModel.FPT_RECOMMEND_ITEM" />
+        <EntityTypeShape EntityType="LibolModel.FPT_SYS_USER_RIGHT" Width="1.5" PointX="28.375" PointY="5.875" />
+        <EntityTypeShape EntityType="LibolModel.FPT_SYS_USER_RIGHT_DETAIL" Width="1.5" PointX="30.625" PointY="6" />
+        <AssociationConnector Association="LibolModel.FK__FPT_SYS_U__Right__76923CB8" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
