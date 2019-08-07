@@ -617,7 +617,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_LOANINFOR]
 	@strCopyNumber  varchar(30),
 	@intLibraryID int,
 	@strLocationPrefix varchar(5),
-	@intLocationID  int,
+	@intLocationID  varchar(500),
 	@strCheckOutDateFrom varchar(30),
 	@strCheckOutDateTo varchar(30),
 	@strCheckInDateFrom varchar(30),
@@ -656,9 +656,9 @@ AS
 		BEGIN
 			IF NOT @strLocationPrefix ='0'
 				BEGIN			
-					IF NOT @intLocationID = 0
+					IF NOT @intLocationID = ''
 						BEGIN
-							SET @strLikeSQL = @strLikeSQL + 'CLH.LocationID='+ CAST(@intLocationID AS VARCHAR(10)) +' AND '
+							SET @strLikeSQL = @strLikeSQL + 'CLH.LocationID IN ('+ @intLocationID +') AND '
 						END
 					ELSE
 						BEGIN
@@ -712,7 +712,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_ONLOANINFOR]
 	@strCopyNumber  varchar(30),
 	@intLibraryID int,
 	@strLocationPrefix varchar(5),
-	@intLocationID  int,
+	@intLocationID  varchar(500),
 	@strCheckOutDateFrom varchar(30),
 	@strCheckOutDateTo varchar(30),
 	@strDueDateFrom varchar(30),
@@ -751,9 +751,9 @@ AS
 		BEGIN
 			IF NOT @strLocationPrefix ='0'
 				BEGIN			
-					IF NOT @intLocationID = 0
+					IF NOT @intLocationID = ''
 						BEGIN
-							SET @strLikeSQL = @strLikeSQL + 'CL.LocationID='+ CAST(@intLocationID AS VARCHAR(10)) +' AND '
+							SET @strLikeSQL = @strLikeSQL + 'CL.LocationID IN ('+ @intLocationID +') AND '
 						END
 					ELSE
 						BEGIN
@@ -809,7 +809,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_RENEW_LOAN_INFOR]
 	@strCopyNumber  varchar(30),
 	@intLibraryID  int,
 	@strLocationPrefix varchar(5),
-	@intLocationID  int,
+	@intLocationID  varchar(500),
 	@strCheckOutDateFrom varchar(30),
 	@strCheckOutDateTo varchar(30),
 	@strCheckInDateFrom varchar(30),
@@ -851,9 +851,9 @@ BEGIN
 		BEGIN
 			IF NOT @strLocationPrefix ='0'
 				BEGIN			
-					IF NOT @intLocationID = 0
+					IF NOT @intLocationID = ''
 						BEGIN
-							SET @strLikeSQL = @strLikeSQL + 'CLH.LocationID='+ CAST(@intLocationID AS VARCHAR(10)) +' AND '
+							SET @strLikeSQL = @strLikeSQL + 'CLH.LocationID IN ('+ @intLocationID +') AND '
 						END
 					ELSE
 						BEGIN
@@ -909,7 +909,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_RENEW_ONLOAN_INFOR]
 	@strCopyNumber  varchar(30),
 	@intLibraryID  int,
 	@strLocationPrefix varchar(5),
-	@intLocationID  int,
+	@intLocationID  varchar(500),
 	@strCheckOutDateFrom varchar(30),
 	@strCheckOutDateTo varchar(30),
 	@strCheckInDateFrom varchar(30),
@@ -951,9 +951,9 @@ BEGIN
 		BEGIN
 			IF NOT @strLocationPrefix ='0'
 				BEGIN			
-					IF NOT @intLocationID = 0
+					IF NOT @intLocationID = ''
 						BEGIN
-							SET @strLikeSQL = @strLikeSQL + 'CL.LocationID='+ CAST(@intLocationID AS VARCHAR(10)) +' AND '
+							SET @strLikeSQL = @strLikeSQL + 'CL.LocationID IN ('+ @intLocationID +') AND '
 						END
 					ELSE
 						BEGIN
