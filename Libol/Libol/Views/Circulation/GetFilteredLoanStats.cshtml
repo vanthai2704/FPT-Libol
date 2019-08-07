@@ -14,7 +14,7 @@
                     "data": function (d) {
                         d.strLibID = document.getElementById("Library").value,
                             d.strLocPrefix = document.getElementById("LocationPrefix").value,
-                            d.strLocID = document.getElementById("LocationsByPrefix").value,
+                            d.strLocID = $("#LocationsByPrefix").val().toString(),
                             d.strPatronNumber = document.getElementById("PatronNumber").value,
                             d.strItemCode = document.getElementById("ItemCode").value,
                             d.strCopyNumber = document.getElementById("CopyNumber").value,

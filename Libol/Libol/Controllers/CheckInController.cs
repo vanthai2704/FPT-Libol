@@ -10,7 +10,7 @@ using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
-    public class CheckInController : BaseController
+    public class CheckInController : Controller
     {
         private LibolEntities db = new LibolEntities();
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
@@ -19,7 +19,7 @@ namespace Libol.Controllers
         private static string fullname = "";
         private static string sessionpcode = "";
 
-        [AuthAttribute(ModuleID = 3, RightID = "58")]
+        [AuthAttribute(ModuleID = 3, RightID = "17")]
         public ActionResult Index(string PatronCode)
         {
             sessionpcode = "";
@@ -38,10 +38,6 @@ namespace Libol.Controllers
             else
             {
                 ViewBag.active = 0;
-                ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().Note;
-                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().StartedDate;
-                ViewBag.lockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().LockedDays;
-                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).First().LockedDays);
             }
 
             getpatrondetail(pcode);
@@ -176,6 +172,21 @@ namespace Libol.Controllers
             List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> listResult = circulationBusiness.FPT_SP_UPDATE_UNLOCK_PATRON_CARD(patronCode, lockDays, lnote);
             ViewData["listResult"] = listResult;
             return Json(listResult, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetLockPatronInfo()
+        {
+            CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == sessionpcode).First();
+            string LPatronName = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName;
+            string LPatronCode = sessionpcode;
+            ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().StartedDate;
+            string Lblackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().StartedDate.ToString("dd/MM/yyyy");
+            string Lblackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().LockedDays).ToString("dd/MM/yyyy");
+            string LlockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().LockedDays.ToString();
+            string LblackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().Note;
+            string[] PatronLockInfo = { LPatronName , LPatronCode , Lblackstartdate, Lblackenddate, LlockedDay , LblackNote };
+            return Json(PatronLockInfo, JsonRequestBehavior.AllowGet);
         }
 
 

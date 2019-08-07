@@ -245,6 +245,8 @@ namespace Libol.Models
         public virtual DbSet<MARC_BIB_WS_DETAIL> MARC_BIB_WS_DETAIL { get; set; }
         public virtual DbSet<SYS_USER_GOOGLE_ACCOUNT> SYS_USER_GOOGLE_ACCOUNT { get; set; }
         public virtual DbSet<FPT_RECOMMEND> FPT_RECOMMEND { get; set; }
+        public virtual DbSet<FPT_SYS_USER_RIGHT> FPT_SYS_USER_RIGHT { get; set; }
+        public virtual DbSet<FPT_SYS_USER_RIGHT_DETAIL> FPT_SYS_USER_RIGHT_DETAIL { get; set; }
     
         public virtual ObjectResult<CAT_DIC_LIST_SEL_Result> CAT_DIC_LIST_SEL()
         {
@@ -21717,7 +21719,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result>("FPT_GET_LOCFULLNAME_LIBUSER_SEL", intUserIDParameter, intLibIDParameter, strLocPrefixParameter);
         }
     
-        public virtual int FPT_GET_PATRON_LOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, string strSerial, Nullable<int> intUserID)
+        public virtual int FPT_GET_PATRON_LOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, string intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, string strSerial, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -21739,9 +21741,9 @@ namespace Libol.Models
                 new ObjectParameter("strLocationPrefix", strLocationPrefix) :
                 new ObjectParameter("strLocationPrefix", typeof(string));
     
-            var intLocationIDParameter = intLocationID.HasValue ?
+            var intLocationIDParameter = intLocationID != null ?
                 new ObjectParameter("intLocationID", intLocationID) :
-                new ObjectParameter("intLocationID", typeof(int));
+                new ObjectParameter("intLocationID", typeof(string));
     
             var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
                 new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
@@ -21770,7 +21772,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_LOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, strLocationPrefixParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, strSerialParameter, intUserIDParameter);
         }
     
-        public virtual int FPT_GET_PATRON_ONLOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strDueDateFrom, string strDueDateTo, string strSerial, Nullable<int> intUserID)
+        public virtual int FPT_GET_PATRON_ONLOANINFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, string intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strDueDateFrom, string strDueDateTo, string strSerial, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -21792,9 +21794,9 @@ namespace Libol.Models
                 new ObjectParameter("strLocationPrefix", strLocationPrefix) :
                 new ObjectParameter("strLocationPrefix", typeof(string));
     
-            var intLocationIDParameter = intLocationID.HasValue ?
+            var intLocationIDParameter = intLocationID != null ?
                 new ObjectParameter("intLocationID", intLocationID) :
-                new ObjectParameter("intLocationID", typeof(int));
+                new ObjectParameter("intLocationID", typeof(string));
     
             var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
                 new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
@@ -21823,7 +21825,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_ONLOANINFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, strLocationPrefixParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strDueDateFromParameter, strDueDateToParameter, strSerialParameter, intUserIDParameter);
         }
     
-        public virtual int FPT_GET_PATRON_RENEW_LOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intUserID)
+        public virtual int FPT_GET_PATRON_RENEW_LOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, string intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -21845,9 +21847,9 @@ namespace Libol.Models
                 new ObjectParameter("strLocationPrefix", strLocationPrefix) :
                 new ObjectParameter("strLocationPrefix", typeof(string));
     
-            var intLocationIDParameter = intLocationID.HasValue ?
+            var intLocationIDParameter = intLocationID != null ?
                 new ObjectParameter("intLocationID", intLocationID) :
-                new ObjectParameter("intLocationID", typeof(int));
+                new ObjectParameter("intLocationID", typeof(string));
     
             var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
                 new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
@@ -21872,7 +21874,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_GET_PATRON_RENEW_LOAN_INFOR", strPatronCodeParameter, strItemCodeParameter, strCopyNumberParameter, intLibraryIDParameter, strLocationPrefixParameter, intLocationIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, strCheckInDateFromParameter, strCheckInDateToParameter, intUserIDParameter);
         }
     
-        public virtual int FPT_GET_PATRON_RENEW_ONLOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, Nullable<int> intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intUserID)
+        public virtual int FPT_GET_PATRON_RENEW_ONLOAN_INFOR(string strPatronCode, string strItemCode, string strCopyNumber, Nullable<int> intLibraryID, string strLocationPrefix, string intLocationID, string strCheckOutDateFrom, string strCheckOutDateTo, string strCheckInDateFrom, string strCheckInDateTo, Nullable<int> intUserID)
         {
             var strPatronCodeParameter = strPatronCode != null ?
                 new ObjectParameter("strPatronCode", strPatronCode) :
@@ -21894,9 +21896,9 @@ namespace Libol.Models
                 new ObjectParameter("strLocationPrefix", strLocationPrefix) :
                 new ObjectParameter("strLocationPrefix", typeof(string));
     
-            var intLocationIDParameter = intLocationID.HasValue ?
+            var intLocationIDParameter = intLocationID != null ?
                 new ObjectParameter("intLocationID", intLocationID) :
-                new ObjectParameter("intLocationID", typeof(int));
+                new ObjectParameter("intLocationID", typeof(string));
     
             var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
                 new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
@@ -22968,6 +22970,80 @@ namespace Libol.Models
                 new ObjectParameter("intLibraryID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_ITEM_INFOR_Result>("FPT_SP_GET_ITEM_INFOR", intItemIDParameter, intLocationIDParameter, intLibraryIDParameter);
+        }
+    
+        public virtual int FPT_SP_ADMIN_GRANT_RIGHTS(Nullable<int> intUID, Nullable<int> intRightID)
+        {
+            var intUIDParameter = intUID.HasValue ?
+                new ObjectParameter("intUID", intUID) :
+                new ObjectParameter("intUID", typeof(int));
+    
+            var intRightIDParameter = intRightID.HasValue ?
+                new ObjectParameter("intRightID", intRightID) :
+                new ObjectParameter("intRightID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_ADMIN_GRANT_RIGHTS", intUIDParameter, intRightIDParameter);
+        }
+    
+        public virtual int FPT_SP_ADMIN_UPDATE_USER(Nullable<int> intUID, Nullable<int> intISLDAP, string strName, string strUserName, string strPassword, Nullable<int> intCatModule, Nullable<int> intPatModule, Nullable<int> intCirModule, Nullable<int> intAcqModule, Nullable<int> intSerModule, Nullable<int> intILLModule, Nullable<int> intDelModule, Nullable<int> intAdmModule, Nullable<int> intParentID, ObjectParameter intOutVal)
+        {
+            var intUIDParameter = intUID.HasValue ?
+                new ObjectParameter("intUID", intUID) :
+                new ObjectParameter("intUID", typeof(int));
+    
+            var intISLDAPParameter = intISLDAP.HasValue ?
+                new ObjectParameter("intISLDAP", intISLDAP) :
+                new ObjectParameter("intISLDAP", typeof(int));
+    
+            var strNameParameter = strName != null ?
+                new ObjectParameter("strName", strName) :
+                new ObjectParameter("strName", typeof(string));
+    
+            var strUserNameParameter = strUserName != null ?
+                new ObjectParameter("strUserName", strUserName) :
+                new ObjectParameter("strUserName", typeof(string));
+    
+            var strPasswordParameter = strPassword != null ?
+                new ObjectParameter("strPassword", strPassword) :
+                new ObjectParameter("strPassword", typeof(string));
+    
+            var intCatModuleParameter = intCatModule.HasValue ?
+                new ObjectParameter("intCatModule", intCatModule) :
+                new ObjectParameter("intCatModule", typeof(int));
+    
+            var intPatModuleParameter = intPatModule.HasValue ?
+                new ObjectParameter("intPatModule", intPatModule) :
+                new ObjectParameter("intPatModule", typeof(int));
+    
+            var intCirModuleParameter = intCirModule.HasValue ?
+                new ObjectParameter("intCirModule", intCirModule) :
+                new ObjectParameter("intCirModule", typeof(int));
+    
+            var intAcqModuleParameter = intAcqModule.HasValue ?
+                new ObjectParameter("intAcqModule", intAcqModule) :
+                new ObjectParameter("intAcqModule", typeof(int));
+    
+            var intSerModuleParameter = intSerModule.HasValue ?
+                new ObjectParameter("intSerModule", intSerModule) :
+                new ObjectParameter("intSerModule", typeof(int));
+    
+            var intILLModuleParameter = intILLModule.HasValue ?
+                new ObjectParameter("intILLModule", intILLModule) :
+                new ObjectParameter("intILLModule", typeof(int));
+    
+            var intDelModuleParameter = intDelModule.HasValue ?
+                new ObjectParameter("intDelModule", intDelModule) :
+                new ObjectParameter("intDelModule", typeof(int));
+    
+            var intAdmModuleParameter = intAdmModule.HasValue ?
+                new ObjectParameter("intAdmModule", intAdmModule) :
+                new ObjectParameter("intAdmModule", typeof(int));
+    
+            var intParentIDParameter = intParentID.HasValue ?
+                new ObjectParameter("intParentID", intParentID) :
+                new ObjectParameter("intParentID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_ADMIN_UPDATE_USER", intUIDParameter, intISLDAPParameter, strNameParameter, strUserNameParameter, strPasswordParameter, intCatModuleParameter, intPatModuleParameter, intCirModuleParameter, intAcqModuleParameter, intSerModuleParameter, intILLModuleParameter, intDelModuleParameter, intAdmModuleParameter, intParentIDParameter, intOutVal);
         }
     }
 }

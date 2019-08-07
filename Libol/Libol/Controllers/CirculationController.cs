@@ -31,7 +31,7 @@ namespace Libol.Controllers
 
             return validate.Trim();
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "0")]
         public ActionResult Index()
         {
             return View();
@@ -42,7 +42,7 @@ namespace Libol.Controllers
             return View();
         }
 
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "21")]
         public ActionResult ReportOnLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -66,10 +66,8 @@ namespace Libol.Controllers
         public JsonResult GetPatronOnLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strDueDateFrom, string strDueDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
-            int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            var patronLoanInfors = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
+            var patronLoanInfors = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, strLocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
             if (model.search.value != null)
             {
@@ -188,10 +186,8 @@ namespace Libol.Controllers
         public JsonResult GetPatronRenewOnLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
-            int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            var patronLoanInfors = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
+            var patronLoanInfors = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, strLocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
             if (model.search.value != null)
             {
@@ -338,7 +334,7 @@ namespace Libol.Controllers
             });
         }
         //-------------------END OF ONLOAN REPORT---------------------
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "21")]
         public ActionResult ReportLoanCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -372,7 +368,7 @@ namespace Libol.Controllers
         public JsonResult GetLocationsByPrefix(int id, string prefix)
         {
             List<SelectListItem> LocByPrefix = new List<SelectListItem>();
-            LocByPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
+            LocByPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "" });
 
             foreach (var lbp in le.FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL((int)Session["UserID"], id, prefix))
             {
@@ -390,10 +386,8 @@ namespace Libol.Controllers
         public JsonResult GetPatronLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
-            int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            var patronLoanInfors = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
+            var patronLoanInfors = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, strLocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
             if (model.search.value != null)
             {
@@ -539,10 +533,8 @@ namespace Libol.Controllers
         public JsonResult GetPatronRenewLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
-            int LocID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocPrefix) && !strLocPrefix.Equals("0")) LocID = Convert.ToInt32(strLocID);
-            var patronLoanInfors = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, LocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
+            var patronLoanInfors = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, strLocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
             foreach (var i in patronLoanInfors)
             {
                 if ((i.CheckInDate - i.OverDueDateNew).Days > i.OverdueDays)
@@ -724,7 +716,7 @@ namespace Libol.Controllers
             ViewData["lib"] = lib;
             return View();
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticYear()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -802,7 +794,7 @@ namespace Libol.Controllers
             ViewBag.UsingResult = cb.GET_FPT_CIR_MONTH_STATISTIC_LIST(LibID, LocID, Type, 1, strInYear, (int)Session["UserID"]);
             return PartialView("GetMonthStats");
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticMonth()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -817,7 +809,7 @@ namespace Libol.Controllers
             return View();
         }
 
-        [AuthAttribute(ModuleID = 3, RightID = "72")]
+        [AuthAttribute(ModuleID = 3, RightID = "19")]
         public ActionResult LockPatronStats()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -889,7 +881,7 @@ namespace Libol.Controllers
                     int pID = le.CIR_PATRON.Where(a => a.Code == cnumber).First().ID;
                     if (le.CIR_LOAN.Where(a => a.PatronID == pID).Count() != 0)
                     {
-                        ViewBag.message = "Khóa thẻ thành công !" + "\nSố thẻ đang mượn sách là : " + cnumber;
+                        ViewBag.message = "Khóa thẻ thành công !" + "<br>Số thẻ đang mượn sách là : " + cnumber;
                     }
                     else
                     {
@@ -927,12 +919,12 @@ namespace Libol.Controllers
                 }
                 if (error == 0)
                 {
-                    ViewBag.message = "Khóa thẻ thành công !" + "\nSố thẻ đang mượn sách là : " + numLoan;
+                        ViewBag.message = "Khóa thẻ thành công !" + "<br>Số thẻ đang mượn sách là : " + numLoan;
 
                 }
                 else
                 {
-                    ViewBag.message = "Tổng số thẻ khóa thành công : " + mSuccess + "\nSố thẻ đang mượn sách là : " + numLoan + "\nSố thẻ không thể khóa : " + error + "\nSố thẻ không tồn tại là : " + merror + "\nSố thẻ đã bị khóa là : " + locked;
+                    ViewBag.message = "Tổng số thẻ khóa thành công : " + mSuccess + "<br>Số thẻ đang mượn sách là : " + numLoan + "<br>Số thẻ không thể khóa : " + error + "<br>Số thẻ không tồn tại là : " + merror + "<br>Số thẻ đã bị khóa là : " + locked;
                 }
             }
 
@@ -984,7 +976,7 @@ namespace Libol.Controllers
             return PartialView("GetLockPatronStats");
         }
 
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticPatronGroup()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1014,7 +1006,7 @@ namespace Libol.Controllers
 
             return PartialView("DisplayPatronGroup");
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticTopPatron()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1040,7 +1032,7 @@ namespace Libol.Controllers
             ViewBag.test = result;
             return PartialView("DisplayTopPatron");
         }
-        [AuthAttribute(ModuleID = 3, RightID = "67")]
+        [AuthAttribute(ModuleID = 3, RightID = "23")]
         public ActionResult StatisticTopCopy()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1096,11 +1088,11 @@ namespace Libol.Controllers
             }
             if (!String.IsNullOrEmpty(PatronCode))
             {
-                search = search.Where(a => a.PatronCode.Contains(PatronCode));
+                search = search.Where(a => a.PatronCode.ToLower().Contains(PatronCode.ToLower()));
             }
             if (!String.IsNullOrEmpty(Note))
             {
-                search = search.Where(a => a.Note.Contains(Note));
+                search = search.Where(a => a.Note.ToLower().Contains(Note.ToLower()));
             }
             if (!String.IsNullOrEmpty(StartedDate))
             {
@@ -1138,6 +1130,7 @@ namespace Libol.Controllers
 
 
         // list liquid copynumber
+        [AuthAttribute(ModuleID = 3, RightID = "25")]
         public ActionResult CopyNumberLiquidationStats()
         {
 

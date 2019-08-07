@@ -3,8 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
+    <style>
+        table.dataTable thead tr {
+            background-color: #88C6ED;
+        }
+    </style>
     <script>
-$(document).ready(function () {
+        $(document).ready(function () {
             var table = $('#table').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
 

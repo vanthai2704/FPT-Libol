@@ -25,7 +25,7 @@ namespace Libol.Controllers
 
         //----------------Add New Cata ----------------
         //---------------------------------------------
-        [AuthAttribute(ModuleID = 1, RightID = "2")]
+        [AuthAttribute(ModuleID = 1, RightID = "13")]
         public ActionResult AddNewCatalogue()
         {
             //get list marc form
@@ -113,7 +113,7 @@ namespace Libol.Controllers
 
         //----------------Search Field Cata -----------
         //---------------------------------------------
-        [AuthAttribute(ModuleID = 1, RightID = "3")]
+        [AuthAttribute(ModuleID = 1, RightID = "15")]
         public ActionResult SearchCodeNumber()
         {
             return View();
@@ -132,7 +132,7 @@ namespace Libol.Controllers
 
         //----------------Detail Cata -----------
         //---------------------------------------------
-        [AuthAttribute(ModuleID = 1, RightID = "3")]
+        [AuthAttribute(ModuleID = 1, RightID = "15")]
         public ActionResult AddNewCatalogueDetail()
         {
             string Id = Request["ID"];

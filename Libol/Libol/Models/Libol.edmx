@@ -1333,6 +1333,23 @@ warning 6002: The table/view 'Libol.dbo.CIR_SERIAL_COUNT' does not have a primar
           <Property Name="RecommendID" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ItemID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="FPT_SYS_USER_RIGHT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ModuleID" Type="int" Nullable="false" />
+          <Property Name="Right" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsBasic" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FPT_SYS_USER_RIGHT_DETAIL">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="RightID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
         <EntityType Name="HELP_CAT_DIC">
           <Key>
             <PropertyRef Name="ID" />
@@ -2899,6 +2916,18 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Principal>
             <Dependent Role="ITEM">
               <PropertyRef Name="MediumID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__FPT_SYS_U__Right__13196CCD">
+          <End Role="FPT_SYS_USER_RIGHT" Type="Self.FPT_SYS_USER_RIGHT" Multiplicity="1" />
+          <End Role="FPT_SYS_USER_RIGHT_DETAIL" Type="Self.FPT_SYS_USER_RIGHT_DETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FPT_SYS_USER_RIGHT">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FPT_SYS_USER_RIGHT_DETAIL">
+              <PropertyRef Name="RightID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5663,7 +5692,21 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
+          <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+          <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+          <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
+          <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
+          <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_GET_PATRON_LOANINFOR_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+          <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+          <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+          <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
           <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
@@ -5684,7 +5727,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
           <Parameter Name="strDueDateFrom" Type="varchar" Mode="In" />
@@ -5698,7 +5741,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
           <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
@@ -5711,7 +5754,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
           <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
@@ -5725,6 +5768,27 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="LibID" Type="int" Mode="In" />
           <Parameter Name="itemID" Type="int" Mode="In" />
           <Parameter Name="cDate" Type="date" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_ADMIN_GRANT_RIGHTS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUID" Type="int" Mode="In" />
+          <Parameter Name="intRightID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SP_ADMIN_UPDATE_USER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intUID" Type="int" Mode="In" />
+          <Parameter Name="intISLDAP" Type="int" Mode="In" />
+          <Parameter Name="strName" Type="nvarchar" Mode="In" />
+          <Parameter Name="strUserName" Type="varchar" Mode="In" />
+          <Parameter Name="strPassword" Type="varchar" Mode="In" />
+          <Parameter Name="intCatModule" Type="int" Mode="In" />
+          <Parameter Name="intPatModule" Type="int" Mode="In" />
+          <Parameter Name="intCirModule" Type="int" Mode="In" />
+          <Parameter Name="intAcqModule" Type="int" Mode="In" />
+          <Parameter Name="intSerModule" Type="int" Mode="In" />
+          <Parameter Name="intILLModule" Type="int" Mode="In" />
+          <Parameter Name="intDelModule" Type="int" Mode="In" />
+          <Parameter Name="intAdmModule" Type="int" Mode="In" />
+          <Parameter Name="intParentID" Type="int" Mode="In" />
+          <Parameter Name="intOutVal" Type="int" Mode="InOut" />
         </Function>
         <Function Name="FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strFieldValue" Type="varchar" Mode="In" />
@@ -11960,6 +12024,8 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <EntitySet Name="FIELD900S" EntityType="Self.FIELD900S" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FPT_RECOMMEND" EntityType="Self.FPT_RECOMMEND" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FPT_RECOMMEND_ITEM" EntityType="Self.FPT_RECOMMEND_ITEM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FPT_SYS_USER_RIGHT" EntityType="Self.FPT_SYS_USER_RIGHT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FPT_SYS_USER_RIGHT_DETAIL" EntityType="Self.FPT_SYS_USER_RIGHT_DETAIL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HELP_CAT_DIC" EntityType="Self.HELP_CAT_DIC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HELP_CAT_FILE" EntityType="Self.HELP_CAT_FILE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HELP_DIC_ITEM" EntityType="Self.HELP_DIC_ITEM" Schema="dbo" store:Type="Tables" />
@@ -12329,6 +12395,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <AssociationSet Name="CDMED_ITE_FK" Association="Self.CDMED_ITE_FK">
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
+          </AssociationSet>
+          <AssociationSet Name="FK__FPT_SYS_U__Right__13196CCD" Association="Self.FK__FPT_SYS_U__Right__13196CCD">
+            <End Role="FPT_SYS_USER_RIGHT" EntitySet="FPT_SYS_USER_RIGHT" />
+            <End Role="FPT_SYS_USER_RIGHT_DETAIL" EntitySet="FPT_SYS_USER_RIGHT_DETAIL" />
           </AssociationSet>
           <AssociationSet Name="FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET" Association="Self.FK_ACQ_BUDGET_ACCUMULATE_ACQ_BUDGET">
             <End Role="ACQ_BUDGET" EntitySet="ACQ_BUDGET" />
@@ -25561,7 +25631,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
             <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -25575,7 +25645,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
             <Parameter Name="strDueDateFrom" Mode="In" Type="String" />
@@ -25589,7 +25659,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
             <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -25602,7 +25672,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
             <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -25920,6 +25990,33 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="FPT_SYS_USER_RIGHT" EntityType="LibolModel.FPT_SYS_USER_RIGHT" />
+          <EntitySet Name="FPT_SYS_USER_RIGHT_DETAIL" EntityType="LibolModel.FPT_SYS_USER_RIGHT_DETAIL" />
+          <AssociationSet Name="FK__FPT_SYS_U__Right__76923CB8" Association="LibolModel.FK__FPT_SYS_U__Right__76923CB8">
+            <End Role="FPT_SYS_USER_RIGHT" EntitySet="FPT_SYS_USER_RIGHT" />
+            <End Role="FPT_SYS_USER_RIGHT_DETAIL" EntitySet="FPT_SYS_USER_RIGHT_DETAIL" />
+          </AssociationSet>
+          <FunctionImport Name="FPT_SP_ADMIN_GRANT_RIGHTS">
+            <Parameter Name="intUID" Mode="In" Type="Int32" />
+            <Parameter Name="intRightID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SP_ADMIN_UPDATE_USER">
+            <Parameter Name="intUID" Mode="In" Type="Int32" />
+            <Parameter Name="intISLDAP" Mode="In" Type="Int32" />
+            <Parameter Name="strName" Mode="In" Type="String" />
+            <Parameter Name="strUserName" Mode="In" Type="String" />
+            <Parameter Name="strPassword" Mode="In" Type="String" />
+            <Parameter Name="intCatModule" Mode="In" Type="Int32" />
+            <Parameter Name="intPatModule" Mode="In" Type="Int32" />
+            <Parameter Name="intCirModule" Mode="In" Type="Int32" />
+            <Parameter Name="intAcqModule" Mode="In" Type="Int32" />
+            <Parameter Name="intSerModule" Mode="In" Type="Int32" />
+            <Parameter Name="intILLModule" Mode="In" Type="Int32" />
+            <Parameter Name="intDelModule" Mode="In" Type="Int32" />
+            <Parameter Name="intAdmModule" Mode="In" Type="Int32" />
+            <Parameter Name="intParentID" Mode="In" Type="Int32" />
+            <Parameter Name="intOutVal" Mode="InOut" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
@@ -30917,6 +31014,37 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="Content" Nullable="false" MaxLength="800" />
           <Property Type="String" Name="Indicators" Nullable="true" MaxLength="5" />
         </ComplexType>
+        <EntityType Name="FPT_SYS_USER_RIGHT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ModuleID" Type="Int32" Nullable="false" />
+          <Property Name="Right" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsBasic" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="FPT_SYS_USER_RIGHT_DETAIL" Relationship="LibolModel.FK__FPT_SYS_U__Right__76923CB8" FromRole="FPT_SYS_USER_RIGHT" ToRole="FPT_SYS_USER_RIGHT_DETAIL" />
+        </EntityType>
+        <EntityType Name="FPT_SYS_USER_RIGHT_DETAIL">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="RightID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="FPT_SYS_USER_RIGHT" Relationship="LibolModel.FK__FPT_SYS_U__Right__76923CB8" FromRole="FPT_SYS_USER_RIGHT_DETAIL" ToRole="FPT_SYS_USER_RIGHT" />
+        </EntityType>
+        <Association Name="FK__FPT_SYS_U__Right__76923CB8">
+          <End Type="LibolModel.FPT_SYS_USER_RIGHT" Role="FPT_SYS_USER_RIGHT" Multiplicity="1" />
+          <End Type="LibolModel.FPT_SYS_USER_RIGHT_DETAIL" Role="FPT_SYS_USER_RIGHT_DETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FPT_SYS_USER_RIGHT">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FPT_SYS_USER_RIGHT_DETAIL">
+              <PropertyRef Name="RightID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -41372,6 +41500,27 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="FPT_SYS_USER_RIGHT">
+            <EntityTypeMapping TypeName="LibolModel.FPT_SYS_USER_RIGHT">
+              <MappingFragment StoreEntitySet="FPT_SYS_USER_RIGHT">
+                <ScalarProperty Name="IsBasic" ColumnName="IsBasic" />
+                <ScalarProperty Name="Right" ColumnName="Right" />
+                <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FPT_SYS_USER_RIGHT_DETAIL">
+            <EntityTypeMapping TypeName="LibolModel.FPT_SYS_USER_RIGHT_DETAIL">
+              <MappingFragment StoreEntitySet="FPT_SYS_USER_RIGHT_DETAIL">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="RightID" ColumnName="RightID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_ADMIN_GRANT_RIGHTS" FunctionName="LibolModel.Store.FPT_SP_ADMIN_GRANT_RIGHTS" />
+          <FunctionImportMapping FunctionImportName="FPT_SP_ADMIN_UPDATE_USER" FunctionName="LibolModel.Store.FPT_SP_ADMIN_UPDATE_USER" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

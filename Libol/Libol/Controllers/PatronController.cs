@@ -26,7 +26,7 @@ namespace Libol.Controllers
             return View();
         }
 
-        [AuthAttribute(ModuleID = 2, RightID = "45")]
+        [AuthAttribute(ModuleID = 2, RightID = "1")]
         public ActionResult SearchPatronFilter()
         {
             ViewBag.PatronGroup = db.SP_PAT_GET_PATRONGROUP().ToList();
@@ -35,7 +35,7 @@ namespace Libol.Controllers
             return View();
         }
 
-        [AuthAttribute(ModuleID = 2, RightID = "46,48")]
+        [AuthAttribute(ModuleID = 2, RightID = "2,3")]
         public ActionResult Create(string strPatronID)
         {
             if (!((List<Int32>)Session["RightIDs"]).Contains(46) && String.IsNullOrEmpty(strPatronID))
@@ -99,7 +99,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "46")]
+        [AuthAttribute(ModuleID = 2, RightID = "2")]
         public JsonResult NewPatron(string strCode, string strValidDate, string strExpiredDate, string strLastIssuedDate, string strLastName, string strFirstName,
              Nullable<bool> blnSex, string strDOB, Nullable<int> intEthnicID, Nullable<int> intEducationID, Nullable<int> intOccupationID,
             string strWorkPlace, string strTelephone, string strMobile, string strEmail, string strPortrait, Nullable<int> intPatronGroupID, string strNote,
@@ -222,7 +222,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "48")]
+        [AuthAttribute(ModuleID = 2, RightID = "3")]
         public JsonResult UpdatePatron(int ID, string strCode, string strValidDate, string strExpiredDate, string strLastIssuedDate, string strLastName, string strFirstName,
              Nullable<bool> blnSex, string strDOB, Nullable<int> intEthnicID, Nullable<int> intEducationID, Nullable<int> intOccupationID,
             string strWorkPlace, string strTelephone, string strMobile, string strEmail, string strPortrait, Nullable<int> intPatronGroupID, string strNote,
@@ -382,14 +382,14 @@ namespace Libol.Controllers
             return Json("", JsonRequestBehavior.AllowGet);
         }
 
-        [AuthAttribute(ModuleID = 2, RightID = "216")]
+        [AuthAttribute(ModuleID = 2, RightID = "4")]
         public ActionResult AddPatronByFile()
         {
             return View();
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "216")]
+        [AuthAttribute(ModuleID = 2, RightID = "4")]
         public ActionResult PreviewPatronFile()
         {
             List<PatronFile> listPatronInFile = new List<PatronFile>();
@@ -499,7 +499,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "216")]
+        [AuthAttribute(ModuleID = 2, RightID = "4")]
         public ActionResult InsertFileToDB()
         {
             List<PatronFile> listPatronInFile =(List<PatronFile>) Session["listPatronInFile"];
@@ -549,7 +549,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "46,48")]
+        [AuthAttribute(ModuleID = 2, RightID = "2,3")]
         public JsonResult AddDictionary(string field, string data, int CollegeID)
         {
             AddDictionaryResult addDictionaryResult = new AddDictionaryResult();
@@ -642,7 +642,7 @@ namespace Libol.Controllers
             return Json(addDictionaryResult, JsonRequestBehavior.AllowGet);
         }
 
-        [AuthAttribute(ModuleID = 2, RightID = "45")]
+        [AuthAttribute(ModuleID = 2, RightID = "1")]
         public ActionResult SearchPatron()
         {
             ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
@@ -653,7 +653,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "45")]
+        [AuthAttribute(ModuleID = 2, RightID = "1")]
         public JsonResult ListPatron(DataTableAjaxPostModel model,string strCode, string  blnSex, string strLastIssuedDate, string  intPatronGroupID,
             string strClass, string strGrade, string strName, string strDOB, string strExpiredDate, string faculty, string intOccupationID)
         {
@@ -776,7 +776,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "45")]
+        [AuthAttribute(ModuleID = 2, RightID = "1")]
         public PartialViewResult PatronDetail(string strCode)
         {
             var patron = db.CIR_PATRON.Where(a => a.Code == strCode).First();
@@ -806,7 +806,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "51")]
+        [AuthAttribute(ModuleID = 2, RightID = "5")]
         public JsonResult DeletePatron(string strPatronID)
         {
             int id = Int32.Parse(strPatronID);
