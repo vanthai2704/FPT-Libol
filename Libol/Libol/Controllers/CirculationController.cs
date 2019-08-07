@@ -889,7 +889,7 @@ namespace Libol.Controllers
                     int pID = le.CIR_PATRON.Where(a => a.Code == cnumber).First().ID;
                     if (le.CIR_LOAN.Where(a => a.PatronID == pID).Count() != 0)
                     {
-                        ViewBag.message = "Khóa thẻ thành công !" + "\nSố thẻ đang mượn sách là : " + cnumber;
+                        ViewBag.message = "Khóa thẻ thành công !" + "<br>Số thẻ đang mượn sách là : " + cnumber;
                     }
                     else
                     {
@@ -927,12 +927,12 @@ namespace Libol.Controllers
                 }
                 if (error == 0)
                 {
-                    ViewBag.message = "Khóa thẻ thành công !" + "\nSố thẻ đang mượn sách là : " + numLoan;
+                        ViewBag.message = "Khóa thẻ thành công !" + "<br>Số thẻ đang mượn sách là : " + numLoan;
 
                 }
                 else
                 {
-                    ViewBag.message = "Tổng số thẻ khóa thành công : " + mSuccess + "\nSố thẻ đang mượn sách là : " + numLoan + "\nSố thẻ không thể khóa : " + error + "\nSố thẻ không tồn tại là : " + merror + "\nSố thẻ đã bị khóa là : " + locked;
+                    ViewBag.message = "Tổng số thẻ khóa thành công : " + mSuccess + "<br>Số thẻ đang mượn sách là : " + numLoan + "<br>Số thẻ không thể khóa : " + error + "<br>Số thẻ không tồn tại là : " + merror + "<br>Số thẻ đã bị khóa là : " + locked;
                 }
             }
 
