@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Libol.Controllers
 {
-    public class AcquireReportController : BaseController
+    public class AcquireReportController : Controller
     {
         LibolEntities le = new LibolEntities();
         AcquisitionBusiness ab = new AcquisitionBusiness();
@@ -34,6 +34,7 @@ namespace Libol.Controllers
             return View();
         }
         // GET: AcquireReport
+        [AuthAttribute(ModuleID = 4, RightID = "27")]
         public ActionResult Index()
         {
             List<SelectListItem> lib = new List<SelectListItem>();
@@ -1569,6 +1570,7 @@ namespace Libol.Controllers
         {
             return View();
         }
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult LanguageStat()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1592,6 +1594,7 @@ namespace Libol.Controllers
             ViewBag.CopyDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("COPY", LibID);
             return PartialView("GetLanguageStats");
         }
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult StatisticYear()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1615,6 +1618,7 @@ namespace Libol.Controllers
             ViewBag.Result = ab.FPT_ACQ_YEAR_STATISTIC_LIST(LibID, LocID, strFromYear, strToYear, (int)Session["UserID"]);
             return PartialView("GetYearStats");
         }
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult StatisticMonth()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1638,6 +1642,7 @@ namespace Libol.Controllers
             ViewBag.Result = ab.FPT_ACQ_MONTH_STATISTIC_LIST(LibID, LocID, strInYear, (int)Session["UserID"]);
             return PartialView("GetMonthStats");
         }
+        [AuthAttribute(ModuleID = 4, RightID = "27")]
         public ActionResult LiquidationStats()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1781,6 +1786,7 @@ namespace Libol.Controllers
                 data = result
             });
         }
+        [AuthAttribute(ModuleID = 4, RightID = "27")]
         public ActionResult RecomendReport()
         {
             List<SelectListItem> lib = new List<SelectListItem>();
@@ -2643,7 +2649,7 @@ namespace Libol.Controllers
             return View();
         }
 
-
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult StatisticTop20()
         {
             List<SelectListItem> cat = new List<SelectListItem>
@@ -2763,6 +2769,7 @@ namespace Libol.Controllers
         }
 
         //statistic book in
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult StatTaskbar()
         {
             List<SelectListItem> lib = new List<SelectListItem>

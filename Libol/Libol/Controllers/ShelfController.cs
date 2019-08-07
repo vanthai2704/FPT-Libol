@@ -25,7 +25,7 @@ namespace Libol.Controllers
         List<LibraryLocation> lic_locs = new List<LibraryLocation>();
         List<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result> general_loc = null;
 
-        [AuthAttribute(ModuleID = 4, RightID = "44")]
+        [AuthAttribute(ModuleID = 4, RightID = "26")]
         public ActionResult Index()
         {
 
@@ -519,7 +519,7 @@ namespace Libol.Controllers
         }
 
 
-
+        [AuthAttribute(ModuleID = 4, RightID = "29")]
         public ActionResult LiquidationOrLost()
         {
 
@@ -1039,7 +1039,7 @@ namespace Libol.Controllers
 
         }
 
-
+        [AuthAttribute(ModuleID = 4, RightID = "29")]
         public ActionResult NotYetChecked()
         {
             foreach (var item in db.SP_HOLDING_LIB_SEL(42).ToList())
@@ -1623,7 +1623,7 @@ namespace Libol.Controllers
             return null;
         }
 
-
+        [AuthAttribute(ModuleID = 4, RightID = "29")]
         public ActionResult InRepository()
         {
             foreach (var item in db.SP_HOLDING_LIB_SEL(42).ToList())
