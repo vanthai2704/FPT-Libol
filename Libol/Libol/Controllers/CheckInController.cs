@@ -10,7 +10,7 @@ using Libol.SupportClass;
 
 namespace Libol.Controllers
 {
-    public class CheckInController : BaseController
+    public class CheckInController : Controller
     {
         private LibolEntities db = new LibolEntities();
         SearchPatronBusiness searchPatronBusiness = new SearchPatronBusiness();
@@ -19,7 +19,7 @@ namespace Libol.Controllers
         private static string fullname = "";
         private static string sessionpcode = "";
 
-        [AuthAttribute(ModuleID = 3, RightID = "58")]
+        [AuthAttribute(ModuleID = 3, RightID = "17")]
         public ActionResult Index(string PatronCode)
         {
             sessionpcode = "";

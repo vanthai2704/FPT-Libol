@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Libol.Controllers
 {
-    public class RenewController : BaseController
+    public class RenewController : Controller
     {
         private LibolEntities db = new LibolEntities();
         RenewBusiness renewBusiness = new RenewBusiness();
@@ -20,7 +20,7 @@ namespace Libol.Controllers
         FormatHoldingTitle f = new FormatHoldingTitle();
         CirculationBusiness circulationBusiness = new CirculationBusiness();
 
-        [AuthAttribute(ModuleID = 3, RightID = "149")]
+        [AuthAttribute(ModuleID = 3, RightID = "18")]
         public ActionResult Renew()
         {
             return View();
@@ -58,7 +58,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 3, RightID = "72")]
+        [AuthAttribute(ModuleID = 3, RightID = "19")]
         public PartialViewResult Renew(int[] intLoanID, Byte intAddTime, Byte intTimeUnit, string strFixedDueDate, string[] duedates, int[] inttimes, int[] intrange)
         {
             int codeErrorCount = 0;

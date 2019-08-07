@@ -73,7 +73,7 @@ namespace Libol.Controllers
 
             List<Int32> RightIDs = new List<Int32>();
             List<Int32> ModuleIDs = new List<Int32>();
-            var userRight = db.SYS_USER_RIGHT_DETAIL.Where(a => a.UserID == UserID).ToList();
+            var userRight = db.FPT_SYS_USER_RIGHT_DETAIL.Where(a => a.UserID == UserID).ToList();
             foreach (var right in userRight)
             {
                 RightIDs.Add(right.RightID);
