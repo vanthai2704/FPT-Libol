@@ -19,6 +19,7 @@ namespace Libol.Controllers
         private static string strTransactionIDs = "0";
         private static string patroncode = "0";
         private static string fullname = "";
+        private static string sessionpcode = "";
         FormatHoldingTitle f = new FormatHoldingTitle();
         CirculationBusiness circulationBusiness = new CirculationBusiness();
 
@@ -27,6 +28,7 @@ namespace Libol.Controllers
         {
             strTransactionIDs = "0";
             patroncode = "0";
+            sessionpcode = "";
             ViewBag.HiddenPatronCode = PatronCode;
             ViewBag.HiddenCheckduplicate = "";
             return View();
@@ -43,13 +45,9 @@ namespace Libol.Controllers
             else
             {
                 ViewBag.active = 0;
-                ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().Note;
-                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().StartedDate;
-                ViewBag.lockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().LockedDays;
-                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == Patroncode).First().LockedDays);
             }
-
             getpatrondetail(Patroncode);
+            sessionpcode = Patroncode;
             return PartialView("_showPatronInfo");
         }
 
@@ -78,7 +76,7 @@ namespace Libol.Controllers
                 ViewBag.message = "ĐKCB không đúng";
                 ViewBag.HiddenCheckduplicate = "";
             }
-            else if (db.CIR_LOAN.Where(a => a.CopyNumber == CopyNumber).Count() !=0)
+            else if (db.CIR_LOAN.Where(a => a.CopyNumber == CopyNumber).Count() != 0)
             {
                 ViewBag.message = "ĐKCB đang được ghi mượn";
                 ViewBag.HiddenCheckduplicate = "";
@@ -193,6 +191,21 @@ namespace Libol.Controllers
             List<FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result> listResult = circulationBusiness.FPT_SP_UPDATE_UNLOCK_PATRON_CARD(patronCode, lockDays, lnote);
             ViewData["listResult"] = listResult;
             return Json(listResult, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult GetLockPatronInfo()
+        {
+            CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == sessionpcode).First();
+            string LPatronName = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName;
+            string LPatronCode = sessionpcode;
+            ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().StartedDate;
+            string Lblackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().StartedDate.ToString("dd/MM/yyyy");
+            string Lblackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().LockedDays).ToString("dd/MM/yyyy");
+            string LlockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().LockedDays.ToString();
+            string LblackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().Note;
+            string[] PatronLockInfo = { LPatronName, LPatronCode, Lblackstartdate, Lblackenddate, LlockedDay, LblackNote };
+            return Json(PatronLockInfo, JsonRequestBehavior.AllowGet);
         }
 
         public void getpatrondetail(string strPatronCode)

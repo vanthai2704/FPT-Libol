@@ -5625,7 +5625,6 @@ PRINT(@strSQL)
 
 
 /****************************** DATA FOR PERMISSION **********************************/
-USE [Libol]
 GO
 SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT] ON 
 
