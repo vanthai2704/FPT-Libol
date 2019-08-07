@@ -201,7 +201,7 @@
                 $(document).ready(function () {
                     //check tittle
                     $("#245a").focusout(function () {
-                        debugger;
+                        //debugger;
                         checkTitle($('#245a').val(), '');
 
                     });
@@ -362,7 +362,7 @@
 
                     //add event Click to reUse Item
                     $.each(arrId, function (i, item) {
-                        document.getElementById("reUse" + item).onclick = function () { reUse(item) };
+                        document.getElementById("reUse" + item).onclick = function () { reUse(item) + '' };
                     });
                 }
                 else {
@@ -450,7 +450,7 @@
                                     //Nhan đề song song '='
                                     //Phụ đề ':'
                                     if (FieldNameTemp == '245b' && arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1) == '=') {
-                                        debugger;
+                                        //debugger;
                                         FieldNameTemp = '245b1';
                                         arrFieldValueFinal[arrFieldValueFinal.length - 1] = arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(0, arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1);
                                         if (valTemp[valTemp.length - 1] == '/' || valTemp[valTemp.length - 1] == '.' || valTemp[valTemp.length - 1] == ',') {
@@ -458,7 +458,7 @@
                                         }
                                     }
                                     if (FieldNameTemp == '245b' && arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1) == ':') {
-                                        debugger;
+                                        //debugger;
                                          //&& arrFieldNameFinal[arrFieldNameFinal.length - 1] == '245a'
                                         FieldNameTemp = '245b2';
                                         arrFieldValueFinal[arrFieldValueFinal.length - 1] = arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(0, arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1);
@@ -501,14 +501,13 @@
 
 
                 });
-                debugger;
+                //debugger;
                 $.each(arrFieldNameFinal, function (i, FieldCode) {
-
                     var x = $("#" + FieldCode).length;
                     if ($("#" + FieldCode).length) {
                         $("#" + FieldCode).val(arrFieldValueFinal[i] + '');
                     }
-                    debugger;
+                    //debugger;
                 });
             },
             error: function (errorThrown) {
@@ -559,6 +558,7 @@
     function doWork() {
         if ($('#245a').val().trim().length == 0) {
             alert("Biên mục chưa có nhan đề chính(245$a)");
+            $('#245a').focus();
         } else { 
         var arrFieldName = [];
         var arrFieldValue = [];
@@ -582,7 +582,7 @@
                     arrFieldValue.push($("#mediumId :selected").val());
                     break;
                 case '927':
-                    debugger;
+                    //debugger;
                     arrFieldName.push(item);
                     arrFieldValue.push($("#itemTypeId :selected").val());
                     break;
