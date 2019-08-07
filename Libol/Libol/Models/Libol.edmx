@@ -2919,7 +2919,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FPT_SYS_U__Right__76923CB8">
+        <Association Name="FK__FPT_SYS_U__Right__13196CCD">
           <End Role="FPT_SYS_USER_RIGHT" Type="Self.FPT_SYS_USER_RIGHT" Multiplicity="1" />
           <End Role="FPT_SYS_USER_RIGHT_DETAIL" Type="Self.FPT_SYS_USER_RIGHT_DETAIL" Multiplicity="*" />
           <ReferentialConstraint>
@@ -5739,7 +5739,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
           <Parameter Name="strItemCode" Type="varchar" Mode="In" />
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
-          <Parameter Name="intLibraryID" Type="varchar" Mode="In" />
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
           <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
@@ -12396,7 +12396,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
           </AssociationSet>
-          <AssociationSet Name="FK__FPT_SYS_U__Right__76923CB8" Association="Self.FK__FPT_SYS_U__Right__76923CB8">
+          <AssociationSet Name="FK__FPT_SYS_U__Right__13196CCD" Association="Self.FK__FPT_SYS_U__Right__13196CCD">
             <End Role="FPT_SYS_USER_RIGHT" EntitySet="FPT_SYS_USER_RIGHT" />
             <End Role="FPT_SYS_USER_RIGHT_DETAIL" EntitySet="FPT_SYS_USER_RIGHT_DETAIL" />
           </AssociationSet>
@@ -25657,7 +25657,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strPatronCode" Mode="In" Type="String" />
             <Parameter Name="strItemCode" Mode="In" Type="String" />
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
-            <Parameter Name="intLibraryID" Mode="In" Type="String" />
+            <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
             <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
