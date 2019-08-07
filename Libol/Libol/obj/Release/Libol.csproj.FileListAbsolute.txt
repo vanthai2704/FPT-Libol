@@ -107,3 +107,5 @@ F:\CapstoneProject\FPT-Libol\Libol\Libol\obj\Release\Libol.pdb
 F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\log4net.config
 F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\log4net.dll
 F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\log4net.xml
+F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EPPlus.dll
+F:\CapstoneProject\FPT-Libol\Libol\Libol\bin\EPPlus.xml

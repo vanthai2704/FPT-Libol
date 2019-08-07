@@ -10406,5 +10406,38 @@
     <FunctionImportMapping FunctionImportName="FPT_COUNT_COPYNUMBER_ONLOAN" FunctionName="LibolModel.Store.FPT_COUNT_COPYNUMBER_ONLOAN" />
     <FunctionImportMapping FunctionImportName="FPT_SP_GET_ITEM" FunctionName="LibolModel.Store.FPT_SP_GET_ITEM" />
     <FunctionImportMapping FunctionImportName="FPT_SP_CIR_OVERDUELIST_GETINFOR" FunctionName="LibolModel.Store.FPT_SP_CIR_OVERDUELIST_GETINFOR" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV" FunctionName="LibolModel.Store.FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result">
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="VALUE" ColumnName="VALUE" />
+          <ScalarProperty Name="OpenedDate" ColumnName="OpenedDate" />
+          <ScalarProperty Name="ClosedDate" ColumnName="ClosedDate" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_IDs_v1" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_IDs_v1" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_IDs_v1_searching" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_IDs_v1_searching" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_IDs_v1_searching_with_id" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_IDs_v1_searching_with_id" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS_Result">
+          <ScalarProperty Name="CopyNumber" ColumnName="CopyNumber" />
+          <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_HOLDING_DEL" FunctionName="LibolModel.Store.FPT_SP_HOLDING_DEL" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_HOLDING_REMOVED_INS" FunctionName="LibolModel.Store.FPT_SP_HOLDING_REMOVED_INS" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_HOLDING_UPDATE" FunctionName="LibolModel.Store.FPT_SP_HOLDING_UPDATE" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_HOLDING_LIB_SEL" FunctionName="LibolModel.Store.FPT_SP_HOLDING_LIB_SEL">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_HOLDING_LIB_SEL_Result">
+          <ScalarProperty Name="LibName" ColumnName="LibName" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

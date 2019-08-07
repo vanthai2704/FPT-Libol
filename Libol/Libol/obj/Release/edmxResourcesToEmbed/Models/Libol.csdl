@@ -12767,6 +12767,75 @@
       <Parameter Name="strPatronIDs" Mode="In" Type="String" />
       <Parameter Name="whereCondition" Mode="In" Type="String" />
     </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV" ReturnType="Collection(LibolModel.FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result)">
+      <Parameter Name="intLibID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocID" Mode="In" Type="Int32" />
+      <Parameter Name="strShelf" Mode="In" Type="String" />
+      <Parameter Name="intMode" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_IDs_v1">
+      <Parameter Name="intLibID" Mode="In" Type="String" />
+      <Parameter Name="intLocID" Mode="In" Type="String" />
+      <Parameter Name="strShelf" Mode="In" Type="String" />
+      <Parameter Name="intMode" Mode="In" Type="String" />
+      <Parameter Name="intCountOnly" Mode="In" Type="String" />
+      <Parameter Name="numberIndex" Mode="In" Type="String" />
+      <Parameter Name="numberRecordPerPage" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_IDs_v1_searching">
+      <Parameter Name="intLibID" Mode="In" Type="String" />
+      <Parameter Name="intLocID" Mode="In" Type="String" />
+      <Parameter Name="strShelf" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="strCallNumber" Mode="In" Type="String" />
+      <Parameter Name="strVolume" Mode="In" Type="String" />
+      <Parameter Name="strTitle" Mode="In" Type="String" />
+      <Parameter Name="intMode" Mode="In" Type="String" />
+      <Parameter Name="intCountOnly" Mode="In" Type="String" />
+      <Parameter Name="numberIndex" Mode="In" Type="String" />
+      <Parameter Name="numberRecordPerPage" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_IDs_v1_searching_with_id">
+      <Parameter Name="strItemID" Mode="In" Type="String" />
+      <Parameter Name="intMode" Mode="In" Type="String" />
+      <Parameter Name="intCountOnly" Mode="In" Type="String" />
+      <Parameter Name="numberIndex" Mode="In" Type="String" />
+      <Parameter Name="numberRecordPerPage" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS_Result)">
+      <Parameter Name="strLibID" Mode="In" Type="String" />
+      <Parameter Name="strLocID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_HOLDING_DEL">
+      <Parameter Name="strID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_HOLDING_REMOVED_INS">
+      <Parameter Name="intItemID" Mode="In" Type="Int32" />
+      <Parameter Name="intlibID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="strAcquiredDate" Mode="In" Type="DateTime" />
+      <Parameter Name="strRemovedDate" Mode="In" Type="DateTime" />
+      <Parameter Name="intReasonID" Mode="In" Type="Int32" />
+      <Parameter Name="dblPrice" Mode="In" Type="Double" />
+      <Parameter Name="strShelf" Mode="In" Type="String" />
+      <Parameter Name="strVolume" Mode="In" Type="String" />
+      <Parameter Name="intLoanTypeID" Mode="In" Type="Int32" />
+      <Parameter Name="intUseCount" Mode="In" Type="Int32" />
+      <Parameter Name="intPoID" Mode="In" Type="Int32" />
+      <Parameter Name="strDateLastUsed" Mode="In" Type="DateTime" />
+      <Parameter Name="strCallNumber" Mode="In" Type="String" />
+      <Parameter Name="intAcquiredSourceID" Mode="In" Type="Int32" />
+      <Parameter Name="strLiquidCode" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_HOLDING_UPDATE">
+      <Parameter Name="strID" Mode="In" Type="String" />
+      <Parameter Name="locid" Mode="In" Type="String" />
+      <Parameter Name="libid" Mode="In" Type="String" />
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+      <Parameter Name="intMode" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_HOLDING_LIB_SEL" ReturnType="Collection(LibolModel.FPT_SP_HOLDING_LIB_SEL_Result)" />
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -17741,5 +17810,20 @@
     <Property Type="Int32" Name="LibID" Nullable="false" />
     <Property Type="String" Name="Symbol" Nullable="false" MaxLength="50" />
     <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result">
+    <Property Type="String" Name="Type" Nullable="false" MaxLength="11" />
+    <Property Type="String" Name="VALUE" Nullable="true" MaxLength="200" />
+    <Property Type="DateTime" Name="OpenedDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="ClosedDate" Nullable="true" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_GET_HOLDING_REMOVED_GET_COPYNUMBER_TO_INS_Result">
+    <Property Type="String" Name="CopyNumber" Nullable="false" MaxLength="33" />
+    <Property Type="String" Name="Symbol" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="FPT_SP_HOLDING_LIB_SEL_Result">
+    <Property Type="String" Name="LibName" Nullable="true" MaxLength="134" />
+    <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
   </ComplexType>
 </Schema>
