@@ -5663,7 +5663,21 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
+          <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+          <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+          <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
+          <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
+          <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_GET_PATRON_LOANINFOR_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
+          <Parameter Name="strItemCode" Type="varchar" Mode="In" />
+          <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
+          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+          <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
           <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
@@ -5684,7 +5698,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
           <Parameter Name="strDueDateFrom" Type="varchar" Mode="In" />
@@ -5696,9 +5710,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
           <Parameter Name="strItemCode" Type="varchar" Mode="In" />
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
-          <Parameter Name="intLibraryID" Type="int" Mode="In" />
+          <Parameter Name="intLibraryID" Type="varchar" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
           <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
@@ -5711,7 +5725,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
           <Parameter Name="intLibraryID" Type="int" Mode="In" />
           <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-          <Parameter Name="intLocationID" Type="int" Mode="In" />
+          <Parameter Name="intLocationID" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
           <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
           <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
@@ -25561,7 +25575,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
             <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -25575,7 +25589,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
             <Parameter Name="strDueDateFrom" Mode="In" Type="String" />
@@ -25587,9 +25601,9 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strPatronCode" Mode="In" Type="String" />
             <Parameter Name="strItemCode" Mode="In" Type="String" />
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
-            <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+            <Parameter Name="intLibraryID" Mode="In" Type="String" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
             <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -25602,7 +25616,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="strCopyNumber" Mode="In" Type="String" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
             <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-            <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
             <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
             <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -25920,6 +25934,20 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intItemID" Mode="In" Type="Int32" />
             <Parameter Name="intLocationID" Mode="In" Type="Int32" />
             <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_GET_PATRON_LOANINFOR_NEW">
+            <Parameter Name="strPatronCode" Mode="In" Type="String" />
+            <Parameter Name="strItemCode" Mode="In" Type="String" />
+            <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+            <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+            <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
+            <Parameter Name="intLocationID" Mode="In" Type="String" />
+            <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+            <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+            <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
+            <Parameter Name="strCheckInDateTo" Mode="In" Type="String" />
+            <Parameter Name="strSerial" Mode="In" Type="String" />
+            <Parameter Name="intUserID" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
@@ -41372,6 +41400,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_GET_PATRON_LOANINFOR_NEW" FunctionName="LibolModel.Store.FPT_GET_PATRON_LOANINFOR_NEW" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
