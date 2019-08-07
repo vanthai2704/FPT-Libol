@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Libol.Controllers
 {
-    public class RenewController : BaseController
+    public class RenewController : Controller
     {
         private LibolEntities db = new LibolEntities();
         RenewBusiness renewBusiness = new RenewBusiness();
@@ -20,9 +20,10 @@ namespace Libol.Controllers
         FormatHoldingTitle f = new FormatHoldingTitle();
         CirculationBusiness circulationBusiness = new CirculationBusiness();
 
-        [AuthAttribute(ModuleID = 3, RightID = "149")]
+        [AuthAttribute(ModuleID = 3, RightID = "18")]
         public ActionResult Renew()
         {
+            CodeVal = "";
             return View();
         }
 
@@ -58,7 +59,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 3, RightID = "72")]
+        [AuthAttribute(ModuleID = 3, RightID = "19")]
         public PartialViewResult Renew(int[] intLoanID, Byte intAddTime, Byte intTimeUnit, string strFixedDueDate, string[] duedates, int[] inttimes, int[] intrange)
         {
             int codeErrorCount = 0;
@@ -167,6 +168,22 @@ namespace Libol.Controllers
             return Json(listResult, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpPost]
+        public JsonResult GetLockPatronInfo()
+        {
+            CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == CodeVal).First();
+            string LPatronName = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName;
+            string LPatronCode = CodeVal;
+            ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().StartedDate;
+            string Lblackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().StartedDate.ToString("dd/MM/yyyy");
+            string Lblackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().LockedDays).ToString("dd/MM/yyyy");
+            string LlockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().LockedDays.ToString();
+            string LblackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == LPatronCode).First().Note;
+            string[] PatronLockInfo = { LPatronName, LPatronCode, Lblackstartdate, Lblackenddate, LlockedDay, LblackNote };
+            return Json(PatronLockInfo, JsonRequestBehavior.AllowGet);
+        }
+
         private void getcontentrenew(int intUserID, Byte intType, string strCodeVal)
         {
             List<SP_CIR_GET_RENEW_Result> results = renewBusiness.FPT_SP_CIR_GET_RENEW(intUserID, intType, strCodeVal);
@@ -201,13 +218,6 @@ namespace Libol.Controllers
             else
             {
                 ViewBag.active = 0;
-                CIR_PATRON patron = db.CIR_PATRON.Where(a => a.Code == code).First();
-                ViewBag.Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName;
-                ViewBag.strCode = code;
-                ViewBag.blackNote = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().Note;
-                ViewBag.blackstartdate = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().StartedDate;
-                ViewBag.lockedDay = db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().LockedDays;
-                ViewBag.blackenddate = ViewBag.blackstartdate.AddDays(db.CIR_PATRON_LOCK.Where(a => a.PatronCode == code).First().LockedDays);
             }
         }
 

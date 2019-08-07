@@ -55,5 +55,13 @@ namespace Libol.Models
                 new object[] { ItemID, LocID, LibID }).ToList();
             return list;
         }
+
+        //list liquid copynumber
+        public List<FPT_SP_GET_ITEM_INFOR_Result> FPT_SP_GET_ITEM_INFOR_LIST(int ItemID, int LocID, int LibID)
+        {
+            List<FPT_SP_GET_ITEM_INFOR_Result> list = db.Database.SqlQuery<FPT_SP_GET_ITEM_INFOR_Result>("FPT_SP_GET_ITEM_INFOR {0}, {1}, {2}",
+                new object[] { ItemID, LocID, LibID }).ToList();
+            return list;
+        }
     }
 }

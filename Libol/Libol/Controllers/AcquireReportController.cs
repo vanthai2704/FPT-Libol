@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Libol.Controllers
 {
-    public class AcquireReportController : BaseController
+    public class AcquireReportController : Controller
     {
         LibolEntities le = new LibolEntities();
         AcquisitionBusiness ab = new AcquisitionBusiness();
@@ -34,6 +34,7 @@ namespace Libol.Controllers
             return View();
         }
         // GET: AcquireReport
+        [AuthAttribute(ModuleID = 4, RightID = "27")]
         public ActionResult Index()
         {
             List<SelectListItem> lib = new List<SelectListItem>();
@@ -132,8 +133,6 @@ namespace Libol.Controllers
                     else if (edd != "" && sdd == "")
                     {
                         DateTime edt = Convert.ToDateTime(edd);
-                        // ViewBag.AcqItems = le.FPT_SP_GET_HOLDING_BYLOC_TIME(LocID, null, null, edt, orderby).ToList();
-                        //List<Temper> tpt = new List<Temper>();
                         foreach (var item in le.FPT_SP_GET_HOLDING_BY_LOCATIONID_lan12(LibID, LocID, null, null, edt, orderby).ToList())
                         {
                             int temp = Int32.Parse(item.ItemID.ToString());
@@ -152,7 +151,6 @@ namespace Libol.Controllers
                                 String tpDKCB = item.DKCB;
                                 foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
                                 {
-                                    // tpDKCB.Add(ites.DKCB, ites.ItemID);
                                     tpDKCB = ites.DKCB;
                                 }
                                 tpt.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, "cũ", item.ItemID, 0, 0));
@@ -162,7 +160,6 @@ namespace Libol.Controllers
                                 String tpDKCB = item.DKCB;
                                 foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
                                 {
-                                    // tpDKCB.Add(ites.DKCB, ites.ItemID);
                                     tpDKCB = ites.DKCB;
                                 }
                                 tpt.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, "Mới", item.ItemID, 0, 0));
@@ -1573,6 +1570,7 @@ namespace Libol.Controllers
         {
             return View();
         }
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult LanguageStat()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1596,6 +1594,7 @@ namespace Libol.Controllers
             ViewBag.CopyDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("COPY", LibID);
             return PartialView("GetLanguageStats");
         }
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult StatisticYear()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1619,6 +1618,7 @@ namespace Libol.Controllers
             ViewBag.Result = ab.FPT_ACQ_YEAR_STATISTIC_LIST(LibID, LocID, strFromYear, strToYear, (int)Session["UserID"]);
             return PartialView("GetYearStats");
         }
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult StatisticMonth()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1642,6 +1642,7 @@ namespace Libol.Controllers
             ViewBag.Result = ab.FPT_ACQ_MONTH_STATISTIC_LIST(LibID, LocID, strInYear, (int)Session["UserID"]);
             return PartialView("GetMonthStats");
         }
+        [AuthAttribute(ModuleID = 4, RightID = "27")]
         public ActionResult LiquidationStats()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -1785,6 +1786,7 @@ namespace Libol.Controllers
                 data = result
             });
         }
+        [AuthAttribute(ModuleID = 4, RightID = "27")]
         public ActionResult RecomendReport()
         {
             List<SelectListItem> lib = new List<SelectListItem>();
@@ -2647,7 +2649,7 @@ namespace Libol.Controllers
             return View();
         }
 
-
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult StatisticTop20()
         {
             List<SelectListItem> cat = new List<SelectListItem>
@@ -2767,6 +2769,7 @@ namespace Libol.Controllers
         }
 
         //statistic book in
+        [AuthAttribute(ModuleID = 4, RightID = "28")]
         public ActionResult StatTaskbar()
         {
             List<SelectListItem> lib = new List<SelectListItem>
@@ -2785,14 +2788,17 @@ namespace Libol.Controllers
         {
             int LibID = 0;
             int LocID = 0;
+            int count = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
             List<FPT_SP_GET_ITEM_Result> listItem = new List<FPT_SP_GET_ITEM_Result>();
             List<FPT_SP_GET_ITEM_Result> listIte = new List<FPT_SP_GET_ITEM_Result>();
 
             listIte = ab.FPT_SP_GET_ITEM_LIST(strFromDate, strToDate, LocID, LibID).ToList();
+
             foreach (var item in listIte)
             {
+                count++;
                 int countCopy = 0;
                 int borrowNum = 0;
                 int remainingNum = 0;
@@ -2803,13 +2809,8 @@ namespace Libol.Controllers
                 int nam = 0;
                 string StrTitle = "";
                 string Strdigit = "";
-                // countCopy = item.ID;
-                foreach (var coun in ab.FPT_COUNT_COPYNUMBER_BY_ITEMID_LIST(item.ID, LocID, LibID))
-                {
-                    countCopy = coun.SLuong;
-                }
                 //lay thong tin item
-                foreach (var items in ab.SP_GET_ITEM_INFOR_LIST(item.ID))
+                foreach (var items in ab.FPT_SP_GET_ITEM_INFOR_LIST(item.ID, LocID, LibID))
                 {
                     if (items.FieldCode == "100")
                     {
@@ -2889,20 +2890,28 @@ namespace Libol.Controllers
 
                     StrTitle = GetContent(StrTitle);
 
+                    if (items.FieldCode == "luongmuon")
+                    {
+                        borrowNum = Convert.ToInt32(items.ItemID);
+                    }
 
+                    if (items.FieldCode == "soluong")
+                    {
+                        countCopy = Convert.ToInt32(items.ItemID);
+                    }
 
+                    remainingNum = countCopy - borrowNum;
                 }
 
                 //so luong muon
-                foreach (var liItem in ab.FPT_COUNT_COPYNUMBER_ONLOAN_LIST(item.ID, LocID, LibID))
-                {
-                    borrowNum = liItem.Sluong;
-                }
-                remainingNum = countCopy - borrowNum;
 
-                listItem.Add(new FPT_SP_GET_ITEM_Result(item.ID, StrTitle, item.Code, tGia, noiXB, nhaXB, nam, countCopy, item.DKCB, borrowNum, remainingNum));
+                listItem.Add(
+                    new FPT_SP_GET_ITEM_Result(
+                        item.ID, StrTitle, item.Code, tGia, noiXB, 
+                        nhaXB, nam, countCopy, item.DKCB, borrowNum, remainingNum));
 
             }
+
 
 
 
@@ -3175,7 +3184,6 @@ namespace Libol.Controllers
             ViewBag.Result = listItem;
             return PartialView("GetStatTaskbar");
         }
-
 
     }
     public class FPT_GET_LIQUIDBOOKS_Result_2

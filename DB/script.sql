@@ -41,8 +41,96 @@ CREATE TABLE SYS_USER_GOOGLE_ACCOUNT(
 )
 
 GO
-
 /******/
+CREATE TABLE FPT_SYS_USER_RIGHT(
+	[ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[ModuleID] [int] NOT NULL,
+	[Right] [nvarchar](100) NOT NULL,
+	[IsBasic] [bit] NOT NULL
+)
+GO
+/******/
+
+CREATE TABLE FPT_SYS_USER_RIGHT_DETAIL(
+	[RightID] [int] NOT NULL FOREIGN KEY REFERENCES FPT_SYS_USER_RIGHT(ID),
+	[UserID] [int] NOT NULL,
+	[ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY	
+)
+GO
+/******/
+
+CREATE PROCEDURE [dbo].[FPT_SP_ADMIN_GRANT_RIGHTS]
+	@intUID int,
+	@intRightID int
+AS
+	INSERT INTO FPT_SYS_USER_RIGHT_DETAIL (UserID, RightID) VALUES (@intUID,@intRightID)
+GO
+/******/
+
+
+CREATE  PROCEDURE [dbo].[FPT_SP_ADMIN_UPDATE_USER]
+	@intUID int,
+	@intISLDAP int,
+	@strName NVarchar(100),
+	@strUserName varchar(100),
+	@strPassword varchar(100),
+	@intCatModule int,
+	@intPatModule int,
+	@intCirModule int,
+	@intAcqModule int,
+	@intSerModule int,
+	@intILLModule int,
+	@intDelModule int,
+	@intAdmModule int,
+	@intParentID int,
+	@intOutVal int OUT
+AS
+	DECLARE @strUserNameTemp varchar(100)
+	DECLARE @strLDAPAdsPath varchar(100)
+
+	SET @intOutVal = 0
+
+	SELECT @strUserNameTemp = UserName FROM SYS_USER Where ID = @intUID
+	SELECT @strLDAPAdsPath = ISNULL(LDAPAdsPath, '') FROM SYS_USER WHERE ID = @intUID 
+	IF @strUserNameTemp = 'Admin'
+		SET @strUserName = 'Admin'
+	ELSE
+	   BEGIN
+	   	IF @intISLDAP = 0
+			SELECT @intOutVal = ISNULL(Count(UserName),0) FROM SYS_USER WHERE UserName = @strUserName AND ID <> @intUID	
+		ELSE
+			SELECT @intOutVal = ISNULL(Count(UserName),0) FROM SYS_USER WHERE UserName = @strUserName AND ID <> @intUID AND LDAPAdsPath = @strLDAPAdsPath
+	   END 	
+
+	IF @intOutVal = 0 
+	   BEGIN
+		IF @strPassword <> '' 
+			UPDATE SYS_USER SET Name = @strName,
+			        Username = @strUserName, Password = @strPassword,
+				Priority = @intCatModule ,AcqModule= @intAcqModule, 
+				SerModule= @intSerModule , CirModule = @intCirModule,
+				PatModule= @intPatModule, CatModule= @intCatModule,
+				ILLModule= @intILLModule, DelModule= @intDelModule, 
+				AdmModule = @intAdmModule, ParentID = @intParentID 
+				WHERE ID = @intUID
+		ELSE
+			UPDATE SYS_USER SET Name = @strName,
+			        Username = @strUserName,
+				Priority = @intCatModule,AcqModule= @intAcqModule, 
+				SerModule= @intSerModule , CirModule = @intCirModule,
+				PatModule= @intPatModule,CatModule= @intCatModule  ,
+				ILLModule= @intILLModule, DelModule= @intDelModule, 
+				AdmModule = @intAdmModule, ParentID = @intParentID 
+				WHERE ID = @intUID
+
+		DELETE FROM FPT_SYS_USER_RIGHT_DETAIL WHERE UserID = @intUID
+		DELETE FROM SYS_USER_LOCATION WHERE UserID = @intUID
+		DELETE FROM SYS_USER_CIR_LOCATION WHERE UserID = @intUID
+		DELETE FROM SYS_USER_SER_LOCATION WHERE UserID = @intUID
+	   END
+GO
+
+
 create PROCEDURE [dbo].[FPT_SP_CATA_GET_MARC_FORM]
 -- ---------   ------  -------------------------------------------
 	@intFormID	int,
@@ -156,7 +244,7 @@ CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_ACCEPT]
 	@intModuleID int,
 	@intUserID int
 AS
-SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT_DETAIL D JOIN SYS_USER_RIGHT R ON D.RightID = R.ID
+SELECT R.ID, R.[Right] FROM FPT_SYS_USER_RIGHT_DETAIL D JOIN FPT_SYS_USER_RIGHT R ON D.RightID = R.ID
 WHERE D.UserID = @intUserID AND R.ModuleID = @intModuleID
 
 go
@@ -167,11 +255,11 @@ CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_DENY]
 	@intUserParentID int
 AS
 
-SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT R 
-JOIN SYS_USER_RIGHT_DETAIL D ON R.ID = D.RightID 
+SELECT R.ID, R.[Right] FROM FPT_SYS_USER_RIGHT R 
+JOIN FPT_SYS_USER_RIGHT_DETAIL D ON R.ID = D.RightID 
 WHERE R.ModuleID = @intModuleID AND D.UserID = @intUserParentID AND R.ID 
 NOT IN (
-	SELECT U.ID FROM SYS_USER_RIGHT_DETAIL D JOIN SYS_USER_RIGHT U ON D.RightID = U.ID
+	SELECT U.ID FROM FPT_SYS_USER_RIGHT_DETAIL D JOIN FPT_SYS_USER_RIGHT U ON D.RightID = U.ID
 	WHERE D.UserID = @intUserID AND U.ModuleID = @intModuleID
 )
 
@@ -183,8 +271,8 @@ CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_WHEN_CREATE]
 	@IsBasic int
 AS
 
-SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT R 
-JOIN SYS_USER_RIGHT_DETAIL D ON R.ID = D.RightID 
+SELECT R.ID, R.[Right] FROM FPT_SYS_USER_RIGHT R 
+JOIN FPT_SYS_USER_RIGHT_DETAIL D ON R.ID = D.RightID 
 JOIN SYS_USER E ON D.UserID = E.ID 
 WHERE D.UserID = @intParentID AND R.ModuleID = @intModuleID AND R.IsBasic = @IsBasic
 
@@ -529,7 +617,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_LOANINFOR]
 	@strCopyNumber  varchar(30),
 	@intLibraryID int,
 	@strLocationPrefix varchar(5),
-	@intLocationID  int,
+	@intLocationID  varchar(500),
 	@strCheckOutDateFrom varchar(30),
 	@strCheckOutDateTo varchar(30),
 	@strCheckInDateFrom varchar(30),
@@ -568,9 +656,9 @@ AS
 		BEGIN
 			IF NOT @strLocationPrefix ='0'
 				BEGIN			
-					IF NOT @intLocationID = 0
+					IF NOT @intLocationID = ''
 						BEGIN
-							SET @strLikeSQL = @strLikeSQL + 'CLH.LocationID='+ CAST(@intLocationID AS VARCHAR(10)) +' AND '
+							SET @strLikeSQL = @strLikeSQL + 'CLH.LocationID IN ('+ @intLocationID +') AND '
 						END
 					ELSE
 						BEGIN
@@ -624,7 +712,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_ONLOANINFOR]
 	@strCopyNumber  varchar(30),
 	@intLibraryID int,
 	@strLocationPrefix varchar(5),
-	@intLocationID  int,
+	@intLocationID  varchar(500),
 	@strCheckOutDateFrom varchar(30),
 	@strCheckOutDateTo varchar(30),
 	@strDueDateFrom varchar(30),
@@ -663,9 +751,9 @@ AS
 		BEGIN
 			IF NOT @strLocationPrefix ='0'
 				BEGIN			
-					IF NOT @intLocationID = 0
+					IF NOT @intLocationID = ''
 						BEGIN
-							SET @strLikeSQL = @strLikeSQL + 'CL.LocationID='+ CAST(@intLocationID AS VARCHAR(10)) +' AND '
+							SET @strLikeSQL = @strLikeSQL + 'CL.LocationID IN ('+ @intLocationID +') AND '
 						END
 					ELSE
 						BEGIN
@@ -721,7 +809,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_RENEW_LOAN_INFOR]
 	@strCopyNumber  varchar(30),
 	@intLibraryID  int,
 	@strLocationPrefix varchar(5),
-	@intLocationID  int,
+	@intLocationID  varchar(500),
 	@strCheckOutDateFrom varchar(30),
 	@strCheckOutDateTo varchar(30),
 	@strCheckInDateFrom varchar(30),
@@ -763,9 +851,9 @@ BEGIN
 		BEGIN
 			IF NOT @strLocationPrefix ='0'
 				BEGIN			
-					IF NOT @intLocationID = 0
+					IF NOT @intLocationID = ''
 						BEGIN
-							SET @strLikeSQL = @strLikeSQL + 'CLH.LocationID='+ CAST(@intLocationID AS VARCHAR(10)) +' AND '
+							SET @strLikeSQL = @strLikeSQL + 'CLH.LocationID IN ('+ @intLocationID +') AND '
 						END
 					ELSE
 						BEGIN
@@ -821,7 +909,7 @@ Create   PROCEDURE [dbo].[FPT_GET_PATRON_RENEW_ONLOAN_INFOR]
 	@strCopyNumber  varchar(30),
 	@intLibraryID  int,
 	@strLocationPrefix varchar(5),
-	@intLocationID  int,
+	@intLocationID  varchar(500),
 	@strCheckOutDateFrom varchar(30),
 	@strCheckOutDateTo varchar(30),
 	@strCheckInDateFrom varchar(30),
@@ -863,9 +951,9 @@ BEGIN
 		BEGIN
 			IF NOT @strLocationPrefix ='0'
 				BEGIN			
-					IF NOT @intLocationID = 0
+					IF NOT @intLocationID = ''
 						BEGIN
-							SET @strLikeSQL = @strLikeSQL + 'CL.LocationID='+ CAST(@intLocationID AS VARCHAR(10)) +' AND '
+							SET @strLikeSQL = @strLikeSQL + 'CL.LocationID IN ('+ @intLocationID +') AND '
 						END
 					ELSE
 						BEGIN
@@ -2100,10 +2188,10 @@ CREATE PROCEDURE [dbo].[FPT_ADMIN_GET_RIGHTS_DENY_ADMIN]
 	@intModuleID int
 AS
 
-SELECT R.ID, R.[Right] FROM SYS_USER_RIGHT R 
+SELECT R.ID, R.[Right] FROM FPT_SYS_USER_RIGHT R 
 WHERE R.ModuleID = @intModuleID AND R.ID 
 NOT IN (
-	SELECT U.ID FROM SYS_USER_RIGHT_DETAIL D JOIN SYS_USER_RIGHT U ON D.RightID = U.ID
+	SELECT U.ID FROM FPT_SYS_USER_RIGHT_DETAIL D JOIN FPT_SYS_USER_RIGHT U ON D.RightID = U.ID
 	WHERE D.UserID = 1 AND U.ModuleID = @intModuleID
 )
 
@@ -4461,7 +4549,7 @@ PRINT @strSQL + @strTable + @strWhere + @strPaging
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 7/28/2019 04:21:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM]    Script Date: 07/28/2019 17:32:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -4472,7 +4560,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	THỐNG KÊ DANH MỤC SÁCH NHẬP
 -- =============================================
-CREATE  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
+Create  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
 
       @strFromDate VARCHAR(30),
 
@@ -4485,44 +4573,43 @@ CREATE  PROCEDURE [dbo].[FPT_SP_GET_ITEM]
 AS   
 
       DECLARE @strSQL NVARCHAR(1000)
-
+	  DECLARE @strLike NVARCHAR(1000)
+	  DECLARE @strJoin NVARCHAR(1000)
       SET @strSQL=''
-
+      SET @strJoin=''
+	  SET @strLike = ''
       SET @strSQL=@strSQL + 'SELECT I.ID,I.Code, U.DKCB, F.Content 
       FROM ITEM I
       join FIELD200S F on I.ID=F.ITEMID
 join (SELECT distinct ItemID ,
 STUFF(( SELECT  '', '' + CopyNumber
 FROM HOLDING D1
-WHERE D1.ItemID = D2.ItemID
-FOR
-XML PATH('''')
-), 1, 1, '''') AS DKCB
-FROM HOLDING D2
-GROUP BY ItemID) as U on I.ID = U.ItemID
-WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15) '
+WHERE D1.ItemID = D2.ItemID'
+SET @strJoin = @strJoin+ 'FOR XML PATH('''')), 1, 1, '''') AS DKCB FROM HOLDING D2 GROUP BY ItemID) as U on I.ID = U.ItemID
+WHERE FIELDCODE=''245'' AND (I.TYPEID=1 OR I.TypeID=15)'
 
       If @strFromDate<>''
 
-            SET @strSQL=@strSQL + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
+            SET @strJoin=@strJoin + ' AND I.CreatedDate>=CONVERT(VARCHAR, '''+@strFromDate+''', 21)'
 
       If @strToDate<>''
 
-            SET @strSQL=@strSQL + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
+            SET @strJoin=@strJoin + ' AND I.CreatedDate<=CONVERT(VARCHAR, '''+@strToDate+''', 21)'
 
       If @intLocationID <>0
-
-            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
-            
+		BEGIN
+            SET @strJoin=@strJoin + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LocationID='+ convert(nvarchar,@intLocationID) +')'
+            SET @strLike = @strLike + ' AND D1.LocationID=' +convert(nvarchar,@intLocationID)
+        END    
        If @intLocationID =0
-
-            SET @strSQL=@strSQL + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
-
-
+		BEGIN
+            SET @strJoin=@strJoin + ' AND I.ID IN (SELECT ITEMID FROM HOLDING WHERE LibID='+ convert(nvarchar,@intLibraryID) +')'
+			SET @strLike = @strLike + ' AND D1.LibID=' +convert(nvarchar,@intLibraryID)
+		END
+		SET @strSQL = @strSQL+ @strLike + @strJoin
     --print(@strSQL)
 
       EXEC(@strSQL)
-      
 
 GO
 /****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_REMOVED_PAGING_v2]    Script Date: 7/28/2019 04:21:02 PM ******/
@@ -5450,11 +5537,158 @@ AS
 	FROM HOLDING_LIBRARY 
 	WHERE LocalLib = 1 
 	ORDER BY Code
-
-
 GO
 
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_ITEM_INFOR]    Script Date: 07/28/2019 17:31:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		<DUCNV>
+-- Create date: <Create Date,,>
+-- Description:	list item information and count number of copynumber
+-- InUsed 
+-- =1: dang muon 
+-- =============================================
+CREATE procedure [dbo].[FPT_SP_GET_ITEM_INFOR] 
+	@intItemID int,
+	@intLocationID int,
+	@intLibraryID int
+AS
+If @intLocationID <>0
+SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (020, 022) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (041) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (044) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field100s WHERE FieldCode IN (100, 110, 111) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 245 AND ItemID = @intItemID 
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 250 AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 260 AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field300s WHERE FieldCode = 300 AND ItemID = @intItemID
+UNION SELECT COUNT(COPYNUMBER) AS ItemID,'soluong' AS FieldCode,'SLuongDKrongKho' AS Content, 'inex' as Indicators FROM HOLDING WHERE ITEMID = @intItemID AND  LocationID =@intLocationID
+UNION SELECT COUNT(COPYNUMBER) AS ItemID, 'luongmuon' AS FieldCode,'SLuongDKCBtrongKho' AS Content,'index' as Indicators FROM HOLDING WHERE ITEMID =@intItemID AND  LocationID = @intLocationID
+	
+If @intLocationID =0
+SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (020, 022) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (041) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field000s WHERE FieldCode IN (044) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field100s WHERE FieldCode IN (100, 110, 111) AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 245 AND ItemID = @intItemID 
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 250 AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field200s WHERE FieldCode = 260 AND ItemID = @intItemID
+UNION SELECT ItemID, FieldCode, Content, Ind1+ind2 as Indicators FROM Field300s WHERE FieldCode = 300 AND ItemID = @intItemID
+  UNION SELECT COUNT(COPYNUMBER) AS ItemID,'soluong' AS FieldCode,'SLuongDKrongKho' AS Content,'inex' as Indicators FROM HOLDING WHERE ITEMID = @intItemID AND  LibID =@intLibraryID
+ UNION SELECT COUNT(COPYNUMBER) AS ItemID,'luongmuon' AS FieldCode,'SLuongDKCBtrongKho' AS Content,'index' as Indicators FROM HOLDING WHERE ITEMID =@intItemID AND  LibID = @intLibraryID
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER]    Script Date: 08/06/2019 17:39:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/******/
+CREATE PROCEDURE [dbo].[FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER]
+	@strCopyNumber VARCHAR(50)
+AS
+
+	DECLARE @strSQL VARCHAR(8000)
+	DECLARE @strJoinSQL varchar(1000)
+	DECLARE @strLikeSql varchar(1000)
+	SET @strSQL = 'SELECT HRR.Reason,
+	REPLACE(REPLACE(REPLACE(REPLACE(F.Content,''$a'',''''),''$b'','' ''),''$c'','' ''),''$n'','' '') as Content,
+	HR.CopyNumber,
+	HR.LiquidCode,
+	HR.Price,HR.UseCount,
+	HR.RemovedDate' 
+	
+	SET @strLikeSql = '1 =1 AND '
+	SET @strJoinSQL = ''
+	
+	SET @strJoinSQL = @strJoinSQL + ' FROM HOLDING_REMOVED HR LEFT JOIN FIELD200S F ON HR.ItemID = F.ItemID AND F.FieldCode=''245'' '
+	SET @strJoinSQL = @strJoinSQL + ' LEFT JOIN HOLDING_REMOVE_REASON HRR ON HR.Reason=HRR.ID '
+	--SET @strJoinSQL = @strJoinSQL + ' LEFT JOIN HOLDING_LIBRARY HL ON HR.LibID = HL.ID '
+	--SET @strJoinSQL = @strJoinSQL + ' LEFT JOIN HOLDING_LOCATION HLC ON HR.LocationID = HLC.ID '
+		
+	IF NOT @strCopyNumber=''
+		BEGIN
+			SET @strLikeSql=@strLikeSql+' CopyNumber='''+@strCopyNumber+''' AND '
+		END
+	
+	
+	SET @strSql = @strSql + @strJoinSQL + ' WHERE ' +@strLikeSQL
+	SET @strSql = LEFT(@strSql,LEN(@strSql)-3) 
+EXEC(@strSQL)
+PRINT(@strSQL)
 
 
+
+/****************************** DATA FOR PERMISSION **********************************/
+GO
+SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT] ON 
+
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (1, 2, N'FPT - Tra cứu bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (2, 2, N'FPT - Nhập hồ sơ bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (3, 2, N'FPT - Sửa hồ sơ bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (4, 2, N'FPT - Thêm bạn đọc theo lô', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (5, 2, N'FPT - Xóa hồ sơ bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (6, 6, N'FPT - Phân quyền cho phân hệ biên mục', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (7, 6, N'FPT - Phân quyền cho phân hệ bạn đọc', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (8, 6, N'FPT - Phân quyền cho phân hệ mượn trả', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (9, 6, N'FPT - Phân quyền cho phân hệ bổ sung', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (10, 6, N'FPT - Phân quyền cho phân hệ ấn phẩm định kỳ', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (11, 6, N'FPT - Phân quyền cho phân hệ ILL', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (12, 6, N'FPT - Phân quyền cho phân hệ phát hành', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (13, 1, N'FPT - Tạo mới bản ghi biên mục', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (15, 1, N'FPT - Sửa bản ghi biên mục', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (16, 3, N'FPT- Ghi mượn', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (17, 3, N'FPT - Ghi trả', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (18, 3, N'FPT - Gia hạn', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (19, 3, N'FPT - Khoá thẻ', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (20, 3, N'FPT - Quá hạn', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (21, 3, N'FPT - Báo cáo', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (23, 3, N'FPT - Thống kê', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (25, 3, N'FPT - Kiểm tra thanh lý', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (26, 4, N'FPT - Xếp giá', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (27, 4, N'FPT - Báo cáo', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (28, 4, N'FPT - Thống kê', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (29, 4, N'FPT - Kho', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (30, 4, N'FPT - In mã vạch', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (31, 4, N'FPT - In nhãn gáy', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (32, 4, N'FPT - Thanh lý', 1)
+SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT] OFF
+SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ON 
+
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (13, 1, 31)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (15, 1, 32)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (1, 1, 33)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (2, 1, 34)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (3, 1, 35)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (4, 1, 36)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (5, 1, 37)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (16, 1, 38)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (17, 1, 39)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (18, 1, 40)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (19, 1, 41)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (20, 1, 42)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (21, 1, 43)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (23, 1, 44)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (25, 1, 45)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (26, 1, 46)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (27, 1, 47)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (28, 1, 48)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (29, 1, 49)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (30, 1, 50)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (31, 1, 51)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (32, 1, 52)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (6, 1, 53)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (7, 1, 54)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (8, 1, 55)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (9, 1, 56)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (10, 1, 57)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (11, 1, 58)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (12, 1, 59)
+SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] OFF
 
 

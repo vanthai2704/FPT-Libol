@@ -60,6 +60,9 @@
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="OfficeOpenXml.Core.ExcelPackage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OfficeOpenXml.Core.ExcelPackage.1.0.0\lib\net46\OfficeOpenXml.Core.ExcelPackage.dll</HintPath>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
@@ -74,6 +77,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
@@ -137,6 +146,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
     <Reference Include="XCrypt">
       <HintPath>..\..\..\..\Users\ngqua\Downloads\Libol60_Updated\Code\Libol60\bin\XCrypt.dll</HintPath>
     </Reference>
@@ -187,7 +197,6 @@
     <Compile Include="Controllers\AcquireReportController.cs" />
     <Compile Include="Controllers\AcquisitionController.cs" />
     <Compile Include="Controllers\CirculationController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CatalogueController.cs" />
     <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
@@ -203,6 +212,7 @@
     <Compile Include="Controllers\ShelfController.cs" />
     <Compile Include="EntityResult\FPT_COUNT_COPYNUMBER_BY_ITEMID_Result.cs" />
     <Compile Include="EntityResult\FPT_COUNT_COPYNUMBER_ONLOAN_Result.cs" />
+    <Compile Include="EntityResult\FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_CATA_SEARCH_MARC_FIELDS_Results.cs" />
     <Compile Include="EntityResult\FPT_SP_GET_ITEM_Result.cs" />
@@ -238,10 +248,19 @@
     <Compile Include="Models\FPT_SP_GET_HOLDING_REMOVED_WITH_ID_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_SP_GET_ITEM_INFOR_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_SP_HOLDING_LIBLOCUSER_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_HOLDING_LIB_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SYS_USER_RIGHT.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SYS_USER_RIGHT_DETAIL.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_GET_LOCKEDPATRONS_Result2.cs" />
@@ -2306,6 +2325,8 @@
     <Content Include="Content\DataTables\Select-1.3.0\js\dataTables.select.js" />
     <Content Include="Content\Images\bg.gif" />
     <Content Include="Content\Images\libol.jpg" />
+    <Content Include="Content\Images\loan.gif" />
+    <Content Include="Content\Images\lock.gif" />
     <Content Include="Content\Images\Logo.png" />
     <Content Include="Content\multiselect.css" />
     <Content Include="Content\PagedList.css" />
@@ -2379,6 +2400,7 @@
     <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
     <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
     <Content Include="Log\console-app.log" />
+    <Content Include="Content\Log\console-app.log" />
     <None Include="Properties\PublishProfiles\Libol - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Libol - Web Deploy.pubxml" />
     <None Include="log4net.config">
@@ -2506,6 +2528,8 @@
     <Content Include="Views\Shelf\LiquidationOrLostPartialView.cshtml" />
     <Content Include="Views\Shelf\NotYetChecked.cshtml" />
     <Content Include="Views\Shelf\NotYetCheckedPartialView.cshtml" />
+    <Content Include="Views\Circulation\CopyNumberLiquidationStats.cshtml" />
+    <Content Include="Views\Circulation\GetCopyNumberLiquidationStats.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />

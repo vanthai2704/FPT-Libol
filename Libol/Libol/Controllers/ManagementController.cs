@@ -124,7 +124,7 @@ namespace Libol.Controllers
                     Data = "Người dùng với tên đăng nhập <strong style='color:black; '>" + Username + "</strong> đã tồn tại!"
                 }, JsonRequestBehavior.AllowGet);
             }
-            if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.Email == Email).Count() > 0)
+            if (!String.IsNullOrEmpty(Email) && db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.Email == Email).Count() > 0)
             {
                 return Json(new Result()
                 {
@@ -137,10 +137,10 @@ namespace Libol.Controllers
             {
                 InvalidFields += "txtName-";
             }
-            if (String.IsNullOrEmpty(Email))
-            {
-                InvalidFields += "txtEmail-";
-            }
+            //if (String.IsNullOrEmpty(Email))
+            //{
+            //    InvalidFields += "txtEmail-";
+            //}
             if (String.IsNullOrEmpty(Username))
             {
                 InvalidFields += "txtUsername-";
@@ -175,7 +175,7 @@ namespace Libol.Controllers
                     {
                         if (!String.IsNullOrEmpty(r))
                         {
-                            db.SP_ADMIN_GRANT_RIGHTS(ID, Int32.Parse(r));
+                            db.FPT_SP_ADMIN_GRANT_RIGHTS(ID, Int32.Parse(r));
                         }
                         
                     }
@@ -244,7 +244,7 @@ namespace Libol.Controllers
                     Data = "Người dùng với tên đăng nhập <strong style='color:black; '>" + Username + "</strong> đã tồn tại!"
                 }, JsonRequestBehavior.AllowGet);
             }
-            if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID != ID).Where(a => a.Email == Email).Count() > 0)
+            if (!String.IsNullOrEmpty(Email) && db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID != ID).Where(a => a.Email == Email).Count() > 0)
             {
                 return Json(new Result()
                 {
@@ -257,10 +257,10 @@ namespace Libol.Controllers
             {
                 InvalidFields += "txtName-";
             }
-            if (String.IsNullOrEmpty(Email))
-            {
-                InvalidFields += "txtEmail-";
-            }
+            //if (String.IsNullOrEmpty(Email))
+            //{
+            //    InvalidFields += "txtEmail-";
+            //}
             if (String.IsNullOrEmpty(Username))
             {
                 InvalidFields += "txtUsername-";
@@ -285,14 +285,14 @@ namespace Libol.Controllers
                     passEncrypt = new XCryptEngine(XCryptEngine.AlgorithmType.MD5).Encrypt(Password, "pl");
                 }
                 var intOutVal = new ObjectParameter("intOutVal", typeof(int));
-                db.SP_ADMIN_UPDATE_USER(ID, 0, Name, Username, passEncrypt, module1, module2, module3, module4, module5, module8, module9, module6,
+                db.FPT_SP_ADMIN_UPDATE_USER(ID, 0, Name, Username, passEncrypt, module1, module2, module3, module4, module5, module8, module9, module6,
                     Int32.Parse(Session["UserID"].ToString()), intOutVal);
                 var rightsSplit = rights.Split(',');
                 foreach (var r in rightsSplit)
                 {
                     if (!String.IsNullOrEmpty(r))
                     {
-                        db.SP_ADMIN_GRANT_RIGHTS(ID, Int32.Parse(r));
+                        db.FPT_SP_ADMIN_GRANT_RIGHTS(ID, Int32.Parse(r));
                     }
                     
                 }

@@ -14,7 +14,7 @@ namespace Libol.Controllers
         private LibolEntities db = new LibolEntities();
         ShelfBusiness shelfBusiness = new ShelfBusiness();
 
-        [AuthAttribute(ModuleID = 4, RightID = "104")]
+        [AuthAttribute(ModuleID = 4, RightID = "31")]
         public ActionResult Index()
         {
             ViewBag.Library = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, (int)Session["UserID"], 1);
@@ -30,7 +30,7 @@ namespace Libol.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
-        [AuthAttribute(ModuleID = 4, RightID = "104")]
+        [AuthAttribute(ModuleID = 4, RightID = "0")]
         public ActionResult Print(int intSelMode,
             int intLibID,
             int intLocID,
