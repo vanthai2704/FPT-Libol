@@ -1096,11 +1096,11 @@ namespace Libol.Controllers
             }
             if (!String.IsNullOrEmpty(PatronCode))
             {
-                search = search.Where(a => a.PatronCode.Contains(PatronCode));
+                search = search.Where(a => a.PatronCode.ToLower().Contains(PatronCode.ToLower()));
             }
             if (!String.IsNullOrEmpty(Note))
             {
-                search = search.Where(a => a.Note.Contains(Note));
+                search = search.Where(a => a.Note.ToLower().Contains(Note.ToLower()));
             }
             if (!String.IsNullOrEmpty(StartedDate))
             {

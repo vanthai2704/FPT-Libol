@@ -91,7 +91,7 @@ namespace Libol.Controllers
                 fieldCode = item.FieldCode;
                 if (fieldCode.Equals("020"))
                 {
-                    field020 = ".-" + shelfBusiness.GetContent(item.Content);
+                    field020 = ". -" + shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("022"))
                 {
@@ -110,47 +110,43 @@ namespace Libol.Controllers
                     field245 = item.Content;
                     if (field245.Contains("$a"))
                     {
-                        field245 = field245.Replace("$a", ".-");
+                        field245 = field245.Replace("$a", ". -");
                     }
-                    if (field245.Contains("=$b"))
+                    if (field245.Contains("$b"))
                     {
-                        field245 = field245.Replace("=$b", "=");
+                        field245 = field245.Replace("$b", " ");
                     }
-                    if (field245.Contains(":$b"))
-                    {
-                        field245 = field245.Replace(":$b", ":");
+                    if (field245.Contains("$c"))
+                    {  
+                        field245 = field245.Replace("$c", " ");
                     }
-                    if (field245.Contains("/$c"))
+                    if (field245.Contains("$n"))
                     {
-                        field245 = field245.Replace("/$c", "/");
+                        field245 = field245.Replace("$n", " ");
                     }
-                    if (field245.Contains(".$n"))
+                    if (field245.Contains("$p"))
                     {
-                        field245 = field245.Replace(".$n", ".");
-                    }
-                    if (field245.Contains(":$p"))
-                    {
-                        field245 = field245.Replace(":$p", ":");
+                        field245 = field245.Replace("$p", " ");
                     }
                 }
                 if (fieldCode.Equals("250"))
                 {
-                    field250 = ".-" + shelfBusiness.GetContent(item.Content);
+                    field250 = ". -" + shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("260"))
                 {
                     field260 = item.Content;
                     if (field260.Contains("$a"))
                     {
-                        field260 = field260.Replace("$a", ".-");
+                        field260 = field260.Replace("$a", ". -");
                     }
-                    if (field260.Contains(":$b"))
+                    if (field260.Contains("$b"))
                     {
-                        field260 = field260.Replace(":$b", ":");
+                        field260 = field260.Replace("$b", " ");
                     }
                     if (field260.Contains("$c"))
                     {
-                        field260 = field260.Replace("$c", "");
+                        field260 = field260.Replace("$c", " ");
                     }
                 }
                 if (fieldCode.Equals("300"))
@@ -158,30 +154,30 @@ namespace Libol.Controllers
                     field300 = item.Content;
                     if (field300.Contains("$a"))
                     {
-                        field300 = field300.Replace("$a", ".-");
+                        field300 = field300.Replace("$a", ". -");
                     }
-                    if (field300.Contains(":$b"))
+                    if (field300.Contains("$b"))
                     {
-                        field300 = field300.Replace(":$b", ":");
+                        field300 = field300.Replace("$b", " ");
                     }
                     if (field300.Contains("$c"))
                     {
-                        field300 = field300.Replace("$c", "");
+                        field300 = field300.Replace("$c", " ");
                     }
                     if (field300.Contains("$e"))
                     {
-                        field300 = field300.Replace("$e", "");
+                        field300 = field300.Replace("$e", " ");
                     }
                 }
                 if (fieldCode.Equals("490"))
                 {
-                    field490 = ".-" + shelfBusiness.GetContent(item.Content);
+                    field490 = ". -" + shelfBusiness.GetContent(item.Content);
                 }
                 if (fieldCode.Equals("520"))
                 {
                     field520 = shelfBusiness.GetContent(item.Content);
                 }
-                contentOutput = field022 + " " + field100 + " "+ field110 +" " +"@"+ field245 + " " + "@" + field250 + " " + field260 + " " + field300 + " " + field490 + " " + "@" + field520 + " " + field020;
+                contentOutput = field022  + field100 + field110  +"@"+ field245 + "@" + field250  + field260 + field300  + field490  + "@" + field520  + field020;
             }
             return contentOutput;
         }
