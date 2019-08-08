@@ -2399,7 +2399,6 @@
     </Content>
     <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
     <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
-    <Content Include="Log\console-app.log" />
     <Content Include="Content\Log\console-app.log" />
     <None Include="Properties\PublishProfiles\Libol - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Libol - Web Deploy.pubxml" />
@@ -2407,7 +2406,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Log\console-app.log" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2550,6 +2548,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="EntityResultRAS\" />
+    <Folder Include="Log\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

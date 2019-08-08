@@ -12490,7 +12490,7 @@
       <Parameter Name="strCopyNumber" Mode="In" Type="String" />
       <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
       <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
       <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -12504,7 +12504,7 @@
       <Parameter Name="strCopyNumber" Mode="In" Type="String" />
       <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
       <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
       <Parameter Name="strDueDateFrom" Mode="In" Type="String" />
@@ -12518,7 +12518,7 @@
       <Parameter Name="strCopyNumber" Mode="In" Type="String" />
       <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
       <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
       <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -12531,7 +12531,7 @@
       <Parameter Name="strCopyNumber" Mode="In" Type="String" />
       <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
       <Parameter Name="strLocationPrefix" Mode="In" Type="String" />
-      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
       <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
       <Parameter Name="strCheckInDateFrom" Mode="In" Type="String" />
@@ -12703,8 +12703,14 @@
       <Parameter Name="strShelf" Mode="In" Type="String" />
       <Parameter Name="strCopyNumber" Mode="In" Type="String" />
       <Parameter Name="strCallNumber" Mode="In" Type="String" />
+      <Parameter Name="strLiquidCode" Mode="In" Type="String" />
       <Parameter Name="strVolume" Mode="In" Type="String" />
       <Parameter Name="strTitle" Mode="In" Type="String" />
+      <Parameter Name="strPrice" Mode="In" Type="String" />
+      <Parameter Name="strDateFrom" Mode="In" Type="DateTime" />
+      <Parameter Name="strDateTo" Mode="In" Type="DateTime" />
+      <Parameter Name="strDateType" Mode="In" Type="String" />
+      <Parameter Name="strReason" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="FPT_SP_GET_HOLDING_REMOVED_PAGING" ReturnType="Collection(LibolModel.FPT_SP_GET_HOLDING_REMOVED_PAGING_Result)">
       <Parameter Name="intLibID" Mode="In" Type="String" />
@@ -12836,6 +12842,41 @@
       <Parameter Name="intMode" Mode="In" Type="String" />
     </FunctionImport>
     <FunctionImport Name="FPT_SP_HOLDING_LIB_SEL" ReturnType="Collection(LibolModel.FPT_SP_HOLDING_LIB_SEL_Result)" />
+    <FunctionImport Name="FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER">
+      <Parameter Name="strCopyNumber" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_GET_ITEM_INFOR" ReturnType="Collection(LibolModel.FPT_SP_GET_ITEM_INFOR_Result)">
+      <Parameter Name="intItemID" Mode="In" Type="Int32" />
+      <Parameter Name="intLocationID" Mode="In" Type="Int32" />
+      <Parameter Name="intLibraryID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="FPT_SYS_USER_RIGHT" EntityType="LibolModel.FPT_SYS_USER_RIGHT" />
+    <EntitySet Name="FPT_SYS_USER_RIGHT_DETAIL" EntityType="LibolModel.FPT_SYS_USER_RIGHT_DETAIL" />
+    <AssociationSet Name="FK__FPT_SYS_U__Right__76923CB8" Association="LibolModel.FK__FPT_SYS_U__Right__76923CB8">
+      <End Role="FPT_SYS_USER_RIGHT" EntitySet="FPT_SYS_USER_RIGHT" />
+      <End Role="FPT_SYS_USER_RIGHT_DETAIL" EntitySet="FPT_SYS_USER_RIGHT_DETAIL" />
+    </AssociationSet>
+    <FunctionImport Name="FPT_SP_ADMIN_GRANT_RIGHTS">
+      <Parameter Name="intUID" Mode="In" Type="Int32" />
+      <Parameter Name="intRightID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_ADMIN_UPDATE_USER">
+      <Parameter Name="intUID" Mode="In" Type="Int32" />
+      <Parameter Name="intISLDAP" Mode="In" Type="Int32" />
+      <Parameter Name="strName" Mode="In" Type="String" />
+      <Parameter Name="strUserName" Mode="In" Type="String" />
+      <Parameter Name="strPassword" Mode="In" Type="String" />
+      <Parameter Name="intCatModule" Mode="In" Type="Int32" />
+      <Parameter Name="intPatModule" Mode="In" Type="Int32" />
+      <Parameter Name="intCirModule" Mode="In" Type="Int32" />
+      <Parameter Name="intAcqModule" Mode="In" Type="Int32" />
+      <Parameter Name="intSerModule" Mode="In" Type="Int32" />
+      <Parameter Name="intILLModule" Mode="In" Type="Int32" />
+      <Parameter Name="intDelModule" Mode="In" Type="Int32" />
+      <Parameter Name="intAdmModule" Mode="In" Type="Int32" />
+      <Parameter Name="intParentID" Mode="In" Type="Int32" />
+      <Parameter Name="intOutVal" Mode="InOut" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -17826,4 +17867,41 @@
     <Property Type="String" Name="Code" Nullable="false" MaxLength="32" />
     <Property Type="Int32" Name="ID" Nullable="false" />
   </ComplexType>
+  <ComplexType Name="FPT_SP_GET_ITEM_INFOR_Result">
+    <Property Type="Int32" Name="ItemID" Nullable="true" />
+    <Property Type="String" Name="FieldCode" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="Content" Nullable="false" MaxLength="800" />
+    <Property Type="String" Name="Indicators" Nullable="true" MaxLength="5" />
+  </ComplexType>
+  <EntityType Name="FPT_SYS_USER_RIGHT">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ModuleID" Type="Int32" Nullable="false" />
+    <Property Name="Right" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="IsBasic" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="FPT_SYS_USER_RIGHT_DETAIL" Relationship="LibolModel.FK__FPT_SYS_U__Right__76923CB8" FromRole="FPT_SYS_USER_RIGHT" ToRole="FPT_SYS_USER_RIGHT_DETAIL" />
+  </EntityType>
+  <EntityType Name="FPT_SYS_USER_RIGHT_DETAIL">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="RightID" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <NavigationProperty Name="FPT_SYS_USER_RIGHT" Relationship="LibolModel.FK__FPT_SYS_U__Right__76923CB8" FromRole="FPT_SYS_USER_RIGHT_DETAIL" ToRole="FPT_SYS_USER_RIGHT" />
+  </EntityType>
+  <Association Name="FK__FPT_SYS_U__Right__76923CB8">
+    <End Type="LibolModel.FPT_SYS_USER_RIGHT" Role="FPT_SYS_USER_RIGHT" Multiplicity="1" />
+    <End Type="LibolModel.FPT_SYS_USER_RIGHT_DETAIL" Role="FPT_SYS_USER_RIGHT_DETAIL" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FPT_SYS_USER_RIGHT">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="FPT_SYS_USER_RIGHT_DETAIL">
+        <PropertyRef Name="RightID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

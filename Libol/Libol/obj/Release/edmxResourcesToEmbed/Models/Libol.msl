@@ -10439,5 +10439,37 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER" FunctionName="LibolModel.Store.FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_GET_ITEM_INFOR" FunctionName="LibolModel.Store.FPT_SP_GET_ITEM_INFOR">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_ITEM_INFOR_Result">
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="FieldCode" ColumnName="FieldCode" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+          <ScalarProperty Name="Indicators" ColumnName="Indicators" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="FPT_SYS_USER_RIGHT">
+      <EntityTypeMapping TypeName="LibolModel.FPT_SYS_USER_RIGHT">
+        <MappingFragment StoreEntitySet="FPT_SYS_USER_RIGHT">
+          <ScalarProperty Name="IsBasic" ColumnName="IsBasic" />
+          <ScalarProperty Name="Right" ColumnName="Right" />
+          <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FPT_SYS_USER_RIGHT_DETAIL">
+      <EntityTypeMapping TypeName="LibolModel.FPT_SYS_USER_RIGHT_DETAIL">
+        <MappingFragment StoreEntitySet="FPT_SYS_USER_RIGHT_DETAIL">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="RightID" ColumnName="RightID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="FPT_SP_ADMIN_GRANT_RIGHTS" FunctionName="LibolModel.Store.FPT_SP_ADMIN_GRANT_RIGHTS" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_ADMIN_UPDATE_USER" FunctionName="LibolModel.Store.FPT_SP_ADMIN_UPDATE_USER" />
   </EntityContainerMapping>
 </Mapping>
