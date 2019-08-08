@@ -38,10 +38,7 @@ namespace Libol.Controllers
         [AuthAttribute(ModuleID = 2, RightID = "2,3")]
         public ActionResult Create(string strPatronID)
         {
-            if (!((List<Int32>)Session["RightIDs"]).Contains(46) && String.IsNullOrEmpty(strPatronID))
-            {
-                return new ViewResult() { ViewName = "Permisssion" };
-            }
+            
             ViewBag.Ethnic = db.SP_PAT_GET_ETHNIC().ToList();
             ViewBag.PatronGroup = db.SP_PAT_GET_PATRONGROUP().ToList();
             ViewBag.Education = db.SP_PAT_GET_EDUCATION().ToList();

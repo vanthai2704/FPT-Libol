@@ -323,24 +323,30 @@ namespace Libol.Controllers
                     }
                     
                 }
-                if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).Count() > 0)
+                if (!String.IsNullOrEmpty(Email))
                 {
-                    var userGoogleAccountDel = db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).First();
-                    db.Entry(userGoogleAccountDel).State = EntityState.Deleted;
+                    if (db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).Count() > 0)
+                    {
+                        var userGoogleAccountDel = db.SYS_USER_GOOGLE_ACCOUNT.Where(a => a.ID == ID).First();
+                        db.Entry(userGoogleAccountDel).State = EntityState.Deleted;
 
-                    var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
-                    userGoogleAccount.ID = ID;
-                    userGoogleAccount.Email = Email;
-                    db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
-                }
-                else
-                {
+                        var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
+                        userGoogleAccount.ID = ID;
+                        userGoogleAccount.Email = Email;
+                        db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
+                    }
+                    else
+                    {
 
-                    var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
-                    userGoogleAccount.ID = ID;
-                    userGoogleAccount.Email = Email;
-                    db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
+                        var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
+                        userGoogleAccount.ID = ID;
+                        userGoogleAccount.Email = Email;
+                        db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
+
+
+                    }
                 }
+                    
                 db.SaveChanges();
                 return Json(new Result()
                 {
