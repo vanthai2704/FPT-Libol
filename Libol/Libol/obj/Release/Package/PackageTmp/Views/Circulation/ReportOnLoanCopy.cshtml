@@ -26,7 +26,7 @@
             </div>
             <div class="form-group row col">
                 <label class="control-label col-md-4 align-self-center">Lĩnh vực kho</label>
-                @Html.DropDownList("LocationsByPrefix", new SelectList(string.Empty, "Value", "Text"), "Chọn lĩnh vực", new { @class = "form-control col-md-8" })
+                @Html.DropDownList("LocationsByPrefix", new SelectList(string.Empty, "Value", "Text"), "Chọn lĩnh vực", new { @class = "form-control col-md-8" , @multiple = true })
             </div>
         </div>
         <div class="col">
@@ -121,7 +121,8 @@
         var empObj = {
             strLibID: document.getElementById("Library").value,
             strLocPrefix: document.getElementById("LocationPrefix").value,
-            strLocID: document.getElementById("LocationsByPrefix").value,
+            //strLocID: document.getElementById("LocationsByPrefix").value,
+            strLocID: $("#LocationsByPrefix").val().toString(),
             strPatronNumber: document.getElementById("PatronNumber").value,
             strItemCode: document.getElementById("ItemCode").value,
             strCopyNumber: document.getElementById("CopyNumber").value,

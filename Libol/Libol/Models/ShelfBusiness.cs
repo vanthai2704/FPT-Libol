@@ -320,6 +320,11 @@ namespace Libol.Models
                                  Copynumber = x.Both.HOLDING.CopyNumber
                              }).ToList();
 
+            if (listCompositeHolding.Count <= 0)
+            {
+                return "";
+            }
+
             var dictionaryComposite = new Dictionary<string, string>();
             var dictionaryMaxNumber = new Dictionary<string, int>();
 
