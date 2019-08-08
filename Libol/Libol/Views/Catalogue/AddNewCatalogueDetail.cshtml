@@ -26,7 +26,7 @@
         border-radius: 35px;
     }
 </style>
-<h4 style="margin:1rem">Biên Mục Chi Tiết</h4>
+<h4 style="margin:1rem"><mark>Thông Tin Biên Mục Chi Tiết</mark></h4>
 @*<nav class="col-sm-3">
     <div class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
         <button type="button" class="btn btn-warning btn-circle btn-xl">
@@ -36,7 +36,6 @@
 </nav>*@
 <form action="~/Catalogue/AddNewCatalogue" method="post">
     
-
         @{
             SP_CATA_GET_CONTENTS_OF_ITEMS_Result Leader = ViewData["Leader"] as SP_CATA_GET_CONTENTS_OF_ITEMS_Result;
             List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> Contents = ViewData["ListContent"] as List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result>;
@@ -78,8 +77,8 @@
                 }
 
             }
-
-            <label class='control-label align-self-center font-weight-bold' id="lbAdd">CÁC TRƯỜNG THÊM MỚI</label> <br>
+            <br>
+            <h5 class='control-label align-self-center font-weight-bold' id="lbAdd"><mark>CÁC TRƯỜNG THÊM MỚI</mark></h5> <br>
 
         </div>
 
@@ -91,6 +90,7 @@
                     <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Cập Nhập" onclick="Update();" />
                     @*<button disabled type="button" id="btnReset" class="btn btn-primary form-control">Đặt Lại</button>*@
                     <button type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#centralModalSm" data-backdrop="static">Thêm Trường</button>
+                    <input type="button" id="btnShelf"  class="btn btn-primary form-control" value="Xếp Giá" />
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@
             <div class="modal-body">
                 <div class="row">
                     <input type="text" class="col-md-10 form-control" id="txtSearch" placeholder="">
-                    <button type="button" class="col-md-1 btn-success form-control" onclick="SearchFields()">Search</button>
+                    <button type="button" class="col-md-1 btn-success form-control" id="btnSearch" onclick="SearchFields()">Search</button>
                 </div>
                 <br>
                 <br>
@@ -157,10 +157,19 @@
 </div>
 
 <script>
+    $("#txtSearch").on('keyup', function (e) {
+        if (e.keyCode == 13) {
+            SearchFields();
+        }
+    });
     $('#lbAdd').hide();
+    $('#btnShelf').click(function () {
+        //window.location.href = '/Catalogue/AddNewCatalogue?ID=' + 'Request.QueryString["ID"]';
+        window.location.href = '/Shelf/Index?Code=' + $('#001').val();
+    });
     var tempArrTempFieldName = ["000"];
     $(document).ready(function () {
-        debugger;
+        //debugger;
         $('#001').prop('disabled', true);
         var arrListFieldName = @Html.Raw(Json.Encode(ViewBag.listField));
         $.each(arrListFieldName, function (i, item) {
@@ -183,7 +192,7 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (listRs) {
-                debugger;
+                //debugger;
                 $('#table').append("<tr class='table-success'><th scope='col'> Nhãn Trường</th ><th scope='col'>Mô Tả</th><th scope='col'>Hành Động</th></tr>")
                 if (listRs.length >= 0) {
                     for (var i = 0; i < listRs.length; i++) {
@@ -287,7 +296,7 @@
                         //debugger;
                     }
                 }
-                debugger;
+                //debugger;
             }
 
             if (FieldName === '260') {

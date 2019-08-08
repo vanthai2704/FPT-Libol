@@ -137,7 +137,7 @@ namespace Libol.Controllers
         {
             string Id = Request["ID"];
             string strFieldCode = "";
-            if (Id != "")
+            if (!String.IsNullOrEmpty(Id))
             {
                 List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(Id).ToList();
                 //Lay Content cua LEADERty
@@ -153,6 +153,10 @@ namespace Libol.Controllers
                         {
                             index.Add(i - 1);
                             listContent[i].Content = listContent[i - 1].Content + "::" + listContent[i].Content;
+                        }
+                        if (listContent[i].FieldCode.StartsWith("852"))
+                        {
+                            index.Add(i);
                         }
                     }
 
@@ -181,7 +185,7 @@ namespace Libol.Controllers
             }
             else
             {
-                //return  search
+                return RedirectToAction("SearchCodeNumber", "catalogue");
             }
 
             return View();
