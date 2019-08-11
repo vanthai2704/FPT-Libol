@@ -15,98 +15,109 @@
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <h4 style="margin:1rem">Danh sách biên mục</h4>
-<form action="~/Catalogue/AddNewCatalogue" method="post">
-    @{
-        List<FPT_SP_CATA_GET_MARC_FORM_Result> list = ViewData["ListMarcForm"] as List<FPT_SP_CATA_GET_MARC_FORM_Result>; // FormID ++
-
-        List<CAT_DIC_DIRLEVEL> listLevelDir = ViewData["listLevelDir"] as List<CAT_DIC_DIRLEVEL>; //cap thuw muc :  DirLevel : ++
-
-        List<CAT_DIC_RECORDTYPE> ListRecordType = ViewData["ListRecordType"] as List<CAT_DIC_RECORDTYPE>; //Kieu ban ghi : RecordType ++
-        List<CAT_DIC_ITEM_TYPE> listItemType = ViewData["listItemType"] as List<CAT_DIC_ITEM_TYPE>; //dang tai lieu  : TypeID : 927$a
-        List<CAT_DIC_MEDIUM> listMedium = ViewData["listMedium"] as List<CAT_DIC_MEDIUM>; // vat mang tin : MediumID : 925$a
-        byte[] listAccessLevel = ViewData["listAccessLevel"] as byte[]; // muc do mat : AccessLevel :  926$a
-
-    }
 
 
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Chọn Mẫu Biên Mục </label>
-        <select class="form-control col-md-2" name="formId" id="listMarcFormID" onchange="SelectedForm();">
-            @foreach (FPT_SP_CATA_GET_MARC_FORM_Result item in list)
+@{
+    List<FPT_SP_CATA_GET_MARC_FORM_Result> list = ViewData["ListMarcForm"] as List<FPT_SP_CATA_GET_MARC_FORM_Result>; // FormID ++
+
+    List<CAT_DIC_DIRLEVEL> listLevelDir = ViewData["listLevelDir"] as List<CAT_DIC_DIRLEVEL>; //cap thuw muc :  DirLevel : ++
+
+    List<CAT_DIC_RECORDTYPE> ListRecordType = ViewData["ListRecordType"] as List<CAT_DIC_RECORDTYPE>; //Kieu ban ghi : RecordType ++
+    List<CAT_DIC_ITEM_TYPE> listItemType = ViewData["listItemType"] as List<CAT_DIC_ITEM_TYPE>; //dang tai lieu  : TypeID : 927$a
+    List<CAT_DIC_MEDIUM> listMedium = ViewData["listMedium"] as List<CAT_DIC_MEDIUM>; // vat mang tin : MediumID : 925$a
+    byte[] listAccessLevel = ViewData["listAccessLevel"] as byte[]; // muc do mat : AccessLevel :  926$a
+
+}
+
+
+<div class="form-group row col-12">
+    <label class="control-label col-md-3 align-self-center">Chọn Mẫu Biên Mục </label>
+    <select class="form-control col-md-2" name="formId" id="listMarcFormID" onchange="SelectedForm();">
+        @foreach (FPT_SP_CATA_GET_MARC_FORM_Result item in list)
+        {
+            <option value="@item.ID">@item.Name</option>
+        }
+    </select>
+</div>
+
+<div class="form-group row col-12">
+    <label class="control-label col-md-3 align-self-center">Cấp thư mục : </label>
+    <select class="form-control col-md-2" name="dirCode" id="levelDir">
+        @{
+            foreach (CAT_DIC_DIRLEVEL levelDir in listLevelDir)
             {
-                <option value="@item.ID">@item.Name</option>
+                <option value="@levelDir.Code"> @levelDir.Code : @levelDir.Description</option>
             }
-        </select>
-    </div>
+        }
+    </select>
+</div>
 
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Cấp thư mục : </label>
-        <select class="form-control col-md-2" name="dirCode" id="levelDir">
-            @{
-                foreach (CAT_DIC_DIRLEVEL levelDir in listLevelDir)
-                {
-                    <option value="@levelDir.Code"> @levelDir.Code : @levelDir.Description</option>
-                }
+<div class="form-group row col-12">
+    <label class="control-label col-md-3 align-self-center">Kiểu bản ghi : </label>
+    <select class="form-control col-md-2" name="recordTypeCode" id="recordTypeCode">
+        @{
+            foreach (CAT_DIC_RECORDTYPE recordType in ListRecordType)
+            {
+                <option value="@recordType.Code">@recordType.Code : @recordType.Description</option>
             }
-        </select>
-    </div>
+        }
+    </select>
+    <label class="control-label col-md-2 align-self-center">Vật mang tin : </label>
+    <select class="form-control col-md-2" name="mediumId" id="mediumId">
+        @{
+            foreach (CAT_DIC_MEDIUM medium in listMedium)
+            {
+                <option value="@medium.ID">@medium.Code : @medium.Description</option>
+            }
+        }
+    </select>
+</div>
 
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Kiểu bản ghi : </label>
-        <select class="form-control col-md-2" name="recordTypeCode" id="recordTypeCode">
-            @{
-                foreach (CAT_DIC_RECORDTYPE recordType in ListRecordType)
-                {
-                    <option value="@recordType.Code">@recordType.Code : @recordType.Description</option>
-                }
+<div class="form-group row col-12">
+    <label class="control-label col-md-3 align-self-center">Dạng tài liệu : </label>
+    <select class="form-control col-md-2" name="itemTypeId" id="itemTypeId">
+        @{
+            foreach (CAT_DIC_ITEM_TYPE itemType in listItemType)
+            {
+                <option value="@itemType.ID">@itemType.TypeCode : @itemType.TypeName</option>
             }
-        </select>
-        <label class="control-label col-md-2 align-self-center">Vật mang tin : </label>
-        <select class="form-control col-md-2" name="mediumId" id="mediumId">
-            @{
-                foreach (CAT_DIC_MEDIUM medium in listMedium)
-                {
-                    <option value="@medium.ID">@medium.Code : @medium.Description</option>
-                }
+        }
+    </select>
+    <label class="control-label col-md-2 align-self-center">Mức độ : </label>
+    <select class="form-control col-md-2" name="accessLevel" id="accessLevel">
+        @{
+            foreach (byte number in listAccessLevel)
+            {
+                <option value="@number">@number</option>
             }
-        </select>
-    </div>
+        }
+    </select>
+</div>
+<br>
+@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>*@
+<div id="formCreated">
 
-    <div class="form-group row col-12">
-        <label class="control-label col-md-3 align-self-center">Dạng tài liệu : </label>
-        <select class="form-control col-md-2" name="itemTypeId" id="itemTypeId">
-            @{
-                foreach (CAT_DIC_ITEM_TYPE itemType in listItemType)
-                {
-                    <option value="@itemType.ID">@itemType.TypeCode : @itemType.TypeName</option>
-                }
-            }
-        </select>
-        <label class="control-label col-md-2 align-self-center">Mức độ : </label>
-        <select class="form-control col-md-2" name="accessLevel" id="accessLevel">
-            @{
-                foreach (byte number in listAccessLevel)
-                {
-                    <option value="@number">@number</option>
-                }
-            }
-        </select>
-    </div>
-    <br>
-    @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>*@
-    <div id="formCreated">
+</div>
 
-    </div>
 
-    <div class="form-group col-md-12 form-inline">
-        <div class="form-row col-md-12 text-center">
-            <div style="margin : auto">
-                <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới" onclick="doWork();" />
-                <button disabled type="button" id="btnReset" class="btn btn-primary form-control" onclick="reset();">Đặt Lại</button>
-            </div>
+@*<div>
+    <h3>Upload EData</h3>
+
+    <input type="file" id="fileInput" multiple />
+    <input type="button" id="fileButton" value="Upload Files" /><br />
+    
+</div>*@
+
+
+<div class="form-group col-md-12 form-inline">
+    <div class="form-row col-md-12 text-center">
+        <div style="margin : auto">
+            <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới" onclick="doWork();" />
+            <button disabled type="button" id="btnReset" class="btn btn-primary form-control" onclick="reset();">Đặt Lại</button>
         </div>
     </div>
-</form>
+</div>
+
 
 
 <!--The Modal Insert Thành Công-->
@@ -169,7 +180,7 @@
             $('#mediumId option[value=3]').attr('selected', true);
             SelectedForm();
         }
-        
+
 
     });
     var Data = [];
@@ -566,119 +577,119 @@
         if ($('#245a').val().trim().length == 0) {
             alert("Biên mục chưa có nhan đề chính(245$a)");
             $('#245a').focus();
-        } else { 
-        var arrFieldName = [];
-        var arrFieldValue = [];
-        arrFieldName.push('FormId');
-        arrFieldValue.push($("#listMarcFormID :selected").val());
-        arrFieldName.push('DirLevel');
-        arrFieldValue.push($("#levelDir :selected").val());
-        arrFieldName.push('RecordType');
-        arrFieldValue.push($("#recordTypeCode :selected").val());
-        $.each(Data, function (i, item) {
-            inputId = item.replace('$', '');
-            //get Value of inputTag base FieldCode
-            var strValue = $("#" + inputId).val();
-            switch (item) {
-                case '926':
-                    arrFieldName.push(item);
-                    arrFieldValue.push($("#accessLevel :selected").val());
-                    break;
-                case '925':
-                    arrFieldName.push(item);
-                    arrFieldValue.push($("#mediumId :selected").val());
-                    break;
-                case '927':
-                    //debugger;
-                    arrFieldName.push(item);
-                    arrFieldValue.push($("#itemTypeId :selected").val());
-                    break;
-                case '020$a':
-                    getRepeatValue(item, strValue);
-                    break;
-                case '022$a':
-                    getRepeatValue(item, strValue);
-                    break;
-                case '245$b':
-                    //Nhan Đề song song
-                    var strValue1 = $("#" + inputId + "1").val();
-                    arrFieldName.push(item + "1");
-                    arrFieldValue.push(strValue1);
-                    //phụ đề
-                    var strValue2 = $("#" + inputId + "2").val();
-                    arrFieldName.push(item + "2");
-                    arrFieldValue.push(strValue2);
-                    break;
-                case '650$a':
-                    getRepeatValue(item, strValue);
-                    break;
-                case '653$a':
-                    getRepeatValue(item, strValue);
-                    break;
-                case '700$a':
-                    getRepeatValue(item, strValue);
-                    break;
-                default:
+        } else {
+            var arrFieldName = [];
+            var arrFieldValue = [];
+            arrFieldName.push('FormId');
+            arrFieldValue.push($("#listMarcFormID :selected").val());
+            arrFieldName.push('DirLevel');
+            arrFieldValue.push($("#levelDir :selected").val());
+            arrFieldName.push('RecordType');
+            arrFieldValue.push($("#recordTypeCode :selected").val());
+            $.each(Data, function (i, item) {
+                inputId = item.replace('$', '');
+                //get Value of inputTag base FieldCode
+                var strValue = $("#" + inputId).val();
+                switch (item) {
+                    case '926':
+                        arrFieldName.push(item);
+                        arrFieldValue.push($("#accessLevel :selected").val());
+                        break;
+                    case '925':
+                        arrFieldName.push(item);
+                        arrFieldValue.push($("#mediumId :selected").val());
+                        break;
+                    case '927':
+                        //debugger;
+                        arrFieldName.push(item);
+                        arrFieldValue.push($("#itemTypeId :selected").val());
+                        break;
+                    case '020$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    case '022$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    case '245$b':
+                        //Nhan Đề song song
+                        var strValue1 = $("#" + inputId + "1").val();
+                        arrFieldName.push(item + "1");
+                        arrFieldValue.push(strValue1);
+                        //phụ đề
+                        var strValue2 = $("#" + inputId + "2").val();
+                        arrFieldName.push(item + "2");
+                        arrFieldValue.push(strValue2);
+                        break;
+                    case '650$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    case '653$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    case '700$a':
+                        getRepeatValue(item, strValue);
+                        break;
+                    default:
+                        arrFieldName.push(item);
+                        arrFieldValue.push(strValue);
+                }
+            });
+
+            //Insert Item
+
+            $.ajax({
+                url: "/Catalogue/InsertOrUpdateCatalogue",
+                type: "POST",
+                data: JSON.stringify({ listFieldsName: arrFieldName, listFieldsValue: arrFieldValue, listFieldsOrg: null, listValuesOrg: null }),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (Data) {
+                    //pop up Modal
+
+                    $('#codeId').text(Data[0]);
+                    $('#centralModalSm').modal({ backdrop: 'static' })
+                    $('#centralModalSm').modal('toggle');
+                    $('#btnShelf').click(function () {
+                        window.location.href = '/Shelf/Index?Code=' + Data[0];
+                    });
+                    $('#btnDetail').click(function () {
+                        window.location.href = '/Catalogue/AddNewCatalogueDetail?ID=' + Data[1];
+                    });
+
+
+                },
+                error: function (errorThrown) {
+                    alert('Dowork Funtion Fail !!');
+                }
+
+            });
+
+            function getRepeatValue(item, strValue) {
+                if (strValue.indexOf("::") > 0) {
+                    while (strValue.length > 0) {
+                        var index = strValue.indexOf("::");
+                        if (index > 0) {
+                            var value = strValue.substring(0, index);
+                            arrFieldName.push(item);
+                            arrFieldValue.push(value);
+                            strValue = strValue.substring(index + 2, strValue.length);
+                        } else {
+                            var value = strValue;
+                            arrFieldName.push(item);
+                            arrFieldValue.push(value);
+                            strValue = "";
+                        }
+                    }
+                } else {
                     arrFieldName.push(item);
                     arrFieldValue.push(strValue);
-            }
-        });
-
-        //Insert Item
-
-        $.ajax({
-            url: "/Catalogue/InsertOrUpdateCatalogue",
-            type: "POST",
-            data: JSON.stringify({ listFieldsName: arrFieldName, listFieldsValue: arrFieldValue, listFieldsOrg: null, listValuesOrg: null }),
-            contentType: "application/json;charset=utf-8",
-            dataType: "json",
-            success: function (Data) {
-                //pop up Modal
-
-                $('#codeId').text(Data[0]);
-                $('#centralModalSm').modal({ backdrop: 'static' })
-                $('#centralModalSm').modal('toggle');
-                $('#btnShelf').click(function () {
-                    window.location.href = '/Shelf/Index?Code=' + Data[0];
-                });
-                $('#btnDetail').click(function () {
-                    window.location.href = '/Catalogue/AddNewCatalogueDetail?ID=' + Data[1];
-                });
-
-
-            },
-            error: function (errorThrown) {
-                alert('Dowork Funtion Fail !!');
-            }
-
-        });
-
-        function getRepeatValue(item, strValue) {
-            if (strValue.indexOf("::") > 0) {
-                while (strValue.length > 0) {
-                    var index = strValue.indexOf("::");
-                    if (index > 0) {
-                        var value = strValue.substring(0, index);
-                        arrFieldName.push(item);
-                        arrFieldValue.push(value);
-                        strValue = strValue.substring(index + 2, strValue.length);
-                    } else {
-                        var value = strValue;
-                        arrFieldName.push(item);
-                        arrFieldValue.push(value);
-                        strValue = "";
-                    }
                 }
-            } else {
-                arrFieldName.push(item);
-                arrFieldValue.push(strValue);
-            }
-            
+
             }
         }
     }
 
-      
+
 </script>
 
 
