@@ -7,6 +7,7 @@ using Libol.Models;
 using Libol.EntityResult;
 using System.Data.Entity.Core.Objects;
 using Libol.SupportClass;
+using System.IO;
 
 namespace Libol.Controllers
 {
@@ -41,6 +42,59 @@ namespace Libol.Controllers
             ViewData["listAccessLevel"] = listAccessLevel;
 
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult UploadFile()
+        {
+            string rs = "";
+            HttpFileCollectionBase Files = Request.Files;
+            if(Files != null)
+            {
+                for (int i = 0; i < Files.Count; i++)
+                {
+                    var file = Files[i];
+                    var fileName = DateTime.Now.ToString("yyMMddHHmmss") + Path.GetFileName(file.FileName);
+                    //try
+                    string path = Path.Combine(Server.MapPath("/CAT_FILE"),
+                                                       Path.GetFileName(fileName));
+                    file.SaveAs(path);
+                   
+                    db.FPT_CAT_FILE.Add(new FPT_CAT_FILE { ID = db.FPT_CAT_FILE.Select(x => x.ID).Max()+1 , ItemID = 2 , FileName="test/x" , FilePath="xx." });
+                    db.SaveChanges();
+                    rs = "Upload Thành Công "+ i +" File !";
+                }
+            }
+            else
+            {
+                rs = "Chưa có File được chọn !";
+            }
+
+            return Json(rs, JsonRequestBehavior.AllowGet);
+
+            //foreach (HttpPostedFileBase item in files)
+            //{
+            //    if (item != null && item.ContentLength > 0)
+            //    {
+            //        try
+            //        {
+            //            string path = Path.Combine(Server.MapPath("/CatalogueEdata"),
+            //                                       Path.GetFileName(item.FileName));
+            //            item.SaveAs(path);
+            //            ViewBag.Message = "File uploaded successfully";
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            ViewBag.Message = "ERROR:" + ex.Message.ToString();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        ViewBag.Message = "You have not specified a file.";
+            //    }
+            //}
+
+
         }
 
         //**************************************************************CHECK TITLE**************************************************************
@@ -82,7 +136,7 @@ namespace Libol.Controllers
         public JsonResult GetItemInf(string itemID)
         {
             int ID = Int32.Parse(itemID);
-            int FormID  = db.ITEMs.First(i => i.ID == ID).FormID;
+            int FormID = db.ITEMs.First(i => i.ID == ID).FormID;
             return Json(FormID, JsonRequestBehavior.AllowGet);
         }
 
@@ -100,9 +154,9 @@ namespace Libol.Controllers
         //---------------------------------------------
 
         [HttpPost]
-        public JsonResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue , List<string> listFieldsOrg  , List<string> listValuesOrg)
+        public JsonResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, List<string> listFieldsOrg, List<string> listValuesOrg)
         {
-            string ItemID = catalogueBusiness.UpdateItem(listFieldsName, listFieldsValue , listFieldsOrg , listValuesOrg) ;
+            string ItemID = catalogueBusiness.UpdateItem(listFieldsName, listFieldsValue, listFieldsOrg, listValuesOrg);
             int tempCode = Int32.Parse(ItemID);
             string ItemCode = db.ITEMs.Where(i => i.ID == tempCode).Select(i => i.Code).FirstOrDefault().ToString();
             string[] data = { ItemCode, ItemID };
@@ -203,7 +257,7 @@ namespace Libol.Controllers
                 List<FPT_SP_CATA_SEARCH_MARC_FIELDS_Results> listSearch = catalogueBusiness.FPT_SP_CATA_SEARCH_MARC_FIELDS(strSearch, (-1), 0, "", "");
                 return Json(listSearch, JsonRequestBehavior.AllowGet);
             }
-            
+
         }
     }
 
