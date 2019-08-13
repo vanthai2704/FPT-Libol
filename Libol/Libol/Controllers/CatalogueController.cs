@@ -60,9 +60,9 @@ namespace Libol.Controllers
                                                        Path.GetFileName(fileName));
                     file.SaveAs(path);
                    
-                    db.FPT_CAT_FILE.Add(new FPT_CAT_FILE { ID = db.FPT_CAT_FILE.Select(x => x.ID).Max()+1 , ItemID = 2 , FileName="test/x" , FilePath="xx." });
-                    db.SaveChanges();
-                    rs = "Upload Thành Công "+ i +" File !";
+                    //db.FPT_CAT_FILE.Add(new FPT_CAT_FILE { ID = db.FPT_CAT_FILE.Select(x => x.ID).Max()+1 , ItemID = 2 , FileName="test/x" , FilePath="xx." });
+                    //db.SaveChanges();
+                    rs = "Upload Thành Công "+ i++  +" File !";
                 }
             }
             else

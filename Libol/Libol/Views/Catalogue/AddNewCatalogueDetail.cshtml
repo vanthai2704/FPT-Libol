@@ -83,13 +83,13 @@
     <h5 class='control-label align-self-center font-weight-bold' id="lbAdd"><mark>CÁC TRƯỜNG THÊM MỚI</mark></h5> <br>
 
 
-    <div>
+    @*<div>
         <h3>Upload EData</h3>
 
-        <input type="file" id="fileInput" multiple />
+        <input type="file" id="fileInput" multiple="" />
         <input type="button" id="fileButton" value="Upload Files" /><br />
 
-    </div>
+    </div>*@
 </div>
 
 <div class="form-group col-md-12 form-inline">
@@ -159,14 +159,38 @@
     </div>
 </div>
 <script>
+    //upload FIle
+    $('#fileInput').bind('change', function () {
+        $('#btnSubmit').attr("disabled", false)
+        var size = 0;
+        var filex = $("#fileInput").get(0).files;
+        //this.files[0].size gets the size of your file.
+        for (var i = 0; i < filex.length; i++) {
+            debugger;
+            size = size + filex[i].size;
+            if (size > 4096000) {
+                alert('File Too Big !');
+                $('#btnSubmit').attr("disabled", true);
+                return false;
+            }
+            
+        }
+
+
+    });
     //UpLoad Edata
     $(document).ready(function () {
         $("#fileButton").click(function () {
-
+            
             var files = $("#fileInput").get(0).files;
             var fileData = new FormData();
 
             for (var i = 0; i < files.length; i++) {
+                debugger;
+                //size = size + file[i].size();
+                //if (size > 4096000) {
+
+                //}
                 fileData.append("fileInput", files[i]);
             }
 
@@ -190,37 +214,6 @@
     });
 </script>
 <script>
-        $(document).ready(function () {
-        $("#fileButton").click(function () {
- 
-            var files = $("#fileInput").get(0).files;
-            var fileData = new FormData();
-
-            for (var i = 0; i < files.length; i++) {
-                fileData.append("fileInput", files[i]);
-            }
-
-            $.ajax({
-                type: "POST",
-                url: "/Catalogue/UploadFile",
-                dataType: "json",
-                contentType: false, // Not to set any content header
-                processData: false, // Not to process data
-                data: fileData ,
-                success: function (result, status, xhr) {
-                    alert(result);
-                },
-                error: function (xhr, status, error) {
-                    alert(status);
-                }
-            });
-        });
-
-
-    });
-
-
-
 
     $("#txtSearch").on('keyup', function (e) {
         if (e.keyCode == 13) {
