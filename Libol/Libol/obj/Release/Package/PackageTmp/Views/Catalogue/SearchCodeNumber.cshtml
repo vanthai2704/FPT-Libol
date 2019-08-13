@@ -42,6 +42,12 @@
 </div>
 
 <script>
+    $(document).keypress(function (e) {
+        var keycode = (e.keyCode ? e.keyCode : e.which);
+        if (keycode == '13') {
+            Search();
+        }
+    });
     $(document).ready(function () {
         $("table").hide();
     });
@@ -49,9 +55,9 @@
     function Search() {
         debugger;
         $('#table').empty();
-        var strCode = $('#txtCode').val();
-        var strCN = $('#txtCN').val();
-        var strTT = $('#txtTT').val();
+        var strCode = $('#txtCode').val().trim();
+        var strCN = $('#txtCN').val().trim();
+        var strTT = $('#txtTT').val().trim();
         $.ajax({
             url: "/Catalogue/SearchCode",
             type: "POST",

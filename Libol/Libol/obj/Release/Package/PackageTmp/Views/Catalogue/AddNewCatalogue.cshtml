@@ -152,20 +152,29 @@
 
 
 <script>
-
     //get form 2019 to default
     $(document).ready(function () {
-        $('#listMarcFormID option[value=14]').attr('selected', true);
-        $('#levelDir option[value=a]').attr('selected', true);
-        $('#recordTypeCode option[value=a]').attr('selected', true);
-        $('#itemTypeId option[value=1]').attr('selected', true);
-        $('#mediumId option[value=3]').attr('selected', true);
-        SelectedForm();
+        //debugger;
+        var id = '@Request.QueryString["ID"]';
+        if (id) {
+            //Not Null or empty => Reuse
+            reUse(id);
+        }
+        else {
+            //Null or empty => Create New
+            $('#listMarcFormID option[value=14]').attr('selected', true);
+            $('#levelDir option[value=a]').attr('selected', true);
+            $('#recordTypeCode option[value=a]').attr('selected', true);
+            $('#itemTypeId option[value=1]').attr('selected', true);
+            $('#mediumId option[value=3]').attr('selected', true);
+            SelectedForm();
+        }
+        
 
     });
     var Data = [];
     function SelectedForm() {
-        
+
         Data = ["001"];
         var empObj = {
             intIsAuthority: 0,
@@ -430,7 +439,7 @@
                             $("#itemTypeId option[value=" + value.Content + "]").attr('selected', true);
                             break;
                         default:
-                            var tempContent = value.Content; 
+                            var tempContent = value.Content;
                             if (tempContent.indexOf("$") >= 0) {
                                 var arrTemp = tempContent.split("$");
                                 //Loc value null
@@ -446,7 +455,7 @@
                                             valTemp = valTemp.substring(0, valTemp.length - 1);
                                         }
                                     }
-                                    //Phân biệt Nhan đề song song và Phụ đề bằng các kí tự nối 
+                                    //Phân biệt Nhan đề song song và Phụ đề bằng các kí tự nối
                                     //Nhan đề song song '='
                                     //Phụ đề ':'
                                     if (FieldNameTemp == '245b' && arrFieldValueFinal[arrFieldValueFinal.length - 1].substring(arrFieldValueFinal[arrFieldValueFinal.length - 1].length - 1) == '=') {
@@ -466,7 +475,7 @@
                                             valTemp = valTemp.substring(0, valTemp.length - 1);
                                         }
                                     }
-                                    
+
 
                                     //Xóa các kí tự nối của trường 260 và trường 300
                                     if (FieldNameTemp.startsWith('260') || FieldNameTemp.startsWith('300')) {
@@ -495,7 +504,7 @@
                             }
 
                             //Fill thông tin vào Form
-                            
+
                             break;
                     }
 
@@ -553,8 +562,6 @@
 
 
 <script>
-
-
     function doWork() {
         if ($('#245a').val().trim().length == 0) {
             alert("Biên mục chưa có nhan đề chính(245$a)");

@@ -254,11 +254,11 @@
         <label style="margin-top:10px"><h5>Thông tin xếp giá hiện thời</h5></label>
         <div class="form-row col-md-12">
             <label class="control-label col-md-5">Tổng số ĐKCB : </label>
-            <label class="col-md-7 text-left" id="labNumberOfRecord" style="color: red">11</label>
+            <label class="col-md-7 text-left" id="labNumberOfRecord" style="color: red">0</label>
         </div>
         <div class="form-row col-md-12">
             <label class="control-label col-md-5">Dữ liệu ĐKCB tổng hợp : </label>
-            <label class="col-md-7 text-left" style="color: red;" id="lblCopyDataVal"></label>
+            <label class="col-md-7 text-left" style="color: red;" id="lblCopyDataVal">0</label>
         </div>
         <div class="form-row col-md-12">
             <label class="control-label col-md-5">Tổng số bản rỗi : </label>
@@ -382,13 +382,14 @@
             data: JSON.stringify(data),
             contentType: "application/json;charset=utf-8",
             dataType: "json",
-            success: function (message) {
-                console.log(message);
-                if (message["Message"] === "") {
+            success: function (data) {
+                
+                if (data["Message"] === "") {
+                    document.getElementById("lblCopyDataVal").innerHTML = data["Composite"];
                     alert("Bổ sung thành công");
                     $('#table_holdinglist').DataTable().ajax.reload(null, false);
                 } else {
-                    alert(message["Message"]);
+                    alert(data["Message"]);
                 }
 
             },
@@ -775,21 +776,16 @@
 
     function SearchItem() {
 
-
         var title = document.getElementById("txtTitle2").value;
         var  copynumber= document.getElementById("txtCopyNumber2").value;
         var   author= document.getElementById("txtAuthor2").value;
         var   publisher= document.getElementById("txtPublisher2").value;
         var   year= document.getElementById("txtYear2").value;
         var   isbn= document.getElementById("txtISBN2").value;
-
+        var displayForm = false;
         var table = $("#table").DataTable({
 
-            "processing": true,
-            "serverSide": true,
-            "filter": true,
-            "paging": true,
-            "searching": true,
+
 
             ajax: {
                 url: "/Shelf/SearchItem",
@@ -807,6 +803,9 @@
                 dataSrc: function (data) {
                     if (data.Message != "") {
                         alert(data.Message);
+                        displayForm = false;
+                    } else {
+                        displayForm = true;
                     }
                     return data.data; //access the data variable from the returned JSON
                 }
@@ -823,8 +822,9 @@
             ],
         });
         $('#numberOfCode').text(table.rows().count());
-        document.getElementById("result-search-table").style.display = "block";
-
+        if (displayForm) {
+            document.getElementById("result-search-table").style.display = "block";
+        }
         table.destroy();
     }
 
@@ -876,7 +876,7 @@
     <!-- Modal content -->
     <div class="modal-content">
         <div class="modal-header">
-            <span class="close">&times;</span>
+            <span onclick="CloseSearchCodeForm()" class="close">&times;</span>
             <h4 style="text-align: center">Cập nhật xếp giá</h4>
         </div>
         <div class="modal-body">
@@ -935,7 +935,7 @@
     <!-- Modal content -->
     <div class="modal-content">
         <div class="modal-header">
-            <span class="close">&times;</span>
+            <span  class="close">&times;</span>
             <h4 style="text-align: center">Tìm kiếm biểu ghi biên mục</h4>
         </div>
         <div class="modal-body">

@@ -45,7 +45,7 @@ namespace Libol.Models
             return copyNumber;
         }
 
-        public string InsertHolding(HOLDING holding, int numberOfCN,string recommendID)
+        public string InsertHolding(HOLDING holding, int numberOfCN,string recommendID, ref string composite)
         {
 
             if (String.IsNullOrEmpty(holding.CopyNumber))
@@ -57,6 +57,7 @@ namespace Libol.Models
             {
                 return "Không tồn tại bản ghi";
             }
+
             List<HOLDING> holdings = new List<HOLDING>();
             //   ITEM item = db.ITEMs.Where(i => i.ID == holding.ItemID).FirstOrDefault();
             holding.Volume = "";
@@ -130,7 +131,7 @@ namespace Libol.Models
                 {
                     InsertRecommend(recommendID, holding.ItemID);
                 }
-                
+                composite = GenerateCompositeHoldings(holding.ItemID);
             }
             else
             {
@@ -292,7 +293,13 @@ namespace Libol.Models
                 }
             }
 
-            data = FPT_SP_GET_TITLES(querry);
+            if (querry.Equals("SELECT DISTINCT ID FROM ITEM WHERE 1 = 1"))
+            {
+                return "Hãy điền thông tin tìm kiếm";
+            }
+
+
+            data = FPT_SP_GET_TITLES(querry);   
             if (data == null)
             {
                 return "Không tìm thấy biểu ghi phù hợp";
@@ -346,7 +353,7 @@ namespace Libol.Models
 
                     // start copynumber
                     string value = listCompositeHolding[i].LibCode + " / " + listCompositeHolding[i].LocSymbol + " / " + listCompositeHolding[i].Copynumber +"-";
-                    string number = listCompositeHolding[i].Copynumber.Substring(listCompositeHolding[i].Copynumber.Length - listCompositeHolding[i].LocSymbol.Length + 1);
+                    string number = listCompositeHolding[i].Copynumber.Substring(listCompositeHolding[i].LocSymbol.Length);
                     var isNumeric = int.TryParse(number, out int currentMaxNumber);
                     dictionaryComposite.Add(groupIDComposite,value);
                     if (isNumeric)
@@ -363,7 +370,7 @@ namespace Libol.Models
                 {
                    string value = dictionaryComposite[groupIDComposite];
                    int existedMaxNumber = dictionaryMaxNumber[groupIDComposite];
-                    string number = listCompositeHolding[i].Copynumber.Substring(listCompositeHolding[i].Copynumber.Length - listCompositeHolding[i].LocSymbol.Length + 1);
+                    string number = listCompositeHolding[i].Copynumber.Substring(listCompositeHolding[i].LocSymbol.Length);
                     var isNumeric = int.TryParse(number, out int currentMaxNumber);
                     // validate
                     if (isNumeric)
@@ -472,8 +479,6 @@ namespace Libol.Models
         }
         public List<SP_GET_TITLES_Result> FPT_SP_GET_TITLES(string querry)
         {
-            Debug.WriteLine("Querry: "+querry);
-            
             string commandStatement = "SELECT  Code,Content AS TITLE,Ind1 FROM ITEM LEFT JOIN FIELD200s ON ITEM.ID = FIELD200s.ItemID WHERE FIELD200s.FieldCode = '245' and ITEM.ID in (" + querry +")";
             Debug.WriteLine("Querry: " + commandStatement);
             List<SP_GET_TITLES_Result> list = db.Database.SqlQuery<SP_GET_TITLES_Result>(commandStatement).ToList();
