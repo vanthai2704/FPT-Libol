@@ -34,10 +34,19 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult Liquidate(string Copynumber, string DKCB, string Liquidate, string DateLiquidate, int Reason ,string selectfile)
         {
-            string formatDKCB = DKCB.Replace('\n',',');
-            ViewBag.Liquidate = db.SP_HOLDING_REMOVED_LIQUIDATE(Liquidate, DateLiquidate,Copynumber, formatDKCB, Reason, new ObjectParameter("intTotalItem", typeof(int)),
-                new ObjectParameter("intOnLoan", typeof(int)),
-                new ObjectParameter("intOnInventory", typeof(int))).ToList();
+            if(db.ITEMs.Where(a => a.Code == Copynumber).Count() == 0)
+            {
+                ViewBag.Liquidate = "DKCB : " + Copynumber + " không tồn tại";
+            }
+            else
+            {
+                string formatDKCB = DKCB.Replace('\n', ',');
+                ViewBag.Liquidate = db.SP_HOLDING_REMOVED_LIQUIDATE(Liquidate, DateLiquidate, Copynumber, formatDKCB, Reason, new ObjectParameter("intTotalItem", typeof(int)),
+                    new ObjectParameter("intOnLoan", typeof(int)),
+                    new ObjectParameter("intOnInventory", typeof(int))).ToList();
+                ViewBag.Liquidate = "Thanh lý thành công";
+            }
+           
             return Json(ViewBag.Liquidate, JsonRequestBehavior.AllowGet);
 
         }
