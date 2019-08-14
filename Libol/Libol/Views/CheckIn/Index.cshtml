@@ -333,8 +333,6 @@
 
     function checkinbyDKCB() {
         var empObj = {
-            strFullName: '',
-            strFixDueDate: document.getElementById("strCheckinDate").value,
             intType: 1,
             intAutoPaid: 0,
             strCopyNumbers: document.getElementById("strCopyNumber").value,
@@ -369,9 +367,7 @@
             ids.push(x);
         }
         var empObj = {
-            strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
-            strFixDueDate: document.getElementById("strCheckinDate").value,
             intType: 1,
             intAutoPaid: 0,
             strCopyNumbers: ids,

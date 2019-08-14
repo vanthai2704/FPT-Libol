@@ -40,15 +40,13 @@ namespace Libol.Controllers
                 ViewBag.active = 0;
             }
 
-            getpatrondetail(pcode);
+            Getpatrondetail(pcode);
             sessionpcode = pcode;
             return PartialView("_checkinByCardNumber");
         }
 
         [HttpPost]
         public PartialViewResult CheckInByDKCB(
-            string strFullName,
-            string strFixDueDate,
             int intType,
             int intAutoPaid,
             string strCopyNumbers,
@@ -59,7 +57,7 @@ namespace Libol.Controllers
             int success = -1;
             if (!sessionpcode.Equals(""))
             {
-                getpatrondetail(sessionpcode);
+                Getpatrondetail(sessionpcode);
             }
             else
             {
@@ -101,16 +99,14 @@ namespace Libol.Controllers
                     };
                     sessionpcode = patroncode;
                 }
-                getpatrondetail(patroncode);
+                Getpatrondetail(patroncode);
             }
             return PartialView("_checkinByDKCB");
         }
 
         [HttpPost]
         public PartialViewResult CheckInByDKCBs(
-           string strFullName,
            string strPatronCode,
-           string strFixDueDate,
            int intType,
            int intAutoPaid,
            string[] strCopyNumbers,
@@ -126,7 +122,7 @@ namespace Libol.Controllers
                 new ObjectParameter("strPatronCode", typeof(string)),
                 new ObjectParameter("intError", typeof(int)));
             }
-            getpatrondetail(sessionpcode);
+            Getpatrondetail(sessionpcode);
             if (success == -1)
             {
                 ViewBag.message = "Ghi trả thất bại";
@@ -190,7 +186,7 @@ namespace Libol.Controllers
         }
 
 
-        public void getpatrondetail(string strPatronCode)
+        public void Getpatrondetail(string strPatronCode)
         {
             if (db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("MM/dd/yyyy")).Count() == 0)
             {
@@ -229,11 +225,11 @@ namespace Libol.Controllers
                     strPortrait = patron.Portrait
                 };
                 int id2 = ViewBag.PatronDetail.ID;
-                getonloandetail(id2);
+                Getonloandetail(id2);
             }
         }
 
-        public void getonloandetail(int id)
+        public void Getonloandetail(int id)
         {
             List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
             List<OnLoan> onLoans = new List<OnLoan>();
