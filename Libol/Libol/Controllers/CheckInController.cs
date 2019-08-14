@@ -28,7 +28,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult CheckInByCardNumber(string strPatronCode)
+        public PartialViewResult SearchPatronDetail(string strPatronCode)
         {
             string pcode = strPatronCode.Trim();
             if (db.CIR_PATRON_LOCK.Where(a => a.PatronCode == pcode).Count() == 0)

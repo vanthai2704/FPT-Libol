@@ -4,64 +4,86 @@
 }
 
 <div class="row">
-    <div class="col-md-3">
-        <table class="table table-bordered table-striped" id="123" style="border-collapse: collapse" , border="1">
-            <tr>
-                <th>Nhóm bạn đọc</th>
-                <th>Số lượt mượn</th>
-            </tr>
-            @foreach (var item in ViewBag.rnow)
-            {
+    @if (ViewBag.rnow.Count >= 1)
+    {
+        <div class="col-md-3">
+            <table class="table table-bordered table-striped" id="123" style="border-collapse: collapse" , border="1">
                 <tr>
-                    <td>@item.Name</td>
-                    <td>@item.TotalLoan</td>
+                    <th>Nhóm bạn đọc</th>
+                    <th>Số lượt mượn</th>
                 </tr>
-            }
-        </table>
-    </div>
+                @foreach (var item in ViewBag.rnow)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.TotalLoan</td>
+                    </tr>
+                }
+            </table>
 
-    <div class="col-md-9">
-        <div style="text-align:center; padding-top:20px">
-            <h4 style="font-size:16px">Biểu đồ hình cột</h4>
+
+            <div class="col-md-9">
+                <div style="text-align:center; padding-top:20px">
+                    <h4 style="font-size:16px">Biểu đồ hình cột</h4>
+                </div>
+
+                <div id="columnchart_values_now" style="width: 100%; height: 50%; font-size:10px"></div>
+            </div>
+            <div style="text-align:center">
+                <div style="text-align:center; padding-top:30px">
+                    <input type="button" value="Lưu vào file Excel" style="background-color:blue; color:white" onclick="exportTableToExcel('123', 'Patron Group Now'); exportTableToExcel('1234', 'Patron Group Pass')" />
+                </div>
+            </div>
         </div>
-
-        <div id="columnchart_values_now" style="width: 100%; height: 50%; font-size:10px"></div>
-    </div>
+    }
+    else
+    {
+        <h5>Không có dữ liệu</h5>
+    }
 </div>
 
 <div class="row">
-    <div class="col-md-3">
-        <table class="table table-bordered table-striped" id="1234" style="border-collapse: collapse" , border="1">
-            <tr>
-                <th>Nhóm bạn đọc</th>
-                <th>Số lượt mượn</th>
-            </tr>
-            @foreach (var item in ViewBag.rpass)
-            {
+    @if (ViewBag.rpass.Count >= 1)
+    {
+        <div class="col-md-3">
+            <table class="table table-bordered table-striped" id="1234" style="border-collapse: collapse" , border="1">
                 <tr>
-                    <td>@item.Name</td>
-                    <td>@item.TotalLoan</td>
+                    <th>Nhóm bạn đọc</th>
+                    <th>Số lượt mượn</th>
                 </tr>
-            }
-        </table>
-    </div>
+                @foreach (var item in ViewBag.rpass)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.TotalLoan</td>
+                    </tr>
+                }
+            </table>
 
-    <div class="col-md-9">
-        <div style="text-align:center; padding-top:20px">
-            <h4 style="font-size:16px">Biểu đồ hình cột</h4>
+            <div class="col-md-9">
+                <div style="text-align:center; padding-top:20px">
+                    <h4 style="font-size:16px">Biểu đồ hình cột</h4>
+                </div>
+
+                <div id="columnchart_values_pass" style="width: 100%; height: 50%; font-size:10px"></div>
+            </div>
+            <div style="text-align:center">
+                <div style="text-align:center; padding-top:30px">
+                    <input type="button" value="Lưu vào file Excel" style="background-color:blue; color:white" onclick="exportTableToExcel('123', 'Patron Group Now'); exportTableToExcel('1234', 'Patron Group Pass')" />
+                </div>
+            </div>
         </div>
-
-        <div id="columnchart_values_pass" style="width: 100%; height: 50%; font-size:10px"></div>
-    </div>
+    }
+    else
+    {
+        <h5>Không có dữ liệu</h5>
+    }
 </div>
 
 
 
-<div style="text-align:center">
-    <div style="text-align:center; padding-top:30px">
-        <input type="button" value="Lưu vào file Excel" style="background-color:blue; color:white" onclick="exportTableToExcel('123', 'Patron Group Now'); exportTableToExcel('1234', 'Patron Group Pass')" />
-    </div>
-</div>
+
+
 
 <script src="~/Scripts/GoodleDrawingChart.js"></script>
 
@@ -71,6 +93,9 @@
     google.charts.setOnLoadCallback(drawChart2);
 
     function drawChart2() {
+        var table = document.getElementById("123");
+        if (table == null)
+            return;
         var data = google.visualization.arrayToDataTable([
             ["Nhóm bạn đọc", "Số lần", { role: "style" }],
 
@@ -109,7 +134,10 @@
     }
 
     function drawChart() {
-                var data = google.visualization.arrayToDataTable([
+        var table = document.getElementById("123");
+        if (table == null)
+            return;
+        var data = google.visualization.arrayToDataTable([
             ["Nhóm bạn đọc", "Số lần", { role: "style" }],
 
             @foreach (var item in ViewBag.rpass)

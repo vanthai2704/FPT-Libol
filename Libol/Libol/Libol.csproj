@@ -2520,12 +2520,12 @@
     <Content Include="Views\AcquireReport\StatTaskbar.cshtml" />
     <Content Include="Views\AcquireReport\GetStatTaskbar.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
-    <Content Include="Views\Shelf\InRepository.cshtml" />
-    <Content Include="Views\Shelf\InRepositoryPartialView.cshtml" />
-    <Content Include="Views\Shelf\LiquidationOrLost.cshtml" />
-    <Content Include="Views\Shelf\LiquidationOrLostPartialView.cshtml" />
-    <Content Include="Views\Shelf\NotYetChecked.cshtml" />
-    <Content Include="Views\Shelf\NotYetCheckedPartialView.cshtml" />
+    <Content Include="Views\Acquired\InRepository.cshtml" />
+    <Content Include="Views\Acquired\InRepositoryPartialView.cshtml" />
+    <Content Include="Views\Acquired\LiquidationOrLost.cshtml" />
+    <Content Include="Views\Acquired\LiquidationOrLostPartialView.cshtml" />
+    <Content Include="Views\Acquired\NotYetChecked.cshtml" />
+    <Content Include="Views\Acquired\NotYetCheckedPartialView.cshtml" />
     <Content Include="Views\Circulation\CopyNumberLiquidationStats.cshtml" />
     <Content Include="Views\Circulation\GetCopyNumberLiquidationStats.cshtml" />
   </ItemGroup>

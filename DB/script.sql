@@ -5692,3 +5692,251 @@ INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (12,
 SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] OFF
 
 
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_STAT_PATRONGROUP]    Script Date: 7/10/2019 06:20:50 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+Create PROCEDURE [dbo].[FPT_SP_STAT_PATRONGROUP]
+	-- Created Tuanhv
+	-- Date 06/09/2004
+	-- ModifyDate:
+	@intUserID varchar(30),
+	@strCheckOutDateFrom varchar(30),
+	@strCheckOutDateTo varchar(30),
+	@OptItemID varchar(30), --0 la thong ke theo dau an pham, 1 la thong ke tho DKCB
+	@intHistory varchar(30), --0 la hien tai dang muon
+	@LibID varchar(30)
+AS
+	DECLARE @StrSql varchar(1500),
+			@userid int,
+			@itemid int,
+			@history int
+
+			SET @userid = CAST(@intUserID as int)
+			SET @itemid = CAST(@OptItemID as int)
+			SET @history = CAST(@intHistory as int)
+
+IF @history = 0 
+BEGIN
+
+	SET @StrSql = ''
+	IF @itemid <> 0 
+	BEGIN
+		SET @StrSql = 	' SELECT Count (CL.ItemID) AS TotalLoan, CPG.Name ' +
+				' FROM CIR_LOAN CL LEFT JOIN CIR_PATRON CP ON CP.ID = CL.PatronID ' + 
+				' JOIN CIR_PATRON_GROUP CPG ON CP.PatronGroupID = CPG.ID ' +
+				' WHERE 1=1 '
+	END
+	ELSE
+	BEGIN
+		SET @StrSql = 	' SELECT Count (DISTINCT CL.ItemID) AS TotalLoan, CPG.Name ' +
+				' FROM CIR_LOAN CL LEFT JOIN CIR_PATRON CP ON CP.ID = CL.PatronID ' + 
+				' JOIN CIR_PATRON_GROUP CPG ON CP.PatronGroupID = CPG.ID ' +
+				' WHERE 1=1 '
+	END
+
+	IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CL.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+	IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CL.CheckOutDate <=''' + @strCheckOutDateTo +''''
+
+	SET @strSql = @strSql + ' AND CL.LocationID IN 
+	( SELECT B.ID AS ID 
+	FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+	WHERE A.ID = ' + @LibID + ' AND A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID =' + CAST(@userid AS CHAR(20)) + ' ) '
+
+	SET @StrSql = @StrSql + ' GROUP BY CPG.Name ORDER BY Count (CL.ItemID) '	
+END 
+ELSE
+BEGIN
+	SET @StrSql = ''
+	IF @itemid <> 0 
+	BEGIN
+		SET @StrSql = 	' SELECT Count (CLH.ItemID) AS TotalLoan, CPG.Name ' +
+				' FROM CIR_LOAN_HISTORY CLH LEFT JOIN CIR_PATRON CP ON CP.ID = CLH.PatronID ' + 
+				' JOIN CIR_PATRON_GROUP CPG ON CP.PatronGroupID = CPG.ID ' +
+				' WHERE 1=1 '
+	END
+	ELSE
+	BEGIN
+		SET @StrSql = 	' SELECT Count (DISTINCT CLH.ItemID) AS TotalLoan, CPG.Name ' +
+				' FROM CIR_LOAN_HISTORY CLH LEFT JOIN CIR_PATRON CP ON CP.ID = CLH.PatronID ' + 
+				' JOIN CIR_PATRON_GROUP CPG ON CP.PatronGroupID = CPG.ID ' +
+				' WHERE 1=1 '
+	END
+
+	IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+	IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''
+
+	SET @strSql = @strSql + ' AND CLH.LocationID IN ( 
+	SELECT B.ID AS ID 
+	FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+	WHERE A.ID = ' + @LibID + ' AND A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID =' + CAST(@userid AS CHAR(20)) + ' ) '
+
+	SET @StrSql = @StrSql + ' GROUP BY CPG.Name ORDER BY Count (CLH.ItemID) '	
+
+END
+	EXEC (@StrSql)
+
+
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_STAT_ITEMMAX]    Script Date: 7/10/2019 06:22:17 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+Create   PROCEDURE [dbo].[FPT_SP_STAT_ITEMMAX]
+	-- Created Tuanhv
+	-- Date 06/09/2004
+	-- ModifyDate:
+	@intUserID varchar(30),
+	@strCheckOutDateFrom varchar(30),
+	@strCheckOutDateTo varchar(30),
+	@intTopNum varchar(30),
+	@intMinLoan varchar(30),
+	@libid varchar(30)
+AS
+DECLARE @StrSql varchar(1500)
+	SET @StrSql = ''
+	SET @StrSql = @StrSql + 
+	' SELECT TOP ' + @intTopNum + ' Count (*) AS TotalLoan, CLH.ItemID AS Name  
+	FROM CIR_LOAN_HISTORY CLH 
+	WHERE 1=1 ' 
+	IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+	IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''
+
+		SET @StrSql = @StrSql + ' AND CLH.LocationID IN 
+		( SELECT B.ID AS ID 
+		FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+		WHERE A.ID = ' + CAST(@libid as varchar(30))+' and A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID = ' + @intUserID+ ' ) '
+
+		SET @StrSql = @StrSql + ' GROUP BY CLH.ItemID  HAVING Count (*) >= ' + @intMinLoan + ' ORDER BY TotalLoan DESC'
+	EXEC (@StrSql)
+
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_STAT_PATRONMAX]    Script Date: 7/10/2019 06:18:50 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+CREATE PROCEDURE [dbo].[FPT_SP_STAT_PATRONMAX]
+	-- Created Tuanhv
+	-- Date 06/09/2004
+	-- ModifyDate:
+	@intUserID varchar(30),
+	@strCheckOutDateFrom varchar(30),
+	@strCheckOutDateTo varchar(30),
+	@intTopNum varchar(30),
+	@intMinLoan varchar(30),
+	@OptItemID varchar(30), --0 la thong ke theo dau an pham, 1 la thong ke tho DKCB
+	@LocID varchar(30),
+	@LibID varchar(30)
+
+AS
+DECLARE @StrSql varchar(1500),
+		@user_id int,
+		@top_num int,
+		@min_loan int,
+		@opt_item_id int,
+		@loc_id int,
+		@lib_id int
+
+	SET @StrSql = ''
+	SET @user_id = CAST(@intUserID as int)
+	SET @top_num = CAST(@intTopNum as int)
+	SET @min_loan = CAST(@intMinLoan as int)
+	SET @opt_item_id = CAST(@OptItemID as int)
+	SET @loc_id = CAST(@LocID as int)
+	SET @lib_id = CAST(@LibID as int)
+
+	IF @loc_id = 0
+	BEGIN
+		IF @opt_item_id <> 0 
+		SET @StrSql = @StrSql + ' SELECT TOP ' + CAST(@top_num AS CHAR(10)) + 
+		'Count (*) AS TotalLoan, CP.Code AS Name  FROM CIR_LOAN_HISTORY CLH, CIR_PATRON CP  WHERE 1=1 AND CP.ID = CLH.PatronID ' 
+		ELSE SET @StrSql = @StrSql + ' SELECT TOP ' + CAST(@top_num AS CHAR(10)) + 'Count (DISTINCT Copynumber) AS TotalLoan, CP.Code AS Name FROM CIR_LOAN_HISTORY CLH, CIR_PATRON CP  WHERE 1=1 AND CP.ID = CLH.PatronID ' 							
+		IF @strCheckOutDateFrom <> ''SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+		IF @strCheckOutDateTo <> ''SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''		
+		IF @opt_item_id <> 0
+		BEGIN
+			SET @strSql = @strSql + ' AND CLH.LocationID IN 
+			( SELECT B.ID AS ID 
+			FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+			WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID 
+			AND C.UserID =' + CAST(@user_id AS CHAR(20)) + ' AND A.ID = ' + CAST(@lib_id AS CHAR(20)) + ' ) '
+			SET @StrSql = @StrSql + ' GROUP BY CP.Code  HAVING Count (*) >=' + CAST(@min_loan AS CHAR(5)) + ' ORDER BY TotalLoan DESC'
+		END
+		ELSE
+		BEGIN
+			SET @strSql = @strSql + ' AND CLH.LocationID IN 
+			( SELECT B.ID AS ID 
+			FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+			WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID 
+			AND C.UserID =' + CAST(@user_id AS CHAR(20)) + ' AND A.ID = ' + CAST(@lib_id AS CHAR(20)) + ' ) '
+       	    SET @StrSql = @StrSql + ' GROUP BY CP.Code  HAVING Count (DISTINCT Copynumber) >=' + CAST(@min_loan AS CHAR(5)) + ' ORDER BY TotalLoan DESC' 
+		END
+	END
+	ELSE
+	BEGIN
+		IF @opt_item_id <> 0 
+		SET @StrSql = @StrSql + ' SELECT TOP ' + CAST(@top_num AS CHAR(10)) + 
+		'Count (*) AS TotalLoan, CP.Code AS Name  
+		FROM CIR_LOAN_HISTORY CLH, CIR_PATRON CP  
+		WHERE 1=1 AND CP.ID = CLH.PatronID ' 
+		ELSE 
+		SET @StrSql = @StrSql + ' SELECT TOP ' + CAST(@top_num AS CHAR(10)) + 
+		'Count (DISTINCT Copynumber) AS TotalLoan, CP.Code AS Name 
+		FROM CIR_LOAN_HISTORY CLH, CIR_PATRON CP  
+		WHERE 1=1 AND CP.ID = CLH.PatronID ' 							
+		IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+		IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''		
+		IF @opt_item_id <> 0
+		BEGIN
+			SET @strSql = @strSql + ' AND CLH.LocationID IN 
+			( SELECT B.ID AS ID 
+			FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+			WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID 
+			AND C.UserID =' + CAST(@user_id AS CHAR(20)) + ' AND B.ID = ' + CAST(@loc_id AS CHAR(20)) + ' ) '
+			SET @StrSql = @StrSql + ' GROUP BY CP.Code  HAVING Count (*) >=' + CAST(@min_loan AS CHAR(5)) + ' ORDER BY TotalLoan DESC'
+		END
+		ELSE
+		BEGIN
+			SET @strSql = @strSql + ' AND CLH.LocationID IN 
+			( SELECT B.ID AS ID 
+			FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+			WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID 
+			AND C.UserID =' + CAST(@user_id AS CHAR(20)) + ' AND B.ID = ' + CAST(@loc_id AS CHAR(20)) + ' ) '
+       	    SET @StrSql = @StrSql + ' GROUP BY CP.Code  HAVING Count (DISTINCT Copynumber) >=' + CAST(@min_loan AS CHAR(5)) + ' ORDER BY TotalLoan DESC' 
+		END
+	END
+
+
+	EXEC (@StrSql)
+
+
+
