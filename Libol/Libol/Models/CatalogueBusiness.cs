@@ -295,7 +295,7 @@ namespace Libol.Models
                         FormID = formId,
                         RecordType = recordType,
                         BibLevel = bibLevel,
-
+                        CallNumber = callNumber
                     };
                     //add Item
                     InsertItem(ref item);
