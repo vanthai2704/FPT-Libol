@@ -53,7 +53,7 @@ namespace Libol.Controllers
 
         // GET: CheckOutSuccess
         [HttpPost]
-        public PartialViewResult CheckOutSuccess(
+        public PartialViewResult CheckOut(
             string strPatronCode,
             string strDueDate,
             int intLoanMode,
