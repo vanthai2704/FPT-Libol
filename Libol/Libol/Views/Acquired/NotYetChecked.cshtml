@@ -1,7 +1,9 @@
-﻿@{
-    ViewBag.Title = "ThanhLyHoacDaMat";
+﻿
+@{
+    ViewBag.Title = "Chưa Kiểm Nhận";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <head>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -10,18 +12,17 @@
         function goto(url) {
             window.location = url;
         }
-
         $(document).ready(function () {
             $("#selectpage").change(function () {
                 var c = $("#selectpage").val();
                 console.log(c);
 
                 if (c == '1') {
-                    window.location = '/Shelf/InRepository'
+                    window.location = '/Acquired/InRepository'
                 } else if (c == '2') {
-                    window.location = '/Shelf/LiquidationOrLost'
+                    window.location = '/Acquired/LiquidationOrLost'
                 } else if (c == '3') {
-                    window.location = '/Shelf/NotYetChecked'
+                    window.location = '/Acquired/NotYetChecked'
                 }
             });
         });
@@ -156,8 +157,8 @@
                 <p style="background-color: azure">
                     Loại số liệu: <select id="selectpage">
                         <option value="1" >Trong kho</option>
-                        <option value="2" selected>Đã mất/Thanh lý</option>
-                        <option value="3">Chưa kiểm nhận</option>
+                        <option value="2">Đã mất/Thanh lý</option>
+                        <option value="3" selected>Chưa kiểm nhận</option>
                     </select>
                 </p>
 
@@ -174,7 +175,7 @@
                     {
                         <li>
                             <div class="libid">
-                                <span class="caret">@item.lib.Code</span>
+                                <span class="caret" id="@item.lib.ID">@item.lib.Code <b style="color:red">(@item.lib.Total.Total)</b> </span>
                                 <div class="test">
                                     <ul class="nested">
                                         @{
@@ -182,7 +183,7 @@
                                         }
                                         @foreach (var jtem in item.locs)
                                         {
-                                            <li id="@count">@jtem.Symbol</li>
+                                            <li id="@jtem.ID">@jtem.Symbol <b style="color:red">(@jtem.Total.Total)</b></li>
                                             count++;
                                         }
                                     </ul>
@@ -206,19 +207,21 @@
                 this.classList.toggle("caret-down");
             });
         }
+
         $(document).ready(function () {
 
             $(".test li").click(function () {
                 //delete checked checkbox list
                 localStorage.removeItem("checkboxValues");
 
-                var locname = $(this).text();
+                var locname = this.id;
+                console.log(locname);
                 var page_index = "1";
                 var record_per_page = "25";
                 var state = "abc";
 
                 $.ajax({
-                    url: "LiquidationOrLostPartialView",
+                    url: "NotYetCheckedPartialView",
                     data: {
                         'locname': locname, 'page_index': page_index,
                         'record_per_page': record_per_page, 'state': state
@@ -237,13 +240,14 @@
                 //delete checked checkbox list
                 localStorage.removeItem("checkboxValues");
 
-                var libname = $(this).text();
+                var libname = this.id;
+                console.log(libname);
                 var page_index = "1";
                 var record_per_page = "25";
                 var state = "abc";
 
                 $.ajax({
-                    url: "LiquidationOrLostPartialView",
+                    url: "NotYetCheckedPartialView",
                     data: {
                         'libname': libname, 'page_index': page_index,
                         'record_per_page': record_per_page, 'state': state
@@ -291,4 +295,6 @@
         }
     </script>
 </body>
+
+
 

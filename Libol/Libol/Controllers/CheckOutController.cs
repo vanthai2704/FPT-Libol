@@ -46,7 +46,7 @@ namespace Libol.Controllers
             {
                 ViewBag.active = 0;
             }
-            getpatrondetail(Patroncode);
+            Getpatrondetail(Patroncode);
             sessionpcode = Patroncode;
             return PartialView("_showPatronInfo");
         }
@@ -54,7 +54,6 @@ namespace Libol.Controllers
         // GET: CheckOutSuccess
         [HttpPost]
         public PartialViewResult CheckOutSuccess(
-            string strFullName,
             string strPatronCode,
             string strDueDate,
             int intLoanMode,
@@ -70,7 +69,7 @@ namespace Libol.Controllers
             var cIR_LOANs = db.CIR_LOAN.Where(a => a.PatronID == PatronID).ToList();
             string CopyNumber = strCopyNumbers.Trim();
             List<int?> ItemIds = new List<int?>();
-            getpatrondetail(PatronCode);
+            Getpatrondetail(PatronCode);
             if (db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).Count() == 0)
             {
                 ViewBag.message = "ĐKCB không đúng";
@@ -129,7 +128,7 @@ namespace Libol.Controllers
                 }
             }
             ViewBag.HiddenDuplicateCopyNumber = CopyNumber;
-            getcurrentloandetail();
+            Getcurrentloandetail();
             patroncode = PatronCode;
             return PartialView("_checkoutSuccess");
         }
@@ -145,8 +144,8 @@ namespace Libol.Controllers
                new ObjectParameter("intError", typeof(int)));
 
             strTransactionIDs = strTransactionIDs.Replace("," + strCopyNumbers, "");
-            getcurrentloandetail();
-            getpatrondetail(patroncode);
+            Getcurrentloandetail();
+            Getpatrondetail(patroncode);
             return PartialView("_checkoutSuccess");
         }
 
@@ -155,8 +154,8 @@ namespace Libol.Controllers
         {
             int lngTransactionID = db.CIR_LOAN.Where(a => a.CopyNumber == strCopyNumber).First().ID;
             db.SP_UPDATE_CURRENT_LOAN(lngTransactionID, strNote, "");
-            getcurrentloandetail();
-            getpatrondetail(patroncode);
+            Getcurrentloandetail();
+            Getpatrondetail(patroncode);
             return PartialView("_checkoutSuccess");
         }
 
@@ -208,7 +207,7 @@ namespace Libol.Controllers
             return Json(PatronLockInfo, JsonRequestBehavior.AllowGet);
         }
 
-        public void getpatrondetail(string strPatronCode)
+        public void Getpatrondetail(string strPatronCode)
         {
             if (db.SP_GET_PATRON_INFOR("", strPatronCode, DateTime.Now.ToString("MM/dd/yyyy")).Count() == 0)
             {
@@ -249,11 +248,11 @@ namespace Libol.Controllers
                     strPortrait = patron.Portrait
                 };
                 int id2 = ViewBag.PatronDetail.ID;
-                getonloandetail(id2);
+                Getonloandetail(id2);
             }
         }
 
-        public void getonloandetail(int id)
+        public void Getonloandetail(int id)
         {
             List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
             List<OnLoan> onLoans = new List<OnLoan>();
@@ -278,7 +277,7 @@ namespace Libol.Controllers
             ViewBag.owningcount = owningcount;
         }
 
-        public void getcurrentloandetail()
+        public void Getcurrentloandetail()
         {
             List<SP_GET_CURRENT_LOANINFOR_Result> currentloaninfo = checkOutBusiness.SP_GET_CURRENT_LOANINFORs(strTransactionIDs, "Loan").ToList();
             List<OnLoan> onLoans = new List<OnLoan>();

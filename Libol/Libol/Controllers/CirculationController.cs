@@ -66,7 +66,7 @@ namespace Libol.Controllers
         public JsonResult GetPatronOnLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strDueDateFrom, string strDueDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!string.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             var patronLoanInfors = cb.GET_PATRON_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, strLocID, strCheckOutDateFrom, strCheckOutDateTo, strDueDateFrom, strDueDateTo, null, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
             if (model.search.value != null)
@@ -186,7 +186,7 @@ namespace Libol.Controllers
         public JsonResult GetPatronRenewOnLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!string.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             var patronLoanInfors = cb.GET_PATRON_RENEW_ONLOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, strLocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
             if (model.search.value != null)
@@ -354,7 +354,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> LocPrefix = new List<SelectListItem>();
             LocPrefix.Add(new SelectListItem { Text = "Tất cả", Value = "0" });
-            if (!String.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(id))
             {
                 foreach (var lp in le.FPT_CIR_GET_LOCLIBUSER_PREFIX_SEL((int)Session["UserID"], Int32.Parse(id)))
                 {
@@ -386,7 +386,7 @@ namespace Libol.Controllers
         public JsonResult GetPatronLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!string.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             var patronLoanInfors = cb.GET_PATRON_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, strLocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, null, (int)Session["UserID"]);
             var search = patronLoanInfors.Where(a => true);
             if (model.search.value != null)
@@ -533,7 +533,7 @@ namespace Libol.Controllers
         public JsonResult GetPatronRenewLoanInfo(DataTableAjaxPostModel model, string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
         {
             int LibID = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!string.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             var patronLoanInfors = cb.GET_PATRON_RENEW_LOAN_INFOR_LIST(strPatronNumber, strItemCode, strCopyNumber, LibID, strLocPrefix, strLocID, strCheckOutDateFrom, strCheckOutDateTo, strCheckInDateFrom, strCheckInDateTo, (int)Session["UserID"]);
             foreach (var i in patronLoanInfors)
             {
@@ -735,7 +735,7 @@ namespace Libol.Controllers
         {
             List<SelectListItem> loc = new List<SelectListItem>();
             loc.Add(new SelectListItem { Text = "Tất cả các kho", Value = "0" });
-            if (!String.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(id))
             {
                 foreach (var l in le.FPT_SP_CIR_LIBLOCUSER_SEL((int)Session["UserID"], Int32.Parse(id)).ToList())
                 {
@@ -750,9 +750,9 @@ namespace Libol.Controllers
             int LibID = 0;
             int LocID = 0;
             int Type = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            if (!String.IsNullOrEmpty(strType)) Type = Convert.ToInt32(strType);
+            if (!string.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!string.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
+            if (!string.IsNullOrEmpty(strType)) Type = Convert.ToInt32(strType);
             if (Type == 3)
             {
                 ViewBag.TypeName = "bạn đọc";
@@ -775,9 +775,9 @@ namespace Libol.Controllers
             int LibID = 0;
             int LocID = 0;
             int Type = 0;
-            if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            if (!String.IsNullOrEmpty(strType)) Type = Convert.ToInt32(strType);
+            if (!string.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
+            if (!string.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
+            if (!string.IsNullOrEmpty(strType)) Type = Convert.ToInt32(strType);
             if (Type == 3)
             {
                 ViewBag.TypeName = "bạn đọc";
@@ -838,7 +838,7 @@ namespace Libol.Controllers
             string LockDateToFilter = Request.Form["LockDateToFilter"];
             string NoteFilter = Request.Form["NoteFilter"];
             int CollegeID = 0;
-            if (!String.IsNullOrEmpty(LibraryFilter)) CollegeID = Convert.ToInt32(LibraryFilter);
+            if (!string.IsNullOrEmpty(LibraryFilter)) CollegeID = Convert.ToInt32(LibraryFilter);
 
             ShelfBusiness shelfBusiness = new ShelfBusiness();
             ViewBag.Library = shelfBusiness.FPT_SP_HOLDING_LIBRARY_SELECT(0, 1, -1, Int32.Parse(Session["UserID"].ToString()), 1);
@@ -962,7 +962,7 @@ namespace Libol.Controllers
         public PartialViewResult GetLockPatronStats(string strPatronCode, string strLockDateTo, string strLockDateFrom, string strCollegeID)
         {
             //int CollegeID = 0;
-            //if (!String.IsNullOrEmpty(strCollegeID)) CollegeID = Convert.ToInt32(strCollegeID);
+            //if (!string.IsNullOrEmpty(strCollegeID)) CollegeID = Convert.ToInt32(strCollegeID);
             //ViewBag.Result = cb.GET_SP_GET_LOCKEDPATRONS_LIST(strPatronCode, strLockDateFrom, strLockDateTo, CollegeID);
             //List<SelectListItem> lib = new List<SelectListItem>
             //{
@@ -991,9 +991,9 @@ namespace Libol.Controllers
             return View();
         }
         [HttpPost]
-        public PartialViewResult DisplayPatronGroup(String strLibID, String strDateFrom, String strDateTo, String strType)
+        public PartialViewResult DisplayPatronGroup(string strLibID, string strDateFrom, string strDateTo, string strType)
         {
-            string userID = "UserID";
+            string userID = Session["UserID"].ToString();
             List<PATRON_GROUP> result_now =
                 pb.PATRON_GROUP_NOW(userID, strDateFrom, strDateTo, strType, strLibID);
 
@@ -1021,10 +1021,10 @@ namespace Libol.Controllers
             return View();
         }
         [HttpPost]
-        public PartialViewResult DisplayTopPatron(String strLibID, String strLocID, String strDateFrom, String strDateTo,
-            String strNumPatron, String strHireTimes, String strType)
+        public PartialViewResult DisplayTopPatron(string strLibID, string strLocID, string strDateFrom, string strDateTo,
+            string strNumPatron, string strHireTimes, string strType)
         {
-            string userID = "UserID";
+            string userID = Session["UserID"].ToString();
 
             List<FPT_SP_STAT_PATRONMAX_Result> result =
                 pb.FPT_SP_STAT_PATRONMAX_LIST(userID, strDateFrom, strDateTo, strNumPatron, strHireTimes, strType, strLocID, strLibID);
@@ -1047,10 +1047,10 @@ namespace Libol.Controllers
             return View();
         }
         [HttpPost]
-        public PartialViewResult DisplayTopCopy(String strLibID, String strDateFrom, String strDateTo,
-        String strNumPatron, String strHireTimes)
+        public PartialViewResult DisplayTopCopy(string strLibID, string strDateFrom, string strDateTo,
+        string strNumPatron, string strHireTimes)
         {
-            string userID = "UserID";
+            string userID = Session["UserID"].ToString();
 
             List<ITEMMAX> result =
                 pb.TOP_COPY(userID, strDateFrom, strDateTo, strNumPatron, strHireTimes, strLibID);
@@ -1083,22 +1083,22 @@ namespace Libol.Controllers
             var search = lockedpatron.Where(a => true);
             if (libraryID != -1)
             {
-                List<String> listInLib = le.CIR_PATRON.Where(c => c.CIR_PATRON_GROUP == null ? false : c.CIR_PATRON_GROUP.HOLDING_LOCATION.Select(l => l.LibID).Contains(libraryID)).Select(c => c.Code).ToList();
+                List<string> listInLib = le.CIR_PATRON.Where(c => c.CIR_PATRON_GROUP == null ? false : c.CIR_PATRON_GROUP.HOLDING_LOCATION.Select(l => l.LibID).Contains(libraryID)).Select(c => c.Code).ToList();
                 search = lockedpatron.Where(a => listInLib.Contains(a.PatronCode));
             }
-            if (!String.IsNullOrEmpty(PatronCode))
+            if (!string.IsNullOrEmpty(PatronCode))
             {
                 search = search.Where(a => a.PatronCode.ToLower().Contains(PatronCode.ToLower()));
             }
-            if (!String.IsNullOrEmpty(Note))
+            if (!string.IsNullOrEmpty(Note))
             {
                 search = search.Where(a => a.Note.ToLower().Contains(Note.ToLower()));
             }
-            if (!String.IsNullOrEmpty(StartedDate))
+            if (!string.IsNullOrEmpty(StartedDate))
             {
                 search = search.Where(a => a.StartedDate.ToString("yyyy-MM-dd").CompareTo(StartedDate) >= 0);
             }
-            if (!String.IsNullOrEmpty(FinishDate))
+            if (!string.IsNullOrEmpty(FinishDate))
             {
                 search = search.Where(a => a.StartedDate.ToString("yyyy-MM-dd").CompareTo(FinishDate) <= 0);
             }
