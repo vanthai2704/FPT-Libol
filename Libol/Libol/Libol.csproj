@@ -224,6 +224,9 @@
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_RECOMMEND.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -442,7 +445,6 @@
     <Compile Include="Models\CAT_QUEUE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CIRCULATION.cs" />
     <Compile Include="Models\CheckOutBusiness.cs" />
     <Compile Include="Models\CIR_DIC_COLLEGE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
