@@ -2668,102 +2668,18 @@ namespace Libol.Controllers
         {
             int id = 0;
             if (!String.IsNullOrEmpty(strCatID)) id = Int32.Parse(strCatID);
-            CAT_DIC_LIST list = le.CAT_DIC_LIST.Where(a => a.ID == id).First();
-            switch (list.ID)
+            CAT_DIC_LIST cat = le.CAT_DIC_LIST.Where(a => a.ID == id).First();
+            if (cat.ID == 38)
             {
-                case 0:
-                    ViewBag.Result = null;
-                    break;
-                case 1:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR(0).ToList();
-                    break;
-                case 2:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_PUBLISHER(0).ToList();
-                    break;
-                case 3:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_KEYWORD(0).ToList();
-                    break;
-                case 4:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_BBK(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_BBK(0).ToList();
-                    break;
-                case 5:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DDC(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DDC(0).ToList();
-                    break;
-                case 6:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LOC(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LOC(0).ToList();
-                    break;
-                case 7:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_UDC(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_UDC(0).ToList();
-                    break;
-                case 9:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SH(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SH(0).ToList();
-                    break;
-                case 10:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LANGUAGE(0).ToList();
-                    break;
-                case 11:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_COUNTRY(0).ToList();
-                    break;
-                case 12:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_SERIALS(0).ToList();
-                    break;
-                case 14:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_MEDIUM_NEW(0).ToList();
-                    break;
-                case 17:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_ITEMTYPE_NEW(0).ToList();
-                    break;
-                case 18:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_LIBRARY_NEW(0).ToList();
-                    break;
-                case 19:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT(0).ToList();
-                    break;
-                case 30:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_NLM(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_NLM(0).ToList();
-                    break;
-                case 31:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_OAI_SET(0).ToList();
-                    break;
-                case 38:
-                    ViewBag.BAPResult = null;
-                    ViewBag.DAPResult = null;
-                    break;
-                case 40:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC40(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC40(0).ToList();
-                    break;
-                case 41:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC41(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC41(0).ToList();
-                    break;
-                case 42:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC42(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC42(0).ToList();
-                    break;
-                case 43:
-                    ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC43(1).ToList();
-                    ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20_BY_DIC43(0).ToList();
-                    break;
+                ViewBag.BAPResult = null;
+                ViewBag.DAPResult = null;
+            } else
+            {
+                ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20(1, cat.ID).ToList();
+                ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20(0, cat.ID).ToList();
             }
-            ViewBag.Category = list.Name;
+            
+            ViewBag.Category = cat.Name;
             ViewBag.Total = le.FPT_ACQ_LANGUAGE_STATISTIC(0).First();
             return PartialView("GetTop20Stats");
         }
