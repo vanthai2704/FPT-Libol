@@ -23139,6 +23139,17 @@ namespace Libol.Models
                 new ObjectParameter("LibID", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_STAT_PATRONMAX", intUserIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, intTopNumParameter, intMinLoanParameter, optItemIDParameter, locIDParameter, libIDParameter);
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_Result> FPT_ACQ_STATISTIC_TOP20(Nullable<int> intType, Nullable<int> intCategoryID)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            var intCategoryIDParameter = intCategoryID.HasValue ?
+                new ObjectParameter("intCategoryID", intCategoryID) :
+                new ObjectParameter("intCategoryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_Result>("FPT_ACQ_STATISTIC_TOP20", intTypeParameter, intCategoryIDParameter);
         }
     }
 }
