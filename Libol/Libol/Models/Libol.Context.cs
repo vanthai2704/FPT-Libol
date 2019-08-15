@@ -23045,5 +23045,18 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_ADMIN_UPDATE_USER", intUIDParameter, intISLDAPParameter, strNameParameter, strUserNameParameter, strPasswordParameter, intCatModuleParameter, intPatModuleParameter, intCirModuleParameter, intAcqModuleParameter, intSerModuleParameter, intILLModuleParameter, intDelModuleParameter, intAdmModuleParameter, intParentIDParameter, intOutVal);
         }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_Result> FPT_ACQ_STATISTIC_TOP20(Nullable<int> intType, Nullable<int> intCategoryID)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            var intCategoryIDParameter = intCategoryID.HasValue ?
+                new ObjectParameter("intCategoryID", intCategoryID) :
+                new ObjectParameter("intCategoryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_Result>("FPT_ACQ_STATISTIC_TOP20", intTypeParameter, intCategoryIDParameter);
+        }
     }
 }
