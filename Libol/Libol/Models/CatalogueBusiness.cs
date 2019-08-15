@@ -6,6 +6,7 @@ using Libol.SupportClass;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 
 namespace Libol.Models
 {
@@ -73,12 +74,12 @@ namespace Libol.Models
             //Loc $a $b trong title
             foreach (FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result item in inforList)
             {
-                if(item.FieldCode == "245")
+                if (item.FieldCode == "245")
                 {
                     item.Content = new FormatHoldingTitle().OnFormatHoldingTitle(item.Content);
                 }
             }
-            
+
 
             return inforList;
         }
@@ -200,425 +201,443 @@ namespace Libol.Models
             string ItemID = "";
             //If Code = null thì là trường Hợp Tạo mới Item và ngược lại là Update
             //Get ITEM information
-            if (String.IsNullOrEmpty(ItemCode))
+
+            /////////////////////////////BEGIN TRANS///////////////////////////////
+            ///
+            using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
-                string code = ""; //New Code for Insert
-                if (listFieldValue.Count > 0 && listFieldName.Count > 0)
+                try
                 {
-                    byte accessLevel = 0;
-                    int typeId = 1, mediumId = 3, formId = 14;
-                    string coverPicture = "", bibLevel = "", recordType = "", sourceAgencyID = "", callNumber = "";
-                    // insert item 
-
-                    //sourceAgencyID
-                    if (listFieldName.Contains("040$a"))
-                    {
-                        int index = listFieldName.IndexOf("040$a");
-                        string valueAgency = listFieldValue[index];
-                        sourceAgencyID = PickReferenceID("HOLDING_LIBRARY", valueAgency);
-                    }
-                    else
-                    {
-                        sourceAgencyID = null;
-                    }
-
-                    //CallNumber
-                    if (listFieldName.Contains("090$a") && listFieldName.Contains("090$b"))
-                    {
-                        int index = listFieldName.IndexOf("090$a");
-                        callNumber = listFieldValue[listFieldName.IndexOf("090$a")] + " " + listFieldValue[listFieldName.IndexOf("090$b")];
-                    }
-                    else
-                    {
-                        callNumber = null;
-                    }
-
-                    if (listFieldName.Contains("926"))
-
-                    {
-                        int index = listFieldName.IndexOf("926");
-                        accessLevel = Convert.ToByte(listFieldValue[index]);
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    if (listFieldName.Contains("927"))
-                    {
-                        int index = listFieldName.IndexOf("927");
-                        typeId = Convert.ToInt32(listFieldValue[listFieldName.IndexOf("927")]);
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-
-                    if (listFieldName.Contains("907"))
-                    {
-                        int index = listFieldName.IndexOf("907");
-                        coverPicture = listFieldValue[listFieldName.IndexOf("907")];
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-
-                    if (listFieldName.Contains("DirLevel"))
-                    {
-                        int index = listFieldName.IndexOf("DirLevel");
-                        bibLevel = listFieldValue[listFieldName.IndexOf("DirLevel")];
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    if (listFieldName.Contains("RecordType"))
-                    {
-                        int index = listFieldName.IndexOf("RecordType");
-                        recordType = listFieldValue[listFieldName.IndexOf("RecordType")];
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    if (listFieldName.Contains("925"))
-                    {
-                        int index = listFieldName.IndexOf("925");
-                        mediumId = Convert.ToInt32(listFieldValue[listFieldName.IndexOf("925")]);
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    if (listFieldName.Contains("FormId"))
-                    {
-                        int index = listFieldName.IndexOf("FormId");
-                        formId = Convert.ToInt32(listFieldValue[listFieldName.IndexOf("FormId")]);
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-
-                    ITEM item = new ITEM()
-                    {
-                        AccessLevel = accessLevel,
-                        MediumID = mediumId,
-                        TypeID = typeId,
-                        CoverPicture = coverPicture,
-                        FormID = formId,
-                        RecordType = recordType,
-                        BibLevel = bibLevel,
-                        CallNumber = callNumber
-                    };
-                    //add Item
-                    InsertItem(ref item);
-                    code = item.Code;
-                    //Add thông tin các trường điều khiển vào bảng tương ứng
-                    //Doanhdq Bổ xung
-                }
-                ItemID = db.SP_GET_ITEMID_BYCODE(code).FirstOrDefault().ToString(); //New ItemID after Insert New Item
-            }
-            else
-            //CODE Đã tồn tại THÌ THỰC HIỆN UPDATE
-            {
-                ItemID = db.SP_GET_ITEMID_BYCODE(ItemCode).FirstOrDefault().ToString();
-                int ID = Int32.Parse(ItemID);
-
-                //Update ITEM Infor By ItemID
-                if (listFieldValue.Count > 0 && listFieldName.Count > 0)
-                {
-                    ITEM item = db.ITEMs.Single(u => u.ID == ID);
-                    string Leader = listFieldValue[listFieldName.IndexOf("000")];
-                    listFieldValue.RemoveAt(listFieldName.IndexOf("000"));
-                    listFieldName.RemoveAt(listFieldName.IndexOf("000"));
 
 
 
-                    // UPDATE item 
-
-                    item.Leader = Leader;
-                    item.BibLevel = Leader.Substring(7, 1);
-                    item.RecordType = Leader.Substring(6, 1);
-                    //Update sourceAgencyID
-                    if (listFieldName.Contains("040$a"))
+                    if (String.IsNullOrEmpty(ItemCode))
                     {
-                        string valueAgency = listFieldValue[listFieldName.IndexOf("040$a")];
-                        item.SourceAgencyID = Int32.Parse(PickReferenceID("HOLDING_LIBRARY", valueAgency));
-                    }
-
-                    //CallNumber
-                    if (listFieldName.Contains("090$a") && listFieldName.Contains("090$b"))
-                    {
-                        string NewCN = listFieldValue[listFieldName.IndexOf("090$a")] + " " + listFieldValue[listFieldName.IndexOf("090$b")];
-                        item.CallNumber = NewCN;
-                        //Update CallNumebr in Hoding table
-                        var some = db.HOLDINGs.Where(x => x.ItemID == ID).ToList();
-                        some.ForEach(cn => cn.CallNumber = NewCN);
-                        //(from p in db.HOLDINGs where p.CallNumber == OldCN select p ).ToList().ForEach( x=> x.is)
-                    }
-                    //NewRecord
-                    if (listFieldName.Contains("900"))
-                    {
-                        int index = listFieldName.IndexOf("900");
-                        item.NewRecord = (Int32.Parse(listFieldValue[index]) == 0) ? false : true;
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    //coverPic
-                    if (listFieldName.Contains("907"))
-                    {
-                        int index = listFieldName.IndexOf("907");
-                        item.CoverPicture = listFieldValue[index];
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    //TypeID
-                    if (listFieldName.Contains("927"))
-                    {
-                        int index = listFieldName.IndexOf("927");
-                        string valueType = listFieldValue[index];
-                        item.TypeID = Int32.Parse(PickReferenceID("CAT_DIC_ITEM_TYPE", valueType));
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    //AccessLv
-                    if (listFieldName.Contains("926"))
-                    {
-                        int index = listFieldName.IndexOf("926");
-                        item.AccessLevel = Byte.Parse(listFieldValue[index]);
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    //MediumID
-                    if (listFieldName.Contains("925"))
-                    {
-                        int index = listFieldName.IndexOf("925");
-                        string valueMedium = listFieldValue[index];
-                        item.MediumID = Int32.Parse(PickReferenceID("CAT_DIC_MEDIUM", valueMedium));
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    //Cataloguer
-                    if (listFieldName.Contains("911"))
-                    {
-                        int index = listFieldName.IndexOf("911");
-                        item.Cataloguer = listFieldValue[index];
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-                    //Reviewer
-                    if (listFieldName.Contains("912"))
-                    {
-                        int index = listFieldName.IndexOf("912");
-                        item.Reviewer = listFieldValue[index];
-                        listFieldName.RemoveAt(index);
-                        listFieldValue.RemoveAt(index);
-                    }
-
-
-                    db.SaveChanges();
-                }
-
-
-            }
-
-            //****************************************************DONE INSERT ITEM(table)****************************************
-            //************************************************************************************************************
-
-            //get ItemID By Code
-
-
-            //Loaị bỏ các field null hoặc trống ***************************************************************************
-            //Sử Dụng trong TH Insert New
-            List<int> indexNull = new List<int>();
-            for (int i = 0; i < listFieldName.Count(); i++)
-            {
-                if (listFieldValue[i] == null || listFieldValue[i] == "")
-                    indexNull.Add(i);
-            }
-            for (int i = 0; i < indexNull.Count(); i++)
-            {
-                if (i > 0)
-                {
-                    listFieldName.RemoveAt(indexNull[i] - i);
-                    listFieldValue.RemoveAt(indexNull[i] - i);
-                }
-                else
-                {
-                    listFieldName.RemoveAt(indexNull[i]);
-                    listFieldValue.RemoveAt(indexNull[i]);
-                }
-            }
-
-
-            // Update * ***************************************** UPDATE CÁC BẢNG PHỤC VỤ TÌM KIẾM * ************************************************
-            //************************************************************************************************************
-            List<string> listFieldDeleted = new List<string>();
-            for (int i = 0; i < listFieldName.Count(); i++)
-            {
-                //Update ****************************************** LANGUAGE  *************************************************
-                //************************************************************************************************************
-                if (listFieldName[i] == "008")
-                {
-                    if (ItemCode != null && listFieldDeleted.IndexOf("008") == -1)
-                    {
-                        db.Database.ExecuteSqlCommand("DELETE FROM ITEM_LANGUAGE WHERE FieldCode = '008' AND ItemID = " + ItemID);
-                        listFieldDeleted.Add("008");
-                    }
-                    //Update ******************************************DONE LANGUAGE  *************************************************
-                    //************************************************************************************************************
-                    UpdateLanguage(ItemID, listFieldValue[i], "008");
-                }
-                ////Sử dụng cho các bảng ITEM_TITLE
-                /////Update ****************************************** TITTLE *************************************************
-                //************************************************************************************************************
-                if (listFieldName[i] == "245$a" || listFieldName[i].StartsWith("245$b") || listFieldName[i] == "245$p")
-                {
-                    if (ItemCode != null)
-                    {
-                        if (listFieldDeleted.IndexOf("245") == -1)
+                        string code = ""; //New Code for Insert
+                        if (listFieldValue.Count > 0 && listFieldName.Count > 0)
                         {
-                            db.Database.ExecuteSqlCommand("DELETE FROM ITEM_TITLE WHERE FieldCode = '245' AND ItemID = " + ItemID);
-                            listFieldDeleted.Add("245");
+                            byte accessLevel = 0;
+                            int typeId = 1, mediumId = 3, formId = 14;
+                            string coverPicture = "", bibLevel = "", recordType = "", sourceAgencyID = "", callNumber = "";
+                            // insert item 
+
+                            //sourceAgencyID
+                            if (listFieldName.Contains("040$a"))
+                            {
+                                int index = listFieldName.IndexOf("040$a");
+                                string valueAgency = listFieldValue[index];
+                                sourceAgencyID = PickReferenceID("HOLDING_LIBRARY", valueAgency);
+                            }
+                            else
+                            {
+                                sourceAgencyID = null;
+                            }
+
+                            //CallNumber
+                            if (listFieldName.Contains("090$a") && listFieldName.Contains("090$b"))
+                            {
+                                int index = listFieldName.IndexOf("090$a");
+                                callNumber = listFieldValue[listFieldName.IndexOf("090$a")] + " " + listFieldValue[listFieldName.IndexOf("090$b")];
+                            }
+                            else
+                            {
+                                callNumber = null;
+                            }
+
+                            if (listFieldName.Contains("926"))
+
+                            {
+                                int index = listFieldName.IndexOf("926");
+                                accessLevel = Convert.ToByte(listFieldValue[index]);
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            if (listFieldName.Contains("927"))
+                            {
+                                int index = listFieldName.IndexOf("927");
+                                typeId = Convert.ToInt32(listFieldValue[listFieldName.IndexOf("927")]);
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+
+                            if (listFieldName.Contains("907"))
+                            {
+                                int index = listFieldName.IndexOf("907");
+                                coverPicture = listFieldValue[listFieldName.IndexOf("907")];
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+
+                            if (listFieldName.Contains("DirLevel"))
+                            {
+                                int index = listFieldName.IndexOf("DirLevel");
+                                bibLevel = listFieldValue[listFieldName.IndexOf("DirLevel")];
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            if (listFieldName.Contains("RecordType"))
+                            {
+                                int index = listFieldName.IndexOf("RecordType");
+                                recordType = listFieldValue[listFieldName.IndexOf("RecordType")];
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            if (listFieldName.Contains("925"))
+                            {
+                                int index = listFieldName.IndexOf("925");
+                                mediumId = Convert.ToInt32(listFieldValue[listFieldName.IndexOf("925")]);
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            if (listFieldName.Contains("FormId"))
+                            {
+                                int index = listFieldName.IndexOf("FormId");
+                                formId = Convert.ToInt32(listFieldValue[listFieldName.IndexOf("FormId")]);
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+
+                            ITEM item = new ITEM()
+                            {
+                                AccessLevel = accessLevel,
+                                MediumID = mediumId,
+                                TypeID = typeId,
+                                CoverPicture = coverPicture,
+                                FormID = formId,
+                                RecordType = recordType,
+                                BibLevel = bibLevel,
+                                CallNumber = callNumber
+                            };
+                            //add Item
+                            InsertItem(ref item);
+                            code = item.Code;
+                            //Add thông tin các trường điều khiển vào bảng tương ứng
+                            //Doanhdq Bổ xung
+                        }
+                        ItemID = db.SP_GET_ITEMID_BYCODE(code).FirstOrDefault().ToString(); //New ItemID after Insert New Item
+                    }
+                    else
+                    //CODE Đã tồn tại THÌ THỰC HIỆN UPDATE
+                    {
+                        ItemID = db.SP_GET_ITEMID_BYCODE(ItemCode).FirstOrDefault().ToString();
+                        int ID = Int32.Parse(ItemID);
+
+                        //Update ITEM Infor By ItemID
+                        if (listFieldValue.Count > 0 && listFieldName.Count > 0)
+                        {
+                            ITEM item = db.ITEMs.Single(u => u.ID == ID);
+                            string Leader = listFieldValue[listFieldName.IndexOf("000")];
+                            listFieldValue.RemoveAt(listFieldName.IndexOf("000"));
+                            listFieldName.RemoveAt(listFieldName.IndexOf("000"));
+
+
+
+                            // UPDATE item 
+
+                            item.Leader = Leader;
+                            item.BibLevel = Leader.Substring(7, 1);
+                            item.RecordType = Leader.Substring(6, 1);
+                            //Update sourceAgencyID
+                            if (listFieldName.Contains("040$a"))
+                            {
+                                string valueAgency = listFieldValue[listFieldName.IndexOf("040$a")];
+                                item.SourceAgencyID = Int32.Parse(PickReferenceID("HOLDING_LIBRARY", valueAgency));
+                            }
+
+                            //CallNumber
+                            if (listFieldName.Contains("090$a") && listFieldName.Contains("090$b"))
+                            {
+                                string NewCN = listFieldValue[listFieldName.IndexOf("090$a")] + " " + listFieldValue[listFieldName.IndexOf("090$b")];
+                                item.CallNumber = NewCN;
+                                //Update CallNumebr in Hoding table
+                                var some = db.HOLDINGs.Where(x => x.ItemID == ID).ToList();
+                                some.ForEach(cn => cn.CallNumber = NewCN);
+                                //(from p in db.HOLDINGs where p.CallNumber == OldCN select p ).ToList().ForEach( x=> x.is)
+                            }
+                            //NewRecord
+                            if (listFieldName.Contains("900"))
+                            {
+                                int index = listFieldName.IndexOf("900");
+                                item.NewRecord = (Int32.Parse(listFieldValue[index]) == 0) ? false : true;
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            //coverPic
+                            if (listFieldName.Contains("907"))
+                            {
+                                int index = listFieldName.IndexOf("907");
+                                item.CoverPicture = listFieldValue[index];
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            //TypeID
+                            if (listFieldName.Contains("927"))
+                            {
+                                int index = listFieldName.IndexOf("927");
+                                string valueType = listFieldValue[index];
+                                item.TypeID = Int32.Parse(PickReferenceID("CAT_DIC_ITEM_TYPE", valueType));
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            //AccessLv
+                            if (listFieldName.Contains("926"))
+                            {
+                                int index = listFieldName.IndexOf("926");
+                                item.AccessLevel = Byte.Parse(listFieldValue[index]);
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            //MediumID
+                            if (listFieldName.Contains("925"))
+                            {
+                                int index = listFieldName.IndexOf("925");
+                                string valueMedium = listFieldValue[index];
+                                item.MediumID = Int32.Parse(PickReferenceID("CAT_DIC_MEDIUM", valueMedium));
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            //Cataloguer
+                            if (listFieldName.Contains("911"))
+                            {
+                                int index = listFieldName.IndexOf("911");
+                                item.Cataloguer = listFieldValue[index];
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+                            //Reviewer
+                            if (listFieldName.Contains("912"))
+                            {
+                                int index = listFieldName.IndexOf("912");
+                                item.Reviewer = listFieldValue[index];
+                                listFieldName.RemoveAt(index);
+                                listFieldValue.RemoveAt(index);
+                            }
+
+
+                            db.SaveChanges();
                         }
 
-                        //Xoa b ki tu noi truoc khi UPDATE
-                        if (listFieldValue[i].LastIndexOf("=") == listFieldValue[i].Length - 1 || listFieldValue[i].LastIndexOf(":") == listFieldValue[i].Length - 1 || listFieldValue[i].LastIndexOf(",") == listFieldValue[i].Length - 1 || listFieldValue[i].LastIndexOf("/") == listFieldValue[i].Length - 1)
+
+                    }
+
+                    //****************************************************DONE INSERT ITEM(table)****************************************
+                    //************************************************************************************************************
+
+                    //get ItemID By Code
+
+
+                    //Loaị bỏ các field null hoặc trống ***************************************************************************
+                    //Sử Dụng trong TH Insert New
+                    List<int> indexNull = new List<int>();
+                    for (int i = 0; i < listFieldName.Count(); i++)
+                    {
+                        if (listFieldValue[i] == null || listFieldValue[i] == "")
+                            indexNull.Add(i);
+                    }
+                    for (int i = 0; i < indexNull.Count(); i++)
+                    {
+                        if (i > 0)
                         {
-                            //Cat nhan de song song
-                            if (listFieldValue[i].Substring(listFieldValue[i].Length - 1) == "=")
-                                listFieldName[i + 1] = "245$b1";
-                            //cat phu de
-                            if (listFieldValue[i].Substring(listFieldValue[i].Length - 1) == ":")
-                                listFieldName[i + 1] = "245$b2";
-                            listFieldValue[i] = listFieldValue[i].Remove(listFieldValue[i].Length - 1, 1);
-                            UpdateItemTitle(ItemID, listFieldValue[i], "245");
+                            listFieldName.RemoveAt(indexNull[i] - i);
+                            listFieldValue.RemoveAt(indexNull[i] - i);
                         }
                         else
                         {
-                            UpdateItemTitle(ItemID, listFieldValue[i], "245");
+                            listFieldName.RemoveAt(indexNull[i]);
+                            listFieldValue.RemoveAt(indexNull[i]);
                         }
                     }
-                    else
-                    {
-                        //trường hợp lặp trường con (không phải trường lặp - ví dụ : 245 có 2 $b)
-                        if (listFieldValue[i].Contains("//"))
-                        {
-                            string valTemp = listFieldValue[i];
-                            valTemp =  valTemp.Replace("//" , "$");
-                            var arrTemp = valTemp.Split('$');
-                            foreach (string val in arrTemp)
-                            {
-                                UpdateItemTitle(ItemID, val, "245");
-                            }
-                        }
-                        else
-                        {
-                            UpdateItemTitle(ItemID, listFieldValue[i], "245");
-                        }
-                        
-                        
-                    }
-                    //Update *****************************************DONE TITTLE *************************************************
+
+                    //throw new Exception();
+                    // Update * ***************************************** UPDATE CÁC BẢNG PHỤC VỤ TÌM KIẾM * ************************************************
                     //************************************************************************************************************
-
-                }
-
-
-            }
-
-            //Update ***********************FULL TEXT **********************************
-            string fullText = String.Join(" ", listFieldValue);
-            if (ItemCode != null)
-            {
-                db.Database.ExecuteSqlCommand("DELETE FROM ITEM_FULLTEXT WHERE ItemID = " + ItemID);
-                //Loc truong 000 (leader)
-            }
-            UpdateItemFulltext(ItemID, fullText);
-
-            //Nối chuối phục vụ việc select query
-            string strFields = String.Join("','", listFieldName);
-            //Update ***********************DONE FULL TEXT **********************************
-
-
-            //**************************************************** UPDATE REFERENCE TABLES**********************************************
-            //*************************************************************************************************************************
-            List<FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result> listRef = db.Database.SqlQuery<FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result>("SELECT ID, FieldCode, DicID, FunctionID, FieldTypeID, LinkTypeID FROM MARC_BIB_FIELD WHERE(ID IN(SELECT ID FROM MARC_BIB_FIELD WHERE FieldCode IN('" + strFields + "')) OR ParentFieldCode IN('" + strFields + "')) AND(DicID > 0 OR FunctionID IN(6, 7, 8, 9, 14)) ORDER BY FieldCode").ToList();
-            foreach (FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result item in listRef)
-            {
-
-                switch (item.FunctionID == null ? 0 : item.FunctionID)
-                {
-                    case 6:
-                        //["FieldTypeID"]) == 4
-                        //UPDATE CAT_EDATA_FILE
-                        break;
-                    case 7:
-                        //["FieldTypeID"]) == 7
-                        //DELETE FROM ITEM_LINK
-                        break;
-                    case 9:
-                        List<int> indexSN = Enumerable.Range(0, listFieldName.Count).Where(i => listFieldName[i] == item.FieldCode).ToList();
-                        foreach (int i in indexSN)
+                    List<string> listFieldDeleted = new List<string>();
+                    for (int i = 0; i < listFieldName.Count(); i++)
+                    {
+                        //Update ****************************************** LANGUAGE  *************************************************
+                        //************************************************************************************************************
+                        if (listFieldName[i] == "008")
                         {
-                            if (ItemCode != null && listFieldDeleted.IndexOf(item.FieldCode) == -1)
+                            if (ItemCode != null && listFieldDeleted.IndexOf("008") == -1)
                             {
-                                db.Database.ExecuteSqlCommand("DELETE FROM CAT_DIC_NUMBER WHERE FieldCode = '" + item.FieldCode + "' AND ItemID = " + ItemID);
-                                listFieldDeleted.Add(item.FieldCode);
+                                db.Database.ExecuteSqlCommand("DELETE FROM ITEM_LANGUAGE WHERE FieldCode = '008' AND ItemID = " + ItemID);
+                                listFieldDeleted.Add("008");
                             }
-                            UpdateStandardNumber(ItemID, listFieldValue[i], item.FieldCode);
+                            //Update ******************************************DONE LANGUAGE  *************************************************
+                            //************************************************************************************************************
+                            UpdateLanguage(ItemID, listFieldValue[i], "008");
                         }
-                        break;
-                    case 14:
-                        List<int> indexY = Enumerable.Range(0, listFieldName.Count).Where(i => listFieldName[i] == item.FieldCode).ToList();
-                        foreach (int i in indexY)
+                        ////Sử dụng cho các bảng ITEM_TITLE
+                        /////Update ****************************************** TITTLE *************************************************
+                        //************************************************************************************************************
+                        if (listFieldName[i] == "245$a" || listFieldName[i].StartsWith("245$b") || listFieldName[i] == "245$p")
                         {
-                            if (ItemCode != null && listFieldDeleted.IndexOf(item.FieldCode) == -1)
+                            if (ItemCode != null)
                             {
-                                db.Database.ExecuteSqlCommand("DELETE FROM CAT_DIC_YEAR WHERE FieldCode = '" + item.FieldCode + "' AND ItemID = " + ItemID);
-                                listFieldDeleted.Add(item.FieldCode);
-                            }
-                            UpdateYear(ItemID, listFieldValue[i], item.FieldCode);
-                        }
-                        break;
-                    default:
-                        if (item.DicID != null)
-                        {
-                            List<int> indexRef = Enumerable.Range(0, listFieldName.Count).Where(i => listFieldName[i] == item.FieldCode).ToList();
-                            foreach (int i in indexRef)
-                            {
-                                if (listFieldDeleted.IndexOf(item.FieldCode) == -1)
+                                if (listFieldDeleted.IndexOf("245") == -1)
                                 {
-                                    UpdateReference(ItemID, listFieldValue[i], item.FieldCode, item.DicID, ItemCode == null ? 1 : 0, true);
-                                    listFieldDeleted.Add(item.FieldCode);
+                                    db.Database.ExecuteSqlCommand("DELETE FROM ITEM_TITLE WHERE FieldCode = '245' AND ItemID = " + ItemID);
+                                    listFieldDeleted.Add("245");
+                                }
+
+                                //Xoa b ki tu noi truoc khi UPDATE
+                                if (listFieldValue[i].LastIndexOf("=") == listFieldValue[i].Length - 1 || listFieldValue[i].LastIndexOf(":") == listFieldValue[i].Length - 1 || listFieldValue[i].LastIndexOf(",") == listFieldValue[i].Length - 1 || listFieldValue[i].LastIndexOf("/") == listFieldValue[i].Length - 1)
+                                {
+                                    //Cat nhan de song song
+                                    if (listFieldValue[i].Substring(listFieldValue[i].Length - 1) == "=")
+                                        listFieldName[i + 1] = "245$b1";
+                                    //cat phu de
+                                    if (listFieldValue[i].Substring(listFieldValue[i].Length - 1) == ":")
+                                        listFieldName[i + 1] = "245$b2";
+                                    listFieldValue[i] = listFieldValue[i].Remove(listFieldValue[i].Length - 1, 1);
+                                    UpdateItemTitle(ItemID, listFieldValue[i], "245");
                                 }
                                 else
                                 {
-                                    UpdateReference(ItemID, listFieldValue[i], item.FieldCode, item.DicID, ItemCode == null ? 1 : 0, false);
+                                    UpdateItemTitle(ItemID, listFieldValue[i], "245");
+                                }
+                            }
+                            else
+                            {
+                                //trường hợp lặp trường con (không phải trường lặp - ví dụ : 245 có 2 $b)
+                                if (listFieldValue[i].Contains("//"))
+                                {
+                                    string valTemp = listFieldValue[i];
+                                    valTemp = valTemp.Replace("//", "$");
+                                    var arrTemp = valTemp.Split('$');
+                                    foreach (string val in arrTemp)
+                                    {
+                                        UpdateItemTitle(ItemID, val, "245");
+                                    }
+                                }
+                                else
+                                {
+                                    UpdateItemTitle(ItemID, listFieldValue[i], "245");
                                 }
 
+
                             }
+                            //Update *****************************************DONE TITTLE *************************************************
+                            //************************************************************************************************************
 
                         }
-                        break;
-                }
-
-            }
-            //****************************************************DONE INSERT REFERENCE (tables)***************************
-            //************************************************************************************************************
 
 
-
-            //****************************************************START INSERT Block Fields(tables)***************************
-            //************************************************************************************************************
-            if (ItemCode == null)
-            {
-                //INSERT = 1
-                ParseFieldsValue(listFieldName, listFieldValue, ItemID);
-            }
-            else
-            {
-                //UPDATE = 0
-                List<string> FieldControl = new List<string> { "000", "001","852", "900", "907", "911", "912", "925", "926", "927" };
-                foreach (string value in FieldControl)
-                {
-                    if (listFieldOrg.Contains(value))
-                    {
-                        listValueOrg.RemoveAt(listFieldOrg.IndexOf(value));
-                        listFieldOrg.RemoveAt(listFieldOrg.IndexOf(value));
                     }
+
+                    //Update ***********************FULL TEXT **********************************
+                    string fullText = String.Join(" ", listFieldValue);
+                    if (ItemCode != null)
+                    {
+                        db.Database.ExecuteSqlCommand("DELETE FROM ITEM_FULLTEXT WHERE ItemID = " + ItemID);
+                        //Loc truong 000 (leader)
+                    }
+                    UpdateItemFulltext(ItemID, fullText);
+
+                    //Nối chuối phục vụ việc select query
+                    string strFields = String.Join("','", listFieldName);
+                    //Update ***********************DONE FULL TEXT **********************************
+
+
+                    //**************************************************** UPDATE REFERENCE TABLES**********************************************
+                    //*************************************************************************************************************************
+                    List<FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result> listRef = db.Database.SqlQuery<FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result>("SELECT ID, FieldCode, DicID, FunctionID, FieldTypeID, LinkTypeID FROM MARC_BIB_FIELD WHERE(ID IN(SELECT ID FROM MARC_BIB_FIELD WHERE FieldCode IN('" + strFields + "')) OR ParentFieldCode IN('" + strFields + "')) AND(DicID > 0 OR FunctionID IN(6, 7, 8, 9, 14)) ORDER BY FieldCode").ToList();
+                    foreach (FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result item in listRef)
+                    {
+
+                        switch (item.FunctionID == null ? 0 : item.FunctionID)
+                        {
+                            case 6:
+                                //["FieldTypeID"]) == 4
+                                //UPDATE CAT_EDATA_FILE
+                                break;
+                            case 7:
+                                //["FieldTypeID"]) == 7
+                                //DELETE FROM ITEM_LINK
+                                break;
+                            case 9:
+                                List<int> indexSN = Enumerable.Range(0, listFieldName.Count).Where(i => listFieldName[i] == item.FieldCode).ToList();
+                                foreach (int i in indexSN)
+                                {
+                                    if (ItemCode != null && listFieldDeleted.IndexOf(item.FieldCode) == -1)
+                                    {
+                                        db.Database.ExecuteSqlCommand("DELETE FROM CAT_DIC_NUMBER WHERE FieldCode = '" + item.FieldCode + "' AND ItemID = " + ItemID);
+                                        listFieldDeleted.Add(item.FieldCode);
+                                    }
+                                    UpdateStandardNumber(ItemID, listFieldValue[i], item.FieldCode);
+                                }
+                                break;
+                            case 14:
+                                List<int> indexY = Enumerable.Range(0, listFieldName.Count).Where(i => listFieldName[i] == item.FieldCode).ToList();
+                                foreach (int i in indexY)
+                                {
+                                    if (ItemCode != null && listFieldDeleted.IndexOf(item.FieldCode) == -1)
+                                    {
+                                        db.Database.ExecuteSqlCommand("DELETE FROM CAT_DIC_YEAR WHERE FieldCode = '" + item.FieldCode + "' AND ItemID = " + ItemID);
+                                        listFieldDeleted.Add(item.FieldCode);
+                                    }
+                                    UpdateYear(ItemID, listFieldValue[i], item.FieldCode);
+                                }
+                                break;
+                            default:
+                                if (item.DicID != null)
+                                {
+                                    List<int> indexRef = Enumerable.Range(0, listFieldName.Count).Where(i => listFieldName[i] == item.FieldCode).ToList();
+                                    foreach (int i in indexRef)
+                                    {
+                                        if (listFieldDeleted.IndexOf(item.FieldCode) == -1)
+                                        {
+                                            UpdateReference(ItemID, listFieldValue[i], item.FieldCode, item.DicID, ItemCode == null ? 1 : 0, true);
+                                            listFieldDeleted.Add(item.FieldCode);
+                                        }
+                                        else
+                                        {
+                                            UpdateReference(ItemID, listFieldValue[i], item.FieldCode, item.DicID, ItemCode == null ? 1 : 0, false);
+                                        }
+
+                                    }
+
+                                }
+                                break;
+                        }
+
+                    }
+                    //****************************************************DONE INSERT REFERENCE (tables)***************************
+                    //************************************************************************************************************
+
+
+
+                    //****************************************************START INSERT Block Fields(tables)***************************
+                    //************************************************************************************************************
+                    if (ItemCode == null)
+                    {
+                        //INSERT = 1
+                        ParseFieldsValue(listFieldName, listFieldValue, ItemID);
+                    }
+                    else
+                    {
+                        //UPDATE = 0
+                        List<string> FieldControl = new List<string> { "000", "001", "852", "900", "907", "911", "912", "925", "926", "927" };
+                        foreach (string value in FieldControl)
+                        {
+                            if (listFieldOrg.Contains(value))
+                            {
+                                listValueOrg.RemoveAt(listFieldOrg.IndexOf(value));
+                                listFieldOrg.RemoveAt(listFieldOrg.IndexOf(value));
+                            }
+                        }
+                        UpdateBlockField(listFieldOrg, listValueOrg, ItemID, 0);
+                    }
+                    transaction.Commit();
                 }
-                UpdateBlockField(listFieldOrg, listValueOrg, ItemID, 0);
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    return "Error";
+                }
             }
-
-
+            ////////////////////////////////////////END TRANS
+            ////////////////////////////////////////END TRANS
             //****************************************************DONE INSERT Block Fields(tables)***************************
             //************************************************************************************************************
 

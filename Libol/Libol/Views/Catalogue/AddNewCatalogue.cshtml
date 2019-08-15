@@ -5,6 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
+    #loading-indicator {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+    }
     #textColorInput {
         color: red;
     }
@@ -222,9 +227,16 @@
                     //check tittle
                     $("#245a").focusout(function () {
                         //debugger;
-                        checkTitle($('#245a').val(), '');
+                        if ($('#245a').val().trim().length > 0) {
+                            checkTitle($('#245a').val(), '');
+                        }
+                    });
+                    $("#245a").focusin(function () {
+                        //debugger;
+                        $('#iPass').remove();
 
                     });
+                    iPass
 
                     //Check ISBN  \\ Chưa check cho trường hợp lặp
                     $("#020a").focusout(function () {
@@ -242,12 +254,19 @@
     }
 
     function checkTitle(tit, type) {
+       
         $.ajax({
             url: "/Catalogue/CheckTitle",
             type: "POST",
             data: JSON.stringify({ strTitle: tit, strItemType: type }),
             contentType: "application/json;charset=utf-8",
             dataType: "json",
+            beforeSend: function () {
+                $('#dv245a').append("<img id='loadingTT' class='col-md-1' src='/Content/Images/Loading1.gif' />");
+            },
+            complete: function () {
+                $('#loadingTT').remove();
+            },
             success: function (listTitle) {
                 //debugger;
                 if (listTitle.length > 0) {
@@ -440,7 +459,7 @@
                             $("#dirCode option[value=" + value.Content.substring(7, 8) + "]").attr('selected', true);
                             break;
                         case '925':
-                            debugger;
+                            //debugger;
                             $("#mediumId option[value=" + value.Content + "]").attr('selected', true);
                             break;
                         case '926':

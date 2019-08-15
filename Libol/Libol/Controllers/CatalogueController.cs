@@ -49,20 +49,24 @@ namespace Libol.Controllers
         {
             string rs = "";
             HttpFileCollectionBase Files = Request.Files;
-            if(Files != null)
+            int id = Int32.Parse(Request.Form["ID"]) ;
+            
+            if (Files != null)
             {
                 for (int i = 0; i < Files.Count; i++)
                 {
+                    
                     var file = Files[i];
                     var fileName = DateTime.Now.ToString("yyMMddHHmmss") + Path.GetFileName(file.FileName);
-                    //try
                     string path = Path.Combine(Server.MapPath("/CAT_FILE"),
                                                        Path.GetFileName(fileName));
                     file.SaveAs(path);
-                   
-                    //db.FPT_CAT_FILE.Add(new FPT_CAT_FILE { ID = db.FPT_CAT_FILE.Select(x => x.ID).Max()+1 , ItemID = 2 , FileName="test/x" , FilePath="xx." });
-                    //db.SaveChanges();
-                    rs = "Upload Thành Công "+ i++  +" File !";
+                    int indexi = i + 1;
+                    //save DB
+                    db.FPT_CAT_FILE.Add(new FPT_CAT_FILE {  ItemID = id, FileName = file.FileName, FilePath = path });
+                    db.SaveChanges();
+                    
+                    rs = "Upload Thành Công " + indexi + " File !";
                 }
             }
             else
@@ -72,29 +76,13 @@ namespace Libol.Controllers
 
             return Json(rs, JsonRequestBehavior.AllowGet);
 
-            //foreach (HttpPostedFileBase item in files)
-            //{
-            //    if (item != null && item.ContentLength > 0)
-            //    {
-            //        try
-            //        {
-            //            string path = Path.Combine(Server.MapPath("/CatalogueEdata"),
-            //                                       Path.GetFileName(item.FileName));
-            //            item.SaveAs(path);
-            //            ViewBag.Message = "File uploaded successfully";
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            ViewBag.Message = "ERROR:" + ex.Message.ToString();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        ViewBag.Message = "You have not specified a file.";
-            //    }
-            //}
-
-
+        }
+        [HttpGet]
+        public FileResult Download(string FileName , string FilePath )
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
+            //string fileName = "190814100030SBV_SG3.1_Tai lieu mo ta source code Web Application-SWIFT.docx";
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet , FileName);
         }
 
         //**************************************************************CHECK TITLE**************************************************************
@@ -236,6 +224,11 @@ namespace Libol.Controllers
                 //****************************************************Done List Des****************************************************
                 //*************************************************************************************************************************
                 ViewData["ListField"] = listField;
+
+                //Load File
+                int IdIn = Int32.Parse(Id);
+                List<FPT_CAT_FILE> listFile = db.FPT_CAT_FILE.Where(i => i.ItemID == IdIn).ToList();
+                ViewData["ListFile"] = listFile;
             }
             else
             {
