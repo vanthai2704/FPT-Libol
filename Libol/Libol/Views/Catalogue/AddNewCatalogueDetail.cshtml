@@ -42,6 +42,7 @@
     SP_CATA_GET_CONTENTS_OF_ITEMS_Result Leader = ViewData["Leader"] as SP_CATA_GET_CONTENTS_OF_ITEMS_Result;
     List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> Contents = ViewData["ListContent"] as List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result>;
     List<SP_CATA_GET_MODIFIED_FIELDS_Result> Fields = ViewData["listField"] as List<SP_CATA_GET_MODIFIED_FIELDS_Result>;
+    List<FPT_CAT_FILE> Filex = ViewData["listFile"] as List<FPT_CAT_FILE>;
     //Merge 2 List Content + Des
     var res = Contents.Zip(Fields, (c, f) => new { Content = c, Field = f });
 }
@@ -83,19 +84,36 @@
     <h5 class='control-label align-self-center font-weight-bold' id="lbAdd"><mark>CÁC TRƯỜNG THÊM MỚI</mark></h5> <br>
 
 
-    @*<div>
-        <h3>Upload EData</h3>
-
-        <input type="file" id="fileInput" multiple="" />
-        <input type="button" id="fileButton" value="Upload Files" /><br />
-
-    </div>*@
 </div>
+@*/////////////////////////////////////////File Processing//////////////////////////////////////////////////*@
+<div class="row">
+
+    <div class="col-md-8">
+        <h3><mark>Download EData</mark></h3>
+        @{
+            foreach (var nile in Filex)
+            {
+                @Html.ActionLink(nile.FileName, "Download", "Catalogue", new { FileName = nile.FileName, FilePath = nile.FilePath }, new { @target = "_blank" })
+                <br />
+            }
+
+        }
+    </div>
+    <div class="col-md-4">
+        <h3><mark>Upload EData</mark></h3>
+
+        <input type="file" class="btn-secondary" id="fileInput" multiple="" />
+        <input type="button" class="btn-outline-success" id="fileButton" value="Upload Files" /><br />
+
+    </div>
+</div>
+
+
 
 <div class="form-group col-md-12 form-inline">
     <div class="form-row col-md-12 text-center">
         <div style="margin : auto">
-            <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Cập Nhập" onclick="Update();" />
+            <input type="button" id="btnCreate" class="btn-primary form-control" value="Cập Nhập" onclick="Update();" />
             @*<button disabled type="button" id="btnReset" class="btn btn-primary form-control">Đặt Lại</button>*@
             <button type="button" id="btnAddField" class="btn btn-primary form-control" data-toggle="modal" data-target="#centralModalSm" data-backdrop="static">Thêm Trường</button>
             <input type="button" id="btnShelf" class="btn btn-primary form-control" value="Xếp Giá" />
@@ -161,19 +179,19 @@
 <script>
     //upload FIle
     $('#fileInput').bind('change', function () {
-        $('#btnSubmit').attr("disabled", false)
+        $('#fileButton').attr("disabled", false)
         var size = 0;
         var filex = $("#fileInput").get(0).files;
         //this.files[0].size gets the size of your file.
         for (var i = 0; i < filex.length; i++) {
-            debugger;
+            //debugger;
             size = size + filex[i].size;
             if (size > 4096000) {
-                alert('File Too Big !');
-                $('#btnSubmit').attr("disabled", true);
+                alert('Kích thước File quá lớn(4MB) !');
+                $('#fileButton').attr("disabled", true);
                 return false;
             }
-            
+
         }
 
 
@@ -181,16 +199,11 @@
     //UpLoad Edata
     $(document).ready(function () {
         $("#fileButton").click(function () {
-            
+
             var files = $("#fileInput").get(0).files;
             var fileData = new FormData();
-
+            fileData.append('ID', '@Request.QueryString["ID"]');
             for (var i = 0; i < files.length; i++) {
-                debugger;
-                //size = size + file[i].size();
-                //if (size > 4096000) {
-
-                //}
                 fileData.append("fileInput", files[i]);
             }
 
@@ -203,6 +216,7 @@
                 data: fileData,
                 success: function (result, status, xhr) {
                     alert(result);
+                    location.reload();
                 },
                 error: function (xhr, status, error) {
                     alert(status);
@@ -214,12 +228,13 @@
     });
 </script>
 <script>
-
+    //add event click enter for input search Fields
     $("#txtSearch").on('keyup', function (e) {
         if (e.keyCode == 13) {
             SearchFields();
         }
     });
+    
     $('#lbAdd').hide();
     $('#btnShelf').click(function () {
         //window.location.href = '/Catalogue/AddNewCatalogue?ID=' + 'Request.QueryString["ID"]';
@@ -287,7 +302,7 @@
                 });
             },
             error: function (errorThrown) {
-                alert(errorThrown);
+                alert("Xảy ra lỗi khi thêm trường mới !");
             }
 
         });
@@ -447,17 +462,10 @@
 
             },
             error: function (errorThrown) {
-                alert("Insert Fail !!!");
+                alert("Cập nhập thông tin biên mục không thành công !!!");
             }
 
         });
-
-
-
-
-
-
-
 
     }
 
