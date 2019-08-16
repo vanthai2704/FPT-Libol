@@ -224,6 +224,9 @@
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_RECOMMEND.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -442,7 +445,6 @@
     <Compile Include="Models\CAT_QUEUE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CIRCULATION.cs" />
     <Compile Include="Models\CheckOutBusiness.cs" />
     <Compile Include="Models\CIR_DIC_COLLEGE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
@@ -2520,12 +2522,12 @@
     <Content Include="Views\AcquireReport\StatTaskbar.cshtml" />
     <Content Include="Views\AcquireReport\GetStatTaskbar.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
-    <Content Include="Views\Shelf\InRepository.cshtml" />
-    <Content Include="Views\Shelf\InRepositoryPartialView.cshtml" />
-    <Content Include="Views\Shelf\LiquidationOrLost.cshtml" />
-    <Content Include="Views\Shelf\LiquidationOrLostPartialView.cshtml" />
-    <Content Include="Views\Shelf\NotYetChecked.cshtml" />
-    <Content Include="Views\Shelf\NotYetCheckedPartialView.cshtml" />
+    <Content Include="Views\Acquired\InRepository.cshtml" />
+    <Content Include="Views\Acquired\InRepositoryPartialView.cshtml" />
+    <Content Include="Views\Acquired\LiquidationOrLost.cshtml" />
+    <Content Include="Views\Acquired\LiquidationOrLostPartialView.cshtml" />
+    <Content Include="Views\Acquired\NotYetChecked.cshtml" />
+    <Content Include="Views\Acquired\NotYetCheckedPartialView.cshtml" />
     <Content Include="Views\Circulation\CopyNumberLiquidationStats.cshtml" />
     <Content Include="Views\Circulation\GetCopyNumberLiquidationStats.cshtml" />
   </ItemGroup>

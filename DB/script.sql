@@ -5692,3 +5692,666 @@ INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (12,
 SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] OFF
 
 
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_STAT_PATRONGROUP]    Script Date: 7/10/2019 06:20:50 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+Create PROCEDURE [dbo].[FPT_SP_STAT_PATRONGROUP]
+	-- Created Tuanhv
+	-- Date 06/09/2004
+	-- ModifyDate:
+	@intUserID varchar(30),
+	@strCheckOutDateFrom varchar(30),
+	@strCheckOutDateTo varchar(30),
+	@OptItemID varchar(30), --0 la thong ke theo dau an pham, 1 la thong ke tho DKCB
+	@intHistory varchar(30), --0 la hien tai dang muon
+	@LibID varchar(30)
+AS
+	DECLARE @StrSql varchar(1500),
+			@userid int,
+			@itemid int,
+			@history int
+
+			SET @userid = CAST(@intUserID as int)
+			SET @itemid = CAST(@OptItemID as int)
+			SET @history = CAST(@intHistory as int)
+
+IF @history = 0 
+BEGIN
+
+	SET @StrSql = ''
+	IF @itemid <> 0 
+	BEGIN
+		SET @StrSql = 	' SELECT Count (CL.ItemID) AS TotalLoan, CPG.Name ' +
+				' FROM CIR_LOAN CL LEFT JOIN CIR_PATRON CP ON CP.ID = CL.PatronID ' + 
+				' JOIN CIR_PATRON_GROUP CPG ON CP.PatronGroupID = CPG.ID ' +
+				' WHERE 1=1 '
+	END
+	ELSE
+	BEGIN
+		SET @StrSql = 	' SELECT Count (DISTINCT CL.ItemID) AS TotalLoan, CPG.Name ' +
+				' FROM CIR_LOAN CL LEFT JOIN CIR_PATRON CP ON CP.ID = CL.PatronID ' + 
+				' JOIN CIR_PATRON_GROUP CPG ON CP.PatronGroupID = CPG.ID ' +
+				' WHERE 1=1 '
+	END
+
+	IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CL.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+	IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CL.CheckOutDate <=''' + @strCheckOutDateTo +''''
+
+	SET @strSql = @strSql + ' AND CL.LocationID IN 
+	( SELECT B.ID AS ID 
+	FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+	WHERE A.ID = ' + @LibID + ' AND A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID =' + CAST(@userid AS CHAR(20)) + ' ) '
+
+	SET @StrSql = @StrSql + ' GROUP BY CPG.Name ORDER BY Count (CL.ItemID) '	
+END 
+ELSE
+BEGIN
+	SET @StrSql = ''
+	IF @itemid <> 0 
+	BEGIN
+		SET @StrSql = 	' SELECT Count (CLH.ItemID) AS TotalLoan, CPG.Name ' +
+				' FROM CIR_LOAN_HISTORY CLH LEFT JOIN CIR_PATRON CP ON CP.ID = CLH.PatronID ' + 
+				' JOIN CIR_PATRON_GROUP CPG ON CP.PatronGroupID = CPG.ID ' +
+				' WHERE 1=1 '
+	END
+	ELSE
+	BEGIN
+		SET @StrSql = 	' SELECT Count (DISTINCT CLH.ItemID) AS TotalLoan, CPG.Name ' +
+				' FROM CIR_LOAN_HISTORY CLH LEFT JOIN CIR_PATRON CP ON CP.ID = CLH.PatronID ' + 
+				' JOIN CIR_PATRON_GROUP CPG ON CP.PatronGroupID = CPG.ID ' +
+				' WHERE 1=1 '
+	END
+
+	IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+	IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''
+
+	SET @strSql = @strSql + ' AND CLH.LocationID IN ( 
+	SELECT B.ID AS ID 
+	FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+	WHERE A.ID = ' + @LibID + ' AND A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID =' + CAST(@userid AS CHAR(20)) + ' ) '
+
+	SET @StrSql = @StrSql + ' GROUP BY CPG.Name ORDER BY Count (CLH.ItemID) '	
+
+END
+	EXEC (@StrSql)
+
+
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_STAT_ITEMMAX]    Script Date: 7/10/2019 06:22:17 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+Create   PROCEDURE [dbo].[FPT_SP_STAT_ITEMMAX]
+	-- Created Tuanhv
+	-- Date 06/09/2004
+	-- ModifyDate:
+	@intUserID varchar(30),
+	@strCheckOutDateFrom varchar(30),
+	@strCheckOutDateTo varchar(30),
+	@intTopNum varchar(30),
+	@intMinLoan varchar(30),
+	@libid varchar(30)
+AS
+DECLARE @StrSql varchar(1500)
+	SET @StrSql = ''
+	SET @StrSql = @StrSql + 
+	' SELECT TOP ' + @intTopNum + ' Count (*) AS TotalLoan, CLH.ItemID AS Name  
+	FROM CIR_LOAN_HISTORY CLH 
+	WHERE 1=1 ' 
+	IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+	IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''
+
+		SET @StrSql = @StrSql + ' AND CLH.LocationID IN 
+		( SELECT B.ID AS ID 
+		FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+		WHERE A.ID = ' + CAST(@libid as varchar(30))+' and A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID = ' + @intUserID+ ' ) '
+
+		SET @StrSql = @StrSql + ' GROUP BY CLH.ItemID  HAVING Count (*) >= ' + @intMinLoan + ' ORDER BY TotalLoan DESC'
+	EXEC (@StrSql)
+
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_STAT_PATRONMAX]    Script Date: 7/10/2019 06:18:50 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+CREATE PROCEDURE [dbo].[FPT_SP_STAT_PATRONMAX]
+	-- Created Tuanhv
+	-- Date 06/09/2004
+	-- ModifyDate:
+	@intUserID varchar(30),
+	@strCheckOutDateFrom varchar(30),
+	@strCheckOutDateTo varchar(30),
+	@intTopNum varchar(30),
+	@intMinLoan varchar(30),
+	@OptItemID varchar(30), --0 la thong ke theo dau an pham, 1 la thong ke tho DKCB
+	@LocID varchar(30),
+	@LibID varchar(30)
+
+AS
+DECLARE @StrSql varchar(1500),
+		@user_id int,
+		@top_num int,
+		@min_loan int,
+		@opt_item_id int,
+		@loc_id int,
+		@lib_id int
+
+	SET @StrSql = ''
+	SET @user_id = CAST(@intUserID as int)
+	SET @top_num = CAST(@intTopNum as int)
+	SET @min_loan = CAST(@intMinLoan as int)
+	SET @opt_item_id = CAST(@OptItemID as int)
+	SET @loc_id = CAST(@LocID as int)
+	SET @lib_id = CAST(@LibID as int)
+
+	IF @loc_id = 0
+	BEGIN
+		IF @opt_item_id <> 0 
+		SET @StrSql = @StrSql + ' SELECT TOP ' + CAST(@top_num AS CHAR(10)) + 
+		'Count (*) AS TotalLoan, CP.Code AS Name  FROM CIR_LOAN_HISTORY CLH, CIR_PATRON CP  WHERE 1=1 AND CP.ID = CLH.PatronID ' 
+		ELSE SET @StrSql = @StrSql + ' SELECT TOP ' + CAST(@top_num AS CHAR(10)) + 'Count (DISTINCT Copynumber) AS TotalLoan, CP.Code AS Name FROM CIR_LOAN_HISTORY CLH, CIR_PATRON CP  WHERE 1=1 AND CP.ID = CLH.PatronID ' 							
+		IF @strCheckOutDateFrom <> ''SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+		IF @strCheckOutDateTo <> ''SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''		
+		IF @opt_item_id <> 0
+		BEGIN
+			SET @strSql = @strSql + ' AND CLH.LocationID IN 
+			( SELECT B.ID AS ID 
+			FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+			WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID 
+			AND C.UserID =' + CAST(@user_id AS CHAR(20)) + ' AND A.ID = ' + CAST(@lib_id AS CHAR(20)) + ' ) '
+			SET @StrSql = @StrSql + ' GROUP BY CP.Code  HAVING Count (*) >=' + CAST(@min_loan AS CHAR(5)) + ' ORDER BY TotalLoan DESC'
+		END
+		ELSE
+		BEGIN
+			SET @strSql = @strSql + ' AND CLH.LocationID IN 
+			( SELECT B.ID AS ID 
+			FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+			WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID 
+			AND C.UserID =' + CAST(@user_id AS CHAR(20)) + ' AND A.ID = ' + CAST(@lib_id AS CHAR(20)) + ' ) '
+       	    SET @StrSql = @StrSql + ' GROUP BY CP.Code  HAVING Count (DISTINCT Copynumber) >=' + CAST(@min_loan AS CHAR(5)) + ' ORDER BY TotalLoan DESC' 
+		END
+	END
+	ELSE
+	BEGIN
+		IF @opt_item_id <> 0 
+		SET @StrSql = @StrSql + ' SELECT TOP ' + CAST(@top_num AS CHAR(10)) + 
+		'Count (*) AS TotalLoan, CP.Code AS Name  
+		FROM CIR_LOAN_HISTORY CLH, CIR_PATRON CP  
+		WHERE 1=1 AND CP.ID = CLH.PatronID ' 
+		ELSE 
+		SET @StrSql = @StrSql + ' SELECT TOP ' + CAST(@top_num AS CHAR(10)) + 
+		'Count (DISTINCT Copynumber) AS TotalLoan, CP.Code AS Name 
+		FROM CIR_LOAN_HISTORY CLH, CIR_PATRON CP  
+		WHERE 1=1 AND CP.ID = CLH.PatronID ' 							
+		IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+		IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''		
+		IF @opt_item_id <> 0
+		BEGIN
+			SET @strSql = @strSql + ' AND CLH.LocationID IN 
+			( SELECT B.ID AS ID 
+			FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+			WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID 
+			AND C.UserID =' + CAST(@user_id AS CHAR(20)) + ' AND B.ID = ' + CAST(@loc_id AS CHAR(20)) + ' ) '
+			SET @StrSql = @StrSql + ' GROUP BY CP.Code  HAVING Count (*) >=' + CAST(@min_loan AS CHAR(5)) + ' ORDER BY TotalLoan DESC'
+		END
+		ELSE
+		BEGIN
+			SET @strSql = @strSql + ' AND CLH.LocationID IN 
+			( SELECT B.ID AS ID 
+			FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+			WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID 
+			AND C.UserID =' + CAST(@user_id AS CHAR(20)) + ' AND B.ID = ' + CAST(@loc_id AS CHAR(20)) + ' ) '
+       	    SET @StrSql = @StrSql + ' GROUP BY CP.Code  HAVING Count (DISTINCT Copynumber) >=' + CAST(@min_loan AS CHAR(5)) + ' ORDER BY TotalLoan DESC' 
+		END
+	END
+
+
+	EXEC (@StrSql)
+
+
+
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	THỐNG KÊ TOP 20 THEO TÁC GIẢ
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_ACQ_STATISTIC_TOP20]
+	@intType int,
+	@intCategoryID int
+AS
+BEGIN 
+	IF @intCategoryID = 1 -- TOP20 AUTHOR
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM HOLDING A,ITEM_AUTHOR B,CAT_DIC_AUTHOR C 
+			WHERE B.AuthorID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ')AS AccessEntry 
+				FROM ITEM_AUTHOR B,CAT_DIC_AUTHOR C 
+			WHERE B.AuthorID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 2 -- TOP20 PUBLISHER
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM HOLDING A,ITEM_PUBLISHER B,CAT_DIC_PUBLISHER C 
+			WHERE B.PublisherID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$b'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_PUBLISHER B,CAT_DIC_PUBLISHER C 
+			WHERE B.PublisherID=C.ID AND Right(B.Fieldcode,2)='$b'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 3 -- TOP20 KEYWORD
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM HOLDING A,ITEM_KEYWORD B,CAT_DIC_KEYWORD C 
+			WHERE B.KeyWordID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_KEYWORD B,CAT_DIC_KEYWORD C 
+			WHERE B.KeyWordID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 4 -- TOP20 BBK
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_BBK B,CAT_DIC_CLASS_BBK C 
+			WHERE B.BBKID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_BBK B,CAT_DIC_CLASS_BBK C 
+			WHERE B.BBKID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 5 -- TOP20 DDC
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DDC B,CAT_DIC_CLASS_DDC C 
+			WHERE B.DDCID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DDC B,CAT_DIC_CLASS_DDC C 
+			WHERE B.DDCID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 6 -- TOP20 LOC
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_LOC B,CAT_DIC_CLASS_LOC C 
+			WHERE B.LOCID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_LOC B,CAT_DIC_CLASS_LOC C 
+			WHERE B.LOCID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 7 -- TOP20 UDC
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_UDC B,CAT_DIC_CLASS_UDC C 
+			WHERE B.UDCID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_UDC B,CAT_DIC_CLASS_UDC C 
+			WHERE B.UDCID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 9 -- TOP20 SH
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM HOLDING A,ITEM_SH B,CAT_DIC_SH C 
+				WHERE B.SHID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ')AS AccessEntry 
+				FROM ITEM_SH B,CAT_DIC_SH C 
+				WHERE B.SHID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 10 -- TOP20 LANGUAGE
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_LANGUAGE B,CAT_DIC_LANGUAGE C 
+			WHERE B.LanguageID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_LANGUAGE B,CAT_DIC_LANGUAGE C 
+			WHERE B.LanguageID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 11 -- TOP20 COUNTRY
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_COUNTRY B,CAT_DIC_COUNTRY C 
+			WHERE B.CountryID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_COUNTRY B,CAT_DIC_COUNTRY C 
+			WHERE B.CountryID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 12 -- TOP20 SERIAL
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_SERIES B,CAT_DIC_SERIES C 
+			WHERE B.SeriesID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_SERIES B,CAT_DIC_SERIES C 
+			WHERE B.SeriesID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 14 -- TOP20 MEDIUM
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL as Total, B.CODE, B.NAME as AccessEntry FROM(SELECT COUNT(I.MEDIUMID) AS TOTAL, I.MEDIUMID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY I.MEDIUMID) A, (SELECT DISTINCT(I.MEDIUMID) AS ID, C.CODE AS CODE, ISNULL(C.DESCRIPTION,C.ACCESSENTRY) AS NAME FROM ITEM I, CAT_DIC_MEDIUM C WHERE I.MEDIUMID = C.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL as Total, B.CODE, B.NAME as AccessEntry FROM(SELECT COUNT(I.MEDIUMID) AS TOTAL, I.MEDIUMID AS ID
+			FROM ITEM I
+			GROUP BY I.MEDIUMID) A, (SELECT DISTINCT(I.MEDIUMID) AS ID, C.CODE AS CODE, ISNULL(C.DESCRIPTION,C.ACCESSENTRY) AS NAME FROM ITEM I, CAT_DIC_MEDIUM C WHERE I.MEDIUMID = C.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+	END
+	ELSE IF @intCategoryID = 17 -- TOP20 ITEMTYPE
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL AS Total, B.CODE AS AccessEntry, B.NAME FROM(SELECT COUNT(H.ITEMID) AS TOTAL, I.TYPEID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY I.TYPEID) A, (SELECT DISTINCT(I.TYPEID) AS ID, C.TYPECODE AS CODE, ISNULL(C.TYPENAME,'Không XĐ') AS NAME FROM ITEM I, CAT_DIC_ITEM_TYPE C WHERE I.TYPEID = C.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL as Total, B.CODE AS AccessEntry, B.NAME FROM(SELECT COUNT(DISTINCT H.ITEMID) AS TOTAL, I.TYPEID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY I.TYPEID) A, (SELECT DISTINCT(I.TYPEID) AS ID, C.TYPECODE AS CODE, ISNULL(C.TYPENAME,'Không XĐ') AS NAME 
+			FROM ITEM I, CAT_DIC_ITEM_TYPE C WHERE I.TYPEID = C.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+	END
+	ELSE IF @intCategoryID = 18 -- TOP20 LIBRARY
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL AS Total, B.CODE AS AccessEntry, B.NAME FROM(SELECT COUNT(H.ITEMID) AS TOTAL, H.LIBID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY H.LIBID) A, (SELECT DISTINCT(H.LIBID) AS ID, L.CODE AS CODE, ISNULL(L.ACCESSENTRY,'Không XĐ') AS NAME FROM HOLDING H, HOLDING_LIBRARY L WHERE H.LIBID = L.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 A.TOTAL AS Total, B.CODE AS AccessEntry, B.NAME FROM(SELECT COUNT(DISTINCT H.ITEMID) AS TOTAL, H.LIBID AS ID
+			FROM HOLDING H, ITEM I WHERE H.ITEMID = I.ID
+			GROUP BY H.LIBID) A, (SELECT DISTINCT(H.LIBID) AS ID, L.CODE AS CODE, ISNULL(L.ACCESSENTRY,'Không XĐ') AS NAME FROM HOLDING H, HOLDING_LIBRARY L WHERE H.LIBID = L.ID) B
+			WHERE A.ID = B.ID
+			ORDER BY A.TOTAL DESC
+		END
+	END
+	ELSE IF @intCategoryID = 19 -- TOP20 THESIS SUBJECT
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_THESIS_SUBJECT B,CAT_DIC_THESIS_SUBJECT C 
+			WHERE B.SubjectID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_THESIS_SUBJECT B,CAT_DIC_THESIS_SUBJECT C 
+			WHERE B.SubjectID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 30 -- TOP20 NLM
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_NLM B,CAT_DIC_CLASS_NLM C 
+			WHERE B.NLMID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_NLM B,CAT_DIC_CLASS_NLM C 
+			WHERE B.NLMID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 31 -- TOP20 OAI SET
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_OAI_SET B,CAT_DIC_OAI_SET C 
+			WHERE B.OaiID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_OAI_SET B,CAT_DIC_OAI_SET C 
+			WHERE B.OaiID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	--ELSE IF @intCategoryID = 38 -- TOP20 NOI XUAT BAN
+	--BEGIN
+	--END
+	ELSE IF @intCategoryID = 40 -- TOP20 DIC40
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DICTIONARY40 B,DICTIONARY40 C 
+			WHERE B.DICTIONARY40ID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DICTIONARY40 B,DICTIONARY40 C 
+			WHERE B.DICTIONARY40ID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 41 -- TOP20 DIC41
+	BEGIN
+			IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DICTIONARY41 B,DICTIONARY41 C 
+			WHERE B.DICTIONARY41ID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DICTIONARY41 B,DICTIONARY41 C 
+			WHERE B.DICTIONARY41ID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 42 -- TOP20 DIC42
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DICTIONARY42 B,DICTIONARY42 C 
+			WHERE B.DICTIONARY42ID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$c'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DICTIONARY42 B,DICTIONARY42 C 
+			WHERE B.DICTIONARY42ID=C.ID AND Right(B.Fieldcode,2)='$c'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END
+	ELSE IF @intCategoryID = 43 -- TOP20 DIC43
+	BEGIN
+		IF @intType = 1 -- THỐNG KÊ THEO BẢN ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry
+				FROM HOLDING A,ITEM_DICTIONARY43 B,DICTIONARY43 C 
+			WHERE B.DICTIONARY43ID=C.ID AND A.ItemID=B.ItemID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+		ELSE	-- THỐNG KÊ THEO ĐẦU ẤN PHẨM
+		BEGIN
+			SELECT TOP 20 sum(A.Total) as Total,A.AccessEntry 
+			FROM (SELECT Count(*) AS Total,ISNULL(C.AccessEntry,'Không XĐ') AS AccessEntry 
+				FROM ITEM_DICTIONARY43 B,DICTIONARY43 C 
+			WHERE B.DICTIONARY43ID=C.ID AND Right(B.Fieldcode,2)='$a'  GROUP BY C.AccessEntry) A 
+			GROUP BY A.AccessEntry ORDER BY Total DESC
+		END
+	END	
+END

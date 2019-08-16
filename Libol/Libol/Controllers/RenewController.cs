@@ -53,14 +53,14 @@ namespace Libol.Controllers
             {
                 ViewBag.active = 1;
             }
-            getcontentrenew((int)Session["UserID"], intType, CodeVal);
+            GetContentRenew((int)Session["UserID"], intType, CodeVal);
             Type = intType;
             return PartialView("_searchToRenew");
         }
 
         [HttpPost]
         [AuthAttribute(ModuleID = 3, RightID = "19")]
-        public PartialViewResult Renew(int[] intLoanID, Byte intAddTime, Byte intTimeUnit, string strFixedDueDate, string[] duedates, int[] inttimes, int[] intrange)
+        public PartialViewResult Renew(int[] intLoanID, byte intAddTime, byte intTimeUnit, string strFixedDueDate, string[] duedates, int[] inttimes, int[] intrange)
         {
             int codeErrorCount = 0;
             if (intLoanID is null)
@@ -133,7 +133,7 @@ namespace Libol.Controllers
                     
                 }
             }
-            getcontentrenew((int)Session["UserID"], Type, CodeVal);
+            GetContentRenew((int)Session["UserID"], Type, CodeVal);
             CheckLockPatron(CodetogetLock);
             return PartialView("_searchToRenew");
         }
@@ -184,7 +184,7 @@ namespace Libol.Controllers
             return Json(PatronLockInfo, JsonRequestBehavior.AllowGet);
         }
 
-        private void getcontentrenew(int intUserID, Byte intType, string strCodeVal)
+        private void GetContentRenew(int intUserID, byte intType, string strCodeVal)
         {
             List<SP_CIR_GET_RENEW_Result> results = renewBusiness.FPT_SP_CIR_GET_RENEW(intUserID, intType, strCodeVal);
             List<CustomRenew> customRenews = new List<CustomRenew>();

@@ -7,7 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+<script src="~/Scripts/jquery.blockUI.js"></script>
 
 <style>
     label {
@@ -138,7 +138,7 @@
     </div>
 </div>
 
-<label style="margin-top:10px; text-align: right ; color:blue">Danh sách những thẻ quá hạn</label>
+
 
 <div id="content"></div>
 
@@ -229,11 +229,28 @@
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",
+            beforeSend: function (request) {
+                $.blockUI({
+                    css: {
+                        border: 'none',
+                        padding: '15px',
+                        backgroundColor: '#000',
+                        '-webkit-border-radius': '10px',
+                        '-moz-border-radius': '10px',
+                        opacity: .5,
+                        color: '#fff'
+                    }
+                });
+            },
+            complete: function (request, json) {
+
+            },
             success: function (result) {
                 $("#content").html(result);
+                $.unblockUI()
             },
             error: function (errormessage) {
-                console.log("abcssd");
+                $.unblockUI()
             }
         });
     }

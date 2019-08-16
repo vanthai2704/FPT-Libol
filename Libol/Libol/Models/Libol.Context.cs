@@ -23045,5 +23045,113 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_ADMIN_UPDATE_USER", intUIDParameter, intISLDAPParameter, strNameParameter, strUserNameParameter, strPasswordParameter, intCatModuleParameter, intPatModuleParameter, intCirModuleParameter, intAcqModuleParameter, intSerModuleParameter, intILLModuleParameter, intDelModuleParameter, intAdmModuleParameter, intParentIDParameter, intOutVal);
         }
+    
+        public virtual int FPT_SP_STAT_ITEMMAX(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string intTopNum, string intMinLoan, string libid)
+        {
+            var intUserIDParameter = intUserID != null ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(string));
+    
+            var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
+                new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
+                new ObjectParameter("strCheckOutDateFrom", typeof(string));
+    
+            var strCheckOutDateToParameter = strCheckOutDateTo != null ?
+                new ObjectParameter("strCheckOutDateTo", strCheckOutDateTo) :
+                new ObjectParameter("strCheckOutDateTo", typeof(string));
+    
+            var intTopNumParameter = intTopNum != null ?
+                new ObjectParameter("intTopNum", intTopNum) :
+                new ObjectParameter("intTopNum", typeof(string));
+    
+            var intMinLoanParameter = intMinLoan != null ?
+                new ObjectParameter("intMinLoan", intMinLoan) :
+                new ObjectParameter("intMinLoan", typeof(string));
+    
+            var libidParameter = libid != null ?
+                new ObjectParameter("libid", libid) :
+                new ObjectParameter("libid", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_STAT_ITEMMAX", intUserIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, intTopNumParameter, intMinLoanParameter, libidParameter);
+        }
+    
+        public virtual int FPT_SP_STAT_PATRONGROUP(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string optItemID, string intHistory, string libID)
+        {
+            var intUserIDParameter = intUserID != null ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(string));
+    
+            var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
+                new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
+                new ObjectParameter("strCheckOutDateFrom", typeof(string));
+    
+            var strCheckOutDateToParameter = strCheckOutDateTo != null ?
+                new ObjectParameter("strCheckOutDateTo", strCheckOutDateTo) :
+                new ObjectParameter("strCheckOutDateTo", typeof(string));
+    
+            var optItemIDParameter = optItemID != null ?
+                new ObjectParameter("OptItemID", optItemID) :
+                new ObjectParameter("OptItemID", typeof(string));
+    
+            var intHistoryParameter = intHistory != null ?
+                new ObjectParameter("intHistory", intHistory) :
+                new ObjectParameter("intHistory", typeof(string));
+    
+            var libIDParameter = libID != null ?
+                new ObjectParameter("LibID", libID) :
+                new ObjectParameter("LibID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_STAT_PATRONGROUP", intUserIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, optItemIDParameter, intHistoryParameter, libIDParameter);
+        }
+    
+        public virtual int FPT_SP_STAT_PATRONMAX(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string intTopNum, string intMinLoan, string optItemID, string locID, string libID)
+        {
+            var intUserIDParameter = intUserID != null ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(string));
+    
+            var strCheckOutDateFromParameter = strCheckOutDateFrom != null ?
+                new ObjectParameter("strCheckOutDateFrom", strCheckOutDateFrom) :
+                new ObjectParameter("strCheckOutDateFrom", typeof(string));
+    
+            var strCheckOutDateToParameter = strCheckOutDateTo != null ?
+                new ObjectParameter("strCheckOutDateTo", strCheckOutDateTo) :
+                new ObjectParameter("strCheckOutDateTo", typeof(string));
+    
+            var intTopNumParameter = intTopNum != null ?
+                new ObjectParameter("intTopNum", intTopNum) :
+                new ObjectParameter("intTopNum", typeof(string));
+    
+            var intMinLoanParameter = intMinLoan != null ?
+                new ObjectParameter("intMinLoan", intMinLoan) :
+                new ObjectParameter("intMinLoan", typeof(string));
+    
+            var optItemIDParameter = optItemID != null ?
+                new ObjectParameter("OptItemID", optItemID) :
+                new ObjectParameter("OptItemID", typeof(string));
+    
+            var locIDParameter = locID != null ?
+                new ObjectParameter("LocID", locID) :
+                new ObjectParameter("LocID", typeof(string));
+    
+            var libIDParameter = libID != null ?
+                new ObjectParameter("LibID", libID) :
+                new ObjectParameter("LibID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_STAT_PATRONMAX", intUserIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, intTopNumParameter, intMinLoanParameter, optItemIDParameter, locIDParameter, libIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_ACQ_STATISTIC_TOP20_Result> FPT_ACQ_STATISTIC_TOP20(Nullable<int> intType, Nullable<int> intCategoryID)
+        {
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            var intCategoryIDParameter = intCategoryID.HasValue ?
+                new ObjectParameter("intCategoryID", intCategoryID) :
+                new ObjectParameter("intCategoryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_Result>("FPT_ACQ_STATISTIC_TOP20", intTypeParameter, intCategoryIDParameter);
+        }
     }
 }
