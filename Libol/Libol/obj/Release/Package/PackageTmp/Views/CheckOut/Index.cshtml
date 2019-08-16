@@ -181,7 +181,6 @@
 
     function checkoutSuccess() {
         var empObj = {
-            strFullName: '',
             strPatronCode: document.getElementById("strPatronCode").value,
             strDueDate: document.getElementById("strDueDate").value,
             intLoanMode: 1,
@@ -191,7 +190,7 @@
             boolAllowDuplacate: 0
         };
         $.ajax({
-            url: "CheckOut/CheckOutSuccess",
+            url: "CheckOut/CheckOut",
             data: JSON.stringify(empObj),
             contentType: "application/json;charset=utf-8",
             type: "POST",

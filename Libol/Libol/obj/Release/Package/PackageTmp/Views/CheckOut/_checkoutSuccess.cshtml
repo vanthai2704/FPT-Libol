@@ -141,6 +141,7 @@
         function CancelUpdate() {
             $("#ModalCheckduplicate").modal("hide");
         }
+
         function ContinueUpdate() {
             $("#ModalCheckduplicate").modal("hide");
             var empObj = {
@@ -167,7 +168,6 @@
                     document.getElementById("strCopyNumber").focus();
                 },
                 error: function (errormessage) {
-                    console.log("error");
                 }
             });
         }

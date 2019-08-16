@@ -103,11 +103,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                @if (((List<Int32>)Session["RightIDs"]).Contains(48))
+                @if (((List<Int32>)Session["RightIDs"]).Contains(3))
                 {
                     <button type="button" class="btn btn-primary" onclick="location.href='/Patron/Create?strPatronID=@ViewBag.PatronDetail.ID';">Sửa</button>
                 }
-                @if (((List<Int32>)Session["RightIDs"]).Contains(51))
+                @if (((List<Int32>)Session["RightIDs"]).Contains(5))
                 {
                     <button type="button" class="btn btn-danger" onclick="showConfirmDel()">Xóa</button>
                 }
