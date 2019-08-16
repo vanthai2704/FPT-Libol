@@ -42,7 +42,7 @@
     SP_CATA_GET_CONTENTS_OF_ITEMS_Result Leader = ViewData["Leader"] as SP_CATA_GET_CONTENTS_OF_ITEMS_Result;
     List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> Contents = ViewData["ListContent"] as List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result>;
     List<SP_CATA_GET_MODIFIED_FIELDS_Result> Fields = ViewData["listField"] as List<SP_CATA_GET_MODIFIED_FIELDS_Result>;
-    List<FPT_CAT_FILE> Filex = ViewData["listFile"] as List<FPT_CAT_FILE>;
+    List<FPT_CATA_FILE> Filex = ViewData["listFile"] as List<FPT_CATA_FILE>;
     //Merge 2 List Content + Des
     var res = Contents.Zip(Fields, (c, f) => new { Content = c, Field = f });
 }
