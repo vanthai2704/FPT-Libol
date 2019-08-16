@@ -182,6 +182,7 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(Id))
             {
                 List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(Id).ToList();
+                if (listContent.Count == 0) return View();
                 //Lay Content cua LEADERty
                 ViewData["Leader"] = listContent[0];
                 listContent.RemoveAt(0);

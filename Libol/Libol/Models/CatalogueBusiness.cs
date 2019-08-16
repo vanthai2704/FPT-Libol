@@ -206,8 +206,8 @@ namespace Libol.Models
             ///
             using (DbContextTransaction transaction = db.Database.BeginTransaction())
             {
-                try
-                {
+                //try
+                //{
 
 
 
@@ -629,12 +629,12 @@ namespace Libol.Models
                         UpdateBlockField(listFieldOrg, listValueOrg, ItemID, 0);
                     }
                     transaction.Commit();
-                }
-                catch(Exception ex)
-                {
-                    transaction.Rollback();
-                    return "Error";
-                }
+                //}
+                //catch(Exception ex)
+                //{
+                //    transaction.Rollback();
+                //    return "Error";
+                //}
             }
             ////////////////////////////////////////END TRANS
             ////////////////////////////////////////END TRANS
@@ -881,6 +881,7 @@ namespace Libol.Models
         public void UpdateItemFulltext(string ItemID, string fieldValue)
         {
             //Insert Thông tin tương của trường theo ItemID tương ứng vào bảng INDEX tương ứng theo bảng CAT_DIC
+            fieldValue = fieldValue.Replace("'", "''");
             db.Database.ExecuteSqlCommand("INSERT INTO ITEM_FULLTEXT (ItemID, Contents) VALUES ( " + ItemID + ",N'" + fieldValue.ToUpper() + "')");
         }
 
@@ -914,7 +915,19 @@ namespace Libol.Models
                 //get next max Index in Table
                 ID = db.Database.SqlQuery<int>("SELECT ISNULL(Max(ID), 0) + 1 as ID FROM " + DICInf.DicTable).FirstOrDefault();
                 //Bo xung New Value vao bang CAT_DIC
-                db.Database.ExecuteSqlCommand("INSERT INTO " + DICInf.DicTable + " (ID ,AccessEntry, " + DICInf.CaptionField + "  )  VALUES ( " + ID + ",N'" + fieldValue.ToUpper() + "',N'" + fieldValue + "')");
+                if (DICInf.DicTable == "HOLDING_LIBRARY")
+                {
+                    db.Database.ExecuteSqlCommand("INSERT INTO " + DICInf.DicTable + " (ID ,AccessEntry, Code)  VALUES ( " + ID + ",N'" + fieldValue.ToUpper() + "',N'" + fieldValue + "')");
+                }
+                else if (DICInf.DicTable.StartsWith("DICTIONARY"))
+                {
+                    db.Database.ExecuteSqlCommand("INSERT INTO " + DICInf.DicTable + " (ID ,AccessEntry, Dictionary)  VALUES ( " + ID + ",N'" + fieldValue.ToUpper() + "',N'" + fieldValue + "')");
+                }
+                else
+                {
+                    db.Database.ExecuteSqlCommand("INSERT INTO " + DICInf.DicTable + " (ID ,AccessEntry, DisplayEntry)  VALUES ( " + ID + ",N'" + fieldValue.ToUpper() + "',N'" + fieldValue + "')");
+                }
+                //db.Database.ExecuteSqlCommand("INSERT INTO " + DICInf.DicTable + " (ID ,AccessEntry, " + DICInf.CaptionField + "  )  VALUES ( " + ID + ",N'" + fieldValue.ToUpper() + "',N'" + fieldValue + "')");
             }
 
             //CHECK UPDATE
@@ -949,19 +962,5 @@ namespace Libol.Models
             return ID.ToString();
         }
 
-        ////Loc cac ki tu $x 
-        //public string ParseValue(string value)
-        //{
-        //    int index = 0;
-        //    //Loc ki tu $x 
-        //    while (true)
-        //    {
-        //        index = value.IndexOf("$");
-        //        if (index == -1) break;
-        //        value = value.Substring(0, index)  + value.Substring(index + 2);
-        //    }
-
-        //    return value;
-        //}
     }
 }

@@ -117,7 +117,7 @@
 <div class="form-group col-md-12 form-inline">
     <div class="form-row col-md-12 text-center">
         <div style="margin : auto">
-            <input type="button" id="btnCreate" class="btn btn-primary form-control" value="Tạo mới" onclick="doWork();" />
+            <button type="button" id="btnCreate" class="btn btn-primary form-control" onclick="doWork();">Tạo mới</button>
             <button disabled type="button" id="btnReset" class="btn btn-primary form-control" onclick="reset();">Đặt Lại</button>
         </div>
     </div>
@@ -153,7 +153,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Bản Ghi Có Nhan Đề Tương Tự</h5>
+                <h5 class="modal-title font-weight-bold" id="modalTT" ></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -236,7 +236,7 @@
                         $('#iPass').remove();
 
                     });
-                    iPass
+                    
 
                     //Check ISBN  \\ Chưa check cho trường hợp lặp
                     $("#020a").focusout(function () {
@@ -262,7 +262,7 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             beforeSend: function () {
-                $('#dv245a').append("<img id='loadingTT' class='col-md-1' src='/Content/Images/Loading1.gif' />");
+                $('#dv245a').append("<img id='loadingTT' class='col-md-1' src='/Content/Images/Loading1.gif' /> ");
             },
             complete: function () {
                 $('#loadingTT').remove();
@@ -282,9 +282,12 @@
                     });
 
                     var html = '';
-
+                    //var dup = arrId.length + 1;
+                    document.getElementById("modalTT").innerHTML = "Tồn Tại " + arrId.length + " Bản Ghi Có Nhan Đề Tương Tự.";
                     $('#checkTTModal').modal({ backdrop: 'static', keyboard: false })
                     $('#checkTTModal').modal('toggle');
+                    //debugger;
+                    
                     $.each(arrId, function (i, item) {
                         var strContent = i + 1 + " : ";
                         //get  Field 100
@@ -585,7 +588,7 @@
 
     //reset all value to blank
     function reset() {
-        $(':input').val('');
+        $('input').val('');
     }
 
 </script>
