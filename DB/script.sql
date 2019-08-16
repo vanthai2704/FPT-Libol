@@ -3390,9 +3390,10 @@ IF @intIsAuthority = 0
 		AND I.TypeID = D.ID
 		AND I.ID IN (@strItemIDs)
 			-- copynumber : 852$j
-	    union
-	    SELECT distinct '852' as IDSort,'852' as FieldCode, '' as Ind,  '$a' + HLB.code + '$b' + hl.symbol as Content
-        FROM HOLDING H, HOLDING_LOCATION HL, HOLDING_LIBRARY HLB WHERE H.ItemID  =@strItemIDs AND H.locationid=HL.ID AND HL.LIBID=HLB.ID
+			--Doanhdq
+	    --union
+	    --SELECT distinct '852' as IDSort,'852' as FieldCode, '' as Ind,  '$a' + HLB.code + '$b' + hl.symbol as Content
+     --   FROM HOLDING H, HOLDING_LOCATION HL, HOLDING_LIBRARY HLB WHERE H.ItemID  =@strItemIDs AND H.locationid=HL.ID AND HL.LIBID=HLB.ID
 
 		--ORDER
 		

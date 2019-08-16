@@ -186,29 +186,7 @@ namespace Libol.Controllers
                 //Lay Content cua LEADERty
                 ViewData["Leader"] = listContent[0];
                 listContent.RemoveAt(0);
-                //Ghep Cac truong trung nhau thanh 1 dong
-                List<int> index = new List<int>();
-                for (int i = 0; i < listContent.Count; i++)
-                {
-                    if (i > 0)
-                    {
-                        if (listContent[i].FieldCode == listContent[i - 1].FieldCode)
-                        {
-                            index.Add(i - 1);
-                            listContent[i].Content = listContent[i - 1].Content + "::" + listContent[i].Content;
-                        }
-                        if (listContent[i].FieldCode.StartsWith("852"))
-                        {
-                            index.Add(i);
-                        }
-                    }
-
-                }
-                //remove các trường trùng đã được ghép
-                for (int i = 0; i < index.Count; i++)
-                {
-                    listContent.RemoveAt(index[i] - i);
-                }
+             
 
                 //****************************************************Done List Content****************************************************
                 //*************************************************************************************************************************
