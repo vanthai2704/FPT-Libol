@@ -14,7 +14,9 @@
     }
 </style>
 
-<h4 style="margin-top: 20px;margin-bottom: 20px; color: red" >Thanh lý</h4>
+<h4 style="margin-top: 20px;margin-bottom: 20px; color: red">Thanh lý</h4>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 @{
     List<SP_HOLDING_REMOVE_REASON_SEL_Result> listReason = ViewData["ListReason"] as List<SP_HOLDING_REMOVE_REASON_SEL_Result>; // list Reason
 }
@@ -173,7 +175,7 @@
             document.getElementById("selectfile").disabled = true;
             document.getElementById("fieldkcb").disabled = false;
         }
-        // Thanh Ly 
+        // Thanh Ly
         function Liquidate() {
             var Liquidate = document.getElementById("txtLiquidate").value;
             var DateLiquidate = document.getElementById("DateLiquidate").value;
@@ -181,15 +183,21 @@
             var DKCB = document.getElementById("fieldkcb").value;
             var Copynumber = document.getElementById("txtSDKCB").value;
             var selectfile = document.getElementById("selectfile").value;
-            alert('abc');
             $.ajax({
                 url: "/Acquisition/Liquidate",
-                data: JSON.stringify({ Copynumber, DKCB, Liquidate, DateLiquidate, Reason, selectfile}),
+                data: JSON.stringify({ Copynumber, DKCB, Liquidate, DateLiquidate, Reason, selectfile }),
                 type: "POST",
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
-                success: function () {
-                    alert('Bạn đã thanh lý sản phẩm thành công');
+                success: function (result) {
+                    //alert('Bạn đã thanh lý sản phẩm thành công');
+                    if (result != "") {
+                        //alert(result);
+                        $.alert({
+                            title: 'Thông Báo !',
+                            content: result,
+                        });
+                    }
                 },
                 error: function () {
                     alert('Thanh lý sản phẩm  không thành công');
@@ -201,5 +209,5 @@
 
 
 
-                //
+                    //
     </script>

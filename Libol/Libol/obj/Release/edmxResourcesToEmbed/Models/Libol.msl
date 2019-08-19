@@ -10471,5 +10471,16 @@
     </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="FPT_SP_ADMIN_GRANT_RIGHTS" FunctionName="LibolModel.Store.FPT_SP_ADMIN_GRANT_RIGHTS" />
     <FunctionImportMapping FunctionImportName="FPT_SP_ADMIN_UPDATE_USER" FunctionName="LibolModel.Store.FPT_SP_ADMIN_UPDATE_USER" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_STAT_ITEMMAX" FunctionName="LibolModel.Store.FPT_SP_STAT_ITEMMAX" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_STAT_PATRONGROUP" FunctionName="LibolModel.Store.FPT_SP_STAT_PATRONGROUP" />
+    <FunctionImportMapping FunctionImportName="FPT_SP_STAT_PATRONMAX" FunctionName="LibolModel.Store.FPT_SP_STAT_PATRONMAX" />
+    <FunctionImportMapping FunctionImportName="FPT_ACQ_STATISTIC_TOP20" FunctionName="LibolModel.Store.FPT_ACQ_STATISTIC_TOP20">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="LibolModel.FPT_ACQ_STATISTIC_TOP20_Result">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="AccessEntry" ColumnName="AccessEntry" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

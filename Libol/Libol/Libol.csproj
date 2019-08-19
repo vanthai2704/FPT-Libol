@@ -227,6 +227,12 @@
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_CATA_FILE.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_CATA_FILE_NEW2019.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_RECOMMEND.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -2327,6 +2333,7 @@
     <Content Include="Content\DataTables\Select-1.3.0\js\dataTables.select.js" />
     <Content Include="Content\Images\bg.gif" />
     <Content Include="Content\Images\libol.jpg" />
+    <Content Include="Content\Images\Loading1.gif" />
     <Content Include="Content\Images\loan.gif" />
     <Content Include="Content\Images\lock.gif" />
     <Content Include="Content\Images\Logo.png" />
@@ -2408,6 +2415,8 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Properties\PublishProfiles\Libol - Web Deploy1.pubxml" />
+    <None Include="Properties\PublishProfiles\Libol20190814092921 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -2517,7 +2526,6 @@
     <Content Include="Views\Patron\SearchPatron.cshtml" />
     <Content Include="Views\Catalogue\AddNewCatalogueDetail.cshtml" />
     <Content Include="Views\Patron\_SearchPatronDetail.cshtml" />
-    <Content Include="Uploads\Mẫu import user libol...xls" />
     <Content Include="Views\Acquired\Index.cshtml" />
     <Content Include="Views\AcquireReport\StatTaskbar.cshtml" />
     <Content Include="Views\AcquireReport\GetStatTaskbar.cshtml" />
@@ -2530,6 +2538,7 @@
     <Content Include="Views\Acquired\NotYetCheckedPartialView.cshtml" />
     <Content Include="Views\Circulation\CopyNumberLiquidationStats.cshtml" />
     <Content Include="Views\Circulation\GetCopyNumberLiquidationStats.cshtml" />
+    <Content Include="Uploads\Mẫu import user libol.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />

@@ -49,20 +49,24 @@ namespace Libol.Controllers
         {
             string rs = "";
             HttpFileCollectionBase Files = Request.Files;
-            if(Files != null)
+            int id = Int32.Parse(Request.Form["ID"]) ;
+            
+            if (Files != null)
             {
                 for (int i = 0; i < Files.Count; i++)
                 {
+                    
                     var file = Files[i];
                     var fileName = DateTime.Now.ToString("yyMMddHHmmss") + Path.GetFileName(file.FileName);
-                    //try
                     string path = Path.Combine(Server.MapPath("/CAT_FILE"),
                                                        Path.GetFileName(fileName));
                     file.SaveAs(path);
-                   
-                    //db.FPT_CAT_FILE.Add(new FPT_CAT_FILE { ID = db.FPT_CAT_FILE.Select(x => x.ID).Max()+1 , ItemID = 2 , FileName="test/x" , FilePath="xx." });
-                    //db.SaveChanges();
-                    rs = "Upload Thành Công "+ i++  +" File !";
+                    int indexi = i + 1;
+                    //save DB
+                    db.FPT_CATA_FILE_NEW2019.Add(new FPT_CATA_FILE_NEW2019 {  ItemID = id, FileName= file.FileName, FilePath= path });
+                    db.SaveChanges();
+                    
+                    rs = "Upload Thành Công " + indexi + " File !";
                 }
             }
             else
@@ -72,29 +76,13 @@ namespace Libol.Controllers
 
             return Json(rs, JsonRequestBehavior.AllowGet);
 
-            //foreach (HttpPostedFileBase item in files)
-            //{
-            //    if (item != null && item.ContentLength > 0)
-            //    {
-            //        try
-            //        {
-            //            string path = Path.Combine(Server.MapPath("/CatalogueEdata"),
-            //                                       Path.GetFileName(item.FileName));
-            //            item.SaveAs(path);
-            //            ViewBag.Message = "File uploaded successfully";
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            ViewBag.Message = "ERROR:" + ex.Message.ToString();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        ViewBag.Message = "You have not specified a file.";
-            //    }
-            //}
-
-
+        }
+        [HttpGet]
+        public FileResult Download(string FileName , string FilePath )
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
+            //string fileName = "190814100030SBV_SG3.1_Tai lieu mo ta source code Web Application-SWIFT.docx";
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet , FileName);
         }
 
         //**************************************************************CHECK TITLE**************************************************************
@@ -194,32 +182,11 @@ namespace Libol.Controllers
             if (!String.IsNullOrEmpty(Id))
             {
                 List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(Id).ToList();
+                if (listContent.Count == 0) return View();
                 //Lay Content cua LEADERty
                 ViewData["Leader"] = listContent[0];
                 listContent.RemoveAt(0);
-                //Ghep Cac truong trung nhau thanh 1 dong
-                List<int> index = new List<int>();
-                for (int i = 0; i < listContent.Count; i++)
-                {
-                    if (i > 0)
-                    {
-                        if (listContent[i].FieldCode == listContent[i - 1].FieldCode)
-                        {
-                            index.Add(i - 1);
-                            listContent[i].Content = listContent[i - 1].Content + "::" + listContent[i].Content;
-                        }
-                        if (listContent[i].FieldCode.StartsWith("852"))
-                        {
-                            index.Add(i);
-                        }
-                    }
-
-                }
-                //remove các trường trùng đã được ghép
-                for (int i = 0; i < index.Count; i++)
-                {
-                    listContent.RemoveAt(index[i] - i);
-                }
+             
 
                 //****************************************************Done List Content****************************************************
                 //*************************************************************************************************************************
@@ -236,6 +203,11 @@ namespace Libol.Controllers
                 //****************************************************Done List Des****************************************************
                 //*************************************************************************************************************************
                 ViewData["ListField"] = listField;
+
+                //Load File
+                int IdIn = Int32.Parse(Id);
+                List<FPT_CATA_FILE_NEW2019> listFile = db.FPT_CATA_FILE_NEW2019.Where(i => i.ItemID== IdIn).ToList();
+                ViewData["ListFile"] = listFile;
             }
             else
             {

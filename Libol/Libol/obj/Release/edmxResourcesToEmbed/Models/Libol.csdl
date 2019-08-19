@@ -12877,6 +12877,36 @@
       <Parameter Name="intParentID" Mode="In" Type="Int32" />
       <Parameter Name="intOutVal" Mode="InOut" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="FPT_SP_STAT_ITEMMAX">
+      <Parameter Name="intUserID" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="intTopNum" Mode="In" Type="String" />
+      <Parameter Name="intMinLoan" Mode="In" Type="String" />
+      <Parameter Name="libid" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_STAT_PATRONGROUP">
+      <Parameter Name="intUserID" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="OptItemID" Mode="In" Type="String" />
+      <Parameter Name="intHistory" Mode="In" Type="String" />
+      <Parameter Name="LibID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_SP_STAT_PATRONMAX">
+      <Parameter Name="intUserID" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateFrom" Mode="In" Type="String" />
+      <Parameter Name="strCheckOutDateTo" Mode="In" Type="String" />
+      <Parameter Name="intTopNum" Mode="In" Type="String" />
+      <Parameter Name="intMinLoan" Mode="In" Type="String" />
+      <Parameter Name="OptItemID" Mode="In" Type="String" />
+      <Parameter Name="LocID" Mode="In" Type="String" />
+      <Parameter Name="LibID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="FPT_ACQ_STATISTIC_TOP20" ReturnType="Collection(LibolModel.FPT_ACQ_STATISTIC_TOP20_Result)">
+      <Parameter Name="intType" Mode="In" Type="Int32" />
+      <Parameter Name="intCategoryID" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -17904,4 +17934,8 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <ComplexType Name="FPT_ACQ_STATISTIC_TOP20_Result">
+    <Property Type="Int32" Name="Total" Nullable="true" />
+    <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="250" />
+  </ComplexType>
 </Schema>

@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
 using Libol.SupportClass;
+using OfficeOpenXml;
 
 namespace Libol.Controllers
 {
@@ -391,6 +392,7 @@ namespace Libol.Controllers
         {
             List<PatronFile> listPatronInFile = new List<PatronFile>();
             List<PatronFile> listPatronInFileInvalid = new List<PatronFile>();
+            var ls = new List<PatronFile>();
             for (int i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
@@ -404,80 +406,44 @@ namespace Libol.Controllers
                 var path = Path.Combine(Server.MapPath("~/Uploads"), fileName);
                 file.SaveAs(path);
                 
-                DataSet ds = new DataSet();
-                string ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path + ";Extended Properties=Excel 12.0;";
-
-                using (OleDbConnection conn = new System.Data.OleDb.OleDbConnection(ConnectionString))
+                FileInfo excel = new FileInfo(Server.MapPath("/Uploads/"+fileName));
+                using (var package = new ExcelPackage(excel))
                 {
-                    conn.Open();
-                    using (DataTable dtExcelSchema = conn.GetSchema("Tables"))
+                    var workbook = package.Workbook;
+
+                    //*** Sheet 1
+                    var worksheet = workbook.Worksheets.First();
+
+                    //*** Retrieve to List                    
+                    int totalRows = worksheet.Dimension.End.Row;
+                    for (int u = 2; u <= totalRows; u++)
                     {
-                        string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                        string query = "SELECT * FROM [" + sheetName + "]";
-                        OleDbDataAdapter adapter = new OleDbDataAdapter(query, conn);
-                        adapter.Fill(ds, "Items");
-                        if (ds.Tables.Count > 0)
+                        if(!String.IsNullOrEmpty(worksheet.Cells[u, 2].Text.ToString()))
                         {
-                            if (ds.Tables[0].Rows.Count > 0)
+                            ls.Add(new PatronFile
                             {
-                                for (int j = 0; j < ds.Tables[0].Rows.Count; j++)
-                                {
-                                    string DOB;
-                                    if (ds.Tables[0].Rows[j].Field<string>("Mã Sinh viên") != null)
-                                    {
-                                        PatronFile patronFile = new PatronFile();
-                                        patronFile.Line = j + 2;
-                                        patronFile.strCode = ds.Tables[0].Rows[j].Field<string>("Mã Sinh viên");
-                                        patronFile.FullName = ds.Tables[0].Rows[j].Field<string>("Họ và tên");
-                                        patronFile.blnSex = ds.Tables[0].Rows[j].Field<string>("Giới tính");
-                                        
-                                        patronFile.strEmail = ds.Tables[0].Rows[j].Field<string>("Email");
-                                        patronFile.strAddress = ds.Tables[0].Rows[j].Field<string>("Địa chỉ thường trú");
-                                        patronFile.Faculty = ds.Tables[0].Rows[j].Field<string>("Chuyên ngành");
-                                        patronFile.strMobile = ds.Tables[0].Rows[j].Field<string>("Điện thoại");
-                                        patronFile.strGrade = ds.Tables[0].Rows[j].Field<string>("Khoá");
-                                        patronFile.College = ds.Tables[0].Rows[j].Field<string>("Trường");
-                                        patronFile.strCity = ds.Tables[0].Rows[j].Field<string>("Thành phố");
-                                        patronFile.strClass = ds.Tables[0].Rows[j].Field<string>("Lớp");
-                                        patronFile.PatronGroup = ds.Tables[0].Rows[j].Field<string>("Nhóm");
-                                        try
-                                        {
-                                            patronFile.strDOB = ds.Tables[0].Rows[j].Field<DateTime>("Ngày sinh");
-                                        }
-                                        catch (Exception)
-                                        {
-                                            DOB = ds.Tables[0].Rows[j].Field<string>("Ngày sinh");
-                                            try
-                                            {
-                                                patronFile.strDOB = Convert.ToDateTime(DOB);
-                                            }
-                                            catch (Exception)
-                                            {
-                                                patronFile.IsValid = false;
-                                            }
-                                            
-                                        }
-
-                                        patronFile.IsValid = CheckCodeInFile(patronFile.strCode, listPatronInFile);
-
-
-                                        if (patronFile.IsValid)
-                                        {
-                                            listPatronInFile.Add(patronFile);
-                                        }
-                                        else
-                                        {
-                                            listPatronInFileInvalid.Add(patronFile);
-                                        }
-                                    }
-
-                                }
-                            }
+                                strCode = worksheet.Cells[u, 2].Text.ToString(),
+                                FullName = worksheet.Cells[u, 3].Text.ToString(),
+                                blnSex = worksheet.Cells[u, 4].Text.ToString(),
+                                strDOB = Convert.ToDateTime(worksheet.Cells[u, 5].Text.ToString()),
+                                strEmail = worksheet.Cells[u, 6].Text.ToString(),
+                                strAddress = worksheet.Cells[u, 7].Text.ToString(),
+                                Faculty = worksheet.Cells[u, 8].Text.ToString(),
+                                strMobile = worksheet.Cells[u, 9].Text.ToString(),
+                                strGrade = worksheet.Cells[u, 10].Text.ToString(),
+                                College = worksheet.Cells[u, 11].Text.ToString(),
+                                strCity = worksheet.Cells[u, 12].Text.ToString(),
+                                strClass = worksheet.Cells[u, 13].Text.ToString(),
+                                PatronGroup = worksheet.Cells[u, 14].Text.ToString(),
+                            });
                         }
+                        
                     }
                 }
+
             }
-            ViewBag.ListPatron = listPatronInFile;
+
+            ViewBag.ListPatron = ls;
             ViewBag.ListPatronInvalid = listPatronInFileInvalid;
             return View();
         }

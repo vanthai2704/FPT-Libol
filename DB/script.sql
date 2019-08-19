@@ -3390,9 +3390,10 @@ IF @intIsAuthority = 0
 		AND I.TypeID = D.ID
 		AND I.ID IN (@strItemIDs)
 			-- copynumber : 852$j
-	    union
-	    SELECT distinct '852' as IDSort,'852' as FieldCode, '' as Ind,  '$a' + HLB.code + '$b' + hl.symbol as Content
-        FROM HOLDING H, HOLDING_LOCATION HL, HOLDING_LIBRARY HLB WHERE H.ItemID  =@strItemIDs AND H.locationid=HL.ID AND HL.LIBID=HLB.ID
+			--Doanhdq
+	    --union
+	    --SELECT distinct '852' as IDSort,'852' as FieldCode, '' as Ind,  '$a' + HLB.code + '$b' + hl.symbol as Content
+     --   FROM HOLDING H, HOLDING_LOCATION HL, HOLDING_LIBRARY HLB WHERE H.ItemID  =@strItemIDs AND H.locationid=HL.ID AND HL.LIBID=HLB.ID
 
 		--ORDER
 		
@@ -3479,7 +3480,46 @@ INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultV
 INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (14, N'927', 1, NULL, 0, NULL)
 
 ------	
-
+--DOANHDQ /15/08/2019
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'001', 1, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'020$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'022$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'040$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'041$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'044$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'082$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'090$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'090$b', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'100$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'110$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'245$a', 1, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'245$b', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'245$b', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'245$c', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'245$n', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'245$p', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'246$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'250$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'260$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'260$b', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'260$c', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'300$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'300$b', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'300$c', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'300$e', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'490$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'500$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'520$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'650$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'653$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'700$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'852$a', 0, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'900', 1, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'911', 1, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'925', 1, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'926', 1, NULL, 0, NULL)
+INSERT [dbo].[MARC_BIB_WS_DETAIL] ([FormID], [FieldCode], [Mandatory], [DefaultValue], [IstextBox], [DefaultIndicators]) VALUES (11, N'927', 1, NULL, 0, NULL)
+------	
 
 GO
 /****** Object:  StoredProcedure [dbo].[FPT_ACQ_LANGUAGE_DETAILS_STATISTIC]    Script Date: 07/26/2019 20:23:22 ******/
@@ -6355,3 +6395,30 @@ BEGIN
 		END
 	END	
 END
+
+
+	--DOANHDQ
+GO
+
+/****** Object:  Table [dbo].[FPT_CATA_FILE_NEW2019]    Script Date: 8/16/2019 12:49:26 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[FPT_CATA_FILE_NEW2019](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ItemID] [int] NOT NULL,
+	[FileName] [nvarchar](250) NULL,
+	[FilePath] [nvarchar](250) NULL,
+ CONSTRAINT [PK_FPT] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[FPT_CATA_FILE_NEW2019]  WITH CHECK ADD FOREIGN KEY([ItemID])
+REFERENCES [dbo].[ITEM] ([ID])
+GO

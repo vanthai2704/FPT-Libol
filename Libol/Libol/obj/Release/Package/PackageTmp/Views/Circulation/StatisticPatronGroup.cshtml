@@ -26,7 +26,7 @@
     </tr>
     <tr>
         <td>
-            <input type="radio" name="type" id="theo_dau_an_pham" value="0" />
+            <input type="radio" name="type" id="theo_dau_an_pham" value="0" checked />
             <label for="theo_dau_an_pham">Theo đầu ấn phẩm</label>
         </td>
         <td>
@@ -38,7 +38,7 @@
             <input type="submit" value="Thống kê" id="stat" style="background-color:dodgerblue; color:white" />
         </td>
         <td>
-            <input type="reset" value="Đặt lại" style="background-color:dodgerblue; color:white" />
+            <input type="reset" value="Đặt lại" style="background-color:dodgerblue; color:white" onclick="reset()"/>
         </td>
     </tr>
 </table>
@@ -59,19 +59,23 @@
                 strType: $("input[name='type']:checked").val()
             };
 
-            console.log(empObj)
-            $.ajax({
-                url: "DisplayPatronGroup",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    $("#result").html(result)
-                },
-                error: function (errormessage) {
-                    console.log("error");
-                }
-            });
+            if ($("#Library").val() == "") {
+                alert("Hãy chọn thư viện!");
+            } else {
+                console.log(empObj)
+                $.ajax({
+                    url: "DisplayPatronGroup",
+                    data: JSON.stringify(empObj),
+                    contentType: "application/json;charset=utf-8",
+                    type: "POST",
+                    success: function (result) {
+                        $("#result").html(result)
+                    },
+                    error: function (errormessage) {
+                        console.log("error");
+                    }
+                });
+            }
         };
 
         $("#Library").change(function () {
@@ -93,6 +97,8 @@
             });
             return false;
         });
-
     });
+    function reset() {
+        location.reload();
+    };
 </script>

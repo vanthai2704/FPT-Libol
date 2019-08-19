@@ -5308,6 +5308,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Parameter Name="strInYear" Type="varchar" Mode="In" />
     <Parameter Name="intUserID" Type="int" Mode="In" />
   </Function>
+  <Function Name="FPT_ACQ_STATISTIC_TOP20" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intType" Type="int" Mode="In" />
+    <Parameter Name="intCategoryID" Type="int" Mode="In" />
+  </Function>
   <Function Name="FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intType" Type="int" Mode="In" />
   </Function>
@@ -5695,20 +5699,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
     <Parameter Name="intUserID" Type="int" Mode="In" />
   </Function>
-  <Function Name="FPT_GET_PATRON_LOANINFOR_NEW" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
-    <Parameter Name="strItemCode" Type="varchar" Mode="In" />
-    <Parameter Name="strCopyNumber" Type="varchar" Mode="In" />
-    <Parameter Name="intLibraryID" Type="int" Mode="In" />
-    <Parameter Name="strLocationPrefix" Type="varchar" Mode="In" />
-    <Parameter Name="intLocationID" Type="varchar" Mode="In" />
-    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
-    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
-    <Parameter Name="strCheckInDateFrom" Type="varchar" Mode="In" />
-    <Parameter Name="strCheckInDateTo" Type="varchar" Mode="In" />
-    <Parameter Name="strSerial" Type="nvarchar" Mode="In" />
-    <Parameter Name="intUserID" Type="int" Mode="In" />
-  </Function>
   <Function Name="FPT_GET_PATRON_LOCK_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
     <Parameter Name="strNote" Type="nvarchar" Mode="In" />
@@ -5996,6 +5986,32 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
   <Function Name="FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="ItemID" Type="int" Mode="In" />
     <Parameter Name="AcqDate" Type="date" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_STAT_ITEMMAX" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="intTopNum" Type="varchar" Mode="In" />
+    <Parameter Name="intMinLoan" Type="varchar" Mode="In" />
+    <Parameter Name="libid" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_STAT_PATRONGROUP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="OptItemID" Type="varchar" Mode="In" />
+    <Parameter Name="intHistory" Type="varchar" Mode="In" />
+    <Parameter Name="LibID" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="FPT_SP_STAT_PATRONMAX" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intUserID" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateFrom" Type="varchar" Mode="In" />
+    <Parameter Name="strCheckOutDateTo" Type="varchar" Mode="In" />
+    <Parameter Name="intTopNum" Type="varchar" Mode="In" />
+    <Parameter Name="intMinLoan" Type="varchar" Mode="In" />
+    <Parameter Name="OptItemID" Type="varchar" Mode="In" />
+    <Parameter Name="LocID" Type="varchar" Mode="In" />
+    <Parameter Name="LibID" Type="varchar" Mode="In" />
   </Function>
   <Function Name="FPT_SP_UPDATE_UNLOCK_PATRON_CARD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="strPatronCode" Type="varchar" Mode="In" />

@@ -206,12 +206,15 @@ namespace Libol.Controllers
                         }
                         
                     }
+                    if (!String.IsNullOrEmpty(Email))
+                    {
+                        var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
+                        userGoogleAccount.ID = ID;
+                        userGoogleAccount.Email = Email;
+                        db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
+                        db.SaveChanges();
+                    }
                     
-                    var userGoogleAccount = db.SYS_USER_GOOGLE_ACCOUNT.Create();
-                    userGoogleAccount.ID = ID;
-                    userGoogleAccount.Email = Email;
-                    db.SYS_USER_GOOGLE_ACCOUNT.Add(userGoogleAccount);
-                    db.SaveChanges();
                     return Json(new Result()
                     {
                         CodeError = 0,

@@ -83,15 +83,15 @@
         }
     </style>
     <script>
-        $(function () {
-            $(document).ajaxError(function (xhr, props) {
-                if (props.status >= 200 && props.status < 300 || props.status === 304) {
-                    //all is well
-                } else {
-                    window.location = "/Error";
-                }
-            });
-        });
+        //$(function () {
+        //    $(document).ajaxError(function (xhr, props) {
+        //        if (props.status >= 200 && props.status < 300 || props.status === 304) {
+        //            //all is well
+        //        } else {
+        //            window.location = "/Error";
+        //        }
+        //    });
+        //});
 
     </script>
     @*START------------SCRIPT FOR LOGIN FUNCTION*@

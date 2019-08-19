@@ -247,6 +247,8 @@ namespace Libol.Models
         public virtual DbSet<FPT_RECOMMEND> FPT_RECOMMEND { get; set; }
         public virtual DbSet<FPT_SYS_USER_RIGHT> FPT_SYS_USER_RIGHT { get; set; }
         public virtual DbSet<FPT_SYS_USER_RIGHT_DETAIL> FPT_SYS_USER_RIGHT_DETAIL { get; set; }
+        public virtual DbSet<FPT_CATA_FILE> FPT_CATA_FILE { get; set; }
+        public virtual DbSet<FPT_CATA_FILE_NEW2019> FPT_CATA_FILE_NEW2019 { get; set; }
     
         public virtual ObjectResult<CAT_DIC_LIST_SEL_Result> CAT_DIC_LIST_SEL()
         {

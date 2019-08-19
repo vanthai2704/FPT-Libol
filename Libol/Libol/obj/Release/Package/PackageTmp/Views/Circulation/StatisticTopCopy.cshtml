@@ -36,13 +36,13 @@
             <p> Lọc ra: </p>
         </td>
         <td>
-            <input id="number_patron" type="text" value="12" name="number_patron" />
+            <input id="number_patron" type="number" value="12" name="number_patron" />
         </td>
         <td>
             <p>Ấn phẩm dẫn đầu với tối thiểu: </p>
         </td>
         <td>
-            <input id="hire_times" type="text" value="" name="hire_times" />  Lượt mượn
+            <input id="hire_times" type="number" value="" name="hire_times" />  Lượt mượn
         </td>
     </tr>
     <tr>
@@ -53,7 +53,7 @@
             <input type="submit" value="Thống kê" id="stat" style="background-color:dodgerblue; color:white" />
         </td>
         <td>
-            <input type="reset" value="Đặt lại" style="background-color:dodgerblue; color:white" />
+            <input type="reset" value="Đặt lại" style="background-color:dodgerblue; color:white" onclick="reset()"/>
         </td>
         <td></td>
     </tr>
@@ -76,21 +76,37 @@
                 strHireTimes: $("#hire_times").val(),
             };
 
-            console.log(empObj)
-            $.ajax({
-                url: "DisplayTopCopy",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                success: function (result) {
-                    $("#result").html(result)
-                },
-                error: function (errormessage) {
-                    console.log("error");
-                }
-            });
+            if ($("#hire_times").val() == "") {
+                alert("Số lượt mượn đang bị bỏ trống!");
+            } else if ($("#number_patron").val() == "") {
+                alert("Số ấn phẩm đang bị bỏ trống!");
+            }
+            else if ($("#Library").val() == "") {
+                alert("Hãy chọn thư viện!");
+            }
+            else {
+                console.log(empObj)
+                $.ajax({
+                    url: "DisplayTopCopy",
+                    data: JSON.stringify(empObj),
+                    contentType: "application/json;charset=utf-8",
+                    type: "POST",
+                    success: function (result) {
+                        $("#result").html(result)
+                    },
+                    error: function (errormessage) {
+                        console.log("error");
+                    }
+                });
+            }
         };
+
+
     });
+
+    function reset() {
+        location.reload();
+    };
 </script>
 
 

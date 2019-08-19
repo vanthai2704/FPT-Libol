@@ -189,8 +189,9 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult InsertHolding(HOLDING holding, int numberOfCN,string recommendID)
         {
-            string message = shelfBusiness.InsertHolding(holding, numberOfCN,recommendID);
-            return Json(new { Message = message }, JsonRequestBehavior.AllowGet);
+            string composite = "";
+            string message = shelfBusiness.InsertHolding(holding, numberOfCN,recommendID,ref composite);
+            return Json(new { Message = message, Composite = composite }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
