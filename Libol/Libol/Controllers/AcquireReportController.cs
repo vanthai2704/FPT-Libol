@@ -1590,8 +1590,8 @@ namespace Libol.Controllers
             int LibID = 0;
             if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
             ViewBag.Result = le.FPT_ACQ_LANGUAGE_STATISTIC(LibID).First();
-            ViewBag.ItemDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("ITEM", LibID);
-            ViewBag.CopyDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("COPY", LibID);
+            ViewBag.ItemDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("ITEM", LibID).ToList();
+            ViewBag.CopyDetailsResult = le.FPT_ACQ_LANGUAGE_DETAILS_STATISTIC("COPY", LibID).ToList();
             return PartialView("GetLanguageStats");
         }
         [AuthAttribute(ModuleID = 4, RightID = "28")]
