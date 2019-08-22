@@ -58,8 +58,7 @@ namespace Libol.Controllers
                     
                     var file = Files[i];
                     var fileName = DateTime.Now.ToString("yyMMddHHmmss") + Path.GetFileName(file.FileName);
-                    string path = Path.Combine(Server.MapPath("/CAT_FILE"),
-                                                       Path.GetFileName(fileName));
+                    string path = Path.Combine(Server.MapPath("~/CAT_FILE"),Path.GetFileName(fileName));
                     file.SaveAs(path);
                     int indexi = i + 1;
                     //save DB
