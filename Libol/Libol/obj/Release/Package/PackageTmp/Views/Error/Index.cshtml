@@ -1,5 +1,21 @@
-﻿@{
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
     ViewBag.Title = "Error";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h4 style="margin : 1rem; color:red">Xảy ra lỗi. Vui lòng liên hệ quản trị viên!</h4>
+<div>
+    @{
+        if (Model != null && Model.Exception != null)
+        {
+            <h5>Here is some information you can pass on to the administrator</h5>
+            <h3>Path: ~/@string.Format("{0}/{1}", Model.ControllerName, Model.ActionName)</h3>
+            <h4>Error: @Model.Exception.GetType().Name</h4>
+            if (Request.IsLocal)
+            {
+                <h4>Message: @Model.Exception.Message</h4>
+                <h5>@Model.Exception.StackTrace</h5>
+            }
+        }
+    }
+</div>
