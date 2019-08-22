@@ -51,7 +51,7 @@ namespace Libol.Controllers
             HttpFileCollectionBase Files = Request.Files;
             int id = Int32.Parse(Request.Form["ID"]) ;
             
-            if (Files != null)
+            if (Files.Count  != 0)
             {
                 for (int i = 0; i < Files.Count; i++)
                 {
