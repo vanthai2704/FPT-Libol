@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="2b52a503fd424021864156eff977a143" Name="Diagram1" ZoomLevel="59">
+      <Diagram DiagramId="2b52a503fd424021864156eff977a143" Name="Diagram1" ZoomLevel="52">
         <EntityTypeShape EntityType="LibolModel.ACQ_ACQUIRE_SOURCE" Width="1.5" PointX="3" PointY="90.75" IsExpanded="true" />
         <EntityTypeShape EntityType="LibolModel.ACQ_BUDGET" Width="1.5" PointX="0.75" PointY="102.75" IsExpanded="true" />
         <EntityTypeShape EntityType="LibolModel.ACQ_BUDGET_ACCUMULATE" Width="1.5" PointX="3" PointY="121.25" IsExpanded="true" />
@@ -405,9 +405,8 @@
         <EntityTypeShape EntityType="LibolModel.FPT_SYS_USER_RIGHT" Width="1.5" PointX="28.375" PointY="5.875" />
         <EntityTypeShape EntityType="LibolModel.FPT_SYS_USER_RIGHT_DETAIL" Width="1.5" PointX="30.625" PointY="6" />
         <AssociationConnector Association="LibolModel.FK__FPT_SYS_U__Right__76923CB8" />
-        <EntityTypeShape EntityType="LibolModel.FPT_CATA_FILE" Width="1.5" PointX="17.375" PointY="27.75" />
-        <EntityTypeShape EntityType="LibolModel.FPT_CATA_FILE_NEW2019" Width="1.5" PointX="13.5" PointY="148.5" />
-        <AssociationConnector Association="LibolModel.FK__FPT_CATA___ItemI__10DC1EA0" />
+        <EntityTypeShape EntityType="LibolModel.FPT_CATA_FILE_NEW" Width="1.5" PointX="13.5" PointY="148.5" />
+        <AssociationConnector Association="LibolModel.FK__FPT_CATA___ItemI__567A72E1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

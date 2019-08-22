@@ -84,9 +84,9 @@ namespace Libol.Models
             return inforList;
         }
 
-        public List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> GetContentByID(string Id)
+        public List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> GetContentByID(string Id)
         {
-            List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> list = db.SP_CATA_GET_CONTENTS_OF_ITEMS(Id, 0).ToList();
+            List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> list = db.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS(Id, 0).ToList();
 
             //Ghep Cac truong trung nhau thanh 1 dong
             List<int> index = new List<int>();

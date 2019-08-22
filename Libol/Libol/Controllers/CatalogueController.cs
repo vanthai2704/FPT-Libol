@@ -58,12 +58,11 @@ namespace Libol.Controllers
                     
                     var file = Files[i];
                     var fileName = DateTime.Now.ToString("yyMMddHHmmss") + Path.GetFileName(file.FileName);
-                    string path = Path.Combine(Server.MapPath("/CAT_FILE"),
-                                                       Path.GetFileName(fileName));
+                    string path = Path.Combine(Server.MapPath("~/CAT_FILE"),Path.GetFileName(fileName));
                     file.SaveAs(path);
                     int indexi = i + 1;
                     //save DB
-                    db.FPT_CATA_FILE_NEW2019.Add(new FPT_CATA_FILE_NEW2019 {  ItemID = id, FileName= file.FileName, FilePath= path });
+                    db.FPT_CATA_FILE_NEW.Add(new FPT_CATA_FILE_NEW {  ItemID = id, FileName= file.FileName, FilePath= path });
                     db.SaveChanges();
                     
                     rs = "Upload Thành Công " + indexi + " File !";
@@ -132,7 +131,7 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult ReUseGetContentByID(string itemID)
         {
-            List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(itemID);
+            List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(itemID);
             return Json(listContent, JsonRequestBehavior.AllowGet);
         }
 
@@ -181,7 +180,7 @@ namespace Libol.Controllers
             string strFieldCode = "";
             if (!String.IsNullOrEmpty(Id))
             {
-                List<SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(Id).ToList();
+                List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(Id).ToList();
                 if (listContent.Count == 0) return View();
                 //Lay Content cua LEADERty
                 ViewData["Leader"] = listContent[0];
@@ -193,7 +192,7 @@ namespace Libol.Controllers
                 ViewData["ListContent"] = listContent;
 
                 //get mô tả từng trường
-                foreach (SP_CATA_GET_CONTENTS_OF_ITEMS_Result item in listContent)
+                foreach (FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result item in listContent)
                 {
                     strFieldCode = strFieldCode + item.IDSort + ",";
                 }
@@ -206,7 +205,8 @@ namespace Libol.Controllers
 
                 //Load File
                 int IdIn = Int32.Parse(Id);
-                List<FPT_CATA_FILE_NEW2019> listFile = db.FPT_CATA_FILE_NEW2019.Where(i => i.ItemID== IdIn).ToList();
+                //db.Entry(FPT_CATA_FILE_NEW2019);
+                List<FPT_CATA_FILE_NEW> listFile = db.FPT_CATA_FILE_NEW.Where(i => i.ItemID== IdIn).ToList();
                 ViewData["ListFile"] = listFile;
             }
             else
