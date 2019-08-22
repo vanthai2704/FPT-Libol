@@ -85,21 +85,25 @@
             strFromDate: document.getElementById("FromDate").value,
             strToDate: document.getElementById("ToDate").value,
         };
-        $.ajax({
-            url: "GetStatTaskbar",
-            data: JSON.stringify(empObj),
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            beforeSend: function () {
-                $("#ContentStatTaskbar").html("<h4>Loading...</h4>");
-            },
-            success: function (result) {
-                $("#ContentStatTaskbar").html(result)
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
+        if (document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
+            alert("Khoảng thời gian thống kê không hợp lệ");
+        } else {
+            $.ajax({
+                url: "GetStatTaskbar",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                beforeSend: function () {
+                    $("#ContentStatTaskbar").html("<h4>Loading...</h4>");
+                },
+                success: function (result) {
+                    $("#ContentStatTaskbar").html(result)
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        }
     };
     $(window).bind("pageshow", function () {
         $("#Library").val('');
