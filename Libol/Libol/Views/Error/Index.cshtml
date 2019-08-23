@@ -8,7 +8,7 @@
     @{
         if (Model != null && Model.Exception != null)
         {
-            <h5>Here is some information you can pass on to the administrator</h5>
+            <h5>Vui lòng chụp ảnh màn hình này gửi cho quản trị viên.</h5>
             <h3>Path: ~/@string.Format("{0}/{1}", Model.ControllerName, Model.ActionName)</h3>
             <h4>Error: @Model.Exception.GetType().Name</h4>
             if (Request.IsLocal)

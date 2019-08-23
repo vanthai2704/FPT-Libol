@@ -2556,8 +2556,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CAT_FILE\" />
-    <Folder Include="EntityResultRAS\" />
-    <Folder Include="Log\" />
     <Folder Include="Views\Tests\" />
   </ItemGroup>
   <ItemGroup>
