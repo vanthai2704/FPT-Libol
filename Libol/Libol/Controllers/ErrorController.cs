@@ -13,5 +13,30 @@ namespace Libol.Controllers
         {
             return View();
         }
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        [HttpPost]
+        public void Log(string Path, string Error, string Message, string Track)
+        {
+            var ex = Server.GetLastError();
+            //log the error!
+            log.Info("");
+            log.Info("");
+            log.Info("------------------------------------------------------------------------------------------------------");
+            log.Info("Time: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss"));
+            log.Info("Path: ~/" + Path);
+            log.Info("Error: " + Error);
+            log.Info("Message:" + Message);
+            log.Info(Track);
+
+            System.IO.StreamWriter Writer = System.IO.File.AppendText(@"D:\home\error.log");
+            Writer.WriteLine("");
+            Writer.WriteLine("------------------------------------------------------------------------------------------------------");
+            Writer.WriteLine("Time: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss"));
+            Writer.WriteLine("Path: ~/" + Path);
+            Writer.WriteLine("Error: "+ Error);
+            Writer.WriteLine("Message:"+ Message);
+            Writer.WriteLine(Track);
+            Writer.Close();
+        }
     }
 }
