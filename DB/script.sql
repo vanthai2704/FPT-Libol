@@ -6414,3 +6414,76 @@ CREATE TABLE FPT_CATA_FILE_NEW(
 	[FilePath] [nvarchar](250) NULL
 )
 GO
+
+/****** Object:  StoredProcedure [dbo].[FPT_CIR_SP_STAT_TOP20]    Script Date: 08/22/2019 11:49:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+--SP_STAT_TOP20 0,30,14
+
+
+Create    PROCEDURE [dbo].[FPT_CIR_SP_STAT_TOP20] 
+	@intHistory int, --1 la thong ke lich su muon sach.  
+	@intID int,  
+	@intUserID int,
+	@intLibID int  
+AS   
+DECLARE @StrSql Varchar(4000)  
+DECLARE @strIndexTable varchar(50)   
+DECLARE @strIndexIDField varchar(50)  
+DECLARE @strDicTable varchar(50)  
+DECLARE @strCaptionField varchar(50)  
+DECLARE @strDicIDField varchar(50)  
+	SELECT @strIndexTable = IndexTable, @strIndexIDField = IndexIDField, @strDicTable = DicTable, @strCaptionField = CaptionField, @strDicIDField = DicIDField FROM CAT_DIC_LIST WHERE IndexTable IS NOT NULL AND ID = @intID  
+	SET @StrSql = ''  
+	IF @intHistory = 1   
+	BEGIN  
+		IF @intID IN (2,36)
+			SET @StrSql = ' SELECT A.Total, A.Label, A.Name FROM (SELECT TOP 20 Count (*) AS Total, ' + @strIndexIDField + ' AS Label, ' + @strDicTable + '.' + @strCaptionField + ' as Name From CIR_LOAN_HISTORY,' +  @strIndexTable + ',' + @strDicTable + ' WHERE CIR_LOAN_HISTORY.ItemID =  ' + @strIndexTable +'.ItemID AND RIGHT(' +  @strIndexTable +'.FieldCode,2)=''$b'''    
+		ELSE
+			IF @intID = 34
+				SET @StrSql = ' SELECT A.Total, A.Label, A.Name FROM (SELECT TOP 20 Count (*) AS Total, ' + @strIndexIDField + ' AS Label, ' + @strDicTable + '.' + @strCaptionField + ' as Name From CIR_LOAN_HISTORY,' +  @strIndexTable + ',' + @strDicTable + ' WHERE CIR_LOAN_HISTORY.ItemID =  ' + @strIndexTable +'.ItemID AND RIGHT(' +  @strIndexTable +'.FieldCode,2)=''$c'''    
+			ELSE
+				SET @StrSql = ' SELECT A.Total, A.Label, A.Name FROM (SELECT TOP 20 Count (*) AS Total, ' + @strIndexIDField + ' AS Label, ' + @strDicTable + '.' + @strCaptionField + ' as Name From CIR_LOAN_HISTORY,' +  @strIndexTable + ',' + @strDicTable + ' WHERE CIR_LOAN_HISTORY.ItemID =  ' + @strIndexTable +'.ItemID AND RIGHT(' +  @strIndexTable +'.FieldCode,2)=''$a'''    
+		SET @StrSql =  @StrSql + ' AND ' + @strDicTable + '.' + @strDicIDField + ' = ' + @strIndexTable + '.' + @strIndexIDField   
+		IF @intLibID <> 0
+		SET @StrSql =  @StrSql + ' AND CIR_LOAN_HISTORY.LocationID IN ( SELECT B.ID AS ID FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND LibID =' + CAST(@intLibID AS CHAR(20)) + ' AND C.UserID =' + CAST(@intUserID AS CHAR(20)) + ' ) '   
+		ELSE
+		SET @StrSql =  @StrSql + ' AND CIR_LOAN_HISTORY.LocationID IN ( SELECT B.ID AS ID FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID =' + CAST(@intUserID AS CHAR(20)) + ' ) '   
+		
+		SET @StrSql =  @StrSql +   ' GROUP BY ' + @strIndexIDField + ',' +  @strDicTable + '.' + @strCaptionField  + ' ORDER BY Total DESC) A '  
+	END  
+	ELSE  
+		IF @intHistory = 0  
+			BEGIN  
+			IF @intID IN (2,36)
+				SET @StrSql = ' SELECT A.Total, A.Label, A.Name FROM (SELECT TOP 20 Count (*) as Total, ' + @strIndexIDField + ' AS Label, ' + @strDicTable + '.' + @strCaptionField + ' as Name From CIR_LOAN,' +  @strIndexTable + ',' + @strDicTable + ' WHERE CIR_LOAN.ItemID =  ' + @strIndexTable +'.ItemID AND RIGHT(' +  @strIndexTable +'.FieldCode,2)=''$b''' 
+			ELSE
+				IF @intID = 34
+					SET @StrSql = ' SELECT A.Total, A.Label, A.Name FROM (SELECT TOP 20 Count (*) AS Total, ' + @strIndexIDField + ' AS Label, ' + @strDicTable + '.' + @strCaptionField + ' as Name From CIR_LOAN_HISTORY,' +  @strIndexTable + ',' + @strDicTable + ' WHERE CIR_LOAN_HISTORY.ItemID =  ' + @strIndexTable +'.ItemID AND RIGHT(' +  @strIndexTable +'.FieldCode,2)=''$c'''    
+				ELSE
+					SET @StrSql = ' SELECT A.Total, A.Label, A.Name FROM (SELECT TOP 20 Count (*) as Total, ' + @strIndexIDField + ' AS Label, ' + @strDicTable + '.' + @strCaptionField + ' as Name From CIR_LOAN,' +  @strIndexTable + ',' + @strDicTable + ' WHERE CIR_LOAN.ItemID =  ' + @strIndexTable +'.ItemID AND RIGHT(' +  @strIndexTable +'.FieldCode,2)=''$a''' 
+			SET @StrSql =  @StrSql + ' AND ' + @strDicTable + '.' + @strDicIDField + ' = ' + @strIndexTable + '.' + @strIndexIDField   
+			IF @intID = 34
+				IF @intLibID <> 0
+					SET @StrSql =  @StrSql + ' AND CIR_LOAN_HISTORY.LocationID IN ( SELECT B.ID AS ID FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND LibID =' + CAST(@intLibID AS CHAR(20)) + ' AND C.UserID =' + CAST(@intUserID AS CHAR(20)) + ' ) '   
+				ELSE
+					SET @StrSql =  @StrSql + ' AND CIR_LOAN_HISTORY.LocationID IN ( SELECT B.ID AS ID FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID =' + CAST(@intUserID AS CHAR(20)) + ' ) '   
+			
+			ELSE
+				IF @intLibID <> 0
+					SET @StrSql =  @StrSql + ' AND CIR_LOAN.LocationID IN ( SELECT B.ID AS ID FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND LibID =' + CAST(@intLibID AS CHAR(20)) + ' AND C.UserID =' + CAST(@intUserID AS CHAR(20)) + ' ) '   
+				ELSE
+					SET @StrSql =  @StrSql + ' AND CIR_LOAN.LocationID IN ( SELECT B.ID AS ID FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C WHERE A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID =' + CAST(@intUserID AS CHAR(20)) + ' ) '   
+			SET @StrSql =  @StrSql +   ' GROUP BY ' + @strIndexIDField + ',' +  @strDicTable + '.' + @strCaptionField  + ' ORDER BY Total DESC) A '  
+		END     
+	EXEC(@StrSql)
+print(@StrSql)
+Go
+
+
