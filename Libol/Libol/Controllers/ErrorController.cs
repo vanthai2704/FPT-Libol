@@ -23,18 +23,18 @@ namespace Libol.Controllers
             log.Info("");
             log.Info("------------------------------------------------------------------------------------------------------");
             log.Info("Time: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss"));
-            log.Info("Path: ~/" + Path);
-            log.Info("Error: " + Error);
-            log.Info("Message:" + Message);
+            log.Info(Path);
+            log.Info(Error);
+            log.Info(Message);
             log.Info(Track);
 
             System.IO.StreamWriter Writer = System.IO.File.AppendText(@"D:\home\error.log");
             Writer.WriteLine("");
             Writer.WriteLine("------------------------------------------------------------------------------------------------------");
             Writer.WriteLine("Time: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss"));
-            Writer.WriteLine("Path: ~/" + Path);
-            Writer.WriteLine("Error: "+ Error);
-            Writer.WriteLine("Message:"+ Message);
+            Writer.WriteLine(Path);
+            Writer.WriteLine(Error);
+            Writer.WriteLine(Message);
             Writer.WriteLine(Track);
             Writer.Close();
         }
