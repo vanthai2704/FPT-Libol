@@ -4,11 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="~/Content/DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css">
-    <style>
-        table.dataTable thead tr {
-            background-color: #88C6ED;
-        }
-    </style>
+
     <script>
         $(document).ready(function () {
             var table = $('#table').DataTable({
@@ -148,6 +144,8 @@
         <span id="Total"></span>
     </div>
 </div>
-<div class="btn-group d-xl-flex justify-content-xl-center" role="group">
-    <button id="ExportReporttoExcel" type="button" style="margin-right:20px;">Lưu vào file excel</button>
+<div class="col-md-12 text-center">
+    <div class="btn-group btn-group">
+        <button type="button" id="ExportReporttoExcel" class="btn btn-primary">Lưu vào file excel</button>
+    </div>
 </div>
