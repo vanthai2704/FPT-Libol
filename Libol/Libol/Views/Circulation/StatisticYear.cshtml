@@ -70,21 +70,25 @@
             strToYear: document.getElementById("ToYear").value,
             strType: $("input:radio[name=Type]:checked").val(),
         };
-        $.ajax({
-            url: "GetYearStats",
-            data: JSON.stringify(empObj),
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            beforeSend: function () {
-                $("#ContentStatYear").html("<h4>Loading...</h4>");
-            },
-            success: function (result) {
-                $("#ContentStatYear").html(result)
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
+        if (document.getElementById("FromYear").value > document.getElementById("ToYear").value) {
+            alert("Khoảng thời gian thống kê không hợp lệ");
+        } else {
+            $.ajax({
+                url: "GetYearStats",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                beforeSend: function () {
+                    $("#ContentStatYear").html("<h4>Loading...</h4>");
+                },
+                success: function (result) {
+                    $("#ContentStatYear").html(result)
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        }
     };
 </script>
 

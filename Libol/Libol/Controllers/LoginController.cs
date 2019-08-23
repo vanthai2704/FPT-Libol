@@ -11,6 +11,10 @@ namespace Libol.Controllers
     public class LoginController : Controller
     {
         private LibolEntities db = new LibolEntities();
+
+
+
+
         // GET: Login
         public ActionResult Index()
         {

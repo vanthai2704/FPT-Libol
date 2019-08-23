@@ -50,7 +50,7 @@
 
     <div class="row">
         <div class="col-md-12 text-center">
-            <div class="btn-group btn-group-lg">
+            <div class="btn-group btn-group">
                 <button type="submit" id="stat" class="btn btn-primary mr-1">Xem thử</button>
                 <button type="button" id="reset" class="btn btn-primary" onclick="reset()">Đặt lại</button>
             </div>
@@ -87,21 +87,25 @@
             strFromDate: document.getElementById("FromDate").value,
             strToDate: document.getElementById("ToDate").value,
         };
-        $.ajax({
-            url: "GetLiquidationStats",
-            data: JSON.stringify(empObj),
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            beforeSend: function () {
-                $("#ContentStatLiquidation").html("<h4>Loading...</h4>");
-            },
-            success: function (result) {
-                $("#ContentStatLiquidation").html(result)
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
+        if (document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
+            alert("Khoảng thời gian báo cáo không hợp lệ");
+        } else {
+            $.ajax({
+                url: "GetLiquidationStats",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                beforeSend: function () {
+                    $("#ContentStatLiquidation").html("<h4>Loading...</h4>");
+                },
+                success: function (result) {
+                    $("#ContentStatLiquidation").html(result)
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        }
     };
     $(window).bind("pageshow", function () {
         $("#Library").val('');
