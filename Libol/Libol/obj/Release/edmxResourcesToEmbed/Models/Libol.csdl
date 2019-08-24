@@ -2087,6 +2087,7 @@
     <NavigationProperty Name="MARC_WORKSHEET" Relationship="Self.MWOR_ITE_FK" FromRole="ITEM" ToRole="MARC_WORKSHEET" />
     <NavigationProperty Name="ACQ_PO" Relationship="Self.ACQ_PO_ITEM" FromRole="ITEM" ToRole="ACQ_PO" />
     <NavigationProperty Name="FPT_RECOMMEND" Relationship="LibolModel.FPT_RECOMMEND_ITEM" FromRole="ITEM" ToRole="FPT_RECOMMEND" />
+    <NavigationProperty Name="FPT_CATA_FILE_NEW" Relationship="LibolModel.FK__FPT_CATA___ItemI__567A72E1" FromRole="ITEM" ToRole="FPT_CATA_FILE_NEW" />
   </EntityType>
   <EntityType Name="ITEM_FULLTEXT">
     <Key>
@@ -12907,6 +12908,11 @@
       <Parameter Name="intType" Mode="In" Type="Int32" />
       <Parameter Name="intCategoryID" Mode="In" Type="Int32" />
     </FunctionImport>
+    <EntitySet Name="FPT_CATA_FILE_NEW" EntityType="LibolModel.FPT_CATA_FILE_NEW" />
+    <AssociationSet Name="FK__FPT_CATA___ItemI__567A72E1" Association="LibolModel.FK__FPT_CATA___ItemI__567A72E1">
+      <End Role="ITEM" EntitySet="ITEMs" />
+      <End Role="FPT_CATA_FILE_NEW" EntitySet="FPT_CATA_FILE_NEW" />
+    </AssociationSet>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -17938,4 +17944,26 @@
     <Property Type="Int32" Name="Total" Nullable="true" />
     <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="250" />
   </ComplexType>
+  <EntityType Name="FPT_CATA_FILE_NEW">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ItemID" Type="Int32" Nullable="false" />
+    <Property Name="FileName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="FilePath" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ITEM" Relationship="LibolModel.FK__FPT_CATA___ItemI__567A72E1" FromRole="FPT_CATA_FILE_NEW" ToRole="ITEM" />
+  </EntityType>
+  <Association Name="FK__FPT_CATA___ItemI__567A72E1">
+    <End Type="LibolModel.ITEM" Role="ITEM" Multiplicity="1" />
+    <End Type="LibolModel.FPT_CATA_FILE_NEW" Role="FPT_CATA_FILE_NEW" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ITEM">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="FPT_CATA_FILE_NEW">
+        <PropertyRef Name="ItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

@@ -10482,5 +10482,15 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <EntitySetMapping Name="FPT_CATA_FILE_NEW">
+      <EntityTypeMapping TypeName="LibolModel.FPT_CATA_FILE_NEW">
+        <MappingFragment StoreEntitySet="FPT_CATA_FILE_NEW">
+          <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
