@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,6 +17,7 @@ namespace Libol
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            
         }
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -28,6 +30,13 @@ namespace Libol
             log.Error(ex.Message);
             log.Error(ex.StackTrace);
             log.Error(ex.TargetSite);
+
+            System.IO.StreamWriter Writer = System.IO.File.AppendText(@"D:\home\error.log");
+            Writer.WriteLine("Time: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss"));
+            Writer.WriteLine(ex.Message);
+            Writer.WriteLine(ex.StackTrace);
+            Writer.WriteLine(ex.TargetSite.ToString());
+            Writer.Close();
         }
     }
 }
