@@ -19,9 +19,9 @@ namespace FlibUnitTest.FlibOrientationUnitTests
             // Arrange
             LoginController controller = new LoginController();
             // Act
-            ViewResult result = controller.Index() as ViewResult;
+            ViewResult result = controller.Index("Nhatnh","abc") as ViewResult;
             // Assert
-            Assert.IsNotNull(result);
+            Assert.AreEqual(result.ViewData["Notification"], "Tên đăng nhập/mật khẩu không đúng!");
         }
     }
 
