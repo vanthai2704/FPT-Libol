@@ -1128,6 +1128,50 @@ namespace Libol.Controllers
             });
         }
 
+        // statistic top 20
+        public ActionResult StatisticTop20()
+        {
+            List<SelectListItem> lib = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            };
+            foreach (var l in le.FPT_SP_CIR_LIB_SEL(49).ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
+            List<SelectListItem> cat = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn tiêu chí", Value = "" }
+            };
+            foreach (var c in le.CAT_DIC_LIST.ToList())
+            {
+                cat.Add(new SelectListItem { Text = c.Name.ToString(), Value = c.ID.ToString() });
+            }
+            ViewData["cat"] = cat;
+            return View();
+        }
+        //get statistic top 20
+        public PartialViewResult GetTop20Stats(string strLibID, string strCatID)
+        {
+            int id = 0;
+            if (!String.IsNullOrEmpty(strCatID)) id = Int32.Parse(strCatID);
+            CAT_DIC_LIST cat = le.CAT_DIC_LIST.Where(a => a.ID == id).First();
+            if (cat.ID == 38)
+            {
+                ViewBag.BAPResult = null;
+                ViewBag.DAPResult = null;
+            }
+            else
+            {
+                ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20(1, cat.ID).ToList();
+                ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20(0, cat.ID).ToList();
+            }
+
+            ViewBag.Category = cat.Name;
+            ViewBag.Total = le.FPT_ACQ_LANGUAGE_STATISTIC(0).First();
+            return PartialView("GetTop20Stats");
+        }
 
         // list liquid copynumber
         [AuthAttribute(ModuleID = 3, RightID = "25")]
@@ -1167,6 +1211,7 @@ namespace Libol.Controllers
              ViewBag.Result = listResult;
             return PartialView("GetCopyNumberLiquidationStats");
         }
+
     }
 
     public class GET_PATRON_LOANINFOR_Result_2
