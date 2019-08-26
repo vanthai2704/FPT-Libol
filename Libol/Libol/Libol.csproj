@@ -263,16 +263,16 @@
     <Compile Include="Models\FPT_SYS_USER_RIGHT_DETAIL.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SP_GET_LOCKEDPATRONS_Result2.cs" />
-    <Compile Include="Models\FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result.cs" />
-    <Compile Include="Models\SP_UNLOCK_PATRON_CARD_Result.cs" />
+    <Compile Include="EntityResult\SP_GET_LOCKEDPATRONS_Result2.cs" />
+    <Compile Include="EntityResult\FPT_SP_UPDATE_UNLOCK_PATRON_CARD_Result.cs" />
+    <Compile Include="EntityResult\SP_UNLOCK_PATRON_CARD_Result.cs" />
     <Compile Include="EntityResult\SP_GET_LOCKEDPATRONS_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LIBRARY_SELECT_Result.cs" />
     <Compile Include="EntityResult\SP_HOLDING_LOCATION_GET_INFO_Result.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AcquisitionBusiness.cs" />
+    <Compile Include="Business\AcquisitionBusiness.cs" />
     <Compile Include="Models\ACQ_ACQUIRE_SOURCE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -318,7 +318,7 @@
     <Compile Include="Models\Book_code.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CatalogueBusiness.cs" />
+    <Compile Include="Business\CatalogueBusiness.cs" />
     <Compile Include="Models\CAT_AUTHORITY.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -442,7 +442,7 @@
     <Compile Include="Models\CAT_QUEUE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CheckOutBusiness.cs" />
+    <Compile Include="Business\CheckOutBusiness.cs" />
     <Compile Include="Models\CIR_DIC_COLLEGE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -515,14 +515,14 @@
     <Compile Include="Models\CIR_SERIAL_COUNT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CirculationBusiness.cs" />
+    <Compile Include="Business\CirculationBusiness.cs" />
     <Compile Include="Models\FPT_ACQ_LANGUAGE_DETAILS_STATISTIC_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_ACQ_LANGUAGE_STATISTIC_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_ACQ_MONTH_STATISTIC_Result.cs" />
+    <Compile Include="EntityResult\FPT_ACQ_MONTH_STATISTIC_Result.cs" />
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_AUTHOR_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -583,16 +583,16 @@
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_UDC_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_ACQ_YEAR_STATISTIC_Result.cs" />
+    <Compile Include="EntityResult\FPT_ACQ_YEAR_STATISTIC_Result.cs" />
     <Compile Include="Models\FPT_ADMIN_GET_RIGHTS_DENY_ADMIN_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_CIR_GET_LOCFULLNAME_LIBUSER_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_CIR_MONTH_STATISTIC_Result.cs" />
-    <Compile Include="Models\FPT_CIR_YEAR_STATISTIC_Result.cs" />
-    <Compile Include="Models\FPT_GET_LIQUIDBOOKS_Result.cs" />
+    <Compile Include="EntityResult\FPT_CIR_MONTH_STATISTIC_Result.cs" />
+    <Compile Include="EntityResult\FPT_CIR_YEAR_STATISTIC_Result.cs" />
+    <Compile Include="EntityResult\FPT_GET_LIQUIDBOOKS_Result.cs" />
     <Compile Include="Models\FPT_GET_LOCFULLNAME_LIBUSER_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -617,8 +617,8 @@
     <Compile Include="Models\FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_SP_STAT_PATRONMAX_Result.cs" />
-    <Compile Include="Models\GET_PATRON_LOANINFOR_Result.cs" />
+    <Compile Include="EntityResult\FPT_SP_STAT_PATRONMAX_Result.cs" />
+    <Compile Include="EntityResult\GET_PATRON_LOANINFOR_Result.cs" />
     <Compile Include="EntityResult\GET_CATALOGUE_FIELDS_Result.cs" />
     <Compile Include="Models\CLASSIFICATION.cs">
       <DependentUpon>Libol.tt</DependentUpon>
@@ -778,9 +778,9 @@
     <Compile Include="Models\GET_BLACK_PATRON_INFOR_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GET_PATRON_ONLOANINFOR_Result.cs" />
-    <Compile Include="Models\GET_PATRON_RENEW_LOAN_INFOR_Result.cs" />
-    <Compile Include="Models\GET_PATRON_RENEW_ONLOAN_INFOR_Result.cs" />
+    <Compile Include="EntityResult\GET_PATRON_ONLOANINFOR_Result.cs" />
+    <Compile Include="EntityResult\GET_PATRON_RENEW_LOAN_INFOR_Result.cs" />
+    <Compile Include="EntityResult\GET_PATRON_RENEW_ONLOAN_INFOR_Result.cs" />
     <Compile Include="Models\HELP_CAT_DIC.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -913,7 +913,7 @@
     <Compile Include="Models\ItemCode.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ITEMMAX.cs" />
+    <Compile Include="EntityResult\ITEMMAX.cs" />
     <Compile Include="Models\ITEM_AUTHOR.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1061,13 +1061,13 @@
     <Compile Include="Models\OPAC_SUBJECT_DDC.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\PatronBusiness.cs" />
-    <Compile Include="Models\PATRON_GROUP.cs" />
+    <Compile Include="Business\PatronBusiness.cs" />
+    <Compile Include="EntityResult\PATRON_GROUP.cs" />
     <Compile Include="Models\REGULARITY_OUT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\RenewBusiness.cs" />
-    <Compile Include="Models\SearchPatronBusiness.cs" />
+    <Compile Include="Business\RenewBusiness.cs" />
+    <Compile Include="Business\SearchPatronBusiness.cs" />
     <Compile Include="Models\SER_ARTICLE.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1092,7 +1092,7 @@
     <Compile Include="Models\SER_SUBJECT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ShelfBusiness.cs" />
+    <Compile Include="Business\ShelfBusiness.cs" />
     <Compile Include="Models\SP_ACQ_ACQUIRE_SOURCE_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1679,7 +1679,6 @@
     <Compile Include="Models\SP_GET_LOANNING_INFOR_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SP_GET_LOCKEDPATRONS_Result.cs" />
     <Compile Include="Models\SP_GET_MEDIUMS_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -1944,7 +1943,7 @@
     <Compile Include="Models\SP_ITEM_SELECT_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SP_LOCK_PATRON_CARD_Result.cs" />
+    <Compile Include="EntityResult\SP_LOCK_PATRON_CARD_Result.cs" />
     <Compile Include="Models\SP_MARC_BLOCK_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>

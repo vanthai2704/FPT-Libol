@@ -1314,6 +1314,15 @@ warning 6002: The table/view 'Libol.dbo.CIR_SERIAL_COUNT' does not have a primar
     <Property Name="Ind1" Type="char" MaxLength="1" />
     <Property Name="Ind2" Type="char" MaxLength="1" />
   </EntityType>
+  <EntityType Name="FPT_CATA_FILE_NEW">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ItemID" Type="int" Nullable="false" />
+    <Property Name="FileName" Type="nvarchar" MaxLength="250" />
+    <Property Name="FilePath" Type="nvarchar" MaxLength="250" />
+  </EntityType>
   <EntityType Name="FPT_RECOMMEND">
     <Key>
       <PropertyRef Name="RecommendID" />
@@ -2914,7 +2923,19 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__FPT_SYS_U__Right__13196CCD">
+  <Association Name="FK__FPT_CATA___ItemI__567A72E1">
+    <End Role="ITEM" Type="Self.ITEM" Multiplicity="1" />
+    <End Role="FPT_CATA_FILE_NEW" Type="Self.FPT_CATA_FILE_NEW" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ITEM">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="FPT_CATA_FILE_NEW">
+        <PropertyRef Name="ItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__FPT_SYS_U__Right__76282864">
     <End Role="FPT_SYS_USER_RIGHT" Type="Self.FPT_SYS_USER_RIGHT" Multiplicity="1" />
     <End Role="FPT_SYS_USER_RIGHT_DETAIL" Type="Self.FPT_SYS_USER_RIGHT_DETAIL" Multiplicity="*" />
     <ReferentialConstraint>
@@ -12033,6 +12054,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <EntitySet Name="FIELD700S" EntityType="Self.FIELD700S" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FIELD800S" EntityType="Self.FIELD800S" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FIELD900S" EntityType="Self.FIELD900S" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="FPT_CATA_FILE_NEW" EntityType="Self.FPT_CATA_FILE_NEW" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FPT_RECOMMEND" EntityType="Self.FPT_RECOMMEND" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FPT_RECOMMEND_ITEM" EntityType="Self.FPT_RECOMMEND_ITEM" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="FPT_SYS_USER_RIGHT" EntityType="Self.FPT_SYS_USER_RIGHT" Schema="dbo" store:Type="Tables" />
@@ -12407,7 +12429,11 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
       <End Role="ITEM" EntitySet="ITEM" />
     </AssociationSet>
-    <AssociationSet Name="FK__FPT_SYS_U__Right__13196CCD" Association="Self.FK__FPT_SYS_U__Right__13196CCD">
+    <AssociationSet Name="FK__FPT_CATA___ItemI__567A72E1" Association="Self.FK__FPT_CATA___ItemI__567A72E1">
+      <End Role="ITEM" EntitySet="ITEM" />
+      <End Role="FPT_CATA_FILE_NEW" EntitySet="FPT_CATA_FILE_NEW" />
+    </AssociationSet>
+    <AssociationSet Name="FK__FPT_SYS_U__Right__76282864" Association="Self.FK__FPT_SYS_U__Right__76282864">
       <End Role="FPT_SYS_USER_RIGHT" EntitySet="FPT_SYS_USER_RIGHT" />
       <End Role="FPT_SYS_USER_RIGHT_DETAIL" EntitySet="FPT_SYS_USER_RIGHT_DETAIL" />
     </AssociationSet>

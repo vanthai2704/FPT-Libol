@@ -15,7 +15,6 @@ namespace FlibUnitTest.FlibOrientationUnitTests
         {
             using (TransactionScope transaction = new TransactionScope())
             {
-                LibolEntities db = new LibolEntities();
                 CheckOutController checkOutController = new CheckOutController();
                 PartialViewResult result = checkOutController.CheckOutCardInfo("900047107");
                 Assert.AreEqual("_showPatronInfo", result.ViewName);
@@ -27,11 +26,9 @@ namespace FlibUnitTest.FlibOrientationUnitTests
         {
             using (TransactionScope transaction = new TransactionScope())
             {
-                LibolEntities db = new LibolEntities();
                 CheckOutController checkOutController = new CheckOutController();
-                PartialViewResult result = checkOutController.CheckOut("900047107", "", 1, 0, "aaa", "2019-08-22", true);
-                Assert.AreEqual("ĐKCB không đúng", result.ViewName);
-                transaction.Complete();
+                ViewResult result = checkOutController.Index("900047107") as ViewResult;
+                Assert.AreEqual("", result.ViewName);
             }
 
         }
