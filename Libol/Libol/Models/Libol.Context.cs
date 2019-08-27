@@ -23155,5 +23155,26 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_ACQ_STATISTIC_TOP20_Result>("FPT_ACQ_STATISTIC_TOP20", intTypeParameter, intCategoryIDParameter);
         }
+    
+        public virtual int FPT_CIR_SP_STAT_TOP20(Nullable<int> intHistory, Nullable<int> intID, Nullable<int> intUserID, Nullable<int> intLibID)
+        {
+            var intHistoryParameter = intHistory.HasValue ?
+                new ObjectParameter("intHistory", intHistory) :
+                new ObjectParameter("intHistory", typeof(int));
+    
+            var intIDParameter = intID.HasValue ?
+                new ObjectParameter("intID", intID) :
+                new ObjectParameter("intID", typeof(int));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_CIR_SP_STAT_TOP20", intHistoryParameter, intIDParameter, intUserIDParameter, intLibIDParameter);
+        }
     }
 }

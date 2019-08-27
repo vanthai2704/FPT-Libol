@@ -88,6 +88,26 @@
                 if (props.status >= 200 && props.status < 300 || props.status === 304) {
                     //all is well
                 } else {
+                    var empObj = {
+                        Path: props.responseText,
+                        Error: props.responseJSON,
+                        Message: "",
+                        Track: ""
+                    };
+                    $.ajax({
+                        url: "/Error/Log",
+                        data: JSON.stringify(empObj),
+                        type: "POST",
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+
+                            
+                        },
+                        error: function (errormessage) {
+
+                        }
+                    });
                     window.location = "/Error";
                 }
             });
@@ -168,18 +188,19 @@
                                 <div class="dropdown-item dropright">
                                     <a class="dropdown-toggle">Báo cáo </a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/ReportLoanCopy')">Báo cáo từng mượn</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/ReportOnLoanCopy')">Báo cáo đang mượn</a>
+                                        <a class="dropdown-item" onclick="GoTo('/Circulation/ReportLoanCopy')">Báo cáo từng mượn</a>
+                                        <a class="dropdown-item"  onclick="GoTo('/Circulation/ReportOnLoanCopy')">Báo cáo đang mượn</a>
                                     </div>
                                 </div>
                                 <div class="dropdown-item dropright">
                                     <a class="dropdown-toggle">Thống kê </a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticYear')">Thống kê hàng năm</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticMonth')">Thống kê hàng tháng</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticTopPatron')">Thống kê top bạn đọc</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticTopCopy')">Thống kê top ấn phẩm</a>
-                                        <a class="dropdown-item" href="#" onclick="GoTo('/Circulation/StatisticPatronGroup')">Thống kê nhóm bạn đọc</a>
+                                        <a class="dropdown-item" onclick="GoTo('/Circulation/StatisticYear')">Thống kê hàng năm</a>
+                                        <a class="dropdown-item" onclick="GoTo('/Circulation/StatisticMonth')">Thống kê hàng tháng</a>
+                                        <a class="dropdown-item" onclick="GoTo('/Circulation/StatisticTopPatron')">Thống kê top bạn đọc</a>
+                                        <a class="dropdown-item" onclick="GoTo('/Circulation/StatisticTopCopy')">Thống kê top ấn phẩm</a>
+                                        <a class="dropdown-item" onclick="GoTo('/Circulation/StatisticPatronGroup')">Thống kê nhóm bạn đọc</a>
+                                        <a class="dropdown-item" onclick="GoTo('/Circulation/CirStatisticTop20')">Thống kê top 20</a>
                                     </div>
                                 </div>
                                 <a class="dropdown-item" href="/Circulation/CopyNumberLiquidationStats">Kiểm tra thanh lý</a>

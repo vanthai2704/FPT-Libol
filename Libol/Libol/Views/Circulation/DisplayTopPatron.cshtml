@@ -2,11 +2,9 @@
 @{
     Layout = null;
 }
-
-<div class="row">
-
-    @if (ViewBag.test.Count >= 1)
-    {
+@if (ViewBag.test.Count >= 1)
+{
+    <div class="row">
         <div class="col-md-3">
             <table class="table table-bordered table-striped" id="123" style="border-collapse: collapse" , border="1">
                 <tr>
@@ -29,24 +27,23 @@
             </div>
             <div id="columnchart_values3" style="width: 100%; height: 50%; font-size:10px"></div>
         </div>
-        <div style="text-align:center">
-
-            <div style="text-align:center; padding-top:30px">
-                <input type="button" value="Lưu vào file Excel" style="background-color:blue; color:white" onclick="exportTableToExcel('123','Top Patron')" />
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <button type="button" id="ExportReporttoExcel" class="btn btn-primary" onclick="exportTableToExcel('123','Top Patron')">Lưu vào file excel</button>
         </div>
-    }
-    else
-    {
-        <h5>Không có dữ liệu</h5>
-    }
-</div>
-
+    </div>
+}
+else
+{
+    <h5>Không có dữ liệu</h5>
+}
 
 
 
 
 <script src="~/Scripts/GoodleDrawingChart.js"></script>
+<script type="text/javascript" src="~/Scripts/load.js"></script>
 
 <script type="text/javascript">
     google.charts.load("current", { packages: ['corechart'] });

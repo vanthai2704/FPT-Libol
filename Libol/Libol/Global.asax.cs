@@ -32,7 +32,7 @@ namespace Libol
             log.Error(ex.TargetSite);
 
             System.IO.StreamWriter Writer = System.IO.File.AppendText(@"D:\home\error.log");
-            Writer.WriteLine("Time: " + DateTime.Now.ToString("dd-MM-yyyy hh:mm:ss"));
+            Writer.WriteLine("Time: " + DateTime.Now.ToUniversalTime().AddHours(7).ToString("dd/MM/yyyy HH:mm:ss"));
             Writer.WriteLine(ex.Message);
             Writer.WriteLine(ex.StackTrace);
             Writer.WriteLine(ex.TargetSite.ToString());

@@ -237,11 +237,11 @@ BEGIN
 		END
 	IF NOT @strCheckInDateFrom=''
 		BEGIN
-			SET @strLikeSQL = @strLikeSQL + 'CL.CheckInDate >= ''' + @strCheckInDateFrom +''' AND '	
+			SET @strLikeSQL = @strLikeSQL + 'CL.DueDate >= ''' + @strCheckInDateFrom +''' AND '	
 		END
 	IF NOT @strCheckInDateTo=''
 		BEGIN
-			SET @strLikeSQL = @strLikeSQL + 'CL.CheckInDate <= ''' + @strCheckInDateTo + ''' AND '	
+			SET @strLikeSQL = @strLikeSQL + 'CL.DueDate <= ''' + @strCheckInDateTo + ''' AND '	
 		END
 	--IF Not @strSerial=''
 		--SET @strLikeSQL = @strLikeSQL + 'UPPER(CL.Serial)='''+ UPPER(@strSerial) +''' AND '

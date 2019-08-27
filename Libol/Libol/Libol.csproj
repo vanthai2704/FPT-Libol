@@ -201,6 +201,7 @@
     <Compile Include="Controllers\PrintLabelController.cs" />
     <Compile Include="Controllers\RenewController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
+    <Compile Include="EntityResult\FPT_CIR_SP_STAT_TOP20_Result.cs" />
     <Compile Include="EntityResult\FPT_COUNT_COPYNUMBER_BY_ITEMID_Result.cs" />
     <Compile Include="EntityResult\FPT_COUNT_COPYNUMBER_ONLOAN_Result.cs" />
     <Compile Include="EntityResult\FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result.cs" />
@@ -2399,6 +2400,7 @@
     <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
     <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
     <Content Include="Content\Log\console-app.log" />
+    <None Include="Properties\PublishProfiles\flib123 - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Libol - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Libol - Web Deploy.pubxml" />
     <None Include="log4net.config">
@@ -2529,6 +2531,8 @@
     <Content Include="Views\Circulation\CopyNumberLiquidationStats.cshtml" />
     <Content Include="Views\Circulation\GetCopyNumberLiquidationStats.cshtml" />
     <Content Include="Uploads\Mẫu import user libol.xlsx" />
+    <Content Include="Views\Circulation\CirStatisticTop20.cshtml" />
+    <Content Include="Views\Circulation\GetCirTop20Stats.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
