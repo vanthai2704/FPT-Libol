@@ -2397,6 +2397,7 @@
     <Content Include="Content\DataTables\Buttons-1.5.6\css\common.scss" />
     <Content Include="Content\DataTables\Buttons-1.5.6\css\mixins.scss" />
     <Content Include="Content\Log\console-app.log" />
+    <None Include="Properties\PublishProfiles\flib123 - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Libol - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Libol - Web Deploy.pubxml" />
     <None Include="log4net.config">

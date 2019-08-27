@@ -37,10 +37,17 @@
             if (Model != null && Model.Exception != null)
             {
                 <h5>Vui lòng chụp ảnh màn hình này gửi cho quản trị viên.</h5>
-                <h5>Path: ~/@string.Format("{0}/{1}", Model.ControllerName, Model.ActionName)</h5>
-                <h5>Error: @Model.Exception.GetType().Name</h5>
+                <h5 id="path">Path: ~/@string.Format("{0}/{1}", Model.ControllerName, Model.ActionName)</h5>
+                <h5 id="error">Error: @Model.Exception.GetType().Name</h5>
                 <h5 id="message">Message: @Model.Exception.Message</h5>
                 <p id="track">@Model.Exception.StackTrace</p>
+            }
+            else
+            {
+                <h5 id="path"></h5>
+                <h5 id="error"></h5>
+                <h5 id="message"></h5>
+                <p id="track"></p>
             }
         }
     </div>

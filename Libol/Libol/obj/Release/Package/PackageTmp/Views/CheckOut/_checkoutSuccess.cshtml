@@ -145,9 +145,8 @@
         function ContinueUpdate() {
             $("#ModalCheckduplicate").modal("hide");
             var empObj = {
-                strFullName: '',
                 strPatronCode: document.getElementById("strPatronCode").value,
-                strFixDueDate: document.getElementById("strDueDate").value,
+                strDueDate: document.getElementById("strDueDate").value,
                 intLoanMode: 1,
                 intHoldIgnore: 0,
                 strCopyNumbers: document.getElementById("hiddenDuplicateCopyNumber").value,
@@ -155,7 +154,7 @@
                 boolAllowDuplacate : 1
             };
             $.ajax({
-                url: "CheckOut/CheckOutSuccess",
+                url: "CheckOut/CheckOut",
                 data: JSON.stringify(empObj),
                 contentType: "application/json;charset=utf-8",
                 type: "POST",
