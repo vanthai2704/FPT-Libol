@@ -15,21 +15,16 @@
 </head>
 
 <body>
-    <h5 style="margin-top:20px;">Báo cáo đăng ký cá biệt bị hủy</h5>
-    <table class="table">
-        <thead>
-            <tr></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="text-right">Đăng ký cá biệt</td>
-                <td><textarea id="DKCBID" name="DKCBID"></textarea></td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="btn-group d-xl-flex justify-content-xl-center" role="group">
+    <h5 style="margin-top:20px;">Kiểm tra thanh lý</h5>
+    <div class="control-label align-self-center">
+        <div class="form-group col-10">
+            <label class="control-label col-md-2 align-self-center">Đăng ký cá biệt: </label>
+            <textarea rows="5" type="text" class="form-control col-md-4" id="DKCBID" name="DKCBID"></textarea>
+        </div>
+    </div>
+    <div class="btn-group d-xl-flex justify-content-md-center" role="group">
         <button id="stat" type="submit" style="margin-right:20px;">Xem thử</button>
-        <button id="reset" type="button" style="margin-right:20px;" onclick="reset()">Đặt lại</button>
+        <button id="reset" type="button" onclick="reset()">Đặt lại</button>
     </div>
     <div id="ContentStatLiquidation"></div>
 </body>

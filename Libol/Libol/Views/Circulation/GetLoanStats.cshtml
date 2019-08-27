@@ -38,11 +38,6 @@
                 ],
                 buttons: [
                     {
-                        extend: 'print',
-                        title: function () { var printTitle = 'Nhật ký ấn phẩm đã được mượn'; return printTitle; },
-                        action: newExportAction
-                    },
-                    {
                         extend: 'excel',
                         title: function () { var printTitle = 'Nhật ký ấn phẩm đã được mượn'; return printTitle; },
                         action: newExportAction
@@ -60,10 +55,6 @@
 
             $("#ExportReporttoExcel").on("click", function() {
                 table.button( '.buttons-excel' ).trigger();
-            });
-
-            $("#Print").on("click", function() {
-                table.button( '.buttons-print' ).trigger();
             });
         });
 
@@ -127,7 +118,6 @@
 <div class="row">
     <div class="col-md-12 text-center">
         <div class="btn-group btn-group">
-            <button type="button" id="Print" class="btn btn-primary mr-1">In</button>
             <button type="button" id="ExportReporttoExcel" class="btn btn-primary">Lưu vào file excel</button>
         </div>
     </div>

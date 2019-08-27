@@ -1656,17 +1656,8 @@ namespace Libol.Controllers
             ViewData["lib"] = lib;
             return View();
         }
-        public PartialViewResult GetLiquidationStats(string strLiquidID, string strLibID, string strLocID, string strFromDate, string strToDate)
+        public PartialViewResult GetLiquidationStats(string strLiquidID)
         {
-            //int LibID = 0;
-            //int LocID = 0;
-            //if (!String.IsNullOrEmpty(strLibID)) LibID = Convert.ToInt32(strLibID);
-            //if (!String.IsNullOrEmpty(strLocID)) LocID = Convert.ToInt32(strLocID);
-            //ViewBag.Result = ab.FPT_GET_LIQUIDBOOKS_LIST(strLiquidID, LibID, LocID, strFromDate, strToDate, (int)Session["UserID"]);
-            //foreach(var item in ViewBag.Result)
-            //{
-            //    item.Content = GetContent(item.Content);
-            //}
             ViewBag.LiquidCode = strLiquidID;
             return PartialView("GetLiquidationStats");
         }

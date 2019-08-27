@@ -12913,6 +12913,12 @@
       <End Role="ITEM" EntitySet="ITEMs" />
       <End Role="FPT_CATA_FILE_NEW" EntitySet="FPT_CATA_FILE_NEW" />
     </AssociationSet>
+    <FunctionImport Name="FPT_CIR_SP_STAT_TOP20">
+      <Parameter Name="intHistory" Mode="In" Type="Int32" />
+      <Parameter Name="intID" Mode="In" Type="Int32" />
+      <Parameter Name="intUserID" Mode="In" Type="Int32" />
+      <Parameter Name="intLibID" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="CAT_DIC_LIST_SEL_Result">
     <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />

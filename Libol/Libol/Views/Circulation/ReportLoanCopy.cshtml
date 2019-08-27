@@ -128,9 +128,9 @@
             strCheckOutDateFrom: document.getElementById("CheckOutDateFrom").value,
             strCheckOutDateTo: document.getElementById("CheckOutDateTo").value,
         };
-        if (document.getElementById("CheckInDateFrom").value > document.getElementById("CheckInDateTo").value) {
+        if (document.getElementById("CheckInDateFrom").value != "" && document.getElementById("CheckInDateTo").value != "" && document.getElementById("CheckInDateFrom").value > document.getElementById("CheckInDateTo").value) {
             alert("Khoảng thời gian TRẢ không hợp lệ");
-        } else if (document.getElementById("CheckOutDateFrom").value > document.getElementById("CheckOutDateTo").value) {
+        } else if (document.getElementById("CheckOutDateFrom").value != "" && document.getElementById("CheckOutDateTo").value != "" && document.getElementById("CheckOutDateFrom").value > document.getElementById("CheckOutDateTo").value) {
             alert("Khoảng thời gian MƯỢN không hợp lệ!");
         } else {
             if (document.getElementById("Filter").checked) {

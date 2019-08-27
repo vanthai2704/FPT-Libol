@@ -2923,7 +2923,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__FPT_CATA___ItemI__567A72E1">
+  <Association Name="FK__FPT_CATA___ItemI__4A149BFC">
     <End Role="ITEM" Type="Self.ITEM" Multiplicity="1" />
     <End Role="FPT_CATA_FILE_NEW" Type="Self.FPT_CATA_FILE_NEW" Multiplicity="*" />
     <ReferentialConstraint>
@@ -2935,7 +2935,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__FPT_SYS_U__Right__76282864">
+  <Association Name="FK__FPT_SYS_U__Right__64097829">
     <End Role="FPT_SYS_USER_RIGHT" Type="Self.FPT_SYS_USER_RIGHT" Multiplicity="1" />
     <End Role="FPT_SYS_USER_RIGHT_DETAIL" Type="Self.FPT_SYS_USER_RIGHT_DETAIL" Multiplicity="*" />
     <ReferentialConstraint>
@@ -5446,6 +5446,12 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     <Parameter Name="intStatus" Type="int" Mode="In" />
     <Parameter Name="strInYear" Type="varchar" Mode="In" />
     <Parameter Name="intUserID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="FPT_CIR_SP_STAT_TOP20" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="intHistory" Type="int" Mode="In" />
+    <Parameter Name="intID" Type="int" Mode="In" />
+    <Parameter Name="intUserID" Type="int" Mode="In" />
+    <Parameter Name="intLibID" Type="int" Mode="In" />
   </Function>
   <Function Name="FPT_CIR_YEAR_STATISTIC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="intLibraryID" Type="int" Mode="In" />
@@ -12429,11 +12435,11 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
       <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
       <End Role="ITEM" EntitySet="ITEM" />
     </AssociationSet>
-    <AssociationSet Name="FK__FPT_CATA___ItemI__567A72E1" Association="Self.FK__FPT_CATA___ItemI__567A72E1">
+    <AssociationSet Name="FK__FPT_CATA___ItemI__4A149BFC" Association="Self.FK__FPT_CATA___ItemI__4A149BFC">
       <End Role="ITEM" EntitySet="ITEM" />
       <End Role="FPT_CATA_FILE_NEW" EntitySet="FPT_CATA_FILE_NEW" />
     </AssociationSet>
-    <AssociationSet Name="FK__FPT_SYS_U__Right__76282864" Association="Self.FK__FPT_SYS_U__Right__76282864">
+    <AssociationSet Name="FK__FPT_SYS_U__Right__64097829" Association="Self.FK__FPT_SYS_U__Right__64097829">
       <End Role="FPT_SYS_USER_RIGHT" EntitySet="FPT_SYS_USER_RIGHT" />
       <End Role="FPT_SYS_USER_RIGHT_DETAIL" EntitySet="FPT_SYS_USER_RIGHT_DETAIL" />
     </AssociationSet>

@@ -69,7 +69,7 @@
 
     <div class="row">
         <div class="col-md-12 text-center">
-            <div class="btn-group btn-group-lg">
+            <div class="btn-group btn-group">
                 <button type="submit" id="find" class="btn btn-primary mr-1">Xem thử</button>
                 <button type="button" id="reset" class="btn btn-primary" onclick="reset()">Đặt lại</button>
             </div>
@@ -128,51 +128,56 @@
             strCheckOutDateFrom: document.getElementById("CheckOutDateFrom").value,
             strCheckOutDateTo: document.getElementById("CheckOutDateTo").value,
         };
-        if (document.getElementById("Filter").checked) {
-            $.ajax({
-                url: "GetFilteredLoanStats",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                beforeSend: function() {
-                    $("#ContentStatLoan").html("<h4>Loading...</h4>");
-                },
-                success: function (result) {
-                    $("#ContentStatLoan").html(result)
-                },
-                error: function (errormessage) {
-                    console.log("error");
-                }
-            });
-        }
-        else {
-            $.ajax({
-                url: "GetLoanStats",
-                data: JSON.stringify(empObj),
-                contentType: "application/json;charset=utf-8",
-                type: "POST",
-                beforeSend: function() {
-                    $("#ContentStatLoan").html("<h4>Loading...</h4>");
-                },
-                success: function (result) {
-                    $("#ContentStatLoan").html(result)
-                },
-                error: function (errormessage) {
-                    console.log("error");
-                }
-            });
-        }
-
+        if (document.getElementById("CheckInDateFrom").value > document.getElementById("CheckInDateTo").value) {
+            alert("Khoảng thời gian TRẢ không hợp lệ");
+        } else if (document.getElementById("CheckOutDateFrom").value > document.getElementById("CheckOutDateTo").value) {
+            alert("Khoảng thời gian MƯỢN không hợp lệ!");
+        } else {
+            if (document.getElementById("Filter").checked) {
+                $.ajax({
+                    url: "GetFilteredLoanStats",
+                    data: JSON.stringify(empObj),
+                    contentType: "application/json;charset=utf-8",
+                    type: "POST",
+                    beforeSend: function() {
+                        $("#ContentStatLoan").html("<h4>Loading...</h4>");
+                    },
+                    success: function (result) {
+                        $("#ContentStatLoan").html(result)
+                    },
+                    error: function (errormessage) {
+                        console.log("error");
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: "GetLoanStats",
+                    data: JSON.stringify(empObj),
+                    contentType: "application/json;charset=utf-8",
+                    type: "POST",
+                    beforeSend: function() {
+                        $("#ContentStatLoan").html("<h4>Loading...</h4>");
+                    },
+                    success: function (result) {
+                        $("#ContentStatLoan").html(result)
+                    },
+                    error: function (errormessage) {
+                        console.log("error");
+                    }
+                });
+            }
+        }        
     };
 </script>
 <script>
     $(window).bind("pageshow", function () {
         $("#Library").val('');
-        $("#Location").val('');
     });
     function reset() {
         $("#Library").val('');
-        $("#Location").empty();
+        $("#LocationPrefix").empty();
+        $("#LocationsByPrefix").empty();
         $("#CopyNumber").val('');
         $("#ItemCode").val('');
         $("#PatronNumber").val('');

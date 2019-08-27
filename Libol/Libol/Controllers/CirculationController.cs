@@ -57,7 +57,7 @@ namespace Libol.Controllers
             return View();
         }
         [HttpPost]
-        public PartialViewResult GetOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strDueDateFrom, string strDueDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        public PartialViewResult GetOnLoanStats()
         {
             return PartialView("GetOnLoanStats");
         }
@@ -177,7 +177,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult GetFilteredOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        public PartialViewResult GetFilteredOnLoanStats()
         {
             return PartialView("GetFilteredOnLoanStats");
         }
@@ -378,7 +378,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult GetLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        public PartialViewResult GetLoanStats()
         {
             return PartialView("GetLoanStats");
         }
@@ -524,7 +524,7 @@ namespace Libol.Controllers
 
 
         [HttpPost]
-        public PartialViewResult GetFilteredLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        public PartialViewResult GetFilteredLoanStats()
         {
             return PartialView("GetFilteredLoanStats");
         }
@@ -1129,21 +1129,18 @@ namespace Libol.Controllers
         }
 
         // statistic top 20
-        public ActionResult StatisticTop20()
+        public ActionResult CirStatisticTop20()
         {
             List<SelectListItem> lib = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
             };
-            foreach (var l in le.FPT_SP_CIR_LIB_SEL(49).ToList())
+            foreach (var l in le.FPT_SP_CIR_LIB_SEL((int)Session["UserID"]).ToList())
             {
                 lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
             }
             ViewData["lib"] = lib;
-            List<SelectListItem> cat = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Hãy chọn tiêu chí", Value = "" }
-            };
+            List<SelectListItem> cat = new List<SelectListItem>();
             foreach (var c in le.CAT_DIC_LIST.ToList())
             {
                 cat.Add(new SelectListItem { Text = c.Name.ToString(), Value = c.ID.ToString() });
@@ -1152,25 +1149,33 @@ namespace Libol.Controllers
             return View();
         }
         //get statistic top 20
-        public PartialViewResult GetTop20Stats(string strLibID, string strCatID)
+        public PartialViewResult GetCirTop20Stats(string strLibID, string strCatID)
         {
             int id = 0;
+            int libid = 0;
             if (!String.IsNullOrEmpty(strCatID)) id = Int32.Parse(strCatID);
+            if (!String.IsNullOrEmpty(strLibID)) libid = Int32.Parse(strLibID);
             CAT_DIC_LIST cat = le.CAT_DIC_LIST.Where(a => a.ID == id).First();
             if (cat.ID == 38)
             {
-                ViewBag.BAPResult = null;
-                ViewBag.DAPResult = null;
+                ViewBag.OnLoanResult = null;
+                ViewBag.LoanHisResult = null;
             }
             else
             {
-                ViewBag.BAPResult = le.FPT_ACQ_STATISTIC_TOP20(1, cat.ID).ToList();
-                ViewBag.DAPResult = le.FPT_ACQ_STATISTIC_TOP20(0, cat.ID).ToList();
+                ViewBag.OnLoanResult = cb.FPT_CIR_SP_STAT_TOP20_LIST(0, cat.ID, (int)Session["UserID"], libid);
+                ViewBag.LoanHisResult = cb.FPT_CIR_SP_STAT_TOP20_LIST(1, cat.ID, (int)Session["UserID"], libid);
             }
-
+            if(ViewBag.OnLoanResult.Count == 0)
+            {
+                ViewBag.OnLoanResult = null;
+            }
+            if (ViewBag.LoanHisResult.Count == 0)
+            {
+                ViewBag.LoanHisResult = null;
+            }
             ViewBag.Category = cat.Name;
-            ViewBag.Total = le.FPT_ACQ_LANGUAGE_STATISTIC(0).First();
-            return PartialView("GetTop20Stats");
+            return PartialView("GetCirTop20Stats");
         }
 
         // list liquid copynumber
@@ -1184,8 +1189,12 @@ namespace Libol.Controllers
         public PartialViewResult GetCopyNumberLiquidationStats(string strDKCBID)
         {
             strDKCBID = strDKCBID.Trim();
-            string[] myList = strDKCBID.Split(' ');
-            List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result> listResult = new List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result>();
+            string[] myList = strDKCBID.Split('\n');
+            foreach (var cnumber in myList)
+            {
+                string dddd = cnumber;
+            }
+                List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result> listResult = new List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result>();
             if (myList.Length != 0)
             {
                 foreach (var cnumber in myList)

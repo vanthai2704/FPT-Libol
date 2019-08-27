@@ -61,6 +61,8 @@
     <Compile Include="FlibOrientationUnitTests\AcquisitionControllerTests.cs" />
     <Compile Include="FlibOrientationUnitTests\ShelfControllerTests.cs" />
     <Compile Include="FlibReportUnitTests\UnitTest1.cs" />
+    <Compile Include="FlibReportUnitTests\UnitTest2.cs" />
+    <Compile Include="FlibReportUnitTests\UnitTest3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

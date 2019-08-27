@@ -83,5 +83,12 @@ namespace Libol.Models
                 new object[] { dkcb }).ToList();
             return list;
         }
+        //statistic top20
+        public List<FPT_CIR_SP_STAT_TOP20_Result> FPT_CIR_SP_STAT_TOP20_LIST(int history, int catID, int userID, int libID)
+        {
+            List<FPT_CIR_SP_STAT_TOP20_Result> list = db.Database.SqlQuery<FPT_CIR_SP_STAT_TOP20_Result>("FPT_CIR_SP_STAT_TOP20 {0}, {1}, {2}, {3}",
+                new object[] { history, catID, userID, libID }).ToList();
+            return list;
+        }
     }
 }
