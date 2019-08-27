@@ -85,7 +85,7 @@
             strFromDate: document.getElementById("FromDate").value,
             strToDate: document.getElementById("ToDate").value,
         };
-        if (document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
+        if (document.getElementById("FromDate").value != "" && document.getElementById("ToDate").value != "" && document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
             alert("Khoảng thời gian thống kê không hợp lệ");
         } else {
             $.ajax({

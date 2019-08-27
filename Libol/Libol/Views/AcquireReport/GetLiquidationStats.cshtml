@@ -29,11 +29,6 @@
                 ],
                 buttons: [
                     {
-                        extend: 'print',
-                        title: function () { var printTitle = 'Danh sách Đăng ký cá biệt bị hủy'; return printTitle; },
-                        action: newExportAction
-                    },
-                    {
                         extend: 'excel',
                         title: function () { var printTitle = 'Danh sách Đăng ký cá biệt bị hủy'; return printTitle; },
                         action: newExportAction
@@ -72,10 +67,6 @@
 
             $("#ExportReporttoExcel").on("click", function () {
                 table.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
             });
         });
         var oldExportAction = function (self, e, dt, button, config) {
@@ -134,16 +125,11 @@
             </tr>
         </tfoot>
     </table>
-    @*<div style="text-align: right;">
-            <span id="Count"></span>
-            <span id="Total"></span>
-        </div>*@
 </div>
 
 <div class="row">
     <div class="col-md-12 text-center">
         <div class="btn-group btn-group-lg">
-            <button type="button" id="Print" class="btn btn-primary mr-1">In</button>
             <button type="button" id="ExportReporttoExcel" class="btn btn-primary">Lưu vào file excel</button>
         </div>
     </div>

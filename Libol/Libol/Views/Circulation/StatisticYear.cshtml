@@ -70,7 +70,7 @@
             strToYear: document.getElementById("ToYear").value,
             strType: $("input:radio[name=Type]:checked").val(),
         };
-        if (document.getElementById("FromYear").value > document.getElementById("ToYear").value) {
+        if (document.getElementById("FromYear").value != "" && document.getElementById("ToYear").value != "" && document.getElementById("FromYear").value > document.getElementById("ToYear").value) {
             alert("Khoảng thời gian thống kê không hợp lệ");
         } else {
             $.ajax({

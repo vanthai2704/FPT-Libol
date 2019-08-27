@@ -57,7 +57,7 @@ namespace Libol.Controllers
             return View();
         }
         [HttpPost]
-        public PartialViewResult GetOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strDueDateFrom, string strDueDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        public PartialViewResult GetOnLoanStats()
         {
             return PartialView("GetOnLoanStats");
         }
@@ -177,7 +177,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult GetFilteredOnLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        public PartialViewResult GetFilteredOnLoanStats()
         {
             return PartialView("GetFilteredOnLoanStats");
         }
@@ -378,7 +378,7 @@ namespace Libol.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult GetLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        public PartialViewResult GetLoanStats()
         {
             return PartialView("GetLoanStats");
         }
@@ -524,7 +524,7 @@ namespace Libol.Controllers
 
 
         [HttpPost]
-        public PartialViewResult GetFilteredLoanStats(string strLibID, string strLocPrefix, string strLocID, string strPatronNumber, string strItemCode, string strCheckInDateFrom, string strCheckInDateTo, string strCheckOutDateFrom, string strCheckOutDateTo, string strCopyNumber)
+        public PartialViewResult GetFilteredLoanStats()
         {
             return PartialView("GetFilteredLoanStats");
         }
