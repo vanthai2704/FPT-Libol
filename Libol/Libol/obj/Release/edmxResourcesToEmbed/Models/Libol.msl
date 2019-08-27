@@ -10492,5 +10492,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="FPT_CIR_SP_STAT_TOP20" FunctionName="LibolModel.Store.FPT_CIR_SP_STAT_TOP20" />
   </EntityContainerMapping>
 </Mapping>

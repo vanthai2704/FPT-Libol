@@ -72,23 +72,7 @@
             <label class="control-label col-md-6 align-self-center">Lớp học: </label>
             <input type="text" class="form-control col-md-3" id="txtLopHoc">
         </div>
-        <div class="form-group row col-12">
-            <div class="form-group row col-4">
 
-            </div>
-            <div class="form-group row col-8">
-                <div class="form-group row col-5">
-                    <div style="margin : auto">
-                        <button class="btn btn-primary form-control" onclick="getOverduelist()">Tìm kiếm</button>
-                    </div>
-                </div>
-                <div class="form-group row col-3">
-                    <div style="margin : auto">
-                        <button class="btn btn-primary form-control" onclick="ResetFields()">Đặt lại</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
     </div>
     <div class="col-6">
@@ -136,9 +120,17 @@
             <label class="control-label col-md-1 align-self-center">(ngày) </label>
         </div>
     </div>
+    
 </div>
 
-
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="btn-group btn-group">
+            <button class="btn btn-primary mr-1" onclick="getOverduelist()">Tìm kiếm</button>
+            <button class="btn btn-primary" onclick="ResetFields()">Đặt lại</button>
+        </div>
+    </div>
+</div>
 
 <div id="content"></div>
 
@@ -274,7 +266,7 @@
         document.getElementById("faculty").innerHTML = "<option value='-1'>----- Chọn -----</option>";
         document.getElementById("intLocID").innerHTML = "<option value='-1'>----- Chọn -----</option>";
     }
-    
+
 </script>
 
 

@@ -57,7 +57,34 @@
             searching: false
         });
     });
-    
+
+
+    $(document).ready(function () {
+        document.getElementById('strFromItemCode').value = getParameterByName('strFromItemCode');
+        document.getElementById('strToItemCode').value = getParameterByName('strToItemCode');
+        document.getElementById('strFromCopyNumber').value = getParameterByName('strFromCopyNumber');
+        document.getElementById('strToCopyNumber').value = getParameterByName('strToCopyNumber');
+        document.getElementById('strElse').value = getParameterByName('strElse');
+        if (getParameterByName('strFromItemCode') != null) {
+            checkformCheck1();
+        }
+        if (getParameterByName('strFromCopyNumber') != null) {
+            checkformCheck2();
+        }
+        if (getParameterByName('strElse') != null) {
+            checkformCheck3();
+        }
+    });
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
 </script>
 <h4 style="margin : 1rem">In nhãn</h4>
 <form id="formPrintLabel" action="/PrintLabel/Print">
@@ -105,17 +132,17 @@
                 <div class="col">
                     <div class="form-row">
                         <div class="col-3"><label class="col-form-label float-right">Từ ĐKCB</label></div>
-                        <div class="col"><input type="text" class="form-control" name="strFromCopyNumber" onclick="checkformCheck2();"/></div>
+                        <div class="col"><input type="text" class="form-control" id="strFromCopyNumber" name="strFromCopyNumber" onclick="checkformCheck2();"/></div>
                     </div>
                     <div class="form-row">
                         <div class="col-3"><label class="col-form-label float-right">Tới ĐKCB</label></div>
-                        <div class="col"><input type="text" class="form-control" name="strToCopyNumber" onclick="checkformCheck2();"/></div>
+                        <div class="col"><input type="text" class="form-control" id="strToCopyNumber" name="strToCopyNumber" onclick="checkformCheck2();"/></div>
                     </div>
                 </div>
             </div>
             <div class="form-row">
                 <div class="col">
-                    <div class="form-check"><input type="radio" class="form-check-input" name="intSelMode" value="2" id="formCheck-3" /><label class="form-check-label" for="formCheck-3">In các giá trị sau<br /></label></div><textarea class="form-control" name="strElse" onclick="checkformCheck3();"></textarea>
+                    <div class="form-check"><input type="radio" class="form-check-input" name="intSelMode" value="2" id="formCheck-3" /><label class="form-check-label" for="formCheck-3">In các giá trị sau<br /></label></div><textarea class="form-control" id="strElse" name="strElse" onclick="checkformCheck3();"></textarea>
                 </div>
             </div>
         </div>
