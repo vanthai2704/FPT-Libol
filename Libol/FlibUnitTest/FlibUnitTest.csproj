@@ -57,6 +57,8 @@
     <Compile Include="FlibOrientationUnitTests\CatalogueControllerTests.cs" />
     <Compile Include="FlibOrientationUnitTests\CheckOutControllerTests.cs" />
     <Compile Include="FlibOrientationUnitTests\CheckInControllerTests.cs" />
+    <Compile Include="FlibOrientationUnitTests\CirculationControllerTests.cs" />
+    <Compile Include="FlibOrientationUnitTests\AcquisitionControllerTests.cs" />
     <Compile Include="FlibOrientationUnitTests\ShelfControllerTests.cs" />
     <Compile Include="FlibReportUnitTests\UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
