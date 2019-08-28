@@ -63,6 +63,8 @@
     <Compile Include="FlibReportUnitTests\UnitTest1.cs" />
     <Compile Include="FlibReportUnitTests\UnitTest2.cs" />
     <Compile Include="FlibReportUnitTests\UnitTest3.cs" />
+    <Compile Include="FlibReportUnitTests\UnitTest4.cs" />
+    <Compile Include="FlibReportUnitTests\UnitTest5.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
