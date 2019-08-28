@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>BaoCaoBoSung</title>
+    <title>Báo cáo đề nghị</title>
     <style>
         label {
             text-align: right;
@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <h5 style="margin-top:20px;">Báo cáo bổ sung</h5>
+    <h5 style="margin-top:20px;">Báo cáo đề nghị</h5>
     @using (Html.BeginForm("GetRecomendReport", "AcquireReport"))
     {
         <div class="row">
@@ -31,7 +31,7 @@
             <div class="col-6">
                 <div class="form-group row col-12">
                     <label class="control-label col-md-8 align-self-center">Kho</label>
-                    @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"), "Hãy chọn Kho", new { @class = "form-control col-md-4" })
+                    @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"), "", new { @class = "form-control col-md-4" })
                 </div>
             </div>
         </div>
@@ -72,8 +72,8 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <div class="btn-group btn-group">
-                    <button type="submit" id="preview" class="btn btn-primary mr-1">Xem thử</button>
-                    <button type="button" id="reset" class="btn btn-primary" onclick="reset()">Đặt lại</button>
+                    <button type="button" id="preview" class="btn btn-primary mr-1" onclick="checkValid()">Xem thử</button>
+                    <button type="reset" id="reset" class="btn btn-primary">Đặt lại</button>
                 </div>
             </div>
         </div>
@@ -94,31 +94,25 @@
                                 loc.Text + '</option>');
                         });
                     }
-                //error: function (ex) {
-                //    alert('Failed to retrieve states.' + ex);
-                //}
                 });
                 return false;
             });
         });
-        //$('#Form').validate({
-        //    rules:{
-        //        Library: 'required',
-        //        Location: 'required'
-        //    }
-        //});
     </script>
     <script>
         $(window).bind("pageshow", function () {
             $("#Library").val('');
             $("#Location").val('');
         });
-        function reset() {
-            $("#Library").val('');
-            $("#Location").empty();
-            $("#FromDate").val('');
-            $("#ToDate").val('');
-            $("#reCode").val('');
+        function checkValid() {
+            if (document.getElementById("Library").value == "") {
+                alert("Hãy chọn thư viện");
+
+            } else if (document.getElementById("FromDate").value != "" && document.getElementById("ToDate").value != "" && document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
+                alert("Khoảng thời gian thống kê không hợp lệ");
+            }   else {
+                document.getElementById("preview").type = "submit";
+            } 
         }
     </script>
 </body>

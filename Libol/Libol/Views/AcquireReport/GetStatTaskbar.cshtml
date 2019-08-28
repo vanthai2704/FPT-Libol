@@ -12,10 +12,9 @@
 
                 buttons: [
                     {
-                        extend: 'print',
+                        extend: 'excel',
                         title: function () { var printTitle = 'Thống kê danh mục sách nhập'; return printTitle; }
                     },
-                    'excel',
                     'pdf',
                     'colvis'
                 ],
@@ -99,53 +98,67 @@
         });</script>
 </head>
 <div id="Main">
-    <table id="table" class="table table-striped table-bordered" style="border: thin;" border="1">
-        <thead>
-            <tr>
-                <th>STT</th>
-                <th>Tên sách</th>
-                <th>Mã tài liệu</th>
-                <th>Tác giả</th>
-                <th>Nơi xuất bản</th>
-                <th>Nhà xuất bản</th>
-                <th>Năm xuất bản</th>
-                <th>Số lượng</th>
-                <th>DKCB</th>
-                <th>Số lượng mượn</th>
-                <th>Số lượng tồn</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int STT = 1;
-            }
-            @foreach (var item in ViewBag.Result)
-            {
+    @{
+        if (ViewBag.Result != null)
+        {
+            <table id="table" class="table table-striped table-bordered" style="border: thin;" border="1">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên sách</th>
+                        <th>Mã tài liệu</th>
+                        <th>Tác giả</th>
+                        <th>Nơi xuất bản</th>
+                        <th>Nhà xuất bản</th>
+                        <th>Năm xuất bản</th>
+                        <th>Số lượng</th>
+                        <th>DKCB</th>
+                        <th>Số lượng mượn</th>
+                        <th>Số lượng tồn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int STT = 1;
+                    }
+                    @foreach (var item in ViewBag.Result)
+                    {
 
-                <tr>
-                    <td>@(STT)</td>
-                    <td>@item.Content</td>
-                    <td>@item.Code</td>
-                    <td>@item.tacGia</td>
-                    <td>@item.noiXuatBan</td>
-                    <td>@item.nhaXuatBan</td>
-                    <td>@item.namXuatBan</td>
-                    <td>@item.soluong</td>
-                    <td>@item.DKCB</td>
-                    <td>@item.soluongmuon</td>
-                    <td>@item.soluongton</td>
-                </tr>
-                STT++;
-            }
-        </tbody>
-    </table>
-    <div style="text-align: right;">
-        <span id="Count"></span>
-        <span id="Total"></span>
-    </div>
+                        <tr>
+                            <td>@(STT)</td>
+                            <td>@item.Content</td>
+                            <td>@item.Code</td>
+                            <td>@item.tacGia</td>
+                            <td>@item.noiXuatBan</td>
+                            <td>@item.nhaXuatBan</td>
+                            <td>@item.namXuatBan</td>
+                            <td>@item.soluong</td>
+                            <td>@item.DKCB</td>
+                            <td>@item.soluongmuon</td>
+                            <td>@item.soluongton</td>
+                        </tr>
+                        STT++;
+                    }
+                </tbody>
+            </table>
+            <div style="text-align: right;">
+                <span id="Count"></span>
+                <span id="Total"></span>
+            </div>
+        }
+    }
 </div>
-<div class="col-md-12 text-center">
-    <div class="btn-group btn-group">
-        <button type="button" id="ExportReporttoExcel" class="btn btn-primary">Lưu vào file excel</button>
-    </div>
-</div>
+@{
+    if (ViewBag.Result != null)
+    {
+        <div class="col-md-12 text-center">
+            <div class="btn-group btn-group">
+                <button type="button" id="ExportReporttoExcel" class="btn btn-primary">Lưu vào file excel</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div style="text-align:center; margin-top: 10%"><b>Không tìm thấy kết quả nào</b></div>
+    }
+}

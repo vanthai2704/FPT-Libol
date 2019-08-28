@@ -9,6 +9,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Table;
 using System.Data;
 using System.IO;
+using Libol.EntityResult;
 
 namespace Libol.Controllers
 {
@@ -24,8 +25,6 @@ namespace Libol.Controllers
         {
             return View();
         }
-
-
 
         [AuthAttribute(ModuleID = 4, RightID = "29")]
         public ActionResult LiquidationOrLost()
@@ -472,19 +471,18 @@ namespace Libol.Controllers
             return PartialView("LiquidationOrLostPartialView");
         }
 
-
         public void findingItem(string find_title1, string find_code1, string find_price1,
             string find_dkcb1, string find_so_dinh_danh1, string find_volume1,
             string date_from1, string date_to1, string date_type1, string reason1)
         {
 
-            string find_title = string.IsNullOrEmpty(find_title1) ? null : Request.Form["find_title"].ToString();
+            string find_title = string.IsNullOrEmpty(find_title1) ? null : Request.Form["find_title"].ToString().Trim();
             // ma thanh ly
-            string find_code = string.IsNullOrEmpty(find_code1) ? null : Request.Form["find_code"].ToString();
-            string find_price = string.IsNullOrEmpty(find_price1) ? null : Request.Form["find_price"].ToString();
-            string find_dkcb = string.IsNullOrEmpty(find_dkcb1) ? null : Request.Form["find_dkcb"].ToString();
-            string find_so_dinh_danh = string.IsNullOrEmpty(find_so_dinh_danh1) ? null : Request.Form["find_so_dinh_danh"].ToString();
-            string find_volume = string.IsNullOrEmpty(find_volume1) ? null : Request.Form["find_volume"].ToString();
+            string find_code = string.IsNullOrEmpty(find_code1) ? null : Request.Form["find_code"].ToString().Trim();
+            string find_price = string.IsNullOrEmpty(find_price1) ? null : Request.Form["find_price"].ToString().Trim();
+            string find_dkcb = string.IsNullOrEmpty(find_dkcb1) ? null : Request.Form["find_dkcb"].ToString().Trim();
+            string find_so_dinh_danh = string.IsNullOrEmpty(find_so_dinh_danh1) ? null : Request.Form["find_so_dinh_danh"].ToString().Trim();
+            string find_volume = string.IsNullOrEmpty(find_volume1) ? null : Request.Form["find_volume"].ToString().Trim();
             DateTime? date_from = null;
             DateTime? date_to = null;
             if (!string.IsNullOrEmpty(date_from1))
@@ -879,7 +877,6 @@ namespace Libol.Controllers
             return PartialView("NotYetCheckedPartialView");
         }
 
-
         public void get_not_checked_yet_ItemFromLocation(string itemName, string page_index, string record_per_page)
         {
             //Get library list
@@ -985,12 +982,12 @@ namespace Libol.Controllers
         public void findingItem_not_yet_checked(string find_title1, string find_code1, string find_price1,
            string find_dkcb1, string find_so_dinh_danh1, string find_volume1)
         {
-            string find_title = string.IsNullOrEmpty(find_title1) ? null : Request.Form["find_title"].ToString();
-            string find_code = string.IsNullOrEmpty(find_code1) ? null : Request.Form["find_code"].ToString();
-            string find_price = string.IsNullOrEmpty(find_price1) ? null : Request.Form["find_price"].ToString();
-            string find_dkcb = string.IsNullOrEmpty(find_dkcb1) ? null : Request.Form["find_dkcb"].ToString();
-            string find_so_dinh_danh = string.IsNullOrEmpty(find_so_dinh_danh1) ? null : Request.Form["find_so_dinh_danh"].ToString();
-            string find_volume = string.IsNullOrEmpty(find_volume1) ? null : Request.Form["find_volume"].ToString();
+            string find_title = string.IsNullOrEmpty(find_title1) ? null : Request.Form["find_title"].ToString().Trim();
+            string find_code = string.IsNullOrEmpty(find_code1) ? null : Request.Form["find_code"].ToString().Trim();
+            string find_price = string.IsNullOrEmpty(find_price1) ? null : Request.Form["find_price"].ToString().Trim();
+            string find_dkcb = string.IsNullOrEmpty(find_dkcb1) ? null : Request.Form["find_dkcb"].ToString().Trim();
+            string find_so_dinh_danh = string.IsNullOrEmpty(find_so_dinh_danh1) ? null : Request.Form["find_so_dinh_danh"].ToString().Trim();
+            string find_volume = string.IsNullOrEmpty(find_volume1) ? null : Request.Form["find_volume"].ToString().Trim();
 
             List<Holding_Item> list =
                 db.Database.SqlQuery<Holding_Item>(
@@ -1553,11 +1550,11 @@ namespace Libol.Controllers
         public void findingItem_in_repository(string find_title1, string find_code1, string find_price1,
             string find_dkcb1, string find_so_dinh_danh1, string find_volume1)
         {
-            string find_title = string.IsNullOrEmpty(find_title1) ? null : Request.Form["find_title"].ToString();
+            string find_title = string.IsNullOrEmpty(find_title1) ? null : Request.Form["find_title"].ToString().Trim();
             //string find_code = string.IsNullOrEmpty(find_code1) ? null : Request.Form["find_code"].ToString();
             //string find_price = string.IsNullOrEmpty(find_price1) ? null : Request.Form["find_price"].ToString();
-            string find_dkcb = string.IsNullOrEmpty(find_dkcb1) ? null : Request.Form["find_dkcb"].ToString();
-            string find_so_dinh_danh = string.IsNullOrEmpty(find_so_dinh_danh1) ? null : Request.Form["find_so_dinh_danh"].ToString();
+            string find_dkcb = string.IsNullOrEmpty(find_dkcb1) ? null : Request.Form["find_dkcb"].ToString().Trim();
+            string find_so_dinh_danh = string.IsNullOrEmpty(find_so_dinh_danh1) ? null : Request.Form["find_so_dinh_danh"].ToString().Trim();
             string find_volume = string.IsNullOrEmpty(find_volume1) ? null : Request.Form["find_volume"].ToString();
 
             List<Holding_Item> list = new List<Holding_Item>();
@@ -1616,8 +1613,6 @@ namespace Libol.Controllers
             ViewBag.page_index = "1";
             ViewBag.record_per_page = Convert.ToString(list.Count());
         }
-
-
         public void get_in_repository_ItemFromLocation(string itemName, string page_index, string record_per_page)
         {
             //Get library list
@@ -1798,7 +1793,6 @@ namespace Libol.Controllers
             }
             return null;
         }
-
 
         public void getRemovedItemFromLocation(string itemName, string page_index, string record_per_page)
         {
@@ -2037,7 +2031,6 @@ namespace Libol.Controllers
             }
             return null;
         }
-
 
         //GET LOCATIONS BY LIBRARY
         public JsonResult GetLocations(int id)
@@ -2330,148 +2323,6 @@ namespace Libol.Controllers
             }
         }
 
-    }
-
-
-    public class Holding_Item
-    {
-        public Int64 Seq { get; set; }
-        public bool Acquired { get; set; }
-        public int ID { get; set; }
-        public int LibID { get; set; }
-        public int LocationID { get; set; }
-        public string Content { get; set; }
-        public string Volume { get; set; }
-        public DateTime AcquiredDate { get; set; }
-        public string CopyNumber { get; set; }
-        public string CallNumber { get; set; }
-        public string Shelf { get; set; }
-        public bool InUsed { get; set; }
-        public bool InCirculation { get; set; }
-        public string Note { get; set; }
-
-        public DateTime DateLastUsed { get; set; }
-        public Single Price { get; set; }
-        public int UseCount { get; set; }
-        public string LibName { get; set; }
-        public string LocName { get; set; }
-        public int LoanTypeID { get; set; }
-        public int ItemID { get; set; }
-        public int? POID { get; set; }
-        public int? AcquiredSourceID { get; set; }
-    }
-
-    public class Library
-    {
-
-        public string ID { get; set; }
-        public string LibName { get; set; }
-        public string Code { get; set; }
-        public Total_Amount Total { get; set; }
-
-        public Library(string ID, string Code, string LibName)
-        {
-            this.ID = ID;
-            this.LibName = LibName;
-            this.Code = Code;
-        }
-        public Library(string ID, string Code, string LibName, Total_Amount Total)
-        {
-            this.ID = ID;
-            this.LibName = LibName;
-            this.Code = Code;
-            this.Total = Total;
-        }
-
-    }
-
-
-    public class LibraryLocation
-    {
-        public Library lib { get; set; }
-        public List<Location> locs { get; set; }
-
-        public LibraryLocation(Library lib, List<Location> locs)
-        {
-            this.lib = lib;
-            this.locs = locs;
-        }
-
-    }
-
-
-    public class Location
-    {
-        public string LOCNAME { get; set; }
-        public string ID { get; set; }
-        public string GroupID { get; set; }
-        public string LibID { get; set; }
-        public string Symbol { get; set; }
-        public string Code { get; set; }
-
-        public Total_Amount Total { get; set; }
-
-        public Location(string LOCNAME, string ID, string GroupID,
-            string LibID, string Symbol, string Code)
-        {
-            this.LOCNAME = LOCNAME;
-            this.ID = ID;
-            this.GroupID = GroupID;
-            this.LibID = LibID;
-            this.Symbol = Symbol;
-            this.Code = Code;
-        }
-        public Location(string LOCNAME, string ID, string GroupID,
-            string LibID, string Symbol, string Code, Total_Amount Total)
-        {
-            this.LOCNAME = LOCNAME;
-            this.ID = ID;
-            this.GroupID = GroupID;
-            this.LibID = LibID;
-            this.Symbol = Symbol;
-            this.Code = Code;
-            this.Total = Total;
-        }
-
-        public Location()
-        {
-        }
-    }
-
-    public class Removed_Item
-    {
-        public int ID { get; set; }
-        public string CopyNumber { get; set; }
-        public int ItemID { get; set; }
-        public int LibID { get; set; }
-        public int LocationID { get; set; }
-        public int LoanTypeID { get; set; }
-        public string Shelf { get; set; }
-        public decimal Price { get; set; }
-        public int Reason { get; set; }
-        public DateTime? AcquiredDate { get; set; }
-        public DateTime? RemovedDate { get; set; }
-        public string Volume { get; set; }
-        public int UseCount { get; set; }
-        public int? PoID { get; set; }
-        public DateTime? DateLastUsed { get; set; }
-        public string CallNumber { get; set; }
-        public int AcquiredSourceID { get; set; }
-        public string LiquidCode { get; set; }
-        public string Content { get; set; }
-        public int REASON_ID { get; set; }
-        public string Reson_detail { get; set; }
-
-        public string REASON_DETAIL { get; set; }
-        public string LibName { get; set; }
-        public string LocName { get; set; }
-    }
-
-
-
-    public class Total_Amount
-    {
-        public int Total { get; set; }
     }
 
 }

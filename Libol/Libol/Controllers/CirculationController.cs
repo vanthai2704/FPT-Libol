@@ -1216,8 +1216,15 @@ namespace Libol.Controllers
                 
 
             }
-
-             ViewBag.Result = listResult;
+            if(listResult.Count > 0)
+            {
+                ViewBag.Result = listResult;
+            }
+            else
+            {
+                ViewBag.Result = null;
+            }
+             
             return PartialView("GetCopyNumberLiquidationStats");
         }
 

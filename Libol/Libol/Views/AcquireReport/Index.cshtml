@@ -40,7 +40,7 @@
             <div class="col-6">
                 <div class="form-group row col-12">
                     <label class="control-label col-md-8 align-self-center">Kho</label>
-                    @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"), "Hãy chọn Kho", new { @class = "form-control col-md-4" })
+                    @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"), "", new { @class = "form-control col-md-4" })
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
             <div class="col-6">
                 <div class="form-group row col-12">
                     <label class="control-label col-md-8 align-self-center">Mã số đơn đặt</label>
-                    <input type="text" name="PO" id="RecordNumber" class="form-control col-md-4" />
+                    <input type="number" name="PO" id="RecordNumber" class="form-control col-md-4" pattern="[0-9]{1,10}" min="1" max="2147483647"/>
                 </div>
             </div>
         </div>
@@ -81,8 +81,8 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <div class="btn-group btn-group">
-                    <button type="submit" id="preview" class="btn btn-primary mr-1">Xem thử</button>
-                    <button type="button" id="reset" class="btn btn-primary" onclick="reset()">Đặt lại</button>
+                    <button type="button" id="preview" class="btn btn-primary mr-1" onclick="checkValid()">Xem thử</button>
+                    <button type="reset" id="reset" class="btn btn-primary">Đặt lại</button>
                 </div>
             </div>
         </div>
@@ -125,12 +125,15 @@
             $("#Library").val('');
             $("#Location").val('');
         });
-        function reset() {
-            $("#Library").val('');
-            $("#Location").empty();
-            $("#FromDate").val('');
-            $("#ToDate").val('');
-            $("#RecordNumber").val('');
+        function checkValid() {
+            if (document.getElementById("Library").value == "") {
+                alert("Hãy chọn thư viện");
+
+            } else if (document.getElementById("FromDate").value != "" && document.getElementById("ToDate").value != "" && document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
+                alert("Khoảng thời gian thống kê không hợp lệ");
+            } else {
+                document.getElementById("preview").type = "submit";
+            }
         }
     </script>
 </body>

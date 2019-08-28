@@ -49,7 +49,7 @@
     <div class="row">
         <div class="col-md-12 text-center">
             <div class="btn-group btn-group">
-                <button type="submit" id="stat" class="btn btn-primary mr-1">Xem thử</button>
+                <button type="submit" id="stat" class="btn btn-primary mr-1">Thống kê</button>
                 <button type="button" id="reset" class="btn btn-primary" onclick="reset()">Đặt lại</button>
             </div>
         </div>
@@ -79,15 +79,18 @@
 <script>
     document.getElementById("stat").onclick = function () {
         var empObj = {
-            //strLiquidID: document.getElementById("LiquidID").value,
             strLibID: document.getElementById("Library").value,
             strLocID: document.getElementById("Location").value,
             strFromDate: document.getElementById("FromDate").value,
             strToDate: document.getElementById("ToDate").value,
         };
-        if (document.getElementById("FromDate").value != "" && document.getElementById("ToDate").value != "" && document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
+        if (document.getElementById("Library").value == "" ) {
+            alert("Hãy chọn thư viện");
+
+        } else if (document.getElementById("FromDate").value != "" && document.getElementById("ToDate").value != "" && document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
             alert("Khoảng thời gian thống kê không hợp lệ");
-        } else {
+        } 
+        else {
             $.ajax({
                 url: "GetStatTaskbar",
                 data: JSON.stringify(empObj),

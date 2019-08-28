@@ -209,10 +209,16 @@
     <Compile Include="EntityResult\FPT_SP_CATA_SEARCH_MARC_FIELDS_Results.cs" />
     <Compile Include="EntityResult\FPT_SP_GET_ITEM_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
+    <Compile Include="EntityResult\Holding_Item.cs" />
+    <Compile Include="EntityResult\Library.cs" />
+    <Compile Include="EntityResult\LibraryLocation.cs" />
+    <Compile Include="EntityResult\Location.cs" />
+    <Compile Include="EntityResult\Removed_Item.cs" />
     <Compile Include="EntityResult\SP_CATA_GET_MODIFIED_FIELDS_Result.cs" />
     <Compile Include="EntityResult\SP_CIR_OVERDUELIST_GETINFOR_Result.cs" />
     <Compile Include="EntityResult\SP_GET_CURRENT_CHECKIN_INFOR_Result.cs" />
     <Compile Include="EntityResult\SP_GET_TITLES_Result.cs" />
+    <Compile Include="EntityResult\Total_Amount.cs" />
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_BY_THESIS_SUBJECT_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -2331,6 +2337,7 @@
     <Content Include="Content\multiselect.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\PagingStyle.css" />
+    <Content Include="Content\PartialViewStyle.css" />
     <Content Include="Content\TableOrientation.css" />
     <Content Include="Content\DataTables\dataTables.checkboxes.css" />
     <Content Include="Content\DataTables\dataTables.checkboxes.min.js" />
