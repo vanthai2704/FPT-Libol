@@ -56,6 +56,10 @@ namespace Libol.Controllers
             int TemplateID,
             int Page)
         {
+            if(Page < 1)
+            {
+                Page = 1;
+            }
             var selectCopyNumber = db.HOLDINGs.Where(a => true);
             switch (intSelMode)
             {
