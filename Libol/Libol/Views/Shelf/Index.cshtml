@@ -258,7 +258,7 @@
         </div>
         <div class="form-row col-md-12">
             <label class="control-label col-md-5">Dữ liệu ĐKCB tổng hợp : </label>
-            <label class="col-md-7 text-left" style="color: red;" id="lblCopyDataVal">0</label>
+            <label class="col-md-7 text-left" style="color: red;" id="lblCopyDataVal"></label>
         </div>
         <div class="form-row col-md-12">
             <label class="control-label col-md-5">Tổng số bản rỗi : </label>
@@ -267,8 +267,8 @@
 
         <div class="form-row col-md-12 text-center">
             <div style="margin : auto">
-                <button type="button" class="btn btn-primary form-control">In mã vạch(v)</button>
-                <button type="button" class="btn btn-primary form-control">In nhãn gáy(g)</button>
+                <button type="button" class="btn btn-primary form-control" onclick="PrintBarcode()" id="PrintLabelBtn">In mã vạch(v)</button>
+                <button type="button" class="btn btn-primary form-control" onclick="PrintLabel()" id="PrintBarcodeBtn">In nhãn gáy(g)</button>
             </div>
         </div>
 
@@ -418,10 +418,11 @@
                     "code": code,
                 },
                 dataSrc: function (data) {
-                    console.log(data.numberOfFreeCopies);
+                    console.log(data);
                     $("#lblSumFreeCopy").text("" + data.numberOfFreeCopies);
                     $("#lblCopyDataVal").append(data.compositeHolding);
                     $("#labNumberOfRecord").text("" + data.numberRecord);
+                    codeItemToPrint = data.codeItemToPrint;
                     return data.data; //access the data variable from the returned JSON
                 }
             },
@@ -785,8 +786,6 @@
         var displayForm = false;
         var table = $("#table").DataTable({
 
-
-
             ajax: {
                 url: "/Shelf/SearchItem",
                 type: "POST",
@@ -828,6 +827,14 @@
         table.destroy();
     }
 
+    var codeItemToPrint = "";
+
+    function PrintLabel() {
+        window.location.href = "/PrintLabel?strFromItemCode=" + codeItemToPrint + "&strToItemCode=" + codeItemToPrint;
+    }
+    function PrintBarcode() {
+        window.location.href = "/PrintLabel?strFromItemCode=" + codeItemToPrint + "&strToItemCode=" + codeItemToPrint;
+    }
 </script>
 
 <table id="table_holdinglist" class="table table-striped table-bordered datatables" style="font-size: 13px">
