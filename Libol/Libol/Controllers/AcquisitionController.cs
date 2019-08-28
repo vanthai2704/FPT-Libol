@@ -50,5 +50,13 @@ namespace Libol.Controllers
             return Json(ViewBag.Liquidate, JsonRequestBehavior.AllowGet);
 
         }
+
+        [HttpPost]
+        public JsonResult SearchItem(string title, string copynumber, string author, string publisher, string year, string isbn)
+        {
+            List<SP_GET_TITLES_Result> data = null;
+            string message = shelfBusiness.SearchItem(title.Trim(), copynumber.Trim(), author.Trim(), publisher.Trim(), year.Trim(), isbn.Trim(), ref data);
+            return Json(new { Message = message, data = data }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
