@@ -8,6 +8,6 @@ namespace Libol.Models
     public class ITEMMAX
     {
         public int TotalLoan { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
     }
 }

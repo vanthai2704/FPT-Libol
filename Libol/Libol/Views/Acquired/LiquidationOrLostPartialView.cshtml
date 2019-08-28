@@ -1,84 +1,7 @@
 ﻿<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    /* Button used to open the contact form - fixed at the bottom of the page */
-
-    /* The popup form - hidden by default */
-    .form-popup {
-        display: none;
-        position: center;
-        bottom: 0;
-        right: 15px;
-        border: 3px solid #f1f1f1;
-        z-index: 9;
-    }
-
-    /* Add styles to the form container */
-    .form-container {
-        max-width: inherit;
-        padding: 10px;
-        background-color: white;
-    }
-
-    /* Full-width input fields */
-    .form-container input[type=text], .form-container input[type=password] {
-        width: 100%;
-        padding: 10px;
-        margin: 5px 0 10px 0;
-        border: none;
-        background: #f1f1f1;
-    }
-
-        .form-container input[type=date] {
-            width: 20%;
-            padding: 10px;
-            margin: 5px 0 10px 0;
-            border: none;
-            background: #f1f1f1;
-        }
-
-        .form-container p {
-            width: 90%;
-            padding: 10px;
-            margin: 5px 0 10px 0;
-            border: none;
-            background: #ffffff;
-        }
-
-        /* When the inputs get focus, do something */
-        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
-            background-color: #ddd;
-            outline: none;
-        }
-
-    /* Set a style for the submit/login button */
-    .form-container .btn {
-        background-color: #4CAF50;
-        color: white;
-        padding: 16px 20px;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        margin-bottom: 10px;
-        opacity: 0.8;
-    }
-
-    /* Add a red background color to the cancel button */
-    .form-container .cancel {
-        background-color: red;
-    }
-
-    /* Add some hover effects to buttons */
-    .form-container .btn:hover, .open-button:hover {
-        opacity: 1;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="~/Content/PartialViewStyle.css">
 
 <h4><b>Số liệu xếp giá đã thanh lý/mất</b></h4>
-
 @{
     if (ViewBag.screen_stage.Equals("remove result"))
     {
@@ -135,7 +58,6 @@
 
         <span>
             Thư Viện: @Html.DropDownList("Library", ViewBag.list_lib as List<SelectListItem>)
-
             Kho sách: @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"))
         </span>
         <br />
@@ -237,48 +159,48 @@
                 }
                 @foreach (var item in ViewBag.list)
                 {
-                <tr>
-                    @{
-                        count++;
-                    }
-                    <td style="text-align:center">
-                        <input type="checkbox" id="@item.ID" value="@count" name="cbToDelete" />
-                    </td>
-                    <td>@count</td>
-                    <td>@item.LibName</td>
-                    <td>@item.LocName</td>
-                    <td>@item.CopyNumber</td>
-                    <td>@item.CallNumber</td>
-                    <td style="width: 5%">@item.Volume</td>
-                    <td style="width: 20%">@item.Content</td>
-                    @if (item.AcquiredDate == null)
-                    {
-                        <td></td>
-                    }
-                    else
-                    {
-                        <td>@item.AcquiredDate.ToString("dd/MM/yyyy")</td>
-                    }
-                    <td>@item.Price.ToString("#.##")</td>
-                    <td>@item.REASON_DETAIL</td>
-                    @if (item.RemovedDate == null)
-                    {
-                        <td></td>
-                    }
-                    else
-                    {
-                        <td>@item.RemovedDate.ToString("dd/MM/yyyy")</td>
-                    }
-                    @if (item.DateLastUsed == null)
-                    {
-                        <td></td>
-                    }
-                    else
-                    {
-                        <td>@item.DateLastUsed.ToString("dd/MM/yyyy")</td>
-                    }
-                    <td>@item.UseCount</td>
-                </tr>
+                    <tr>
+                        @{
+                            count++;
+                        }
+                        <td style="text-align:center">
+                            <input type="checkbox" id="@item.ID" value="@count" name="cbToDelete" />
+                        </td>
+                        <td>@count</td>
+                        <td>@item.LibName</td>
+                        <td>@item.LocName</td>
+                        <td>@item.CopyNumber</td>
+                        <td>@item.CallNumber</td>
+                        <td style="width: 5%">@item.Volume</td>
+                        <td style="width: 20%">@item.Content</td>
+                        @if (item.AcquiredDate == null)
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>@item.AcquiredDate.ToString("dd/MM/yyyy")</td>
+                        }
+                        <td>@item.Price.ToString("#.##")</td>
+                        <td>@item.REASON_DETAIL</td>
+                        @if (item.RemovedDate == null)
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>@item.RemovedDate.ToString("dd/MM/yyyy")</td>
+                        }
+                        @if (item.DateLastUsed == null)
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>@item.DateLastUsed.ToString("dd/MM/yyyy")</td>
+                        }
+                        <td>@item.UseCount</td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -307,44 +229,39 @@
         <div class="form-popup" id="findArea" style="display:none">
             <div class="form-container">
                 <h2>Tìm Kiếm</h2>
-
                 <label for="find_title"><b>Nhan đề: </b></label>
                 <input type="text" placeholder="Nhập tiêu đề sách cần tìm ở đây" name="find_title" id="find_title">
-
                 <label for="find_code"><b>Mã Thanh Lý: </b></label>
                 <input type="text" placeholder="Nhập mã thanh lý tài liệu cần tìm ở đây" name="find_code" id="find_code">
                 <br />
-
                 <label for="find_dkcb"><b>Đăng Ký Cá Biệt: </b></label>
                 <input type="text" placeholder="Nhập Đăng Ký Cá Biệt cần tìm ở đây" name="find_dkcb" id="find_dkcb">
-
                 <label for="find_so_dinh_danh"><b>Số Định Danh: </b></label>
                 <input type="text" placeholder="Nhập Số Định Danh cần tìm ở đây" name="find_so_dinh_danh" id="find_so_dinh_danh">
-
                 <label> <b>Chọn kiểu ngày muốn tra cứu:   </b></label>
                 <span>@Html.DropDownList("date_type", ViewBag.datetypes as List<SelectListItem>, new { Style = "background:#f1f1f1;width: 20%" })</span>
-
                 <span style="margin-left:10px">
                     <label for="date_from"><b> từ ngày: </b></label>
-                    <input type="date" name="date_from" id="date_from" disabled/>
+                    <input type="date" name="date_from" id="date_from" disabled />
                     <label for="date_to" style="margin-left:10px"><b>  tới ngày: </b></label>
-                    <input type="date" name="date_to" id="date_to" disabled/>
+                    <input type="date" name="date_to" id="date_to" disabled />
                 </span>
                 <br />
                 <p><b>Lý do:  </b><span>@Html.DropDownList("reason", ViewBag.ta as List<SelectListItem>, new { Style = "background:#f1f1f1;width: 100%" })</span></p>
                 <button type="button" class="btn" onclick="searchingForNewItem()" id="find_new">Bắt đầu tìm kiếm</button>
                 <button type="button" class="btn cancel" onclick="opencloseFindingForm()">Hủy tìm kiếm</button>
-
-                @* reduce the risk of your application being duped by a cross site request forgery attack  *@
-                <input name="__RequestVerificationToken" type="hidden" value="<token_generated_here>">
             </div>
         </div>
-
     }
 }
 <script src="~/Scripts/Jquery-2.2.3.min.js"></script>
-
 <script>
+    Date.prototype.toDateInputValue = (function () {
+        var local = new Date(this);
+        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+        return local.toJSON().slice(0, 10);
+    });
+
     $(document).ready(function () {
 
         $("#select_entries").change(function () {
@@ -430,6 +347,7 @@
                 $("#date_to").prop("disabled", true);
             } else {
                 $("#date_from").prop("disabled", false);
+                $("#date_from").val(new Date().toDateInputValue());
                 $("#date_to").prop("disabled", false);
             }
         });
@@ -484,10 +402,10 @@
     });
 
     function searchingForNewItem() {
-        var find_title = $("#find_title").val();
-        var find_code = $("#find_code").val();
-        var find_dkcb = $("#find_dkcb").val();
-        var find_so_dinh_danh = $("#find_so_dinh_danh").val();
+        var find_title = $("#find_title").val().trim();
+        var find_code = $("#find_code").val().trim();
+        var find_dkcb = $("#find_dkcb").val().trim();
+        var find_so_dinh_danh = $("#find_so_dinh_danh").val().trim();
         var find_volume = $("#find_volume").val();
         var date_from = $("#date_from").val();
         var date_to = $("#date_to").val();
@@ -496,22 +414,46 @@
 
         var state = "";
 
-        $.ajax({
-            url: "LiquidationOrLostPartialView",
-            data: {
-                'find_title': find_title, 'find_code': find_code, 
-                'find_dkcb': find_dkcb, 'find_so_dinh_danh': find_so_dinh_danh,
-                'find_volume': find_volume, 'state': state,
-                'date_from': date_from, 'date_to': date_to, 'reason': reason, 'date_type': date_type
-            },
-            type: "POST",
-            success: function (result) {
-                $("#result").html(result);
-            },
-            error: function (errormessage) {
-                console.log("error");
+
+        if (!find_title.trim().length && !find_dkcb.trim().length && !find_so_dinh_danh.trim().length && !find_code.trim().length) {
+            if (date_type != '-1') {
+                $.ajax({
+                    url: "LiquidationOrLostPartialView",
+                    data: {
+                        'find_title': find_title, 'find_code': find_code,
+                        'find_dkcb': find_dkcb, 'find_so_dinh_danh': find_so_dinh_danh,
+                        'find_volume': find_volume, 'state': state,
+                        'date_from': date_from, 'date_to': date_to, 'reason': reason, 'date_type': date_type
+                    },
+                    type: "POST",
+                    success: function (result) {
+                        $("#result").html(result);
+                    },
+                    error: function (errormessage) {
+                        console.log("error");
+                    }
+                });
+            } else {
+                alert("Hãy nhập vào gì đó để tìm kiếm!");
             }
-        });
+        } else {
+            $.ajax({
+                url: "LiquidationOrLostPartialView",
+                data: {
+                    'find_title': find_title, 'find_code': find_code,
+                    'find_dkcb': find_dkcb, 'find_so_dinh_danh': find_so_dinh_danh,
+                    'find_volume': find_volume, 'state': state,
+                    'date_from': date_from, 'date_to': date_to, 'reason': reason, 'date_type': date_type
+                },
+                type: "POST",
+                success: function (result) {
+                    $("#result").html(result);
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        }
     }
 
     function exportToExcelFile() {
@@ -569,20 +511,27 @@
 
         var state = "remove item";
 
-        $.ajax({
-            url: "LiquidationOrLostPartialView",
-            data: {
-                'selected_checkbox_list': selected_checkbox_list, 'state': state
-            },
-            type: "POST",
-            success: function (result) {
-                $("#result").html(result);
-                alert("removed!");
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
+        if (!selected_checkbox_list) {
+            alert("Hãy chọn quyển sách mà bạn muốn xóa!");
+        } else if (selected_checkbox_list.indexOf('true') > 0) {
+            $.ajax({
+                url: "LiquidationOrLostPartialView",
+                data: {
+                    'selected_checkbox_list': selected_checkbox_list, 'state': state
+                },
+                type: "POST",
+                success: function (result) {
+                    $("#result").html(result);
+
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        } else {
+            alert("Hãy chọn quyển sách mà bạn muốn xóa!");
+        }
+
     }
 
     function opencloseFindingForm() {
@@ -601,21 +550,47 @@
         var locid = $("#Location").val();
         var state = "restore result";
 
-        $.ajax({
-            url: "LiquidationOrLostPartialView",
-            data: {
-                'selected_checkbox_list': selected_checkbox_list, 'state': state,
-                'strType': strType, 'libid': libid, 'locid' : locid
-            },
-            type: "POST",
-            success: function (result) {
-                $("#result").html(result);
-                alert("removed!");
-            },
-            error: function (errormessage) {
-                console.log("error");
+        if (!selected_checkbox_list) {
+            alert("Hãy chọn quyển sách mà bạn muốn phục hồi!");
+        }else if (selected_checkbox_list.indexOf('true') > 0) {
+            if (strType == "1") {
+                if (!locid) {
+                    alert("Hãy chọn thư viện và kho sách tương ứng!");
+                } else {
+                    $.ajax({
+                        url: "LiquidationOrLostPartialView",
+                        data: {
+                            'selected_checkbox_list': selected_checkbox_list, 'state': state,
+                            'strType': strType, 'libid': libid, 'locid': locid
+                        },
+                        type: "POST",
+                        success: function (result) {
+                            $("#result").html(result);
+                        },
+                        error: function (errormessage) {
+                            console.log("error");
+                        }
+                    });
+                }
+            } else {
+                $.ajax({
+                    url: "LiquidationOrLostPartialView",
+                    data: {
+                        'selected_checkbox_list': selected_checkbox_list, 'state': state,
+                        'strType': strType, 'libid': libid, 'locid': locid
+                    },
+                    type: "POST",
+                    success: function (result) {
+                        $("#result").html(result);
+                    },
+                    error: function (errormessage) {
+                        console.log("error");
+                    }
+                });
             }
-        });
+        } else {
+            alert("Hãy chọn quyển sách mà bạn muốn phục hồi!");
+        }
     }
 
     function restore_unlock_item() {
@@ -625,23 +600,47 @@
         var locid = $("#Location").val();
         var state = "restore and unlock result";
 
-        $.ajax({
-            url: "LiquidationOrLostPartialView",
-            data: {
-                'selected_checkbox_list': selected_checkbox_list, 'state': state,
-                'strType': strType, 'libid': libid, 'locid': locid
-            },
-            type: "POST",
-            success: function (result) {
-                $("#result").html(result);
-                alert("removed!");
-            },
-            error: function (errormessage) {
-                console.log("error");
+        if (!selected_checkbox_list) {
+            alert("Hãy chọn quyển sách mà bạn muốn phục hồi và mở khóa!");
+        } else if (selected_checkbox_list.indexOf('true') > 0) {
+                if (strType == "1") {
+                    if (!locid) {
+                        alert("Hãy chọn thư viện và kho sách tương ứng!");
+                    } else {
+                        $.ajax({
+                            url: "LiquidationOrLostPartialView",
+                            data: {
+                                'selected_checkbox_list': selected_checkbox_list, 'state': state,
+                                'strType': strType, 'libid': libid, 'locid': locid
+                            },
+                            type: "POST",
+                            success: function (result) {
+                                $("#result").html(result);
+                            },
+                            error: function (errormessage) {
+                                console.log("error");
+                            }
+                        });
+                    }
+                } else {
+                    $.ajax({
+                        url: "LiquidationOrLostPartialView",
+                        data: {
+                            'selected_checkbox_list': selected_checkbox_list, 'state': state,
+                            'strType': strType, 'libid': libid, 'locid': locid
+                        },
+                        type: "POST",
+                        success: function (result) {
+                            $("#result").html(result);
+                        },
+                        error: function (errormessage) {
+                            console.log("error");
+                        }
+                    });
+                }
+            } else {
+                alert("Hãy chọn quyển sách mà bạn muốn phục hồi và mở khóa!");
             }
-        });
     }
 </script>
-
-
 

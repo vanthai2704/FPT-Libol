@@ -4,8 +4,8 @@
         <div class="col-md-3">
             <table class="table table-bordered table-striped" id="123" style="border-collapse: collapse" , border="1">
                 <tr>
-                    <th>Mã Tài Liệu</th>
                     <th>Số lượt mượn</th>
+                    <th>ID mã tài liệu</th>
                 </tr>
                 @foreach (var item in ViewBag.test)
                 {
@@ -49,7 +49,7 @@ else
         if (table == null)
             return;
         var data = google.visualization.arrayToDataTable([
-            ["Mã tài liệu", "số lần mượn", { role: "style" }],
+            ["ID mã tài liệu", "số lần mượn", { role: "style" }],
 
             @foreach (var item in ViewBag.test)
             {
@@ -73,7 +73,7 @@ else
             legend: { position: "none" },
             is3D: true,
             hAxis: {
-                title: 'Mã tài liệu',
+                title: 'ID mã tài liệu',
             },
             vAxis: {
                 title: 'Số Lượt Mượn',
