@@ -87,16 +87,16 @@ else
                             <table id="table1" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
                                 <thead>
                                     <tr>
-                                        <th>Tháng</th>
-                                        <th>Số @ViewBag.TypeName đang mượn</th>
+                                        <th style="text-align:center">Tháng</th>
+                                        <th style="text-align:center">Số @ViewBag.TypeName đang mượn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in ViewBag.UsingResult)
                                     {
                                         <tr>
-                                            <td>@item.MONTH</td>
-                                            <td>@item.TotalLoan</td>
+                                            <td style="text-align:center">@item.MONTH</td>
+                                            <td style="text-align:center">@item.TotalLoan</td>
                                         </tr>
                                         sum1 += item.TotalLoan;
                                     }
@@ -124,16 +124,16 @@ else
                             <table id="table2" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
                                 <thead>
                                     <tr>
-                                        <th>Tháng</th>
-                                        <th id="tbl2_th">Số @ViewBag.TypeName đã mượn</th>
+                                        <th style="text-align:center">Tháng</th>
+                                        <th id="tbl2_th" style="text-align:center">Số @ViewBag.TypeName đã mượn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in ViewBag.UsedResult)
                                     {
                                         <tr>
-                                            <td>@item.MONTH</td>
-                                            <td>@item.TotalLoan</td>
+                                            <td style="text-align:center">@item.MONTH</td>
+                                            <td style="text-align:center">@item.TotalLoan</td>
                                         </tr>
                                         sum2 += item.TotalLoan;
                                     }

@@ -91,16 +91,16 @@ else
                             <table id="table1" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
                                 <thead>
                                     <tr>
-                                        <th id="tbl1_th">@ViewBag.Category</th>
-                                        <th>Số lượng đầu ấn phẩm</th>
+                                        <th id="tbl1_th" style="text-align:center">@ViewBag.Category</th>
+                                        <th style="text-align:center">Số lượng đầu ấn phẩm</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in ViewBag.DAPResult)
                                     {
                                         <tr>
-                                            <td>@item.AccessEntry</td>
-                                            <td>@item.Total</td>
+                                            <td style="text-align:center">@item.AccessEntry</td>
+                                            <td style="text-align:center">@item.Total</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -127,16 +127,16 @@ else
                             <table id="table2" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
                                 <thead>
                                     <tr>
-                                        <th id="tbl2_th">@ViewBag.Category</th>
-                                        <th>Số lượng bản ấn phẩm</th>
+                                        <th id="tbl2_th" style="text-align:center">@ViewBag.Category</th>
+                                        <th style="text-align:center">Số lượng bản ấn phẩm</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in ViewBag.BAPResult)
                                     {
                                         <tr>
-                                            <td>@item.AccessEntry</td>
-                                            <td>@item.Total</td>
+                                            <td style="text-align:center">@item.AccessEntry</td>
+                                            <td style="text-align:center">@item.Total</td>
                                         </tr>
                                     }
                                 </tbody>
