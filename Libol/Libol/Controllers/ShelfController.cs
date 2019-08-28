@@ -465,10 +465,11 @@ namespace Libol.Controllers
 
             //total number of rows count     
             RecordsTotal = holdings.Count();
+            string codeItemToPrint = code;
             //Paging     
             var data = holdings.Skip(skip).Take(pageSize).ToList();
             List<HoldingTable> holdingTables = new List<HoldingTable>();
-          
+            
             foreach (var holding in data)
             {
                 holdingTables.Add(new HoldingTable()
@@ -491,10 +492,11 @@ namespace Libol.Controllers
                     Shelf = holding.Shelf,
                     Status = shelfBusiness.GetHoldingStatus(holding.InUsed, holding.InCirculation.Value, holding.Acquired),
                 });
+                
             }
 
             //Returning Json Data    
-            return Json(new { draw = draw, recordsFiltered = RecordsTotal, recordsTotal = RecordsTotal, data = holdingTables, numberOfFreeCopies = numberFreeCopies, compositeHolding = compositeHoldingData, numberRecord= numberOfRecord, Message = message });
+            return Json(new { draw = draw, recordsFiltered = RecordsTotal, recordsTotal = RecordsTotal, data = holdingTables, numberOfFreeCopies = numberFreeCopies, compositeHolding = compositeHoldingData, numberRecord= numberOfRecord, Message = message, codeItemToPrint = codeItemToPrint });
         }
 
         

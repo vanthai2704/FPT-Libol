@@ -59,16 +59,16 @@
                 <table id="table1" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
                     <thead>
                         <tr>
-                            <th>Mã Ngôn ngữ</th>
-                            <th>Số lượng đầu ấn phẩm</th>
+                            <th style="text-align:center">Mã Ngôn ngữ</th>
+                            <th style="text-align:center">Số lượng đầu ấn phẩm</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in ViewBag.ItemDetailsResult)
                         {
                             <tr>
-                                <td>@item.ISOCode</td>
-                                <td>@item.Total</td>
+                                <td style="text-align:center">@item.ISOCode</td>
+                                <td style="text-align:center">@item.Total</td>
                             </tr>
                         }
                     </tbody>
@@ -88,16 +88,16 @@
                 <table id="table2" class="WordSection1 table-striped table-bordered" style="margin-left:50px; border: thin;" border="1">
                     <thead>
                         <tr>
-                            <th>Mã Ngôn ngữ</th>
-                            <th>Số lượng bản ấn phẩm</th>
+                            <th style="text-align:center">Mã Ngôn ngữ</th>
+                            <th style="text-align:center">Số lượng bản ấn phẩm</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in ViewBag.CopyDetailsResult)
                         {
                             <tr>
-                                <td>@item.ISOCode</td>
-                                <td>@item.Total</td>
+                                <td style="text-align:center">@item.ISOCode</td>
+                                <td style="text-align:center">@item.Total</td>
                             </tr>
                         }
                     </tbody>

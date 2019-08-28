@@ -1,65 +1,5 @@
 ﻿<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    /* Button used to open the contact form - fixed at the bottom of the page */
-
-    /* The popup form - hidden by default */
-    .form-popup {
-        display: none;
-        position: center;
-        bottom: 0;
-        right: 15px;
-        border: 3px solid #f1f1f1;
-        z-index: 9;
-    }
-
-    /* Add styles to the form container */
-    .form-container {
-        max-width: inherit;
-        padding: 10px;
-        background-color: white;
-    }
-
-        /* Full-width input fields */
-        .form-container input[type=text], .form-container input[type=password] {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0 10px 0;
-            border: none;
-            background: #f1f1f1;
-        }
-
-            /* When the inputs get focus, do something */
-            .form-container input[type=text]:focus, .form-container input[type=password]:focus {
-                background-color: #ddd;
-                outline: none;
-            }
-
-        /* Set a style for the submit/login button */
-        .form-container .btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 16px 20px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 10px;
-            opacity: 0.8;
-        }
-
-        /* Add a red background color to the cancel button */
-        .form-container .cancel {
-            background-color: red;
-        }
-
-        /* Add some hover effects to buttons */
-        .form-container .btn:hover, .open-button:hover {
-            opacity: 1;
-        }
-</style>
+<link rel="stylesheet" type="text/css" href="~/Content/PartialViewStyle.css">
 
 <h4><b>Số liệu xếp giá trong kho</b></h4>
 
@@ -80,27 +20,24 @@
         {
             <input type="hidden" value="finding_result" id="found" />
         }
-        <span>
-            <b>
-                Thư viện:
-                <b>@ViewBag.LibName</b> <input id="libname" value="@ViewBag.LibID" hidden />
-            </b>
-        </span>
-        <span style="padding-left:30px">
-            <b>
-                Kho:
-                <b>@ViewBag.LocName</b><input id="locname" value="@ViewBag.LocID" hidden />
-            </b>
-        </span>
-        <br />
-        <span>
-            <b> Số đầu ấn phẩm: @ViewBag.SUMITEM</b> <b>Số bản đang cho mượn: @ViewBag.CountCir</b>
-            <br />
-            <b> Số bản ấn phẩm: @ViewBag.SUMCOPY</b> <b>Số bản đang khóa: @ViewBag.CountLocked</b>
-            <br />
-            <b> Lần kiểm kê cuối: @ViewBag.INVENTORY</b>
-        </span>
-        <br />
+        <table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse">
+            <tr>
+                <td style="padding-right: 0.5px; padding-bottom:0px; padding-top:0px; border:none">Thư viện:  <b>@ViewBag.LibName</b> <input id="libname" value="@ViewBag.LibID" hidden /></td>
+                <td style="padding-right: 0.5px; padding-bottom:0px; padding-top:0px; border:none"> <b>Kho:  <b>@ViewBag.LocName</b><input id="locname" value="@ViewBag.LocID" hidden /></b></td>
+            </tr>
+            <tr>
+                <td style="padding-right: 0.5px; padding-bottom:0px; padding-top:0px; border:none"><b> Số đầu ấn phẩm: @ViewBag.SUMITEM</b> </td>
+                <td style="padding-right: 0.5px; padding-bottom:0px; padding-top:0px; border:none"><b>Số bản đang cho mượn: @ViewBag.CountCir</b></td>
+            </tr>
+            <tr>
+                <td style="padding-right: 0.5px; padding-bottom:0px; padding-top:0px; border:none"><b> Số bản ấn phẩm: @ViewBag.SUMCOPY</b> </td>
+                <td style="padding-right: 0.5px; padding-bottom:0px; padding-top:0px; border:none"><b>Số bản đang khóa: @ViewBag.CountLocked</b></td>
+            </tr>
+            <tr>
+                <td style="padding-right: 0.5px; padding-bottom:0px; padding-top:0px; border:none"><b> Lần kiểm kê cuối: @ViewBag.INVENTORY</b></td>
+                <td style="padding-right: 0.5px; padding-bottom:0px; padding-top:0px; border:none"></td>
+            </tr>
+        </table>
 
         <span><input type="checkbox" id="ckbCheckAll" /> <label for="ckbCheckAll">Chọn tất</label></span>
 
@@ -215,14 +152,17 @@
                             }
 
                             <td style="text-align:center">
-                                <input type="checkbox" id="@item.ID" value="@count" name="cbToDelete" />
-                                @if (!item.InCirculation)
-                                {
-                                    <img id="imgLocked" src="~/Content/Images/lock.gif" alt="" style="border-width:0px" />
-                                }
                                 @if (item.InUsed)
                                 {
                                     <img id="imgOnHold" src="~/Content/Images/loan.gif" alt="" style="border-width:0px" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="@item.ID" value="@count" name="cbToDelete" />
+                                    if (!item.InCirculation)
+                                    {
+                                        <img id="imgLocked" src="~/Content/Images/lock.gif" alt="" style="border-width:0px" />
+                                    }
                                 }
                             </td>
                             <td>@count</td>
@@ -260,7 +200,7 @@
                 <input type="button" value="Mở khóa" onclick="restore_unlock_item()" />
             </span>
             <span>
-                <input type="button" value="Hủy" onclick="cancel_item()" />
+                <input type="hidden" value="Hủy" onclick="cancel_item()" />
             </span>
             <span>
                 <input type="button" value="Tìm Kiếm" class="open-button" onclick="opencloseFindingForm()" />
@@ -277,12 +217,7 @@
 
                 <label for="find_title"><b>Nhan đề: </b></label>
                 <input type="text" placeholder="Nhập tiêu đề sách cần tìm ở đây" name="find_title" id="find_title">
-
-                <label for="find_code"><b>Mã Tài Liệu: </b></label>
-                <input type="text" placeholder="Nhập mã tài liệu cần tìm ở đây" name="find_code" id="find_code">
                 <br />
-                <label for="find_price"><b>Giá: </b></label>
-                <input type="text" placeholder="Nhập giá cần tìm ở đây" name="find_price" id="find_price">
 
                 <label for="find_dkcb"><b>Đăng Ký Cá Biệt: </b></label>
                 <input type="text" placeholder="Nhập Đăng Ký Cá Biệt cần tìm ở đây" name="find_dkcb" id="find_dkcb">
@@ -290,8 +225,6 @@
                 <label for="find_so_dinh_danh"><b>Số Định Danh: </b></label>
                 <input type="text" placeholder="Nhập Số Định Danh cần tìm ở đây" name="find_so_dinh_danh" id="find_so_dinh_danh">
 
-                <label for="find_volume"><b>Tập: </b></label>
-                <input type="text" placeholder="Nhập tập cần tìm ở đây" name="find_volume" id="find_volume">
 
                 <button type="button" class="btn" onclick="searchingForNewItem()" id="find_new">Bắt đầu tìm kiếm</button>
                 <button type="button" class="btn cancel" onclick="opencloseFindingForm()">Hủy tìm kiếm</button>
@@ -433,31 +366,34 @@
     });
 
     function searchingForNewItem() {
-        var find_title = $("#find_title").val();
+        var find_title = $("#find_title").val().trim();
         var find_code = $("#find_code").val();
         var find_price = $("#find_price").val();
-        var find_dkcb = $("#find_dkcb").val();
-        var find_so_dinh_danh = $("#find_so_dinh_danh").val();
+        var find_dkcb = $("#find_dkcb").val().trim();
+        var find_so_dinh_danh = $("#find_so_dinh_danh").val().trim();
         var find_volume = $("#find_volume").val();
 
         var state = "";
+        if (!find_title.trim().length && !find_dkcb.trim().length && !find_so_dinh_danh.trim().length) {
+            alert("Hãy nhập vào gì đó để tìm kiếm!");
+        } else {
+            $.ajax({
+                url: "InRepositoryPartialView",
+                data: {
+                    'find_title': find_title, 'find_code': find_code, 'find_price': find_price,
+                    'find_dkcb': find_dkcb, 'find_so_dinh_danh': find_so_dinh_danh,
+                    'find_volume': find_volume, 'state': state
+                },
+                type: "POST",
+                success: function (result) {
+                    $("#result").html(result);
 
-        $.ajax({
-            url: "InRepositoryPartialView",
-            data: {
-                'find_title': find_title, 'find_code': find_code, 'find_price': find_price,
-                'find_dkcb': find_dkcb, 'find_so_dinh_danh': find_so_dinh_danh,
-                'find_volume': find_volume, 'state': state
-            },
-            type: "POST",
-            success: function (result) {
-                $("#result").html(result);
-                alert("found!");
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        }
     }
     // delete item and move to holding remove table
     function removeItemFromDataBase() {
@@ -466,21 +402,28 @@
         console.log(reason);
         var state = "remove item";
 
-        $.ajax({
-            url: "InRepositoryPartialView",
-            data: {
-                'selected_checkbox_list': selected_checkbox_list,
-                'state': state, 'reason': reason
-            },
-            type: "POST",
-            success: function (result) {
-                $("#result").html(result);
-                alert("removed!");
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
+        if (!selected_checkbox_list) {
+            alert("Hãy chọn quyển sách mà bạn muốn xóa!");
+        } else if (selected_checkbox_list.indexOf('true') > 0) {
+
+            $.ajax({
+                url: "InRepositoryPartialView",
+                data: {
+                    'selected_checkbox_list': selected_checkbox_list,
+                    'state': state, 'reason': reason
+                },
+                type: "POST",
+                success: function (result) {
+                    $("#result").html(result);
+
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        } else {
+            alert("Hãy chọn quyển sách mà bạn muốn xóa!");
+        }
     }
 
     function opencloseFindingForm() {

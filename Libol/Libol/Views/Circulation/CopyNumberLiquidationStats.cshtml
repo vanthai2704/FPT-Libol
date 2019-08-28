@@ -12,19 +12,30 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css">
+    <style>
+        label {
+            text-align: right;
+        }
+    </style>
 </head>
 
 <body>
     <h5 style="margin-top:20px;">Kiểm tra thanh lý</h5>
-    <div class="control-label align-self-center">
-        <div class="form-group col-10">
-            <label class="control-label col-md-2 align-self-center">Đăng ký cá biệt: </label>
-            <textarea rows="5" type="text" class="form-control col-md-4" id="DKCBID" name="DKCBID"></textarea>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="form-group row col-8">
+                <label class="control-label col-md-8 align-self-center">Đăng ký cá biệt:</label>
+                <textarea type="text" class="form-control col-md-4" id="DKCBID" name="DKCBID" rows="5"></textarea>
+            </div>
         </div>
     </div>
-    <div class="btn-group d-xl-flex justify-content-md-center" role="group">
-        <button id="stat" type="submit" style="margin-right:20px;">Xem thử</button>
-        <button id="reset" type="button" onclick="reset()">Đặt lại</button>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="btn-group btn-group">
+                <button type="submit" id="stat" class="btn btn-primary mr-1">Kiểm tra</button>
+                <button type="button" id="reset" class="btn btn-primary" onclick="reset()">Đặt lại</button>
+            </div>
+        </div>
     </div>
     <div id="ContentStatLiquidation"></div>
 </body>
@@ -33,21 +44,26 @@
         var empObj = {
             strDKCBID: document.getElementById("DKCBID").value,
         };
-        $.ajax({
-            url: "GetCopyNumberLiquidationStats",
-            data: JSON.stringify(empObj),
-            contentType: "application/json;charset=utf-8",
-            type: "POST",
-            beforeSend: function () {
-                $("#ContentStatLiquidation").html("<h4>Loading...</h4>");
-            },
-            success: function (result) {
-                $("#ContentStatLiquidation").html(result)
-            },
-            error: function (errormessage) {
-                console.log("error");
-            }
-        });
+        if (document.getElementById("DKCBID").value == "") {
+            alert("Đăng ký cá biệt không được để trống");
+
+        } else {
+            $.ajax({
+                url: "GetCopyNumberLiquidationStats",
+                data: JSON.stringify(empObj),
+                contentType: "application/json;charset=utf-8",
+                type: "POST",
+                beforeSend: function () {
+                    $("#ContentStatLiquidation").html("<h4>Loading...</h4>");
+                },
+                success: function (result) {
+                    $("#ContentStatLiquidation").html(result)
+                },
+                error: function (errormessage) {
+                    console.log("error");
+                }
+            });
+        }
     };
     $(window).bind("pageshow", function () {
         $("#Library").val('');

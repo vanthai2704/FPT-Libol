@@ -17,57 +17,74 @@
 
     <link href="~/Content/multiselect.css" rel="stylesheet" />
     <script src="~/Scripts/multiselect.min.js"></script>
+    <style>
+        label {
+            text-align: right;
+        }
+    </style>
 </head>
 
 <body>
     <h5 style="margin-top:20px;">Báo cáo bổ sung</h5>
     @using (Html.BeginForm("BaoCaoBoSung_new", "AcquireReport"))
     {
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-right">Thư viện</td>
-                        <td>
-                            @Html.DropDownList("Library", ViewData["lib"] as List<SelectListItem>)
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td class="text-right" style="padding-top:20px;">Kho</td>
-                        <td>
-                            @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"), "Hãy chọn Kho")
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-right">Mã số đơn đặt</td>
-                        <td><input id="RecordNumber" name="PO" type="text"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right">Từ thời gian bổ sung</td>
-                        <td><input name="StartDate" id="FromDate" type="date" /> </td>
-                        <td class="text-right">Tới thời gian bổ sung</td>
-                        <td>&nbsp;<input name="EndDate" id="ToDate" type="date"></td>
-                    </tr>
-                    <tr>
-                        <td class="text-right">Sắp xếp theo ĐKCB</td>
-                        <td class="d-xl-flex align-items-xl-start">
-                            <select id='SortBy' name="OrderBy">
-                                <option name="OrderByasc" value='asc' selected>Tăng dần</option>
-                                <option name="OrderBydesc" value='desc'>Giảm dần</option>
-                            </select>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group row col-12">
+                    <label class="control-label col-md-8 align-self-center">Thư viện</label>
+                    @Html.DropDownList("Library", ViewData["lib"] as List<SelectListItem>, new { @class = "form-control col-md-4" })
+                </div>
+            </div>
         </div>
-        <div class="btn-group d-xl-flex justify-content-xl-center" role="group">
-            <button id="preview" type="submit" style="margin-right:20px;">Xem thử</button>
-            <button id="print" type="button" style="margin-right:20px;">In</button>
-            <button id="reset" type="button" onclick="reset()">Đặt lại</button>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group row col-12">
+                    <label class="control-label col-md-8 align-self-center">Kho</label>
+                    @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"), "", new { @class = "form-control col-md-4" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group row col-12">
+                    <label class="control-label col-md-8 align-self-center">Mã số đơn đặt</label>
+                    <input type="number" name="PO" id="RecordNumber" class="form-control col-md-4" pattern="[0-9]{1,10}" min="1" max="2147483647"/>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group row col-12">
+                    <label class="control-label col-md-8 align-self-center">Từ thời gian bổ sung</label>
+                    <input class="form-control col-md-4" type="date" id="FromDate" name="StartDate" />
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group row col-12">
+                    <label class="control-label col-md-3 align-self-center">Tới thời gian bổ sung</label>
+                    <input class="form-control col-md-4" type="date" id="ToDate" name="EndDate" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group row col-12">
+                    <label class="control-label col-md-8 align-self-center">Sắp xếp theo ĐKCB</label>
+                    <select id='SortBy' name="OrderBy" class="form-control col-md-4">
+                        <option name="OrderByasc" value='asc' selected>Tăng dần</option>
+                        <option name="OrderBydesc" value='desc'>Giảm dần</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="btn-group btn-group">
+                    <button type="button" id="preview" class="btn btn-primary mr-1" onclick="checkValid()">Xem thử</button>
+                    <button type="reset" id="reset" class="btn btn-primary">Đặt lại</button>
+                </div>
+            </div>
         </div>
     }
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -108,12 +125,15 @@
             $("#Library").val('');
             $("#Location").val('');
         });
-        function reset() {
-            $("#Library").val('');
-            $("#Location").empty();
-            $("#FromDate").val('');
-            $("#ToDate").val('');
-            $("#RecordNumber").val('');
+        function checkValid() {
+            if (document.getElementById("Library").value == "") {
+                alert("Hãy chọn thư viện");
+
+            } else if (document.getElementById("FromDate").value != "" && document.getElementById("ToDate").value != "" && document.getElementById("FromDate").value > document.getElementById("ToDate").value) {
+                alert("Khoảng thời gian thống kê không hợp lệ");
+            } else {
+                document.getElementById("preview").type = "submit";
+            }
         }
     </script>
 </body>

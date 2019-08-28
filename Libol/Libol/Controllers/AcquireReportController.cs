@@ -3087,8 +3087,16 @@ namespace Libol.Controllers
 
                 slDauphay = 0;
             }
-
-            ViewBag.Result = listItem;
+            
+            if(listItem.Count > 0)
+            {
+                ViewBag.Result = listItem;
+            }
+            else
+            {
+                ViewBag.Result = null;
+            }
+            
             return PartialView("GetStatTaskbar");
         }
 
