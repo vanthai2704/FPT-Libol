@@ -70,6 +70,8 @@ namespace Libol.Controllers
             string CopyNumber = strCopyNumbers.Trim();
             List<int?> ItemIds = new List<int?>();
             Getpatrondetail(PatronCode);
+            int onloan = db.SP_GET_PATRON_ONLOAN_COPIES(PatronID).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>().Count();
+
             //kiểm tra cùng 1 người thực hiện ghi mượn
             if (patroncode != PatronCode)
             {
@@ -87,45 +89,53 @@ namespace Libol.Controllers
             }
             else
             {
-                int ItemID = db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).First().ItemID;
-                foreach (CIR_LOAN loan in cIR_LOANs)
+                if (!Checkonloanquota(PatronID, intLoanMode))
                 {
-                    ItemIds.Add(loan.ItemID);
-                }
-                foreach (int? id in ItemIds)
-                {
-                    if (ItemID == id)
-                    {
-                        duplicate = true;
-                    }
-                }
-                if (duplicate == true && boolAllowDuplacate == false)
-                {
-                    ViewBag.HiddenCheckduplicate = "duplicate";
+                    ViewBag.message = "Hết hạn ngạch tối đa có thể mượn";
+                    ViewBag.HiddenCheckduplicate = "";
                 }
                 else
                 {
-                    int success = db.SP_CHECKOUT(PatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strDueDate, strCheckOutDate, intHoldIgnore,
-                       new ObjectParameter("intOutValue", typeof(int)),
-                        new ObjectParameter("intOutID", typeof(int)));
-                    string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
-
-                    if (success == -1)
+                    int ItemID = db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).First().ItemID;
+                    foreach (CIR_LOAN loan in cIR_LOANs)
                     {
-                        ViewBag.message = "Ghi mượn thất bại";
+                        ItemIds.Add(loan.ItemID);
+                    }
+                    foreach (int? id in ItemIds)
+                    {
+                        if (ItemID == id)
+                        {
+                            duplicate = true;
+                        }
+                    }
+                    if (duplicate == true && boolAllowDuplacate == false)
+                    {
+                        ViewBag.HiddenCheckduplicate = "duplicate";
                     }
                     else
                     {
-                        if (patroncode == PatronCode)
+                        int success = db.SP_CHECKOUT(PatronCode, (int)Session["UserID"], intLoanMode, CopyNumber, strDueDate, strCheckOutDate, intHoldIgnore,
+                           new ObjectParameter("intOutValue", typeof(int)),
+                            new ObjectParameter("intOutID", typeof(int)));
+                        string lastid = db.CIR_LOAN.Max(a => a.ID).ToString();
+
+                        if (success == -1)
                         {
-                            strTransactionIDs = strTransactionIDs + "," + lastid;
+                            ViewBag.message = "Ghi mượn thất bại";
                         }
                         else
                         {
-                            strTransactionIDs = lastid;
+                            if (patroncode == PatronCode)
+                            {
+                                strTransactionIDs = strTransactionIDs + "," + lastid;
+                            }
+                            else
+                            {
+                                strTransactionIDs = lastid;
+                            }
                         }
+                        ViewBag.HiddenCheckduplicate = "";
                     }
-                    ViewBag.HiddenCheckduplicate = "";
                 }
             }
             ViewBag.HiddenDuplicateCopyNumber = CopyNumber;
@@ -284,6 +294,26 @@ namespace Libol.Controllers
             ViewBag.outofquota = outofquota;
             //số ấn phẩm đang quá hạn
             ViewBag.owningcount = owningcount;
+        }
+
+        public bool Checkonloanquota(int id, int loanMode)
+        {
+            bool check = true;
+            List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
+            int outofquota = 0;
+            foreach (SP_GET_PATRON_ONLOAN_COPIES_Result a in patronloaninfo)
+            {
+                if (a.LOANMODE == 3)
+                {
+                    outofquota = outofquota + 1;
+                }
+            }
+            int loanquota = db.CIR_PATRON.Where(a => a.ID == id).First().CIR_PATRON_GROUP.LoanQuota;
+            if (patronloaninfo.Count()- outofquota >= loanquota && loanMode == 1)
+            {
+                check = false;
+            }
+            return check;
         }
 
         public void Getcurrentloandetail()

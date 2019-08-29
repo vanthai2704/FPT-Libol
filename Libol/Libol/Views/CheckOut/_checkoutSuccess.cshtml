@@ -3,6 +3,7 @@
         .columnleft {
             float: right;
         }
+
         #myModal th {
             font-size: 12px;
         }
@@ -155,7 +156,7 @@
                 intHoldIgnore: 0,
                 strCopyNumbers: document.getElementById("hiddenDuplicateCopyNumber").value,
                 strCheckOutDate: document.getElementById("strCheckoutDate").value,
-                boolAllowDuplacate : 1
+                boolAllowDuplacate: 1
             };
             $.ajax({
                 url: "CheckOut/CheckOut",
@@ -390,41 +391,41 @@
 
 
 <div id="myModal1" class="modal">
-
-    <!-- Modal content -->
-    <div class="modal-content col-6">
-        <div class="modal-header">
-            <h2 class="" modal-title">Sửa thông tin ấn phẩm vừa mượn</h2>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group ">
-                <label for="txtFullName">Nhan đề:</label>
-                <input type="text" class="form-control" id="txtTitle" disabled>
+    <div class="modal-dialog" style="width:500px;">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="" modal-title">Sửa thông tin ấn phẩm vừa mượn</h2>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="form-group ">
-                <label for="txtPatronCode">ĐKCB:</label>
-                <input type="text" class="form-control" id="txtCopyNumber" disabled>
+            <div class="modal-body">
+                <div class="form-group ">
+                    <label for="txtFullName">Nhan đề:</label>
+                    <input type="text" class="form-control" id="txtTitle" disabled>
+                </div>
+                <div class="form-group ">
+                    <label for="txtPatronCode">ĐKCB:</label>
+                    <input type="text" class="form-control" id="txtCopyNumber" disabled>
+                </div>
+                <div class="form-group ">
+                    <label for="txtStartdate">Ngày mượn:</label>
+                    <input type="text" class="form-control" id="txtCheckOutDate" disabled>
+                </div>
+                <div class="form-group ">
+                    <label for="txtFinishdate">Hạn trả:</label>
+                    <input type="text" class="form-control" id="txtDueDate" disabled>
+                </div>
+                <div class="form-group ">
+                    <label for="txtLockedDay">Ghi chú:</label>
+                    <input type="text" class="form-control" id="txtNote">
+                </div>
             </div>
-            <div class="form-group ">
-                <label for="txtStartdate">Ngày mượn:</label>
-                <input type="text" class="form-control" id="txtCheckOutDate" disabled>
+            <div class="modal-footer">
+                <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="Save()">Lưu</button>
+                <button class="btn btn-danger" style="float: right" onclick="Cancel()">Hủy bỏ</button>
             </div>
-            <div class="form-group ">
-                <label for="txtFinishdate">Hạn trả:</label>
-                <input type="text" class="form-control" id="txtDueDate" disabled>
-            </div>
-            <div class="form-group ">
-                <label for="txtLockedDay">Ghi chú:</label>
-                <input type="text" class="form-control" id="txtNote">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-success " style="float: right;margin-left:15px; " onclick="Save()">Lưu</button>
-            <button class="btn btn-danger" style="float: right" onclick="Cancel()">Hủy bỏ</button>
         </div>
     </div>
-
 </div>
 
 @* modal xác nhận ghi mượn*@
