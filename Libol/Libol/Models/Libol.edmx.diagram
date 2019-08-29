@@ -405,9 +405,7 @@
         <EntityTypeShape EntityType="LibolModel.FPT_SYS_USER_RIGHT" Width="1.5" PointX="28.375" PointY="5.875" />
         <EntityTypeShape EntityType="LibolModel.FPT_SYS_USER_RIGHT_DETAIL" Width="1.5" PointX="30.625" PointY="6" />
         <AssociationConnector Association="LibolModel.FK__FPT_SYS_U__Right__76923CB8" />
-        <EntityTypeShape EntityType="LibolModel.FPT_CATA_FILE" Width="1.5" PointX="17.375" PointY="27.75" />
-        <EntityTypeShape EntityType="LibolModel.FPT_CATA_FILE_NEW2019" Width="1.5" PointX="13.5" PointY="148.5" />
-        <AssociationConnector Association="LibolModel.FK__FPT_CATA___ItemI__10DC1EA0" />
+        <EntityTypeShape EntityType="LibolModel.FPT_CATA_FILE_NEW" Width="1.5" PointX="7.375" PointY="28.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

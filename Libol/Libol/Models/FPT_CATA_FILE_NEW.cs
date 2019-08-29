@@ -12,7 +12,7 @@ namespace Libol.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class FPT_CATA_FILE
+    public partial class FPT_CATA_FILE_NEW
     {
         public int ID { get; set; }
         public int ItemID { get; set; }

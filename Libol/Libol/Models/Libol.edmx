@@ -1319,18 +1319,12 @@ warning 6002: The table/view 'Libol.dbo.CIR_SERIAL_COUNT' does not have a primar
           <Property Name="Ind1" Type="char" MaxLength="1" />
           <Property Name="Ind2" Type="char" MaxLength="1" />
         </EntityType>
-        <EntityType Name="FPT_CATA_FILE">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Libol.dbo.FPT_CATA_FILE_NEW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="FPT_CATA_FILE_NEW">
           <Key>
             <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ItemID" Type="int" Nullable="false" />
-          <Property Name="FileName" Type="nvarchar" MaxLength="250" />
-          <Property Name="FilePath" Type="nvarchar" MaxLength="250" />
-        </EntityType>
-        <EntityType Name="FPT_CATA_FILE_NEW2019">
-          <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="ItemID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ItemID" Type="int" Nullable="false" />
@@ -2937,19 +2931,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FPT_CATA___ItemI__4A149BFC">
-          <End Role="ITEM" Type="Self.ITEM" Multiplicity="1" />
-          <End Role="FPT_CATA_FILE_NEW2019" Type="Self.FPT_CATA_FILE_NEW2019" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ITEM">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="FPT_CATA_FILE_NEW2019">
-              <PropertyRef Name="ItemID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__FPT_SYS_U__Right__64097829">
+        <Association Name="FK__FPT_SYS_U__Right__2EA18BB1">
           <End Role="FPT_SYS_USER_RIGHT" Type="Self.FPT_SYS_USER_RIGHT" Multiplicity="1" />
           <End Role="FPT_SYS_USER_RIGHT_DETAIL" Type="Self.FPT_SYS_USER_RIGHT_DETAIL" Multiplicity="*" />
           <ReferentialConstraint>
@@ -12074,8 +12056,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <EntitySet Name="FIELD700S" EntityType="Self.FIELD700S" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FIELD800S" EntityType="Self.FIELD800S" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FIELD900S" EntityType="Self.FIELD900S" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FPT_CATA_FILE" EntityType="Self.FPT_CATA_FILE" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FPT_CATA_FILE_NEW2019" EntityType="Self.FPT_CATA_FILE_NEW2019" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FPT_RECOMMEND" EntityType="Self.FPT_RECOMMEND" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FPT_RECOMMEND_ITEM" EntityType="Self.FPT_RECOMMEND_ITEM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FPT_SYS_USER_RIGHT" EntityType="Self.FPT_SYS_USER_RIGHT" Schema="dbo" store:Type="Tables" />
@@ -12248,6 +12228,14 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
     [CIR_SERIAL_COUNT].[CheckOut] AS [CheckOut], 
     [CIR_SERIAL_COUNT].[CheckIn] AS [CheckIn]
     FROM [dbo].[CIR_SERIAL_COUNT] AS [CIR_SERIAL_COUNT]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="FPT_CATA_FILE_NEW" EntityType="Self.FPT_CATA_FILE_NEW" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [FPT_CATA_FILE_NEW].[ID] AS [ID], 
+    [FPT_CATA_FILE_NEW].[ItemID] AS [ItemID], 
+    [FPT_CATA_FILE_NEW].[FileName] AS [FileName], 
+    [FPT_CATA_FILE_NEW].[FilePath] AS [FilePath]
+    FROM [dbo].[FPT_CATA_FILE_NEW] AS [FPT_CATA_FILE_NEW]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="HOLDING_COPY" EntityType="Self.HOLDING_COPY" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -12450,11 +12438,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
           </AssociationSet>
-          <AssociationSet Name="FK__FPT_CATA___ItemI__4A149BFC" Association="Self.FK__FPT_CATA___ItemI__4A149BFC">
-            <End Role="ITEM" EntitySet="ITEM" />
-            <End Role="FPT_CATA_FILE_NEW2019" EntitySet="FPT_CATA_FILE_NEW2019" />
-          </AssociationSet>
-          <AssociationSet Name="FK__FPT_SYS_U__Right__64097829" Association="Self.FK__FPT_SYS_U__Right__64097829">
+          <AssociationSet Name="FK__FPT_SYS_U__Right__2EA18BB1" Association="Self.FK__FPT_SYS_U__Right__2EA18BB1">
             <End Role="FPT_SYS_USER_RIGHT" EntitySet="FPT_SYS_USER_RIGHT" />
             <End Role="FPT_SYS_USER_RIGHT_DETAIL" EntitySet="FPT_SYS_USER_RIGHT_DETAIL" />
           </AssociationSet>
@@ -15286,7 +15270,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <NavigationProperty Name="MARC_WORKSHEET" Relationship="Self.MWOR_ITE_FK" FromRole="ITEM" ToRole="MARC_WORKSHEET" />
           <NavigationProperty Name="ACQ_PO" Relationship="Self.ACQ_PO_ITEM" FromRole="ITEM" ToRole="ACQ_PO" />
           <NavigationProperty Name="FPT_RECOMMEND" Relationship="LibolModel.FPT_RECOMMEND_ITEM" FromRole="ITEM" ToRole="FPT_RECOMMEND" />
-          <NavigationProperty Name="FPT_CATA_FILE_NEW2019" Relationship="LibolModel.FK__FPT_CATA___ItemI__10DC1EA0" FromRole="ITEM" ToRole="FPT_CATA_FILE_NEW2019" />
         </EntityType>
         <EntityType Name="ITEM_FULLTEXT">
           <Key>
@@ -26107,18 +26090,13 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intType" Mode="In" Type="Int32" />
             <Parameter Name="intCategoryID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="FPT_CATA_FILE" EntityType="LibolModel.FPT_CATA_FILE" />
-          <EntitySet Name="FPT_CATA_FILE_NEW2019" EntityType="LibolModel.FPT_CATA_FILE_NEW2019" />
-          <AssociationSet Name="FK__FPT_CATA___ItemI__10DC1EA0" Association="LibolModel.FK__FPT_CATA___ItemI__10DC1EA0">
-            <End Role="ITEM" EntitySet="ITEMs" />
-            <End Role="FPT_CATA_FILE_NEW2019" EntitySet="FPT_CATA_FILE_NEW2019" />
-          </AssociationSet>
           <FunctionImport Name="FPT_CIR_SP_STAT_TOP20">
             <Parameter Name="intHistory" Mode="In" Type="Int32" />
             <Parameter Name="intID" Mode="In" Type="Int32" />
             <Parameter Name="intUserID" Mode="In" Type="Int32" />
             <Parameter Name="intLibID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="FPT_CATA_FILE_NEW" EntityType="LibolModel.FPT_CATA_FILE_NEW" />
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -31150,37 +31128,16 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="Int32" Name="Total" Nullable="true" />
           <Property Type="String" Name="AccessEntry" Nullable="false" MaxLength="250" />
         </ComplexType>
-        <EntityType Name="FPT_CATA_FILE">
+        <EntityType Name="FPT_CATA_FILE_NEW">
           <Key>
             <PropertyRef Name="ID" />
+            <PropertyRef Name="ItemID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ItemID" Type="Int32" Nullable="false" />
           <Property Name="FileName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="FilePath" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="FPT_CATA_FILE_NEW2019">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ItemID" Type="Int32" Nullable="false" />
-          <Property Name="FileName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="FilePath" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ITEM" Relationship="LibolModel.FK__FPT_CATA___ItemI__10DC1EA0" FromRole="FPT_CATA_FILE_NEW2019" ToRole="ITEM" />
-        </EntityType>
-        <Association Name="FK__FPT_CATA___ItemI__10DC1EA0">
-          <End Type="LibolModel.ITEM" Role="ITEM" Multiplicity="1" />
-          <End Type="LibolModel.FPT_CATA_FILE_NEW2019" Role="FPT_CATA_FILE_NEW2019" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ITEM">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="FPT_CATA_FILE_NEW2019">
-              <PropertyRef Name="ItemID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -41668,27 +41625,17 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="FPT_CATA_FILE">
-            <EntityTypeMapping TypeName="LibolModel.FPT_CATA_FILE">
-              <MappingFragment StoreEntitySet="FPT_CATA_FILE">
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FPT_CATA_FILE_NEW2019">
-            <EntityTypeMapping TypeName="LibolModel.FPT_CATA_FILE_NEW2019">
-              <MappingFragment StoreEntitySet="FPT_CATA_FILE_NEW2019">
-                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
-                <ScalarProperty Name="FileName" ColumnName="FileName" />
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="FPT_CIR_SP_STAT_TOP20" FunctionName="LibolModel.Store.FPT_CIR_SP_STAT_TOP20" />
+          <EntitySetMapping Name="FPT_CATA_FILE_NEW">
+            <EntityTypeMapping TypeName="LibolModel.FPT_CATA_FILE_NEW">
+              <MappingFragment StoreEntitySet="FPT_CATA_FILE_NEW">
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

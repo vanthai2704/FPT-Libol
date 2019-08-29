@@ -225,10 +225,7 @@
     <Compile Include="Models\FPT_ACQ_STATISTIC_TOP20_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\FPT_CATA_FILE.cs">
-      <DependentUpon>Libol.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\FPT_CATA_FILE_NEW2019.cs">
+    <Compile Include="Models\FPT_CATA_FILE_NEW.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_RECOMMEND.cs">

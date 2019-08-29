@@ -15,7 +15,6 @@ namespace Libol.Controllers
         ShelfBusiness shelfBusiness = new ShelfBusiness();
         List<Library> libs = new List<Library>();
         List<LibraryLocation> lic_locs = new List<LibraryLocation>();
-        List<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result> general_loc = null;
 
         [AuthAttribute(ModuleID = 4, RightID = "26")]
         public ActionResult Index()

@@ -62,7 +62,7 @@ namespace Libol.Controllers
                     file.SaveAs(path);
                     int indexi = i + 1;
                     //save DB
-                    db.FPT_CATA_FILE_NEW2019.Add(new FPT_CATA_FILE_NEW2019 {  ItemID = id, FileName= file.FileName, FilePath= path });
+                    db.FPT_CATA_FILE_NEW.Add(new FPT_CATA_FILE_NEW {  ItemID = id, FileName= file.FileName, FilePath= path });
                     db.SaveChanges();
                     
                     rs = "Upload Thành Công " + indexi + " File !";
@@ -205,7 +205,7 @@ namespace Libol.Controllers
 
                 //Load File
                 int IdIn = Int32.Parse(Id);
-                List<FPT_CATA_FILE_NEW2019> listFile = db.FPT_CATA_FILE_NEW2019.Where(i => i.ItemID== IdIn).ToList();
+                List<FPT_CATA_FILE_NEW> listFile = db.FPT_CATA_FILE_NEW.Where(i => i.ItemID== IdIn).ToList();
                 ViewData["ListFile"] = listFile;
             }
             else

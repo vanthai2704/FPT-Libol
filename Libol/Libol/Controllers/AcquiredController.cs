@@ -2159,7 +2159,7 @@ namespace Libol.Controllers
                     return Json("", JsonRequestBehavior.AllowGet);
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 throw;
             }
