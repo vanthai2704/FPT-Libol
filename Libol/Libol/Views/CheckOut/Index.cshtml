@@ -76,16 +76,16 @@
                     <div class="form-row">
                         <div class="col">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                <label class="form-check-label" for="exampleCheck1">Không tính vào hạn ngạch</label>
+                                <input type="checkbox" class="form-check-input" id="checkoutofquota">
+                                <label class="form-check-label" for="checkoutofquota">Không tính vào hạn ngạch</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-row" style="margin-bottom: 5px;">
                         <div class="col">
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck2">
-                                <label class="form-check-label" for="exampleCheck2">Hạn trả mở</label>
+                                <input type="checkbox" class="form-check-input" id="openduedate">
+                                <label class="form-check-label" for="openduedate">Hạn trả mở</label>
                             </div>
                         </div>
                     </div>
@@ -180,10 +180,14 @@
 
 
     function checkoutSuccess() {
+        var mode = 1;
+        if (document.getElementById("checkoutofquota").checked == true) {
+            mode = 3;
+        }
         var empObj = {
             strPatronCode: document.getElementById("strPatronCode").value,
             strDueDate: document.getElementById("strDueDate").value,
-            intLoanMode: 1,
+            intLoanMode: mode,
             intHoldIgnore: 0,
             strCopyNumbers: document.getElementById("strCopyNumber").value,
             strCheckOutDate: document.getElementById("strCheckoutDate").value,
@@ -212,6 +216,8 @@
         var empObj = {
             strPatronCode: document.getElementById("strPatronCode").value,
         };
+        document.getElementById("checkoutofquota").checked = false;
+        document.getElementById("openduedate").checked = false;
         $.ajax({
             contentType: "application/json;charset=utf-8",
             type: "POST",

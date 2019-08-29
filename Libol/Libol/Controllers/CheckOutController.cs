@@ -70,6 +70,11 @@ namespace Libol.Controllers
             string CopyNumber = strCopyNumbers.Trim();
             List<int?> ItemIds = new List<int?>();
             Getpatrondetail(PatronCode);
+            //kiểm tra cùng 1 người thực hiện ghi mượn
+            if (patroncode != PatronCode)
+            {
+                strTransactionIDs = "0";
+            }
             if (db.HOLDINGs.Where(a => a.CopyNumber == CopyNumber).Count() == 0)
             {
                 ViewBag.message = "ĐKCB không đúng";
@@ -107,11 +112,7 @@ namespace Libol.Controllers
 
                     if (success == -1)
                     {
-                        if (patroncode != PatronCode)
-                        {
-                            strTransactionIDs = "0";
-                        }
-                        ViewBag.message = "ĐKCB không đúng hoặc đang được ghi mượn";
+                        ViewBag.message = "Ghi mượn thất bại";
                     }
                     else
                     {
@@ -257,11 +258,16 @@ namespace Libol.Controllers
             List<SP_GET_PATRON_ONLOAN_COPIES_Result> patronloaninfo = db.SP_GET_PATRON_ONLOAN_COPIES(id).ToList<SP_GET_PATRON_ONLOAN_COPIES_Result>();
             List<OnLoan> onLoans = new List<OnLoan>();
             int owningcount = 0;
+            int outofquota = 0;
             foreach (SP_GET_PATRON_ONLOAN_COPIES_Result a in patronloaninfo)
             {
                 if ((DateTime.Now - a.DUEDATE.Value).Days > 0)
                 {
                     owningcount = owningcount + 1;
+                }
+                if(a.LOANMODE == 3)
+                {
+                    outofquota = outofquota + 1;
                 }
                 onLoans.Add(new OnLoan
                 {
@@ -274,6 +280,9 @@ namespace Libol.Controllers
                 });
             }
             ViewBag.patronloaninfo = onLoans;
+            // số ấn phẩm mượn ngoài hạn ngạch
+            ViewBag.outofquota = outofquota;
+            //số ấn phẩm đang quá hạn
             ViewBag.owningcount = owningcount;
         }
 

@@ -144,10 +144,14 @@
 
         function ContinueUpdate() {
             $("#ModalCheckduplicate").modal("hide");
+            var mode = 1;
+            if (document.getElementById("checkoutofquota").checked == true) {
+                mode = 3;
+            }
             var empObj = {
                 strPatronCode: document.getElementById("strPatronCode").value,
                 strDueDate: document.getElementById("strDueDate").value,
-                intLoanMode: 1,
+                intLoanMode: mode,
                 intHoldIgnore: 0,
                 strCopyNumbers: document.getElementById("hiddenDuplicateCopyNumber").value,
                 strCheckOutDate: document.getElementById("strCheckoutDate").value,
