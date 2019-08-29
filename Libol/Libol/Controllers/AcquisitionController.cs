@@ -34,19 +34,48 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult Liquidate(string Copynumber, string DKCB, string Liquidate, string DateLiquidate, int Reason ,string selectfile)
         {
-            if(db.ITEMs.Where(a => a.Code == Copynumber).Count() == 0)
+            int IDCN = -1;
+            if (Copynumber != "" && Copynumber != null)
             {
-                ViewBag.Liquidate = "DKCB : " + Copynumber + " không tồn tại";
+                if (db.ITEMs.Where(a => a.Code == Copynumber).Count() == 0)
+                {
+                    ViewBag.Liquidate = "Mã tài liệu : " + Copynumber + " không tồn tại";
+                }
+                else
+                {
+                    IDCN = db.ITEMs.Where(a => a.Code == Copynumber).First().ID;
+                    if (db.CIR_LOAN.Where(a => a.ItemID == IDCN).Count() != 0)
+                    {
+                        ViewBag.Liquidate = "Không thể Thanh Lý vì vẫn còn sách đang lưu thông";
+                    }
+                    else
+                    {
+                        string formatDKCB = "";
+                        ViewBag.Liquidate = db.SP_HOLDING_REMOVED_LIQUIDATE(Liquidate, DateLiquidate, Copynumber, formatDKCB, Reason, new ObjectParameter("intTotalItem", typeof(int)),
+                            new ObjectParameter("intOnLoan", typeof(int)),
+                            new ObjectParameter("intOnInventory", typeof(int))).ToList();
+                        ViewBag.Liquidate = "Thanh lý thành công";
+                    }
+                }
             }
             else
             {
-                string formatDKCB = DKCB.Replace('\n', ',');
-                ViewBag.Liquidate = db.SP_HOLDING_REMOVED_LIQUIDATE(Liquidate, DateLiquidate, Copynumber, formatDKCB, Reason, new ObjectParameter("intTotalItem", typeof(int)),
-                    new ObjectParameter("intOnLoan", typeof(int)),
-                    new ObjectParameter("intOnInventory", typeof(int))).ToList();
-                ViewBag.Liquidate = "Thanh lý thành công";
+                if (Copynumber == "" && DKCB== "")
+                {
+                    ViewBag.Liquidate = "Không thể thanh lý vì chưa nhập thông tin";
+                }
+                else
+                {
+                    string formatDKCB = DKCB.Replace('\n', ',');
+                    formatDKCB = formatDKCB.Replace("\t", "");
+                    ViewBag.Liquidate = db.SP_HOLDING_REMOVED_LIQUIDATE(Liquidate, DateLiquidate, Copynumber, formatDKCB, Reason, new ObjectParameter("intTotalItem", typeof(int)),
+                        new ObjectParameter("intOnLoan", typeof(int)),
+                        new ObjectParameter("intOnInventory", typeof(int))).ToList();
+                    ViewBag.Liquidate = "Thanh lý thành công";
+                }
+                
             }
-           
+            
             return Json(ViewBag.Liquidate, JsonRequestBehavior.AllowGet);
 
         }
