@@ -116,6 +116,34 @@ namespace Libol.Controllers
             return sP_CIR_OVERDUELISTs;
         }
 
+        public PartialViewResult PatronDetail(string strCode)
+        {
+            var patron = db.CIR_PATRON.Where(a => a.Code == strCode).First();
+            ViewBag.PatronDetail = new CustomPatron
+            {
+                ID = patron.ID,
+                strCode = patron.Code,
+                Name = patron.FirstName + " " + patron.MiddleName + " " + patron.LastName,
+                strDOB = Convert.ToDateTime(patron.DOB).ToString("dd/MM/yyyy"),
+                strLastIssuedDate = Convert.ToDateTime(patron.LastIssuedDate).ToString("dd/MM/yyyy"),
+                strExpiredDate = Convert.ToDateTime(patron.ExpiredDate).ToString("dd/MM/yyyy"),
+                Sex = patron.Sex == "1" ? "Nam" : "Nữ",
+                intEthnicID = db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).Count() == 0 ? "" : db.CIR_DIC_ETHNIC.Where(a => a.ID == patron.EthnicID).First().Ethnic,
+                intCollegeID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_COLLEGE.College,
+                intFacultyID = (patron.CIR_PATRON_UNIVERSITY == null || patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY == null) ? "" : patron.CIR_PATRON_UNIVERSITY.CIR_DIC_FACULTY.Faculty,
+                strGrade = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Grade,
+                strClass = patron.CIR_PATRON_UNIVERSITY == null ? "" : patron.CIR_PATRON_UNIVERSITY.Class,
+                strAddress = patron.CIR_PATRON_OTHER_ADDR.Count == 0 ? "" : patron.CIR_PATRON_OTHER_ADDR.First().Address,
+                strTelephone = patron.Telephone,
+                strMobile = patron.Mobile,
+                strEmail = patron.Email,
+                strNote = patron.Note,
+                intOccupationID = patron.CIR_DIC_OCCUPATION == null ? "" : patron.CIR_DIC_OCCUPATION.Occupation,
+                intPatronGroupID = patron.CIR_PATRON_GROUP == null ? "" : patron.CIR_PATRON_GROUP.Name
+            };
+            return PartialView("_PatronDetail");
+        }
+
         private string ProcessCondition(string txtSoThe, string txtTenBanDoc,int ddlNhomBanDoc,int ddlTruong,int ddlKhoa, string txtKhoaHoc, string txtLopHoc,int ddlLib,int ddlLoc, string txtTenTaiLieu, string txtSDKCB, DateTime? txtNgayMuonTu, DateTime? txtNgayMuonDen, DateTime? txtNgayTraTu, DateTime? txtNgayTraDen, string txtSoNgayQuaHan, string txtSoNgayQuaHanDen)
         {
             string str = "";

@@ -141,7 +141,7 @@
                 <div class="col">
                     <label class="col-form-label">
                         Đang mượn: @if (ViewBag.patronloaninfo.Count > 0)
-                        {<strong>@ViewBag.patronloaninfo.Count</strong> <a href="#" style="margin-left: 15px;" data-toggle="modal" data-target="#myModal2">Chi tiết</a> }
+                        {<strong>@ViewBag.patronloaninfo.Count</strong> <scan>(Ngoài hạn ngạch: <strong>@ViewBag.outofquota</strong>)</scan><a href="#" style="margin-left: 5px;" data-toggle="modal" data-target="#myModal2">Chi tiết</a> }
                     else
                     {<strong>@ViewBag.patronloaninfo.Count</strong>}
                     </label>
@@ -151,7 +151,7 @@
                 <div class="col"><label class="col-form-label" style="color:red;">Quá hạn: <strong>@ViewBag.owningcount</strong></label></div>
             </div>
             <div class="form-row">
-                <div class="col"><label class="col-form-label">Còn được mượn: <strong>@(ViewBag.loanquota - ViewBag.patronloaninfo.Count)</strong></label></div>
+                <div class="col"><label class="col-form-label">Còn được mượn: <strong>@(ViewBag.loanquota - ViewBag.patronloaninfo.Count + ViewBag.outofquota)</strong></label></div>
             </div>
             <div class="form-row">
                 <div class="col">
