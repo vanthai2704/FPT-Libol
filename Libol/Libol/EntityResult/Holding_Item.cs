@@ -14,20 +14,20 @@ namespace Libol.EntityResult
         public int LocationID { get; set; }
         public string Content { get; set; }
         public string Volume { get; set; }
-        public DateTime AcquiredDate { get; set; }
+        public DateTime? AcquiredDate { get; set; }
         public string CopyNumber { get; set; }
         public string CallNumber { get; set; }
         public string Shelf { get; set; }
         public bool InUsed { get; set; }
-        public bool InCirculation { get; set; }
+        public bool? InCirculation { get; set; }
         public string Note { get; set; }
 
-        public DateTime DateLastUsed { get; set; }
-        public Single Price { get; set; }
+        public DateTime? DateLastUsed { get; set; }
+        public Single? Price { get; set; }
         public int UseCount { get; set; }
         public string LibName { get; set; }
         public string LocName { get; set; }
-        public int LoanTypeID { get; set; }
+        public int? LoanTypeID { get; set; }
         public int ItemID { get; set; }
         public int? POID { get; set; }
         public int? AcquiredSourceID { get; set; }
