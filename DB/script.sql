@@ -6408,25 +6408,21 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[FPT_CATA_FILE_NEW](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[ItemID] [int] NOT NULL,
+	[ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[ItemID] [int] NOT NULL FOREIGN KEY REFERENCES Item(ID),
 	[FileName] [nvarchar](250) NULL,
 	[FilePath] [nvarchar](250) NULL
 )
-GO
 
+
+GO
 /****** Object:  StoredProcedure [dbo].[FPT_CIR_SP_STAT_TOP20]    Script Date: 08/22/2019 11:49:33 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-
-
-
 --SP_STAT_TOP20 0,30,14
-
-
 Create    PROCEDURE [dbo].[FPT_CIR_SP_STAT_TOP20] 
 	@intHistory int, --1 la thong ke lich su muon sach.  
 	@intID int,  
