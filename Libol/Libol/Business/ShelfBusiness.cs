@@ -2,6 +2,7 @@
 using Libol.EntityResult;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
@@ -16,9 +17,8 @@ namespace Libol.Models
         LibolEntities db = new LibolEntities();
         public bool IsExistHolding(string strCN, int intLocationID, int intCopyID = -1)
         {
-            List<string> list = db.SP_CHECK_COPYNUMBER(strCN, intCopyID , intLocationID).ToList();
+            List<string> list = db.SP_CHECK_COPYNUMBER(strCN, intCopyID, intLocationID).ToList();
             return list.Count > 0 ? true : false;
-
         }
         public string GenCopyNumber(int locId)
         {
@@ -45,7 +45,7 @@ namespace Libol.Models
             return copyNumber;
         }
 
-        public string InsertHolding(HOLDING holding, int numberOfCN,string recommendID, ref string composite)
+        public string InsertHolding(HOLDING holding, int numberOfCN, string recommendID, ref string composite)
         {
 
             if (String.IsNullOrEmpty(holding.CopyNumber))
@@ -71,7 +71,7 @@ namespace Libol.Models
             holding.Note = "";
             holding.POID = 0;
 
-          
+
             // check start holding tồn tại chưa
 
             if (!IsExistHolding(holding.CopyNumber, holding.LocationID, -1))
@@ -81,57 +81,74 @@ namespace Libol.Models
                 string strNumber = holding.CopyNumber.Substring(symbol.Length, 6);
                 int number = Convert.ToInt32(strNumber);
 
-                for (int i = 0; i < numberOfCN; i++)
+                using (DbContextTransaction transaction = db.Database.BeginTransaction())
                 {
-                    // tạo list ĐKCB
-                    int length = 6 - number.ToString().Length;
-                    string stringZero = "";
-                    for (int j = 0; j < length; j++)
+                    for (int i = 0; i < numberOfCN; i++)
                     {
-                        stringZero = stringZero + "0";
+                        // tạo list ĐKCB
+                        int length = 6 - number.ToString().Length;
+                        string stringZero = "";
+                        for (int j = 0; j < length; j++)
+                        {
+                            stringZero = stringZero + "0";
+                        }
+                        string copyNumber = symbol + stringZero + number;
+
+                        if (IsExistHolding(copyNumber, holding.LocationID, -1))
+                        {
+                            transaction.Rollback();
+                            return "Hãy sinh lại giá trị";
+                        };
+
+                        number++;
+                        // procedure đã + 1 giá trị MaxNumber trong HOLDING_LOCATION
+                        db.SP_HOLDING_INS(
+                            holding.ItemID,
+                            holding.LocationID,
+                            holding.LibID,
+                            holding.UseCount,
+                            holding.Volume,
+                            // ngày bổ sung
+                            holding.AcquiredDate.ToString(),
+                            copyNumber,
+                            holding.InUsed == true ? 1 : 0,
+                            holding.InCirculation == true ? 1 : 0,
+                            holding.ILLID,
+                            holding.Price,
+                            // giá sách
+                            holding.Shelf,
+                            holding.POID,
+                            //ngày sử dụng cuối
+                            holding.DateLastUsed.ToString(),
+                            holding.CallNumber,
+                            holding.Acquired == true ? 1 : 0,
+                            holding.Note,
+                            holding.LoanTypeID,
+                            holding.AcquiredSourceID,
+                            holding.Currency,
+                            holding.Rate,
+                            // số chứng từ
+                            holding.RecordNumber,
+                            // ngày chứng từ
+                            holding.ReceiptedDate.ToString()
+
+                            );
+                        holding.CopyNumber = copyNumber;
+                        holdings.Add(holding);
+
                     }
-                    string copyNumber = symbol + stringZero + number;
-                    number++;
-                    // procedure đã + 1 giá trị MaxNumber trong HOLDING_LOCATION
-                    db.SP_HOLDING_INS(
-                        holding.ItemID,
-                        holding.LocationID,
-                        holding.LibID,
-                        holding.UseCount,
-                        holding.Volume,
-                        // ngày bổ sung
-                        holding.AcquiredDate.ToString(),
-                        copyNumber,
-                        holding.InUsed == true ? 1 : 0,
-                        holding.InCirculation == true ? 1 : 0,
-                        holding.ILLID,
-                        holding.Price,
-                        // giá sách
-                        holding.Shelf,
-                        holding.POID,
-                       //ngày sử dụng cuối
-                        holding.DateLastUsed.ToString(),
-                        holding.CallNumber,
-                        holding.Acquired == true ? 1 : 0,
-                        holding.Note,
-                        holding.LoanTypeID,
-                        holding.AcquiredSourceID,
-                        holding.Currency,
-                        holding.Rate,
-                        // số chứng từ
-                        holding.RecordNumber,
-                      // ngày chứng từ
-                        holding.ReceiptedDate.ToString()
-                      
-                        );
-                    holding.CopyNumber = copyNumber;
-                    holdings.Add(holding);
+                    transaction.Commit();
+                    if (!string.IsNullOrEmpty(recommendID))
+                    {
+                        InsertRecommend(recommendID, holding.ItemID);
+                    }
+                    composite = GenerateCompositeHoldings(holding.ItemID);
+
+
+
                 }
-                if (!string.IsNullOrEmpty(recommendID))
-                {
-                    InsertRecommend(recommendID, holding.ItemID);
-                }
-                composite = GenerateCompositeHoldings(holding.ItemID);
+
+
             }
             else
             {
@@ -142,7 +159,7 @@ namespace Libol.Models
 
         public string UpdateHolding(HoldingTable holding)
         {
-           var currentHolding= db.HOLDINGs.Where(h=>h.ID == holding.ID).Single();
+            var currentHolding = db.HOLDINGs.Where(h => h.ID == holding.ID).Single();
             //currentHolding.ID = holding.ID;
             //currentHolding.InCirculation = holding.InCirculation;
             //currentHolding.InUsed = holding.InUsed;
@@ -154,23 +171,23 @@ namespace Libol.Models
             //currentHolding.LocationID = holding.LocationID;
             //currentHolding.LockedReason = holding.LockedReason;
             currentHolding.Note = holding.Note;
-          //  currentHolding.OnHold = holding.OnHold;
-           // currentHolding.POID = holding.POID;
+            //  currentHolding.OnHold = holding.OnHold;
+            // currentHolding.POID = holding.POID;
             currentHolding.Price = holding.Price;
-            currentHolding.Rate = db.ACQ_CURRENCY.Where( c=>c.CurrencyCode == holding.Currency).Select( d=>d.Rate).Single();
-          //  currentHolding.Reason = holding.Reason;
-           // currentHolding.ReceiptedDate = DateTime.ParseExact(holding.ReceiptedDate,"dd/MM/yyyy",null) ;
+            currentHolding.Rate = db.ACQ_CURRENCY.Where(c => c.CurrencyCode == holding.Currency).Select(d => d.Rate).Single();
+            //  currentHolding.Reason = holding.Reason;
+            // currentHolding.ReceiptedDate = DateTime.ParseExact(holding.ReceiptedDate,"dd/MM/yyyy",null) ;
             currentHolding.RecordNumber = holding.RecordNumber;
             currentHolding.Shelf = holding.Shelf;
-         //   currentHolding.UseCount = holding.UseCount;
+            //   currentHolding.UseCount = holding.UseCount;
             currentHolding.Volume = holding.Volume;
-         //   currentHolding.ILLID = holding.ILLID;
-          //  currentHolding.DateLastUsed = DateTime.ParseExact(holding.Date, "dd/MM/yyyy", null);
+            //   currentHolding.ILLID = holding.ILLID;
+            //  currentHolding.DateLastUsed = DateTime.ParseExact(holding.Date, "dd/MM/yyyy", null);
             currentHolding.Currency = holding.Currency;
-          //  currentHolding.CopyNumber = holding.CopyNumber;
+            //  currentHolding.CopyNumber = holding.CopyNumber;
             currentHolding.CallNumber = holding.CallNumber;
-           // currentHolding.Availlable = holding.Availlable;
-          //  currentHolding.AcquiredSourceID = holding.AcquiredSourceID;
+            // currentHolding.Availlable = holding.Availlable;
+            //  currentHolding.AcquiredSourceID = holding.AcquiredSourceID;
             currentHolding.AcquiredDate = DateTime.ParseExact(holding.AcquiredDate, "yyyy-MM-dd", null);
             //   currentHolding.Acquired = holding.Acquired;
             try
@@ -194,18 +211,19 @@ namespace Libol.Models
                 }
                 throw;
             }
-       
+
             return "Cập nhật thành công!";
         }
 
-        public string GetHoldingStatus(bool InUsed, bool InCirculation,bool Acquired)
+        public string GetHoldingStatus(bool InUsed, bool InCirculation, bool Acquired)
         {
 
             string inUsed = InUsed ? "1" : "0";
             string inCirculation = InCirculation ? "1" : "0";
             string acquired = Acquired ? "1" : "0";
             string InUsed_InCirculation_Acquired = inUsed + inCirculation + acquired;
-            switch (InUsed_InCirculation_Acquired) {
+            switch (InUsed_InCirculation_Acquired)
+            {
                 case "011": return "<p style='color: #28a745'>Lưu thông<p>";
                 case "001": return "Khóa";
                 case "010": return "<p style='color: #dc3545'>Chưa kiểm nhận<p>";
@@ -218,7 +236,7 @@ namespace Libol.Models
             }
         }
 
-        public string SearchItem(string title,string copynumber,string author,string publisher,string year,string isbn,ref List<SP_GET_TITLES_Result> data)
+        public string SearchItem(string title, string copynumber, string author, string publisher, string year, string isbn, ref List<SP_GET_TITLES_Result> data)
         {
             string querry = "SELECT DISTINCT ID FROM ITEM WHERE 1 = 1";
             if (!string.IsNullOrEmpty(title))
@@ -227,7 +245,8 @@ namespace Libol.Models
                 if (itemList.Count > 0)
                 {
                     querry = querry + " AND ITEM.ID IN (" + string.Join(",", itemList) + ")";
-                }else
+                }
+                else
                 {
                     return "Không tìm thấy biểu ghi phù hợp";
                 }
@@ -299,7 +318,7 @@ namespace Libol.Models
             }
 
 
-            data = FPT_SP_GET_TITLES(querry);   
+            data = FPT_SP_GET_TITLES(querry);
             if (data == null)
             {
                 return "Không tìm thấy biểu ghi phù hợp";
@@ -315,9 +334,9 @@ namespace Libol.Models
         public string GenerateCompositeHoldings(int itemID)
         {
             List<CompositeHolding> listCompositeHolding = new List<CompositeHolding>();
-            listCompositeHolding = db.HOLDINGs.Where( h => h.ItemID == itemID)
+            listCompositeHolding = db.HOLDINGs.Where(h => h.ItemID == itemID)
                             .Join(db.HOLDING_LIBRARY, holding => holding.LibID, lib => lib.ID, (holding, lib) => new { HOLDING = holding, HOLDING_LIBRARY = lib })
-                            .Join(db.HOLDING_LOCATION, both => both.HOLDING.LocationID, loc => loc.ID, (both,loc)  => new { Both = both, Loc = loc } )
+                            .Join(db.HOLDING_LOCATION, both => both.HOLDING.LocationID, loc => loc.ID, (both, loc) => new { Both = both, Loc = loc })
                              .OrderBy(o => o.Both.HOLDING.CopyNumber).ToList().Select(x => new CompositeHolding()
                              {
                                  LibID = x.Both.HOLDING_LIBRARY.ID,
@@ -338,24 +357,24 @@ namespace Libol.Models
             // bool isChangeGroupIDComposite = false;
 
 
-            for (int i=0;i < listCompositeHolding.Count; i++)
+            for (int i = 0; i < listCompositeHolding.Count; i++)
             {
-                string groupIDComposite = "" + listCompositeHolding[i].LibID+"," + listCompositeHolding[i].LocationID;
-                
+                string groupIDComposite = "" + listCompositeHolding[i].LibID + "," + listCompositeHolding[i].LocationID;
+
                 if (!dictionaryComposite.Keys.Contains(groupIDComposite))
                 {
                     if (i > 0)
                     {
-                       string previousGroupIDComposite = "" + listCompositeHolding[i-1].LibID + "," + listCompositeHolding[i-1].LocationID;
-                       string currentContent = dictionaryComposite[previousGroupIDComposite];
-                       dictionaryComposite[previousGroupIDComposite]= currentContent.Substring(0, currentContent.Length -1);
+                        string previousGroupIDComposite = "" + listCompositeHolding[i - 1].LibID + "," + listCompositeHolding[i - 1].LocationID;
+                        string currentContent = dictionaryComposite[previousGroupIDComposite];
+                        dictionaryComposite[previousGroupIDComposite] = currentContent.Substring(0, currentContent.Length - 1);
                     }
 
                     // start copynumber
-                    string value = listCompositeHolding[i].LibCode + " / " + listCompositeHolding[i].LocSymbol + " / " + listCompositeHolding[i].Copynumber +"-";
+                    string value = listCompositeHolding[i].LibCode + " / " + listCompositeHolding[i].LocSymbol + " / " + listCompositeHolding[i].Copynumber + "-";
                     string number = listCompositeHolding[i].Copynumber.Substring(listCompositeHolding[i].LocSymbol.Length);
                     var isNumeric = int.TryParse(number, out int currentMaxNumber);
-                    dictionaryComposite.Add(groupIDComposite,value);
+                    dictionaryComposite.Add(groupIDComposite, value);
                     if (isNumeric)
                     {
                         dictionaryMaxNumber.Add(groupIDComposite, currentMaxNumber);
@@ -368,24 +387,24 @@ namespace Libol.Models
                 }
                 else
                 {
-                   string value = dictionaryComposite[groupIDComposite];
-                   int existedMaxNumber = dictionaryMaxNumber[groupIDComposite];
+                    string value = dictionaryComposite[groupIDComposite];
+                    int existedMaxNumber = dictionaryMaxNumber[groupIDComposite];
                     string number = listCompositeHolding[i].Copynumber.Substring(listCompositeHolding[i].LocSymbol.Length);
                     var isNumeric = int.TryParse(number, out int currentMaxNumber);
                     // validate
                     if (isNumeric)
                     {
                         // copynumber lien tiếp
-                        if (currentMaxNumber == (existedMaxNumber+1))
+                        if (currentMaxNumber == (existedMaxNumber + 1))
                         {
-                            if (value[value.Length-1].Equals('-'))
+                            if (value[value.Length - 1].Equals('-'))
                             {
                                 // điền end copynumber
                                 dictionaryComposite[groupIDComposite] = value + currentMaxNumber + ",";
                             }
                             else if (value[value.Length - 1].Equals(','))
                             {
-                                dictionaryComposite[groupIDComposite] = value.Substring(0, value.Length - currentMaxNumber.ToString().Length - 1) + currentMaxNumber +",";
+                                dictionaryComposite[groupIDComposite] = value.Substring(0, value.Length - currentMaxNumber.ToString().Length - 1) + currentMaxNumber + ",";
                             }
 
                             dictionaryMaxNumber[groupIDComposite] = currentMaxNumber;
@@ -393,37 +412,38 @@ namespace Libol.Models
                         // đứt quãng
                         else
                         {
-                           char test =  value[value.Length - 1];
+                            char test = value[value.Length - 1];
                             // trường hợp ở giữa bị xóa 1 đăng ký cá biệt
                             if (value[value.Length - 1].Equals('-'))
                             {
                                 // điền start 
-                                dictionaryComposite[groupIDComposite] = value.Substring(0, value.Length -1 ) +"," + currentMaxNumber + "-";
+                                dictionaryComposite[groupIDComposite] = value.Substring(0, value.Length - 1) + "," + currentMaxNumber + "-";
                             }
                             else if (value[value.Length - 1].Equals(','))
                             {
-                                dictionaryComposite[groupIDComposite] = value + currentMaxNumber +"-";
+                                dictionaryComposite[groupIDComposite] = value + currentMaxNumber + "-";
                             }
 
                             dictionaryMaxNumber[groupIDComposite] = currentMaxNumber;
                         }
-                    }else
+                    }
+                    else
                     {
                         return "Không thể load dữ liệu";
                     }
                 }
             }
-            string finalGroupIDComposite = "" + listCompositeHolding[listCompositeHolding.Count-1].LibID + "," + listCompositeHolding[listCompositeHolding.Count - 1].LocationID;
+            string finalGroupIDComposite = "" + listCompositeHolding[listCompositeHolding.Count - 1].LibID + "," + listCompositeHolding[listCompositeHolding.Count - 1].LocationID;
             string currentText = dictionaryComposite[finalGroupIDComposite];
             dictionaryComposite[finalGroupIDComposite] = currentText.Substring(0, currentText.Length - 1);
 
             List<string> content = dictionaryComposite.Select(x => x.Value).ToList();
-            string result="";
+            string result = "";
             for (int i = 0; i < content.Count; i++)
             {
                 result = result + content[i] + "<br/>";
             }
-           
+
             return result;
         }
 
@@ -445,12 +465,12 @@ namespace Libol.Models
             return validate;
         }
 
-        public string InsertRecommend(string recommendID,int itemID)
+        public string InsertRecommend(string recommendID, int itemID)
         {
             FPT_RECOMMEND currentRecommend = db.FPT_RECOMMEND.FirstOrDefault(s => s.RecommendID.ToLower() == recommendID.ToLower());
-            ITEM item = db.ITEMs.FirstOrDefault( i => i .ID == itemID);
-            
-            if (currentRecommend != null && item!= null)
+            ITEM item = db.ITEMs.FirstOrDefault(i => i.ID == itemID);
+
+            if (currentRecommend != null && item != null)
             {
                 currentRecommend.ITEMs.Add(item);
             }
@@ -479,7 +499,7 @@ namespace Libol.Models
         }
         public List<SP_GET_TITLES_Result> FPT_SP_GET_TITLES(string querry)
         {
-            string commandStatement = "SELECT  Code,Content AS TITLE,Ind1 FROM ITEM LEFT JOIN FIELD200s ON ITEM.ID = FIELD200s.ItemID WHERE FIELD200s.FieldCode = '245' and ITEM.ID in (" + querry +")";
+            string commandStatement = "SELECT  Code,Content AS TITLE,Ind1 FROM ITEM LEFT JOIN FIELD200s ON ITEM.ID = FIELD200s.ItemID WHERE FIELD200s.FieldCode = '245' and ITEM.ID in (" + querry + ")";
             Debug.WriteLine("Querry: " + commandStatement);
             List<SP_GET_TITLES_Result> list = db.Database.SqlQuery<SP_GET_TITLES_Result>(commandStatement).ToList();
             return list;

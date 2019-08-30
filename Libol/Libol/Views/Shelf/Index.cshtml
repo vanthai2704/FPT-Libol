@@ -123,8 +123,8 @@
 
     @if (ViewBag.content != null)
     {
-        <div style=" margin-top: 0.5rem; color:red">@ViewBag.content.Split('@')[0]<strong>@ViewBag.content.Split('@')[1]</strong>@ViewBag.content.Split('@')[2]</div>
-        <div style="color:red">@ViewBag.content.Split('@')[3]</div>
+        <div style=" margin-top: 0.5rem;">@ViewBag.content.Split('@')[0]<strong>@ViewBag.content.Split('@')[1]</strong>@ViewBag.content.Split('@')[2]</div>
+        <div>@ViewBag.content.Split('@')[3]</div>
 
     }
     @if (!string.IsNullOrEmpty(ViewBag.AlertMessage))
