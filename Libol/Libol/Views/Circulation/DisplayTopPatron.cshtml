@@ -8,15 +8,15 @@
         <div class="col-md-3">
             <table class="table table-bordered table-striped" id="123" style="border-collapse: collapse" , border="1">
                 <tr>
-                    <th>Số lượt mượn</th>
                     <th>Bạn đọc</th>
+                    <th>Số lượt mượn</th>
                 </tr>
                 @foreach (var item in ViewBag.test)
                 {
-                    <tr>
-                        <td>@item.TotalLoan</td>
-                        <td>@item.Name</td>
-                    </tr>
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.TotalLoan</td>
+                </tr>
                 }
             </table>
         </div>

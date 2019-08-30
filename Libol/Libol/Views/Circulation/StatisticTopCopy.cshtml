@@ -20,6 +20,10 @@
                 <label class="control-label col-md-5 align-self-center">Thư viện</label>
                 @Html.DropDownList("Library", ViewBag.list_lib as List<SelectListItem>, new { @class = "form-control col-md-7" })
             </div>
+            <div class="form-group row">
+                <label class="control-label col-md-5 align-self-center">Kho</label>
+                @Html.DropDownList("Location", new SelectList(string.Empty, "Value", "Text"), "Tất cả các kho", new { @class = "form-control col-md-7" })
+            </div>
         </div>
         <div class="col-3">
             <div class="form-group row">
@@ -60,6 +64,7 @@
         document.getElementById("stat").onclick = function () {
             var empObj = {
                 strLibID: $("#Library").val(),
+                strLocID: $("#Location").val(),
                 strDateFrom: $("#date_from").val(),
                 strDateTo: $("#date_to").val(),
                 strNumPatron: $("#number_patron").val(),
@@ -91,6 +96,25 @@
             }
         };
 
+        $("#Library").change(function () {
+            $("#Location").empty();
+            $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetLocations")', // we are calling json method
+            dataType: 'json',
+            data: { id: $("#Library").val() },
+            success: function (locs) {
+                $.each(locs, function (i, loc) {
+                    $("#Location").append('<option value="' + loc.Value + '">' +
+                    loc.Text + '</option>');
+                });
+            }
+            //error: function (ex) {
+            //    alert('Failed to retrieve states.' + ex);
+            //}
+            });
+            return false;
+        });
 
     });
 

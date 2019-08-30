@@ -1236,8 +1236,8 @@ namespace Libol.Controllers
                         {
                             list_data.Add(i);
                             DateTime datenow = DateTime.Now;
-                            DateTime acd = i.AcquiredDate;
-                            DateTime datelastuse = i.DateLastUsed;
+                            DateTime? acd = i.AcquiredDate;
+                            DateTime? datelastuse = i.DateLastUsed;
                             int reasonID = Int32.Parse(reason);
                             string liquidcode = "";
                             general_loc = db.FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV(i.LibID, i.LocationID, null, 1).ToList();
