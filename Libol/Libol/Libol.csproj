@@ -2569,7 +2569,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CAT_FILE\" />
-    <Folder Include="Views\Tests\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

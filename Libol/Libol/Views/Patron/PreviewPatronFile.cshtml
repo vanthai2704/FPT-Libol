@@ -17,13 +17,9 @@
     <p>@patronInvalid.Line </p>
 }
 
-@{Session["listPatronInFile"] = @ViewBag.ListPatron;}
-@using (Html.BeginForm("InsertFileToDB", "Patron", FormMethod.Post))
-{
-    <button type="submit" class="btn btn-primary" style="margin-top: 1rem">Nhập vào hệ thống</button>
-}
 
 <div style="margin-top: 1rem">
+    <h5 style="text-align: center; color:green;">Danh sách sau đã được thêm thành công!</h5>
     <table id="table_patron" class="table table-striped table-bordered datatables">
         <thead>
             <tr>

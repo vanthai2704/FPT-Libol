@@ -392,7 +392,6 @@ namespace Libol.Controllers
         {
             List<PatronFile> listPatronInFile = new List<PatronFile>();
             List<PatronFile> listPatronInFileInvalid = new List<PatronFile>();
-            var ls = new List<PatronFile>();
             for (int i = 0; i < Request.Files.Count; i++)
             {
                 var file = Request.Files[i];
@@ -405,8 +404,8 @@ namespace Libol.Controllers
                 }
                 var path = Path.Combine(Server.MapPath("~/Uploads"), fileName);
                 file.SaveAs(path);
-                
-                FileInfo excel = new FileInfo(Server.MapPath("/Uploads/"+fileName));
+
+                FileInfo excel = new FileInfo(Server.MapPath("/Uploads/" + fileName));
                 using (var package = new ExcelPackage(excel))
                 {
                     var workbook = package.Workbook;
@@ -418,9 +417,9 @@ namespace Libol.Controllers
                     int totalRows = worksheet.Dimension.End.Row;
                     for (int u = 2; u <= totalRows; u++)
                     {
-                        if(!String.IsNullOrEmpty(worksheet.Cells[u, 2].Text.ToString()))
+                        if (!String.IsNullOrEmpty(worksheet.Cells[u, 2].Text.ToString()))
                         {
-                            ls.Add(new PatronFile
+                            listPatronInFile.Add(new PatronFile
                             {
                                 strCode = worksheet.Cells[u, 2].Text.ToString(),
                                 FullName = worksheet.Cells[u, 3].Text.ToString(),
@@ -437,35 +436,17 @@ namespace Libol.Controllers
                                 PatronGroup = worksheet.Cells[u, 14].Text.ToString(),
                             });
                         }
-                        
+
                     }
                 }
 
             }
 
-            ViewBag.ListPatron = ls;
+            ViewBag.ListPatron = listPatronInFile;
             ViewBag.ListPatronInvalid = listPatronInFileInvalid;
-            return View();
-        }
 
-        public bool CheckCodeInFile(string strCode, List<PatronFile> listPatronInFile)
-        {
-            bool IsValid = true;
-            foreach(PatronFile p in listPatronInFile)
-            {
-                if(p.strCode == strCode)
-                {
-                    IsValid = false;
-                }
-            }
-            return IsValid;
-        }
 
-        [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "4")]
-        public ActionResult InsertFileToDB()
-        {
-            List<PatronFile> listPatronInFile =(List<PatronFile>) Session["listPatronInFile"];
+            
             if (listPatronInFile != null)
             {
                 foreach (PatronFile p in listPatronInFile)
@@ -480,7 +461,7 @@ namespace Libol.Controllers
                         strFirstName = string.Join(" ", names);
                     }
                     int intPatronGroupID = 0;
-                    CIR_PATRON_GROUP patronGroup = db.CIR_PATRON_GROUP.Where(a => a.Name.Trim() == p.PatronGroup.Trim()).Count() ==  0 ? 
+                    CIR_PATRON_GROUP patronGroup = db.CIR_PATRON_GROUP.Where(a => a.Name.Trim() == p.PatronGroup.Trim()).Count() == 0 ?
                         null : db.CIR_PATRON_GROUP.Where(a => a.Name.Trim() == p.PatronGroup.Trim()).First();
                     if (patronGroup != null)
                     {
@@ -494,22 +475,33 @@ namespace Libol.Controllers
                         intCollegeID = college.ID;
                     }
                     int intFacultyID = 0;
-                    CIR_DIC_FACULTY faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == intCollegeID).Where(a => a.Faculty.Trim() == p.Faculty.Trim()).Count() == 0 ? 
+                    CIR_DIC_FACULTY faculty = db.CIR_DIC_FACULTY.Where(a => a.CollegeID == intCollegeID).Where(a => a.Faculty.Trim() == p.Faculty.Trim()).Count() == 0 ?
                         null : db.CIR_DIC_FACULTY.Where(a => a.CollegeID == intCollegeID).Where(a => a.Faculty.Trim() == p.Faculty.Trim()).First();
                     if (faculty != null)
                     {
                         intFacultyID = faculty.ID;
                     }
                     DateTime strExpiredDate = DateTime.Now;
-                    strExpiredDate= strExpiredDate.AddYears(4);
+                    strExpiredDate = strExpiredDate.AddYears(4);
                     NewPatron(p.strCode, DateTime.Now.ToShortDateString(), strExpiredDate.ToShortDateString(), DateTime.Now.ToShortDateString(), strLastName, strFirstName, p.blnSex == "Nam" ? true : false, p.strDOB.ToString("yyyy-dd-MM"), null, null, null, "Đại học FPT", null, p.strMobile
                         , p.strEmail, null, intPatronGroupID, null, 0, null, p.strAddress, 1, p.strCity, 209, "", 0, intCollegeID, intFacultyID, p.strGrade, p.strClass);
                 }
-                ViewBag.Notify = "Danh sách đã được thêm vào hệ thống!";
-            }
-
-            return View();
+            } 
+                return View();
         }
+
+        public bool CheckCodeInFile(string strCode, List<PatronFile> listPatronInFile)
+        {
+            bool IsValid = true;
+            foreach(PatronFile p in listPatronInFile)
+            {
+                if(p.strCode == strCode)
+                {
+                    IsValid = false;
+                }
+            }
+            return IsValid;
+        }        
 
         [HttpPost]
         [AuthAttribute(ModuleID = 2, RightID = "2,3")]
