@@ -9,11 +9,10 @@
     $(document).ready(function () {
         var table = $('#table_overdueList').DataTable({
             columnDefs: [{
-                orderable: false,
-                className: 'select-checkbox',
-                targets: 0
-            }
-            ],
+                'checkboxes': {
+                    'selectRow': true
+                }
+            }],
             buttons: [
                 {
                     extend: 'excel',
@@ -23,8 +22,30 @@
                 },
             ],
             select: {
-                style: 'multi'
+                style: 'os'
             },
+            columns: [
+                { "data": "Name" },
+                { "data": "strDOB" },
+                {
+                    "data": "strCode",
+                    "render": function (data, type, row, meta) {
+                        var code = "'" + data + "'";
+                        if (type === 'display') {
+                            data = '<a href="#" onclick="PatronDetail(' + code + ')">' + data + '</a>';
+                        }
+
+                        return data;
+                    }
+                },
+                { "data": "Sex" },
+                { "data": "intEthnicID" },
+                { "data": "intCollegeID" },
+                { "data": "intFacultyID" },
+                { "data": "strGrade" },
+                { "data": "strClass" },
+                { "data": "strTelephone" },
+            ],
             order: [[1, 'asc']],
             orderCellsTop: true,
 
@@ -42,7 +63,28 @@
         $("#ExportReporttoExcel").on("click", function () {
             table.button('.buttons-excel').trigger();
         });
+
+
     });
+
+    function PatronDetail(code) {
+        var empObj = {
+            strCode: code
+        }
+        $.ajax({
+            url: "/OverdueList/PatronDetail",
+            data: JSON.stringify(empObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            success: function (result) {
+                $("#modalDetailDiv").html(result)
+                $("#modalDetail").modal()
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
 </script>
 @*END------------SCRIPT FOR DATATABLES*@
 

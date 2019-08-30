@@ -6400,33 +6400,29 @@ END
 	--DOANHDQ
 GO
 
-/****** Object:  Table [dbo].[FPT_CATA_FILE_NEW2019]    Script Date: 8/16/2019 12:49:26 PM ******/
+/****** Object:  Table [dbo].[FPT_CATA_FILE_NEW]    Script Date: 8/16/2019 12:49:26 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[FPT_CATA_FILE_NEW2019](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[ItemID] [int] NOT NULL,
+CREATE TABLE [dbo].[FPT_CATA_FILE_NEW](
+	[ID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[ItemID] [int] NOT NULL FOREIGN KEY REFERENCES Item(ID),
 	[FileName] [nvarchar](250) NULL,
 	[FilePath] [nvarchar](250) NULL
 )
-GO
 
+
+GO
 /****** Object:  StoredProcedure [dbo].[FPT_CIR_SP_STAT_TOP20]    Script Date: 08/22/2019 11:49:33 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-
-
-
 --SP_STAT_TOP20 0,30,14
-
-
 Create    PROCEDURE [dbo].[FPT_CIR_SP_STAT_TOP20] 
 	@intHistory int, --1 la thong ke lich su muon sach.  
 	@intID int,  
