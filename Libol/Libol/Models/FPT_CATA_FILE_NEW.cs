@@ -18,5 +18,7 @@ namespace Libol.Models
         public int ItemID { get; set; }
         public string FileName { get; set; }
         public string FilePath { get; set; }
+    
+        public virtual ITEM ITEM { get; set; }
     }
 }

@@ -1048,12 +1048,12 @@ namespace Libol.Controllers
         }
         [HttpPost]
         public PartialViewResult DisplayTopCopy(string strLibID, string strDateFrom, string strDateTo,
-        string strNumPatron, string strHireTimes)
+        string strNumPatron, string strHireTimes, string strLocID)
         {
             string userID = Session["UserID"].ToString();
 
             List<ITEMMAX> result =
-                pb.TOP_COPY(userID, strDateFrom, strDateTo, strNumPatron, strHireTimes, strLibID);
+                pb.TOP_COPY(userID, strDateFrom, strDateTo, strNumPatron, strHireTimes, strLibID, strLocID);
 
             ViewBag.test = result;
             return PartialView("DisplayTopCopy");

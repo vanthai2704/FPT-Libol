@@ -13,16 +13,6 @@ namespace FlibUnitTest.FlibReportUnitTests
         {
             Assert.AreEqual(1, 1);
         }
-        [TestMethod]
-        public void ReportLoanCopyUT()
-        {
-            // Arrange
-            CirculationController controller = new CirculationController();
-            // Act
-            ViewResult result = controller.ReportLoanCopy() as ViewResult;
-            // Assert
-            Assert.AreEqual(result.ViewName, "ReportLoanCopy");
-        }
 
         [TestMethod]
         public void GetLoanStatsUT()
@@ -44,18 +34,7 @@ namespace FlibUnitTest.FlibReportUnitTests
             PartialViewResult result = controller.GetFilteredLoanStats() as PartialViewResult;
             // Assert
             Assert.AreEqual(result.ViewName, "GetFilteredLoanStats");
-        }
-
-        [TestMethod]
-        public void ReportOnLoanCopyUT()
-        {
-            // Arrange
-            CirculationController controller = new CirculationController();
-            // Act
-            ViewResult result = controller.ReportOnLoanCopy() as ViewResult;
-            // Assert
-            Assert.AreEqual(result.ViewName, "ReportOnLoanCopy");
-        }
+        }               
 
         [TestMethod]
         public void GetOnLoanStatsUT()
@@ -99,17 +78,6 @@ namespace FlibUnitTest.FlibReportUnitTests
             PartialViewResult result = controller.GetCopyNumberLiquidationStats("TK/FAT1000001") as PartialViewResult;
             // Assert
             Assert.AreEqual(result.ViewName, "GetCopyNumberLiquidationStats");
-        }
-
-        [TestMethod]
-        public void GetYearStatsUT()
-        {
-            // Arrange
-            CirculationController controller = new CirculationController();
-            // Act
-            PartialViewResult result = controller.GetYearStats("81", "103", "2018", "2019", "3") as PartialViewResult;
-            // Assert
-            Assert.AreEqual(result.ViewName, "GetYearStats");
         }
     }
 }

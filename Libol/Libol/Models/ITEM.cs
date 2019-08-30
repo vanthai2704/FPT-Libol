@@ -63,6 +63,7 @@ namespace Libol.Models
             this.SER_ISSUE = new HashSet<SER_ISSUE>();
             this.ACQ_PO = new HashSet<ACQ_PO>();
             this.FPT_RECOMMEND = new HashSet<FPT_RECOMMEND>();
+            this.FPT_CATA_FILE_NEW = new HashSet<FPT_CATA_FILE_NEW>();
         }
     
         public int ID { get; set; }
@@ -182,5 +183,7 @@ namespace Libol.Models
         public virtual ICollection<ACQ_PO> ACQ_PO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FPT_RECOMMEND> FPT_RECOMMEND { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<FPT_CATA_FILE_NEW> FPT_CATA_FILE_NEW { get; set; }
     }
 }

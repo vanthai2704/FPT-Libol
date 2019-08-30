@@ -159,48 +159,78 @@
                 }
                 @foreach (var item in ViewBag.list)
                 {
-                    <tr>
-                        @{
-                            count++;
-                        }
-                        <td style="text-align:center">
-                            <input type="checkbox" id="@item.ID" value="@count" name="cbToDelete" />
-                        </td>
-                        <td>@count</td>
-                        <td>@item.LibName</td>
-                        <td>@item.LocName</td>
-                        <td>@item.CopyNumber</td>
-                        <td>@item.CallNumber</td>
-                        <td style="width: 5%">@item.Volume</td>
-                        <td style="width: 20%">@item.Content</td>
-                        @if (item.AcquiredDate == null)
+                <tr>
+                    @{
+                        count++;
+                    }
+                    <td style="text-align:center">
+                        <input type="checkbox" id="@item.ID" value="@count" name="cbToDelete" />
+                    </td>
+                    <td>@count</td>
+                    <td>@item.LibName</td>
+                    <td>@item.LocName</td>
+                    <td>@item.CopyNumber</td>
+                    <td>@item.CallNumber</td>
+                    <td style="width: 5%">@item.Volume</td>
+                    <td style="width: 20%">@item.Content</td>
+                    @if (item.AcquiredDate == null)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        if (item.AcquiredDate == null)
                         {
                             <td></td>
                         }
                         else
                         {
-                            <td>@item.AcquiredDate.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @item.AcquiredDate.ToString("dd/MM/yyyy")
+                            </td>
                         }
+                    }
+                    @if(item.Price == null)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
                         <td>@item.Price.ToString("#.##")</td>
-                        <td>@item.REASON_DETAIL</td>
-                        @if (item.RemovedDate == null)
+                    }
+                    <td>@item.REASON_DETAIL</td>
+                    @if (item.RemovedDate == null)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        if(item.RemovedDate == null)
                         {
                             <td></td>
                         }
                         else
                         {
-                            <td>@item.RemovedDate.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @item.RemovedDate.ToString("dd/MM/yyyy")
+                            </td>
                         }
-                        @if (item.DateLastUsed == null)
-                        {
-                            <td></td>
+                        
                         }
-                        else
-                        {
+                    
+                    @if (item.DateLastUsed == null)
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        
                             <td>@item.DateLastUsed.ToString("dd/MM/yyyy")</td>
                         }
-                        <td>@item.UseCount</td>
-                    </tr>
+                        
+                    
+                    <td>@item.UseCount</td>
+                </tr>
                 }
             </tbody>
         </table>
