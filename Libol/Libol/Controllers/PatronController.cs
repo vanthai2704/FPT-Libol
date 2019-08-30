@@ -776,6 +776,63 @@ namespace Libol.Controllers
             }
             
         }
+
+        [AuthAttribute(ModuleID = 2, RightID = "0")]
+        public ActionResult DeletePatronsByList()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "5")]
+        public JsonResult DeletePatrons(string strPatronCodes)
+        {
+            List<CustomPatron> listCanNotDel = new List<CustomPatron>();
+            List<string> listDel = new List<string>();
+            foreach (var patronCode in strPatronCodes.Split('\n'))
+            {
+                if (db.CIR_PATRON.Where(a => a.Code == patronCode).Count() < 1)
+                {
+                    if(!String.IsNullOrWhiteSpace(patronCode) && !String.IsNullOrEmpty(patronCode))
+                    {
+                        listCanNotDel.Add(new CustomPatron()
+                        {
+                            strCode = patronCode,
+                            Name = "Số thẻ không có trong hệ thống"
+                        });
+                    }
+                    
+                }
+                else
+                {
+                    listDel.Add(patronCode);
+                }
+            }
+
+            foreach(var patronCode in listDel)
+            {
+                string id = db.CIR_PATRON.Where(a => a.Code == patronCode).First().ID+"";
+                db.SP_PATRON_BATCH_DELETE(id);
+                if (db.CIR_PATRON.Where(a => a.Code == patronCode).Count() > 0)
+                {
+                    listCanNotDel.Add(new CustomPatron()
+                    {
+                        strCode = patronCode,
+                        Name = db.CIR_PATRON.Where(a => a.Code == patronCode).First().FirstName +" "+ db.CIR_PATRON.Where(a => a.Code == patronCode).First().LastName
+                    });
+                }
+            }
+            List<string[]> data = new List<string[]>();
+            for(int i = 0; i < listCanNotDel.Count; i++)
+            {
+                string[] d = { listCanNotDel[i].strCode, listCanNotDel[i].Name };
+                data.Add(d);
+                
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
     }
 
     
