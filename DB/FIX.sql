@@ -860,3 +860,135 @@ SET QUOTED_IDENTIFIER ON
 GO
  ALTER TABLE FPT_CATA_FILE_NEW
 ADD CONSTRAINT ID_pk PRIMARY KEY (ID), FOREIGN KEY (ItemID) REFERENCES Item(ID);
+
+
+/****** Object:  StoredProcedure [dbo].[FPT_SP_STAT_ITEMMAX]    Script Date: 08/30/2019 12:33:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER   PROCEDURE [dbo].[FPT_SP_STAT_ITEMMAX]
+	-- Created Tuanhv
+	-- Date 06/09/2004
+	-- ModifyDate:
+	@intUserID varchar(30),
+	@strCheckOutDateFrom varchar(30),
+	@strCheckOutDateTo varchar(30),
+	@intTopNum varchar(30),
+	@intMinLoan varchar(30),
+	@libid varchar(30),
+	@locid varchar(30)
+AS
+DECLARE @StrSql varchar(1500)
+	SET @StrSql = ''
+	SET @StrSql = @StrSql + 
+	' SELECT TOP ' + @intTopNum + ' Count (*) AS TotalLoan, CLH.CopyNumber AS Name  
+	FROM CIR_LOAN_HISTORY CLH 
+	WHERE 1=1 ' 
+	IF @strCheckOutDateFrom <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate >=''' + @strCheckOutDateFrom +''''
+	IF @strCheckOutDateTo <> ''
+		SET @StrSql = @StrSql +  ' AND CLH.CheckOutDate <=''' + @strCheckOutDateTo +''''
+
+		IF @locid <>'0'
+		begin
+		SET @StrSql = @StrSql + ' AND CLH.LocationID IN 
+		( SELECT B.ID AS ID 
+		FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+		WHERE A.ID = ' + CAST(@libid as varchar(30))+' and A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID = ' 
+		+ @intUserID+ ' and B.ID = ' + @locid + ' ) '
+		end
+		else 
+		begin 
+		SET @StrSql = @StrSql + ' AND CLH.LocationID IN 
+		( SELECT B.ID AS ID 
+		FROM HOLDING_LIBRARY A, HOLDING_LOCATION B, SYS_USER_CIR_LOCATION C 
+		WHERE A.ID = ' + CAST(@libid as varchar(30))+' and A.LocalLib = 1 AND A.ID = B.LibID AND B.ID = C.LocationID AND C.UserID = ' + @intUserID+ ' ) '
+		end
+
+		SET @StrSql = @StrSql + ' GROUP BY CLH.CopyNumber  HAVING Count (*) >= ' + @intMinLoan + ' ORDER BY TotalLoan DESC'
+	EXEC (@StrSql)
+	
+	
+	GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV]    Script Date: 8/30/2019 09:43:19 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+--SP_GET_GENERAL_LOC_INFOR 20,31,'noname',1
+
+--@intMode
+--	=1: Trong kho
+--	=0: Chua kiem nhan
+-- InUsed:
+-- =1: dang muon
+-- =0: khong muon
+-- InCirculation:
+-- =0: dang khoa
+ALTER   PROCEDURE [dbo].[FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV] 
+	@intLibID	INT,
+	@intLocID	INT,
+	@strShelf	NVARCHAR(10),
+	@intMode	INT
+AS
+	IF @intLibID<>0
+		BEGIN
+			IF @intLocID<>0
+				BEGIN
+					IF @strShelf<>''
+						BEGIN
+							IF @strShelf='noname'
+								BEGIN
+									with A as
+									(SELECT TOP 1 'INVENTORY' AS Type, Name AS VALUE, OpenedDate ,ClosedDate FROM INVENTORY,HOLDING_INVENTORY WHERE INVENTORY.ID=HOLDING_INVENTORY.InventoryID AND  LocationID=@intLocID AND LibID=@intLibID  ORDER BY OpenedDate  DESC)
+									SELECT 'LIB' AS Type,Code AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING_LIBRARY WHERE ID=@intLibID
+									UNION SELECT 'LOC' AS Type,Symbol AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING_LOCATION WHERE ID=@intLocID AND LibID=@intLibID
+									UNION SELECT 'SUMCOPY' AS Type, RTRIM(CAST(COUNT(*) AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID  AND Acquired = @intMode
+									UNION SELECT 'SUMITEM' AS Type, RTRIM(CAST(COUNT(DISTINCT ItemID)AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID  AND Acquired = @intMode
+									UNION SELECT 'CountLocked' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INCIRCULATION = 0 AND Acquired = @intMode
+									UNION SELECT 'CountCir' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INUSED = 1
+									UNION SELECT * from A
+								END
+							ELSE
+								BEGIN
+								with A as
+								(SELECT TOP 1 'INVENTORY' AS Type, Name AS VALUE, OpenedDate ,ClosedDate FROM INVENTORY,HOLDING_INVENTORY WHERE INVENTORY.ID=HOLDING_INVENTORY.InventoryID AND  LocationID=@intLocID AND LibID=@intLibID AND Shelf=@strShelf ORDER BY OpenedDate DESC)
+									SELECT 'LIB' AS Type,Code AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING_LIBRARY WHERE ID=@intLibID
+									UNION SELECT 'LOC' AS Type,Symbol AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING_LOCATION WHERE ID=@intLocID AND LibID=@intLibID
+									UNION SELECT 'SUMCOPY' AS Type, RTRIM(CAST(COUNT(*) AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND Shelf=@strShelf AND Acquired = @intMode
+									UNION SELECT 'SUMITEM' AS Type, RTRIM(CAST(COUNT(DISTINCT ItemID)AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND Shelf=@strShelf AND Acquired = @intMode
+									UNION SELECT 'CountLocked' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INCIRCULATION = 0 AND Acquired = @intMode
+									UNION SELECT 'CountCir' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INUSED = 1 AND Acquired = @intMode
+									UNION select * from A
+									END
+						END
+					ELSE
+						BEGIN
+						with A as(SELECT TOP 1 'INVENTORY' AS Type, Name AS VALUE, OpenedDate ,ClosedDate FROM INVENTORY,HOLDING_INVENTORY WHERE INVENTORY.ID=HOLDING_INVENTORY.InventoryID AND  LocationID=@intLocID AND LibID=@intLibID ORDER BY OpenedDate  DESC)
+							SELECT 'LIB' AS Type,Code AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING_LIBRARY WHERE ID=@intLibID
+							UNION SELECT 'LOC' AS Type,Symbol AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING_LOCATION WHERE ID=@intLocID AND LibID=@intLibID
+							UNION SELECT 'SUMCOPY' AS Type, RTRIM(CAST(COUNT(*) AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND InCirculation = @intMode AND Acquired = @intMode
+							UNION SELECT 'SUMITEM' AS Type, RTRIM(CAST(COUNT(DISTINCT ItemID)AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND Acquired = @intMode
+							UNION SELECT 'CountLocked' AS Type,RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INCIRCULATION = 0 AND Acquired = @intMode
+							UNION SELECT 'CountCir' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LocationID=@intLocID AND LibID=@intLibID AND INUSED = 1 AND Acquired = @intMode	
+							UNION select * from A
+						END								
+				END
+			ELSE
+				BEGIN
+				with a as(SELECT TOP 1 'INVENTORY' AS Type, Name AS VALUE, OpenedDate ,ClosedDate FROM INVENTORY,HOLDING_INVENTORY WHERE INVENTORY.ID=HOLDING_INVENTORY.InventoryID AND LibID=@intLibID ORDER BY OpenedDate  DESC)
+					SELECT 'LIB' AS Type,Code AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING_LIBRARY WHERE ID=@intLibID
+					UNION SELECT 'SUMCOPY' AS Type, RTRIM(CAST(COUNT(*) AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING WHERE LibID=@intLibID AND Acquired = @intMode
+					UNION SELECT 'SUMITEM' AS Type, RTRIM(CAST(COUNT(DISTINCT ItemID)AS CHAR)) AS VALUE,GETDATE() AS OpenedDate,GETDATE() AS ClosedDate  FROM HOLDING WHERE LibID=@intLibID AND Acquired = @intMode
+					UNION SELECT 'CountLocked' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LibID=@intLibID AND INCIRCULATION = 0 AND Acquired = @intMode
+					UNION SELECT 'CountCir' AS Type, RTRIM(CAST(COUNT(COPYNUMBER) AS CHAR)) AS VALUE, GETDATE() AS OpenedDate,GETDATE() AS ClosedDate FROM HOLDING WHERE LibID=@intLibID AND INUSED = 1	AND Acquired = @intMode		
+					UNION select * from A
+				END
+		END
+
+set ANSI_NULLS ON
+set QUOTED_IDENTIFIER ON

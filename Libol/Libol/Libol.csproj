@@ -2529,7 +2529,6 @@
     <Content Include="Views\Management\Account.cshtml" />
     <Content Include="Views\Patron\AddPatronByFile.cshtml" />
     <Content Include="Views\Patron\PreviewPatronFile.cshtml" />
-    <Content Include="Views\Patron\InsertFileToDB.cshtml" />
     <Content Include="Views\Patron\SearchPatron.cshtml" />
     <Content Include="Views\Catalogue\AddNewCatalogueDetail.cshtml" />
     <Content Include="Views\Patron\_SearchPatronDetail.cshtml" />
@@ -2549,6 +2548,7 @@
     <Content Include="Views\Circulation\CirStatisticTop20.cshtml" />
     <Content Include="Views\Circulation\GetCirTop20Stats.cshtml" />
     <Content Include="Views\OverdueList\_PatronDetail.cshtml" />
+    <Content Include="Views\Patron\DeletePatronsByList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
@@ -2569,7 +2569,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CAT_FILE\" />
-    <Folder Include="Views\Tests\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
