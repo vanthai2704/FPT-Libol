@@ -6505,3 +6505,22 @@ print(@StrSql)
 Go
 
 
+CREATE  PROCEDURE [dbo].[FPT_SP_GETINFOR_EMAIL]
+--purpose: select list to sending email alarm
+--creator:NHATNH
+--createdDate:02/09/2019
+	@libIDs VARCHAR(1000),
+	@intTime INT
+AS
+	DECLARE @strSQL VARCHAR(4000)
+	SET @strSQL='(SELECT L.ID AS LOANID, L.LocationID, CONVERT(VARCHAR,L.CheckOutDate,103) AS CheckOutDate,CONVERT(VARCHAR,L.DueDate,103) AS CheckInDate, F.Content AS MainTitle, L.CopyNumber, P.ID AS PatronID, P.FirstName + ''' + '  ' + ''' + P.MiddleName + ''' + '  ' + ''' + P.LastName AS Name,P.Email,'
+    +'OverdueDate=floor(DATEDIFF(DAY,L.DueDate,GETDATE())) - (datepart(week,getdate())+53*(datepart(year,getdate())-datepart(year,L.DueDate))-datepart(week,L.DueDate))*2,DATEDIFF(DAY,L.DueDate,GETDATE()) AS OverdueDateIncludeWeek,'
+    +'T.Fee*floor(DATEDIFF(DAY,L.DueDate,GETDATE())) AS Penati, P.Code As PatronCode, P.Code,I.code as ItemCode,I.ID,HLC.LibId FROM CIR_LOAN L,CIR_PATRON P,ITEM I,Field200s F , CIR_LOAN_TYPE T,HOLDING_LOCATION  HLC WHERE L.PatronID= P.ID AND L.ItemID=I.ID AND I.ID=F.ItemID AND L.LocationID=HLC.ID AND F.FieldCode=245 AND L.LoanTypeID=T.ID'
+	IF @libIDs='' 
+		SET @strSQL= @strSQL + ') A, '
+	ELSE
+		SET @strSQL= @strSQL + ' AND HLC.LibId IN (' + @libIDs + ')) A, '
+	-- Get Location, Library	
+	SET @strSQL= 'SELECT A.*, B.LibCode, B.LocCode FROM ' + @strSQL + '(SELECT H.Symbol AS LocCode, H.ID, L.Code AS LibCode FROM HOLDING_LOCATION H, HOLDING_LIBRARY L WHERE H.LibID=L.ID ) B WHERE A.LocationID=B.ID AND A.OverdueDateIncludeWeek='+CAST(@intTime AS VARCHAR(2))
+	EXECUTE(@strSQL)
+	print(@strSQL)
