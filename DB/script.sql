@@ -5703,6 +5703,8 @@ INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES 
 INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (30, 4, N'FPT - In mã vạch', 1)
 INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (31, 4, N'FPT - In nhãn gáy', 1)
 INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (32, 4, N'FPT - Thanh lý', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (33, 2, N'FPT - Xóa bạn đọc theo lô', 1)
+INSERT [dbo].[FPT_SYS_USER_RIGHT] ([ID], [ModuleID], [Right], [IsBasic]) VALUES (34, 2, N'FPT - Gia hạn bạn đọc theo lô', 1)
 SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT] OFF
 SET IDENTITY_INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ON 
 
@@ -5728,6 +5730,8 @@ INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (29,
 INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (30, 1, 50)
 INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (31, 1, 51)
 INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (32, 1, 52)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (33, 1, 60)
+INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (34, 1, 61)
 INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (6, 1, 53)
 INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (7, 1, 54)
 INSERT [dbo].[FPT_SYS_USER_RIGHT_DETAIL] ([RightID], [UserID], [ID]) VALUES (8, 1, 55)
