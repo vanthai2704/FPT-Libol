@@ -23175,5 +23175,14 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_CIR_SP_STAT_TOP20", intHistoryParameter, intIDParameter, intUserIDParameter, intLibIDParameter);
         }
+    
+        public virtual ObjectResult<FPT_SP_INVENTORY_Result> FPT_SP_INVENTORY(Nullable<int> intLibraryID)
+        {
+            var intLibraryIDParameter = intLibraryID.HasValue ?
+                new ObjectParameter("intLibraryID", intLibraryID) :
+                new ObjectParameter("intLibraryID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_INVENTORY_Result>("FPT_SP_INVENTORY", intLibraryIDParameter);
+        }
     }
 }
