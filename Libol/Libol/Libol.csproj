@@ -2549,6 +2549,7 @@
     <Content Include="Views\Circulation\GetCirTop20Stats.cshtml" />
     <Content Include="Views\OverdueList\_PatronDetail.cshtml" />
     <Content Include="Views\Patron\DeletePatronsByList.cshtml" />
+    <Content Include="Views\Catalogue\ViewCatalogue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />

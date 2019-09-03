@@ -68,17 +68,30 @@ namespace Libol.Models
             List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> inforList = new List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result>();
             foreach (int item in ItemId)
             {
-                inforList = inforList.Concat(db.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(item.ToString(), 0).ToList()).ToList();
+                //inforList = inforList.Concat(db.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(item.ToString(), 0).ToList()).ToList();
+                List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> inforListTemp = db.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(item.ToString(), 0).ToList();
+                for(int i = 0; i < inforListTemp.Count; i++)
+                {
+                    if(inforListTemp[i].FieldCode == "001")
+                    {
+                        inforList.Add(inforListTemp[i]);
+                    }
+                    if(inforListTemp[i].FieldCode == "245")
+                    {
+                        inforListTemp[i].Content = new FormatHoldingTitle().OnFormatHoldingTitle(inforListTemp[i].Content);
+                        inforList.Add(inforListTemp[i]);
+                    }
+                }
             }
 
             //Loc $a $b trong title
-            foreach (FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result item in inforList)
-            {
-                if (item.FieldCode == "245")
-                {
-                    item.Content = new FormatHoldingTitle().OnFormatHoldingTitle(item.Content);
-                }
-            }
+            //foreach (FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result item in inforList)
+            //{
+            //    if (item.FieldCode == "245")
+            //    {
+            //        item.Content = new FormatHoldingTitle().OnFormatHoldingTitle(item.Content);
+            //    }
+            //}
 
 
             return inforList;
@@ -181,12 +194,13 @@ namespace Libol.Models
 
             string cataloguer = Convert.ToString(HttpContext.Current.Session["FullName"]);
             // Mã tự tăng
-            string sysParam = db.SYS_PARAMETER.Where(s => s.Name.Equals("LIBRARY_ABBREVIATION")).Select(s => s.Val).FirstOrDefault();
-            string year = DateTime.Now.Year.ToString();
-            year = year.Substring(year.Length - 2);
-            db.Database.ExecuteSqlCommand("insert into book_code values(1)");
-            string maxIdBookCode = db.Book_code.Select(b => b.ID).Max().ToString().PadLeft(7, '0');
-            string code = sysParam + year + maxIdBookCode;
+            //string sysParam = db.SYS_PARAMETER.Where(s => s.Name.Equals("LIBRARY_ABBREVIATION")).Select(s => s.Val).FirstOrDefault();
+            //string year = DateTime.Now.Year.ToString();
+            //year = year.Substring(year.Length - 2);
+            //db.Database.ExecuteSqlCommand("insert into book_code values(1)");
+            //string maxIdBookCode = db.Book_code.Select(b => b.ID).Max().ToString().PadLeft(7, '0');
+            //string code = sysParam + year + maxIdBookCode;
+            string code = CreateItemCode();
             ITEM newItem = new ITEM()
             {
                 AccessLevel = item.AccessLevel,
@@ -213,6 +227,18 @@ namespace Libol.Models
             db.ITEMs.Add(newItem);
             db.SaveChanges();
             item = newItem;
+            return code;
+        }
+
+        public string CreateItemCode()
+        {
+            string sysParam = db.SYS_PARAMETER.Where(s => s.Name.Equals("LIBRARY_ABBREVIATION")).Select(s => s.Val).FirstOrDefault();
+            string year = DateTime.Now.Year.ToString();
+            year = year.Substring(year.Length - 2);
+            db.Database.ExecuteSqlCommand("insert into book_code values(1)");
+            string maxIdBookCode = db.Book_code.Select(b => b.ID).Max().ToString().PadLeft(7, '0');
+            string code = sysParam + year + maxIdBookCode;
+
             return code;
         }
 
@@ -657,7 +683,7 @@ namespace Libol.Models
                             listFieldOrg.RemoveAt(listFieldOrg.IndexOf(value));
                         }
                     }
-                    for(int i = 0; i < listValueOrg.Count; i++)
+                    for (int i = 0; i < listValueOrg.Count; i++)
                     {
                         if (listValueOrg[i].Contains("'"))
                         {

@@ -54,7 +54,7 @@
     var Data;
     function Search() {
         //debugger;
-        $('#table').empty();
+        
         var strCode = $('#txtCode').val().trim();
         var strCN = $('#txtCN').val().trim();
         var strTT = $('#txtTT').val().trim();
@@ -65,6 +65,7 @@
             contentType: "application/json;charset=utf-8",
             dataType: "json",
             success: function (inforList) {
+                $('#table').empty();
                 Data = inforList;
                 $('#table').append("<tr class='table-success'><th scope='col'> Mã Tài Liệu</th ><th scope='col'>Nhan Đề</th></tr >")
                 for (var i = 0; i < inforList.length; ++i) {
@@ -74,6 +75,7 @@
                         //lọc các kí tự $
                         $('#table').append("<tr><td> <strong><a href='/Catalogue/AddNewCatalogueDetail?ID=" + inforList[i].ItemID + "'>" + code + "</strong></td><td>" + inforList[i].Content + "</td></tr>");
                     }
+                    
                 }
                 $('#table').show(0);
             },
