@@ -280,6 +280,9 @@
     <Compile Include="Models\FPT_SP_HOLDING_LIB_SEL_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_SP_INVENTORY_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_SYS_USER_RIGHT.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -2574,6 +2577,8 @@
     <Content Include="Views\OverdueList\_PatronDetail.cshtml" />
     <Content Include="Views\Patron\DeletePatronsByList.cshtml" />
     <Content Include="Views\Patron\AdjournPatronExpiredDateByList.cshtml" />
+    <Content Include="Views\AcquireReport\InventoryReport.cshtml" />
+    <Content Include="Views\AcquireReport\GetInventoryReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />

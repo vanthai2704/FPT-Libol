@@ -6530,3 +6530,24 @@ AS
 	SET @strSQL= 'SELECT A.*, B.LibCode, B.LocCode FROM ' + @strSQL + '(SELECT H.Symbol AS LocCode, H.ID, L.Code AS LibCode FROM HOLDING_LOCATION H, HOLDING_LIBRARY L WHERE H.LibID=L.ID ) B WHERE A.LocationID=B.ID AND A.OverdueDateIncludeWeek='+CAST(@intTime AS VARCHAR(2))+ 'ORDER by PatronID' 
 	EXECUTE(@strSQL)
 	print(@strSQL)
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_INVENTORY]    Script Date: 09/03/2019 05:43:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_SP_INVENTORY]
+	@intLibraryID int
+AS
+BEGIN	
+	SELECT REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') AS Content, B.Code, A.CopyNumber, B.CallNumber, A.Price, '' as Note from HOLDING A
+INNER join ITEM B ON A.ITEMID = B.ID
+INNER JOIN FIELD200S F ON A.ITEMID = F.ITEMID
+WHERE F.FieldCode = '245' AND InUsed=0 AND A.LIBID= @intLibraryID
+END
