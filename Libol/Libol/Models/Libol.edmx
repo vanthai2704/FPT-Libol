@@ -5975,6 +5975,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
           <Parameter Name="strLocationID" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="FPT_SP_GETINFOR_EMAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="libIDs" Type="varchar" Mode="In" />
+          <Parameter Name="intTime" Type="int" Mode="In" />
+        </Function>
         <Function Name="FPT_SP_HOLDING_DEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strID" Type="nvarchar" Mode="In" />
         </Function>
@@ -26108,6 +26112,10 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="ITEM" EntitySet="ITEMs" />
             <End Role="FPT_CATA_FILE_NEW" EntitySet="FPT_CATA_FILE_NEW" />
           </AssociationSet>
+          <FunctionImport Name="FPT_SP_GETINFOR_EMAIL">
+            <Parameter Name="libIDs" Mode="In" Type="String" />
+            <Parameter Name="intTime" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -41659,6 +41667,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SP_GETINFOR_EMAIL" FunctionName="LibolModel.Store.FPT_SP_GETINFOR_EMAIL" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

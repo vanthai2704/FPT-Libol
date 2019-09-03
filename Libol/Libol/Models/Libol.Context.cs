@@ -23175,5 +23175,18 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_CIR_SP_STAT_TOP20", intHistoryParameter, intIDParameter, intUserIDParameter, intLibIDParameter);
         }
+    
+        public virtual int FPT_SP_GETINFOR_EMAIL(string libIDs, Nullable<int> intTime)
+        {
+            var libIDsParameter = libIDs != null ?
+                new ObjectParameter("libIDs", libIDs) :
+                new ObjectParameter("libIDs", typeof(string));
+    
+            var intTimeParameter = intTime.HasValue ?
+                new ObjectParameter("intTime", intTime) :
+                new ObjectParameter("intTime", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_GETINFOR_EMAIL", libIDsParameter, intTimeParameter);
+        }
     }
 }

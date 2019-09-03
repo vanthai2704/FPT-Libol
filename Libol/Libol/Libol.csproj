@@ -225,6 +225,7 @@
     <Compile Include="EntityResult\FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_CATA_SEARCH_MARC_FIELDS_Results.cs" />
+    <Compile Include="EntityResult\FPT_SP_GETINFOR_EMAIL_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_GET_ITEM_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
     <Compile Include="EntityResult\Holding_Item.cs" />

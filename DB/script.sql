@@ -6505,6 +6505,12 @@ print(@StrSql)
 Go
 
 
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GETINFOR_EMAIL]    Script Date: 9/3/2019 11:16:27 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE  PROCEDURE [dbo].[FPT_SP_GETINFOR_EMAIL]
 --purpose: select list to sending email alarm
 --creator:NHATNH
@@ -6521,6 +6527,6 @@ AS
 	ELSE
 		SET @strSQL= @strSQL + ' AND HLC.LibId IN (' + @libIDs + ')) A, '
 	-- Get Location, Library	
-	SET @strSQL= 'SELECT A.*, B.LibCode, B.LocCode FROM ' + @strSQL + '(SELECT H.Symbol AS LocCode, H.ID, L.Code AS LibCode FROM HOLDING_LOCATION H, HOLDING_LIBRARY L WHERE H.LibID=L.ID ) B WHERE A.LocationID=B.ID AND A.OverdueDateIncludeWeek='+CAST(@intTime AS VARCHAR(2))
+	SET @strSQL= 'SELECT A.*, B.LibCode, B.LocCode FROM ' + @strSQL + '(SELECT H.Symbol AS LocCode, H.ID, L.Code AS LibCode FROM HOLDING_LOCATION H, HOLDING_LIBRARY L WHERE H.LibID=L.ID ) B WHERE A.LocationID=B.ID AND A.OverdueDateIncludeWeek='+CAST(@intTime AS VARCHAR(2))+ 'ORDER by PatronID' 
 	EXECUTE(@strSQL)
 	print(@strSQL)

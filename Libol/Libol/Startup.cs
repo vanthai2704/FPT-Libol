@@ -17,7 +17,7 @@ namespace Libol
             //GlobalConfiguration.Configuration.UseSqlServerStorage(@"Data Source=flibserver.database.windows.net;Initial Catalog=flib;User ID=flibadmin;Password=Chipchip11;");
             //app.UseHangfireDashboard();
             //OverdueEmailNoticeController obj = new OverdueEmailNoticeController();
-            //RecurringJob.AddOrUpdate(() => obj.SendEmail("hongnhat97tt@gmail.com"), Cron.Hourly);
+            //RecurringJob.AddOrUpdate(() => obj.SendEmail("hongnhat97tt@gmail.com"), Cron.Daily);
             //app.UseHangfireServer();
         }
     }
