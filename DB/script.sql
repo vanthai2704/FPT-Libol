@@ -6551,3 +6551,418 @@ INNER join ITEM B ON A.ITEMID = B.ID
 INNER JOIN FIELD200S F ON A.ITEMID = F.ITEMID
 WHERE F.FieldCode = '245' AND InUsed=0 AND A.LIBID= @intLibraryID
 END
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest]    Script Date: 09/05/2019 04:21:02 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,DucNV>
+-- Create date: <16/06/2019,,>
+-- Description:	<get data for 'Bao cao de nghi' function,,>
+-- =============================================
+Create PROCEDURE [dbo].[FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest] 
+(@LibID int, @LocID int, @reid varchar(50), @StartDate varchar(50), @EndDate varchar(50))
+AS
+if @LocID =0 or @LocID is null
+BEGIN	
+		if @StartDate is null AND @EndDate is null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title, 
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A 
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID and F.FieldCode = 245
+			ORDER BY ACQUIREDDATE ASC
+		END	
+		ELSE IF @StartDate is null AND @EndDate is null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID and F.FieldCode = 245 and T.RECOMMENDID =@reid
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is null AND @EndDate is not null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is not null AND @EndDate is null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is not null AND @EndDate is null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is null AND @EndDate is not null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21)and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LibID = @LibID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) 
+			AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY ACQUIREDDATE ASC
+		END	
+END
+--- CHECK LocID---------------------------------------------
+else
+BEGIN
+
+	
+		if @StartDate is null AND @EndDate is null AND @reid is null
+		BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID and F.FieldCode = 245
+			ORDER BY ACQUIREDDATE ASC
+		END	
+		ELSE IF @StartDate is null AND @EndDate is null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID and F.FieldCode = 245 and T.RECOMMENDID =@reid
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is null AND @EndDate is not null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is not null AND @EndDate is null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is not null AND @EndDate is null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is null AND @EndDate is not null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21)and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY ACQUIREDDATE ASC
+		END
+		ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is not null
+		BEGIN
+			SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+			WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) 
+			AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+			ORDER BY ACQUIREDDATE ASC
+		END
+	------------------------
+	if @StartDate is null AND @EndDate is null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID and F.FieldCode = 245
+		ORDER BY ACQUIREDDATE desc
+	END	
+	ELSE IF @StartDate is null AND @EndDate is null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY ACQUIREDDATE desc
+	END
+	ELSE IF @StartDate is null AND @EndDate is not null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+		ORDER BY ACQUIREDDATE desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245
+		ORDER BY ACQUIREDDATE desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245
+		ORDER BY ACQUIREDDATE desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY ACQUIREDDATE desc
+	END
+	ELSE IF @StartDate is null AND @EndDate is not null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21)and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY ACQUIREDDATE desc
+	END
+	ELSE IF @StartDate is not null AND @EndDate is not null AND @reid is not null
+	BEGIN
+		SELECT distinct  A.RECORDNUMBER, REPLACE(REPLACE(REPLACE(REPLACE(F.Content,'$a',''),'$b',''),'$c',''),'$n','') as Title,  
+				cast(A.ReceiptedDate as Date) AS ReceiptedDate, cast('0' as int) AS useCount, '' as ISBN, cast('0' as int) AS InBookNum,
+				'' as DKCB, cast(A.ACQUIREDDATE as Date) AS ACQUIREDDATE, A.LocationID, T.RECOMMENDID,
+				C.Year, A.Price, REPLACE(A.Currency,' ','') as Currency, R.NXB, cast('0' as float) as FullPrice, A.ItemID
+			FROM HOLDING A
+			join FIELD200S F  on A.ItemID = F.ItemID
+			join CAT_DIC_YEAR C on A.ItemID = C.ItemID
+			JOIN FPT_RECOMMEND_ITEM T ON A.ITEMID = T.ITEMID
+			join (select R.ItemID as ItemID, C.DisplayEntry as NXB
+					from ITEM_PUBLISHER R, CAT_DIC_PUBLISHER C
+					where R.PublisherID = C.ID) as R on A.ItemID = R.ItemID
+		WHERE A.LocationID = @LocID AND A.AcquiredDate >= CONVERT (varchar(10), @StartDate, 21) 
+		AND A.AcquiredDate <= CONVERT (varchar(10), @EndDate, 21) and F.FieldCode = 245 and T.RECOMMENDID = @reid
+		ORDER BY ACQUIREDDATE desc
+	END
+END
+
