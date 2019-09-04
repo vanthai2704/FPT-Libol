@@ -225,6 +225,7 @@
     <Compile Include="EntityResult\FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_CATA_GET_DICINFOR_REFERENCES_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_CATA_SEARCH_MARC_FIELDS_Results.cs" />
+    <Compile Include="EntityResult\FPT_SP_GETINFOR_EMAIL_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_GET_ITEM_Result.cs" />
     <Compile Include="EntityResult\FPT_SP_ILL_SEARCH_PATRON_Result.cs" />
     <Compile Include="EntityResult\Holding_Item.cs" />
@@ -277,6 +278,9 @@
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SP_HOLDING_LIB_SEL_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SP_INVENTORY_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FPT_SYS_USER_RIGHT.cs">
@@ -2573,6 +2577,8 @@
     <Content Include="Views\OverdueList\_PatronDetail.cshtml" />
     <Content Include="Views\Patron\DeletePatronsByList.cshtml" />
     <Content Include="Views\Patron\AdjournPatronExpiredDateByList.cshtml" />
+    <Content Include="Views\AcquireReport\InventoryReport.cshtml" />
+    <Content Include="Views\AcquireReport\GetInventoryReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
