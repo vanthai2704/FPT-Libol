@@ -24,9 +24,9 @@
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12 text-center">
             <div style="margin : auto">
-                <button type="button" id="btnUpdate" class="btn btn-primary form-control">Update</button>
+                <button type="button" id="btnUpdate" class="btn btn-primary form-control">Sửa</button>
                 <button type="button" class="btn btn-secondary form-control" id="btnShelf">Xếp Giá</button>
-                <button type="button" id="btnReUse" class="btn btn-primary form-control">ReUse</button>
+                <button type="button" id="btnReUse" class="btn btn-primary form-control">Dùng Lại</button>
             </div>
         </div>
     </div>
@@ -45,36 +45,41 @@
 
 
     function Search(index) {
+        if (index < 1 || index > @ViewBag.TotalCount) {
+            alert('Số thứ tự nhập không hợp lệ !');
+        } else {
+            $.ajax({
+                url: "/Catalogue/ViewCataContentByIndex",
+                type: "POST",
+                data: JSON.stringify({ index: index }),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (inforList) {
+                    var ItemCode;
+                    $('#table').empty();
+                    var x = "<tr class='table-success text-center'><th div class='px-md-2' scope='col'> Nhãn </th><th class='px-md-2' scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>";
+                    //$('#table').append("<tr class='table-success text-center'><th div class='px-md-2' scope='col'> Nhãn </th><th class='px-md-2' scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>")
+                    for (var i = 0; i < inforList.length; ++i) {
+                        x = x + "<tr><td class='text-center'><strong> " + inforList[i].FieldCode + "</strong></td><td class='text-center'>" + inforList[i].Ind + "</td><td>" + inforList[i].Content + "</td></tr>";
+                        //$('#table').append("<tr><td class='text-center'><strong> " + inforList[i].FieldCode + "</strong></td><td class='text-center'>" + inforList[i].Ind + "</td><td>" +  inforList[i].Content+ "</td></tr>");
+                        if (inforList[i].FieldCode === "001") {
+                            ItemCode = inforList[i].Content;
+                        }
+                    }
+                    $('#table').html(x);
+                    //Add onClick for Button with Item infor
+                    addEvent(ItemCode);
+                },
+                error: function (errorThrown) {
+                    alert('Loading COntent Failed');
+                }
+            });
+        }
         //debugger;
 
         //var strCode = $('#txtCode').val().trim();
         //var index = 4;
-        $.ajax({
-            url: "/Catalogue/ViewCataContentByIndex",
-            type: "POST",
-            data: JSON.stringify({ index: index }),
-            contentType: "application/json;charset=utf-8",
-            dataType: "json",
-            success: function (inforList) {
-                var ItemCode;
-                $('#table').empty();
-                var x = "<tr class='table-success text-center'><th div class='px-md-2' scope='col'> Nhãn </th><th class='px-md-2' scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>";
-                //$('#table').append("<tr class='table-success text-center'><th div class='px-md-2' scope='col'> Nhãn </th><th class='px-md-2' scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>")
-                for (var i = 0; i < inforList.length; ++i) {
-                    x = x + "<tr><td class='text-center'><strong> " + inforList[i].FieldCode + "</strong></td><td class='text-center'>" + inforList[i].Ind + "</td><td>" + inforList[i].Content + "</td></tr>";
-                    //$('#table').append("<tr><td class='text-center'><strong> " + inforList[i].FieldCode + "</strong></td><td class='text-center'>" + inforList[i].Ind + "</td><td>" +  inforList[i].Content+ "</td></tr>");
-                    if (inforList[i].FieldCode === "001") {
-                        ItemCode = inforList[i].Content;
-                    }
-                }
-                $('#table').html(x);
-                //Add onClick for Button with Item infor
-                addEvent(ItemCode);
-            },
-            error: function (errorThrown) {
-                alert('Loading COntent Failed');
-            }
-        });
+
     }
 
     function addEvent(ItemCode) {
