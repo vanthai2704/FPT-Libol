@@ -777,14 +777,14 @@ namespace Libol.Controllers
             
         }
 
-        [AuthAttribute(ModuleID = 2, RightID = "0")]
+        [AuthAttribute(ModuleID = 2, RightID = "33")]
         public ActionResult DeletePatronsByList()
         {
             return View();
         }
 
         [HttpPost]
-        [AuthAttribute(ModuleID = 2, RightID = "5")]
+        [AuthAttribute(ModuleID = 2, RightID = "33")]
         public JsonResult DeletePatrons(string strPatronCodes)
         {
             List<CustomPatron> listCanNotDel = new List<CustomPatron>();
@@ -833,6 +833,54 @@ namespace Libol.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        [AuthAttribute(ModuleID = 2, RightID = "34")]
+        public ActionResult AdjournPatronExpiredDateByList()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AuthAttribute(ModuleID = 2, RightID = "34")]
+        public JsonResult AdjournPatronExpiredDate(string strPatronCodes,string newExpiredDate)
+        {
+            DateTime expiredDate = DateTime.Parse(newExpiredDate);
+            List<CustomPatron> listCanNotAdjourn = new List<CustomPatron>();
+            List<string> listAdjourn = new List<string>();
+            foreach (var patronCode in strPatronCodes.Split('\n'))
+            {
+                if (db.CIR_PATRON.Where(a => a.Code == patronCode).Count() < 1)
+                {
+                    if (!String.IsNullOrWhiteSpace(patronCode) && !String.IsNullOrEmpty(patronCode))
+                    {
+                        listCanNotAdjourn.Add(new CustomPatron()
+                        {
+                            strCode = patronCode,
+                            Name = "Số thẻ không có trong hệ thống"
+                        });
+                    }
+
+                }
+                else
+                {
+                    listAdjourn.Add(patronCode);
+                }
+            }
+
+            foreach (var patronCode in listAdjourn)
+            {
+                db.CIR_PATRON.Where(a => a.Code == patronCode).First().ExpiredDate = expiredDate;
+            }
+            db.SaveChanges();
+            List<string[]> data = new List<string[]>();
+            for (int i = 0; i < listCanNotAdjourn.Count; i++)
+            {
+                string[] d = { listCanNotAdjourn[i].strCode, listCanNotAdjourn[i].Name };
+                data.Add(d);
+
+            }
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
     }
 
     

@@ -3100,6 +3100,92 @@ namespace Libol.Controllers
             return PartialView("GetStatTaskbar");
         }
 
+
+        //kiem ke
+        public ActionResult InventoryReport()
+        {
+            List<SelectListItem> lib = new List<SelectListItem>();
+             lib.Add(new SelectListItem { Text = "Hãy chọn thư viện", Value = "" });
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
+            return View();
+        }
+
+        public PartialViewResult GetInventoryReport(string strLibID, string strDKCBID)
+        {
+            strDKCBID = strDKCBID.Trim();
+            string[] myList = strDKCBID.Split('\n');
+            int countCN = myList.Length;
+            int libid = 0;
+            if(strLibID != "")
+            {
+                libid = Convert.ToInt32(strLibID);
+            }
+            int cirCount = 0;
+            int totalInLoc = 0, totalReLoc = 0;
+            List<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result> listCountResult = ab.FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_LIST(libid, 0, null, 1);
+            foreach (var item in listCountResult)
+            {
+                if (item.Type == "CountCir")
+                {
+                    cirCount = Convert.ToInt32(item.VALUE);
+                }
+
+                if (item.Type == "SUMCOPY")
+                {
+                    totalInLoc = Convert.ToInt32(item.VALUE);
+                }
+            }
+            totalReLoc = countCN + cirCount;
+            List<FPT_SP_INVENTORY_Result> listData = le.FPT_SP_INVENTORY(libid).ToList();
+           // List<FPT_SP_INVENTORY_Result> listLackData = new List<FPT_SP_INVENTORY_Result>();
+            //List<FPT_SP_INVENTORY_Result> listExcessData = new List<FPT_SP_INVENTORY_Result>();
+
+            List<string> listStr = myList.ToList();
+
+            if (myList.Length != 0)
+            {
+                
+                for (int j = 0; j < listData.Count; j++)
+                {
+                    for (int i = 0; i < listStr.Count; i++)
+                    {
+                        if (listData[j].CopyNumber == listStr[i])
+                        {
+                            listStr.RemoveAt(i);
+                            listData.RemoveAt(j);
+                        }
+                    }
+
+                }
+
+
+            }
+            if (listData.Count > 0)
+            {
+                ViewBag.LackDataResult = listData;
+            }
+            else
+            {
+                ViewBag.LackDataResult = null;
+            }
+
+            if (listStr.Count > 0)
+            {
+                ViewBag.ExcessDataResult = listStr;
+            }
+            else
+            {
+                ViewBag.ExcessDataResult = null;
+            }
+           
+            return PartialView("GetInventoryReport");
+        }
+
+
     }
     public class FPT_GET_LIQUIDBOOKS_Result_2
     {
