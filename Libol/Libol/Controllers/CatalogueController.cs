@@ -272,6 +272,24 @@ namespace Libol.Controllers
             return Json(ItemID, JsonRequestBehavior.AllowGet);
         }
 
+
+        [AuthAttribute(ModuleID = 1, RightID = "15")]
+        public ActionResult DeleteCatalogue()
+        {
+            //get all Item ready to delete
+            List<string> listCode = db.FPT_SELECTALLDELETEABLE().ToList();
+            //List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> FinalList = new List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result>();
+            //foreach(string code in listCode)
+            //{
+            //    FinalList = FinalList.Concat(catalogueBusiness.SearchCode(code , "" , "")).ToList();
+            //}
+            string arrayID = String.Join(",", listCode.ToArray());
+            List<SP_GET_TITLES_Result> FinalList = new ShelfBusiness().FPT_SP_GET_TITLES(arrayID);
+
+            //ViewData["Deleteable"] = FinalList;
+            return View();
+        }
+
     }
 
 

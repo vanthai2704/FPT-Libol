@@ -2583,6 +2583,7 @@
     <Content Include="Views\Patron\AdjournPatronExpiredDateByList.cshtml" />
     <Content Include="Views\AcquireReport\InventoryReport.cshtml" />
     <Content Include="Views\AcquireReport\GetInventoryReport.cshtml" />
+    <Content Include="Views\Catalogue\DeleteCatalogue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />
