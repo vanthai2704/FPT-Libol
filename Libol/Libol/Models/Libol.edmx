@@ -2928,7 +2928,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FPT_CATA___ItemI__4A149BFC">
+        <Association Name="FK__FPT_CATA___ItemI__539E0636">
           <End Role="ITEM" Type="Self.ITEM" Multiplicity="1" />
           <End Role="FPT_CATA_FILE_NEW" Type="Self.FPT_CATA_FILE_NEW" Multiplicity="*" />
           <ReferentialConstraint>
@@ -2940,7 +2940,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FPT_SYS_U__Right__64097829">
+        <Association Name="FK__FPT_SYS_U__Right__76282864">
           <End Role="FPT_SYS_USER_RIGHT" Type="Self.FPT_SYS_USER_RIGHT" Multiplicity="1" />
           <End Role="FPT_SYS_USER_RIGHT_DETAIL" Type="Self.FPT_SYS_USER_RIGHT_DETAIL" Multiplicity="*" />
           <ReferentialConstraint>
@@ -5786,6 +5786,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="itemID" Type="int" Mode="In" />
           <Parameter Name="cDate" Type="date" Mode="In" />
         </Function>
+        <Function Name="FPT_SELECTALLDELETEABLE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="FPT_SP_ADMIN_GRANT_RIGHTS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intUID" Type="int" Mode="In" />
           <Parameter Name="intRightID" Type="int" Mode="In" />
@@ -12455,11 +12456,11 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
           </AssociationSet>
-          <AssociationSet Name="FK__FPT_CATA___ItemI__4A149BFC" Association="Self.FK__FPT_CATA___ItemI__4A149BFC">
+          <AssociationSet Name="FK__FPT_CATA___ItemI__539E0636" Association="Self.FK__FPT_CATA___ItemI__539E0636">
             <End Role="ITEM" EntitySet="ITEM" />
             <End Role="FPT_CATA_FILE_NEW" EntitySet="FPT_CATA_FILE_NEW" />
           </AssociationSet>
-          <AssociationSet Name="FK__FPT_SYS_U__Right__64097829" Association="Self.FK__FPT_SYS_U__Right__64097829">
+          <AssociationSet Name="FK__FPT_SYS_U__Right__76282864" Association="Self.FK__FPT_SYS_U__Right__76282864">
             <End Role="FPT_SYS_USER_RIGHT" EntitySet="FPT_SYS_USER_RIGHT" />
             <End Role="FPT_SYS_USER_RIGHT_DETAIL" EntitySet="FPT_SYS_USER_RIGHT_DETAIL" />
           </AssociationSet>
@@ -26138,6 +26139,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="StartDate" Mode="In" Type="String" />
             <Parameter Name="EndDate" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="FPT_SELECTALLDELETEABLE" ReturnType="Collection(Int32)" />
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -41750,6 +41752,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SELECTALLDELETEABLE" FunctionName="LibolModel.Store.FPT_SELECTALLDELETEABLE" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

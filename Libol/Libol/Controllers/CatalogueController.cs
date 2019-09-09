@@ -263,7 +263,7 @@ namespace Libol.Controllers
                 List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = db.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS(ItemID, 0).ToList();
                 return Json(listContent, JsonRequestBehavior.AllowGet);
             }
-                
+
         }
 
         public JsonResult GetItemIDByCode(string ItemCode)
@@ -273,21 +273,29 @@ namespace Libol.Controllers
         }
 
 
+        //////////////////// **** DELETE ITEM **** ////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////
+
+
         [AuthAttribute(ModuleID = 1, RightID = "15")]
         public ActionResult DeleteCatalogue()
         {
             //get all Item ready to delete
-            List<string> listCode = db.FPT_SELECTALLDELETEABLE().ToList();
-            //List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> FinalList = new List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result>();
-            //foreach(string code in listCode)
-            //{
-            //    FinalList = FinalList.Concat(catalogueBusiness.SearchCode(code , "" , "")).ToList();
-            //}
-            string arrayID = String.Join(",", listCode.ToArray());
-            List<SP_GET_TITLES_Result> FinalList = new ShelfBusiness().FPT_SP_GET_TITLES(arrayID);
-
-            //ViewData["Deleteable"] = FinalList;
+            ViewData["Deleteable"] = catalogueBusiness.SearchAllDeleteable();
             return View();
+        }
+
+        public JsonResult DelCatalogue(string ItemCode)
+        {
+            //Get ItemID by ItemCode
+            string rs = catalogueBusiness.DeleteCatalogue(ItemCode);
+            return Json(rs, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult SearchDeleteable(string strCode , string strTT , string strISBN)
+        {
+            List<SP_GET_TITLES_Result> listContent = catalogueBusiness.SearchCodeDeleteable(strCode, strTT, strISBN);
+            return Json( listContent , JsonRequestBehavior.AllowGet);
         }
 
     }
