@@ -6982,7 +6982,7 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest]    Script Date: 09/05/2019 04:21:02 ******/
+/****** Object:  StoredProcedure [dbo].[FPT_SELECTALLDELETEABLE]    Script Date: 09/05/2019 04:21:02 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
