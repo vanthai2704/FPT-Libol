@@ -256,6 +256,9 @@
     <Compile Include="Models\FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_SP_GET_HOLDING_BY_RECOMMENDID_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -2576,9 +2579,11 @@
     <Content Include="Views\Circulation\GetCirTop20Stats.cshtml" />
     <Content Include="Views\OverdueList\_PatronDetail.cshtml" />
     <Content Include="Views\Patron\DeletePatronsByList.cshtml" />
+    <Content Include="Views\Catalogue\ViewCatalogue.cshtml" />
     <Content Include="Views\Patron\AdjournPatronExpiredDateByList.cshtml" />
     <Content Include="Views\AcquireReport\InventoryReport.cshtml" />
     <Content Include="Views\AcquireReport\GetInventoryReport.cshtml" />
+    <Content Include="Views\Catalogue\DeleteCatalogue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />

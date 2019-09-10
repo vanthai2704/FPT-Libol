@@ -1,0 +1,135 @@
+﻿@using Libol.Models;
+@using Libol.EntityResult;
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    List<SP_GET_TITLES_Result> listDeleteable = ViewData["Deleteable"] as List<SP_GET_TITLES_Result>;
+}
+
+<div id="container" class="container">
+    <div class="row">
+        <div class="col-sm-6 offset-sm-3 text-center">
+            <br>
+
+            <h2>Xoá biểu ghi biên mục</h2>
+            <div class="info-form">
+                <form action="" class="form-inlin justify-content-center">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtCode" placeholder="Mã Tài Liệu">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtTT" placeholder="Nhan Đề Chính">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtISBN" placeholder="ISBN">
+                    </div>
+
+                    <button type="button" class="btn btn-success" onclick="Search()">Tìm Kiếm</button>
+                </form>
+            </div>
+            <br>
+        </div>
+    </div>
+
+    <div class="table-responsive col-sm-10 offset-sm-1">
+        <label id="txtCount"></label>
+        @Html.Label("Tổng : " + @listDeleteable.Count().ToString(), new { id = "txtCount" })
+        <table class="table table-hover table-bordered" id="table">
+            <tr class='table-success'>
+                <th scope='col'>Mã Tài Liệu</th>
+                <th scope='col'>Nhan Đề</th>
+                <th scope='col'></th>
+            </tr>
+            @{
+                foreach (SP_GET_TITLES_Result Deleteable in listDeleteable)
+                {
+                    <tr>
+                        <th scope='col' class="clItemCode">@Deleteable.Code </th>
+                        <td scope='col'>@Deleteable.Title</td>
+                        <td scope='col'><button type="button" class="btn-success use-address">Xóa</button></td>
+                    </tr>
+
+                }
+            }
+
+        </table>
+    </div>
+</div>
+<script>
+
+    //Event to Delete Item /////////////////////
+
+    $("#table").on('click', '.use-address', function () {
+
+        var $FieldCode = $(this).closest("tr")   // Finds the closest row <tr>
+            .find(".clItemCode")     // Gets a descendent with class="nr"
+            .text();         // Retrieves the text within <td>
+
+        var result = confirm("Xác nhận xóa mã tài liệu : " + $FieldCode);
+        if (result) {
+            $.ajax({
+                url: "/Catalogue/DelCatalogue",
+                type: "POST",
+                data: JSON.stringify({ ItemCode: $FieldCode }),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (message) {
+                    alert(message);
+
+                },
+                error: function (errorThrown) {
+                    alert("Xảy ra lỗi trong khi xóa mã tài liệu : " + ItemCode);
+                }
+            });
+            $(this).closest("tr").empty();
+        }
+
+
+    });
+
+</script>
+
+
+<script>
+    //event to handle 'Enter'
+    $(document).keypress(function (e) {
+        var keycode = (e.keyCode ? e.keyCode : e.which);
+        if (keycode == '13') {
+            Search();
+        }
+    });
+
+    function Search() {
+        //debugger;
+
+        var strCode = $('#txtCode').val().trim();
+        var strTT = $('#txtTT').val().trim();
+        var strISBN = $('#txtISBN').val().trim();
+        $.ajax({
+            url: "/Catalogue/SearchDeleteable",
+            type: "POST",
+            data: JSON.stringify({ strCode: strCode, strTT: strTT, strISBN: strISBN }),
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (inforList) {
+                $('#table').empty();
+                //$('#txtCount').val = 'Tổng : ' + inforList.length() +1;
+                for (var i = 0; i < inforList.length; ++i) {
+                    $('#table').append("<tr><th scope='col' class='clItemCode'>" + inforList[i].Code + " </th><td scope='col'>" + inforList[i].Title + "</td><td scope='col'><button type='button' class='btn-success use-address'>Xóa</button></td></tr>");
+                }
+                return 0;
+            },
+            error: function (errorThrown) {
+                alert(errorThrown);
+            }
+        });
+
+
+    }
+
+
+</script>
+

@@ -16,7 +16,7 @@ namespace Libol.SupportClass
             {
                 index = value.IndexOf("$");
                 if (index == -1) break;
-                value = value.Substring(0, index) + value.Substring(index + 2);
+                value = value.Substring(0, index) +" "+ value.Substring(index + 2);
             }
 
             return value;

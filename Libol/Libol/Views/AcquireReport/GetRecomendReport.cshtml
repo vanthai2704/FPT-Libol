@@ -33,17 +33,6 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
             var table2 = $('#MainTable2').DataTable({
                 //le
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -63,17 +52,6 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table2.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table2.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
             var table = $('#MainTable3').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 buttons: [
@@ -91,17 +69,6 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
             var table = $('#MainTable4').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 buttons: [
@@ -119,17 +86,6 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
             var table = $('#MainTable5').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 buttons: [
@@ -147,17 +103,6 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
             var table = $('#MainTable6').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 buttons: [
@@ -174,15 +119,56 @@
                 paging: false,
                 searching: false,
             });
-
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
         });
+
+        function exportTableToExcel(tbl1, tbl2, tbl3, tbl4, tbl5, tbl6, filename = '') {
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect1, tableSelect2, tableSelect3, tableSelect4, tableSelect5, tableSelect6;
+            var tableHTML = "";
+            if (document.getElementById(tbl1) != null) {
+                tableSelect1 = document.getElementById(tbl1);
+                tableHTML = tableSelect1.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl2) != null) {
+                tableSelect2 = document.getElementById(tbl2);
+                tableHTML += tableSelect2.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl3) != null) {
+                tableSelect3 = document.getElementById(tbl3);
+                tableHTML += tableSelect3.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl4) != null) {
+                tableSelect4 = document.getElementById(tbl4);
+                tableHTML += tableSelect4.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl5) != null) {
+                tableSelect5 = document.getElementById(tbl5);
+                tableHTML += tableSelect5.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl6) != null) {
+                tableSelect6 = document.getElementById(tbl6);
+                tableHTML += tableSelect6.outerHTML.replace(/ /g, '%20');
+            }
+            // Specify file name
+            filename = filename ? filename + '.xls' : 'excel_data.xls';
+            // Create download link element
+            downloadLink = document.createElement("a");
+            document.body.appendChild(downloadLink);
+            if (navigator.msSaveOrOpenBlob) {
+                var blob = new Blob(['\ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+                // Setting the file name
+                downloadLink.download = filename;
+                //triggering the function
+                downloadLink.click();
+            }
+        }
     </script>
 </head>
 
@@ -215,8 +201,8 @@
         <span class="WordSection1">BBBG số:..................................................................</span><br />
         @{
             int STT1 = 0, STT2 = 0, STT3 = 0, STT = 0, STT4 = 0, STT5 = 0, STT6 = 0;
-            double SUM = 0, SUM1 = 0, SUM2 = 0, SUM3 = 0, SUM4 = 0, SUM5 = 0, SUM6 = 0;
-            int TOTAL = 0, TOTAL1 = 0, TOTAL2 = 0, TOTAL3 = 0, TOTAL4 = 0, TOTAL5 = 0, TOTAL6 = 0;
+            double SUM1 = 0, SUM2 = 0, SUM3 = 0, SUM4 = 0, SUM5 = 0, SUM6 = 0;
+            int TOTAL1 = 0, TOTAL2 = 0, TOTAL3 = 0, TOTAL4 = 0, TOTAL5 = 0, TOTAL6 = 0;
 
             if (ViewBag.DisVND != null)
             {
@@ -246,28 +232,26 @@
 
                             <tr>
                                 <td>@(++STT1)</td>
-                                <td>@item.SoChungTu</td>
-                                <td>@item.NgayChungTu</td>
-                                <td>@item.ReId</td>
+                                <td>@item.RECORDNUMBER</td>
+                                <td>@item.ReceiptedDate</td>
+                                <td>@item.RECOMMENDID</td>
                                 <td>@item.DKCB</td>
                                 <td>@item.ISBN</td>
-                                <td>@item.NhanDe</td>
-                                <td>@item.NhaXuatBan</td>
-                                <td>@item.NamXuatBan</td>
-                                <td>@item.SLN</td>
-                                <td>@item.NgayBoSung</td>
-                                <td>@item.DonGia</td>
-                                <td>@item.DonViTienTe</td>
-                                <td>@item.ThanhTien</td>
-                                <td>@item.UseCount</td>
+                                <td>@item.Title</td>
+                                <td>@item.NXB</td>
+                                <td>@item.Year</td>
+                                <td>@item.InBookNum</td>
+                                <td>@item.ACQUIREDDATE.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Price</td>
+                                <td>@item.Currency</td>
+                                <td>@item.FullPrice</td>
+                                <td>@item.useCount</td>
                             </tr>
-                            SUM1 += item.ThanhTien;
-                            TOTAL1 += item.SLN;
+                            SUM1 += item.FullPrice;
+                            TOTAL1 += item.InBookNum;
                         }
                     </tbody>
-                    @{
-                        Math.Ceiling(SUM1);
-                    }
+                   
                     <tfoot>
                         <tr>
                             <td></td>
@@ -288,11 +272,15 @@
                         </tr>
                     </tfoot>
                 </table>
+
                 <div id="Total1" class="WordSection1" style="font-weight:normal;">
 
                 </div>
                 <script>
-                    document.getElementById('Total1').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM1)) + '</span>';
+                     @{
+                         SUM1= Math.Ceiling(SUM1);
+                    }
+                    document.getElementById('Total1').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM1)) + ' (VND)</span>';
                 </script>
                 <div id="pageNavPosition1"></div>
             }
@@ -326,27 +314,27 @@
 
                             <tr>
                                 <td>@(++STT2)</td>
-                                <td>@item.SoChungTu</td>
-                                <td>@item.NgayChungTu</td>
-                                <td>@item.ReId</td>
+                                <td>@item.RECORDNUMBER</td>
+                                <td>@item.ReceiptedDate</td>
+                                <td>@item.RECOMMENDID</td>
                                 <td>@item.DKCB</td>
                                 <td>@item.ISBN</td>
-                                <td>@item.NhanDe</td>
-                                <td>@item.NhaXuatBan</td>
-                                <td>@item.NamXuatBan</td>
-                                <td>@item.SLN</td>
-                                <td>@item.NgayBoSung</td>
-                                <td>@item.DonGia</td>
-                                <td>@item.DonViTienTe</td>
-                                <td>@item.ThanhTien</td>
-                                <td>@item.UseCount</td>
+                                <td>@item.Title</td>
+                                <td>@item.NXB</td>
+                                <td>@item.Year</td>
+                                <td>@item.InBookNum</td>
+                                <td>@item.ACQUIREDDATE.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Price</td>
+                                <td>@item.Currency</td>
+                                <td>@item.FullPrice</td>
+                                <td>@item.useCount</td>
                             </tr>
-                            SUM2 += item.ThanhTien;
-                            TOTAL2 += item.SLN;
+                            SUM2 += item.FullPrice;
+                            TOTAL2 += item.InBookNum;
                         }
                     </tbody>
                     @{
-                        SUM1 = Math.Ceiling(SUM1);
+                        // SUM2 = Math.Ceiling(SUM2);
                     }
                     <tfoot>
                         <tr>
@@ -372,7 +360,10 @@
 
                 </div>
                 <script>
-                    document.getElementById('Total2').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM2)) + '</span>';
+                     @{
+                        SUM2 = Math.Ceiling(SUM2);
+                    }
+                    document.getElementById('Total2').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM2)) + ' (YEN)</span>';
                 </script>
                 <div id="pageNavPosition2"></div>
             }
@@ -410,27 +401,27 @@
 
                             <tr>
                                 <td>@(++STT3)</td>
-                                <td>@item.SoChungTu</td>
-                                <td>@item.NgayChungTu</td>
-                                <td>@item.ReId</td>
+                                <td>@item.RECORDNUMBER</td>
+                                <td>@item.ReceiptedDate</td>
+                                <td>@item.RECOMMENDID</td>
                                 <td>@item.DKCB</td>
                                 <td>@item.ISBN</td>
-                                <td>@item.NhanDe</td>
-                                <td>@item.NhaXuatBan</td>
-                                <td>@item.NamXuatBan</td>
-                                <td>@item.SLN</td>
-                                <td>@item.NgayBoSung</td>
-                                <td>@item.DonGia</td>
-                                <td>@item.DonViTienTe</td>
-                                <td>@item.ThanhTien</td>
-                                <td>@item.UseCount</td>
+                                <td>@item.Title</td>
+                                <td>@item.NXB</td>
+                                <td>@item.Year</td>
+                                <td>@item.InBookNum</td>
+                                <td>@item.ACQUIREDDATE.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Price</td>
+                                <td>@item.Currency</td>
+                                <td>@item.FullPrice</td>
+                                <td>@item.useCount</td>
                             </tr>
-                            SUM3 += item.ThanhTien;
-                            TOTAL3 += item.SLN;
+                            SUM3 += item.FullPrice;
+                            TOTAL3 += item.InBookNum;
                         }
                     </tbody>
                     @{
-                        SUM3 = Math.Ceiling(SUM3);
+                        //SUM3 = Math.Ceiling(SUM3);
                     }
                     <tfoot>
                         <tr>
@@ -456,7 +447,10 @@
 
                 </div>
                 <script>
-                    document.getElementById('Total3').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM3)) + '</span>';
+                     @{
+                         SUM3 = Math.Ceiling(SUM3);
+                    }
+                    document.getElementById('Total3').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM3)) + ' (USD)</span>';
                 </script>
                 <div id="pageNavPosition3"></div>
             }
@@ -484,32 +478,32 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.DisVND)
+                        @foreach (var item in ViewBag.DisBAnh)
                         {
 
                             <tr>
                                 <td>@(++STT4)</td>
-                                <td>@item.SoChungTu</td>
-                                <td>@item.NgayChungTu</td>
-                                <td>@item.ReId</td>
+                                <td>@item.RECORDNUMBER</td>
+                                <td>@item.ReceiptedDate</td>
+                                <td>@item.RECOMMENDID</td>
                                 <td>@item.DKCB</td>
                                 <td>@item.ISBN</td>
-                                <td>@item.NhanDe</td>
-                                <td>@item.NhaXuatBan</td>
-                                <td>@item.NamXuatBan</td>
-                                <td>@item.SLN</td>
-                                <td>@item.NgayBoSung</td>
-                                <td>@item.DonGia</td>
-                                <td>@item.DonViTienTe</td>
-                                <td>@item.ThanhTien</td>
-                                <td>@item.UseCount</td>
+                                <td>@item.Title</td>
+                                <td>@item.NXB</td>
+                                <td>@item.Year</td>
+                                <td>@item.InBookNum</td>
+                                <td>@item.ACQUIREDDATE.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Price</td>
+                                <td>@item.Currency</td>
+                                <td>@item.FullPrice</td>
+                                <td>@item.useCount</td>
                             </tr>
-                            SUM4 += item.ThanhTien;
-                            TOTAL4 += item.SLN;
+                            SUM4 += item.FullPrice;
+                            TOTAL4 += item.InBookNum;
                         }
                     </tbody>
                     @{
-                        SUM4 = Math.Ceiling(SUM4);
+                        // SUM4 = Math.Ceiling(SUM4);
                     }
                     <tfoot>
                         <tr>
@@ -535,7 +529,10 @@
 
                 </div>
                 <script>
-                    document.getElementById('Total4').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM4)) + '</span>';
+                     @{
+                         SUM4 = Math.Ceiling(SUM4);
+                    }
+                    document.getElementById('Total4').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM4)) + ' (Bang Anh)</span>';
                 </script>
                 <div id="pageNavPosition1"></div>
             }
@@ -563,32 +560,32 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.DisVND)
+                        @foreach (var item in ViewBag.DisCENT)
                         {
 
                             <tr>
                                 <td>@(++STT5)</td>
-                                <td>@item.SoChungTu</td>
-                                <td>@item.NgayChungTu</td>
-                                <td>@item.ReId</td>
+                                <td>@item.RECORDNUMBER</td>
+                                <td>@item.ReceiptedDate</td>
+                                <td>@item.RECOMMENDID</td>
                                 <td>@item.DKCB</td>
                                 <td>@item.ISBN</td>
-                                <td>@item.NhanDe</td>
-                                <td>@item.NhaXuatBan</td>
-                                <td>@item.NamXuatBan</td>
-                                <td>@item.SLN</td>
-                                <td>@item.NgayBoSung</td>
-                                <td>@item.DonGia</td>
-                                <td>@item.DonViTienTe</td>
-                                <td>@item.ThanhTien</td>
-                                <td>@item.UseCount</td>
+                                <td>@item.Title</td>
+                                <td>@item.NXB</td>
+                                <td>@item.Year</td>
+                                <td>@item.InBookNum</td>
+                                <td>@item.ACQUIREDDATE.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Price</td>
+                                <td>@item.Currency</td>
+                                <td>@item.FullPrice</td>
+                                <td>@item.useCount</td>
                             </tr>
-                            SUM5 += item.ThanhTien;
-                            TOTAL5 += item.SLN;
+                            SUM5 += item.FullPrice;
+                            TOTAL5 += item.InBookNum;
                         }
                     </tbody>
                     @{
-                        SUM5 = Math.Ceiling(SUM5);
+                        //SUM5 = Math.Ceiling(SUM5);
                     }
                     <tfoot>
                         <tr>
@@ -614,7 +611,10 @@
 
                 </div>
                 <script>
-                    document.getElementById('Total5').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM5)) + '</span>';
+                    @{
+                        SUM5 = Math.Ceiling(SUM5);
+                    }
+                    document.getElementById('Total5').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM5)) + ' (Cent)</span>';
                 </script>
                 <div id="pageNavPosition1"></div>
             }
@@ -642,32 +642,32 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.DisVND)
+                        @foreach (var item in ViewBag.DisEUR)
                         {
 
                             <tr>
                                 <td>@(++STT6)</td>
-                                <td>@item.SoChungTu</td>
-                                <td>@item.NgayChungTu</td>
-                                <td>@item.ReId</td>
+                                <td>@item.RECORDNUMBER</td>
+                                <td>@item.ReceiptedDate</td>
+                                <td>@item.RECOMMENDID</td>
                                 <td>@item.DKCB</td>
                                 <td>@item.ISBN</td>
-                                <td>@item.NhanDe</td>
-                                <td>@item.NhaXuatBan</td>
-                                <td>@item.NamXuatBan</td>
-                                <td>@item.SLN</td>
-                                <td>@item.NgayBoSung</td>
-                                <td>@item.DonGia</td>
-                                <td>@item.DonViTienTe</td>
-                                <td>@item.ThanhTien</td>
-                                <td>@item.UseCount</td>
+                                <td>@item.Title</td>
+                                <td>@item.NXB</td>
+                                <td>@item.Year</td>
+                                <td>@item.InBookNum</td>
+                                <td>@item.ACQUIREDDATE.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Price</td>
+                                <td>@item.Currency</td>
+                                <td>@item.FullPrice</td>
+                                <td>@item.useCount</td>
                             </tr>
-                            SUM6 += item.ThanhTien;
-                            TOTAL6 += item.SLN;
+                            SUM6 += item.FullPrice;
+                            TOTAL6 += item.InBookNum;
                         }
                     </tbody>
                     @{
-                        SUM6 = Math.Ceiling(SUM6);
+                        //SUM6 = Math.Ceiling(SUM6);
                     }
                     <tfoot>
                         <tr>
@@ -693,7 +693,10 @@
 
                 </div>
                 <script>
-                    document.getElementById('Total6').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM6)) + '</span>';
+                    @{
+                        SUM6 = Math.Ceiling(SUM6);
+                    }
+                    document.getElementById('Total6').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM6)) + ' (EUR)</span>';
                 </script>
                 <div id="pageNavPosition1"></div>
             }
@@ -708,12 +711,12 @@
             </tr>
         </table>
         <div class="WordSection1" style="width:100%; height:150px;"></div>
-    </div>    
+    </div>
     <div class="row">
         <div class="col-md-12 text-center">
             <div class="btn-group btn-group">
                 <button id="print" type="button" class="btn btn-primary mr-1">In</button>
-                <button id="ExcelTo" type="button" class="btn btn-primary mr-1">Lưu vào file Excel</button>
+                <button id="ExcelTo" type="button" class="btn btn-primary mr-1" onclick="exportTableToExcel('MainTable1','MainTable2','MainTable3','MainTable4','MainTable5','MainTable6','Báo cáo Đề nghị')">Lưu vào file Excel</button>
                 <button id="export" type="button" class="btn btn-primary">Lưu vào file Word</button>
             </div>
         </div>
@@ -724,73 +727,11 @@
         //Nhấn btn in
         $(document).ready(function () {
             $("#print").click(function () {
-                $('#pageNavPosition1').hide();
                 var divToPrint = document.getElementById("Main");
                 newWin = window.open("");
                 newWin.document.write(divToPrint.outerHTML);
                 newWin.print();
                 newWin.close();
-                $('#pageNavPosition1').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition2').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition2').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition3').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition3').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition4').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition4').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition5').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition5').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition6').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition6').show();
             });
         });
     </script>

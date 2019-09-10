@@ -42,7 +42,7 @@
     FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result Leader = ViewData["Leader"] as FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result;
     List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> Contents = ViewData["ListContent"] as List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result>;
     List<SP_CATA_GET_MODIFIED_FIELDS_Result> Fields = ViewData["listField"] as List<SP_CATA_GET_MODIFIED_FIELDS_Result>;
-    List<FPT_CATA_FILE_NEW> Filex = ViewData["listFile"] as List<FPT_CATA_FILE_NEW>;
+    //List<FPT_CATA_FILE_NEW> Filex = ViewData["listFile"] as List<FPT_CATA_FILE_NEW>;
     //Merge 2 List Content + Des
     var res = Contents.Zip(Fields, (c, f) => new { Content = c, Field = f });
 }
@@ -86,7 +86,7 @@
 
 </div>
 @*/////////////////////////////////////////File Processing//////////////////////////////////////////////////*@
-<div class="row">
+@*<div class="row">
 
     <div class="col-md-8">
         <h3><mark>Download EData</mark></h3>
@@ -106,7 +106,7 @@
         <input type="button" class="btn-outline-success" id="fileButton" value="Upload Files" /><br />
 
     </div>
-</div>
+</div>*@
 
 
 
@@ -176,7 +176,7 @@
         </div>
     </div>
 </div>
-<script>
+@*<script>
     //upload FIle
     $('#fileInput').bind('change', function () {
         $('#fileButton').attr("disabled", false)
@@ -226,7 +226,7 @@
 
 
     });
-</script>
+</script>*@
 <script>
     //add event click enter for input search Fields
     $("#txtSearch").on('keyup', function (e) {
@@ -286,7 +286,7 @@
 
 
 
-                    var result = confirm("Bạn có chắc muốn thêm trường " + $FieldCode + "?");
+                    var result = confirm("Xác nhận thêm trường " + $FieldCode + "?");
                     if (result) {
                         if (!tempArrTempFieldName.includes($FieldCode)) {
                             $('#lbAdd').show(0);

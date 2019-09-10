@@ -307,7 +307,8 @@ namespace Libol.Models
 
             foreach (var item in data)
             {
-                item.Title = GetContent(item.Title);
+                //item.Title = GetContent(item.Title);
+                item.Title = new SupportClass.FormatHoldingTitle().OnFormatHoldingTitle(item.Title);
             }
             return "";
         }

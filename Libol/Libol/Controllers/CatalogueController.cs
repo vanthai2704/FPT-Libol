@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Libol.Models;
 using Libol.EntityResult;
 using System.Data.Entity.Core.Objects;
 using Libol.SupportClass;
-using System.IO;
+using System.Data;
 
 namespace Libol.Controllers
 {
@@ -44,45 +43,48 @@ namespace Libol.Controllers
             return View();
         }
 
-        [HttpPost]
-        public JsonResult UploadFile()
-        {
-            string rs = "";
-            HttpFileCollectionBase Files = Request.Files;
-            int id = Int32.Parse(Request.Form["ID"]) ;
-            
-            if (Files.Count  != 0)
-            {
-                for (int i = 0; i < Files.Count; i++)
-                {
-                    
-                    var file = Files[i];
-                    var fileName = DateTime.Now.ToString("yyMMddHHmmss") + Path.GetFileName(file.FileName);
-                    string path = Path.Combine(Server.MapPath("~/CAT_FILE"),Path.GetFileName(fileName));
-                    file.SaveAs(path);
-                    int indexi = i + 1;
-                    //save DB
-                    db.FPT_CATA_FILE_NEW.Add(new FPT_CATA_FILE_NEW {  ItemID = id, FileName= file.FileName, FilePath= path });
-                    db.SaveChanges();
-                    
-                    rs = "Upload Thành Công " + indexi + " File !";
-                }
-            }
-            else
-            {
-                rs = "Chưa có File được chọn !";
-            }
 
-            return Json(rs, JsonRequestBehavior.AllowGet);
+        //Chức năng được phát triển theo yêu cầu phát sinh ------------------------------------
+        //[HttpPost]
+        //public JsonResult UploadFile()
+        //{
+        //    string rs = "";
+        //    HttpFileCollectionBase Files = Request.Files;
+        //    int id = Int32.Parse(Request.Form["ID"]) ;
 
-        }
-        [HttpGet]
-        public FileResult Download(string FileName , string FilePath )
-        {
-            byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
-            //string fileName = "190814100030SBV_SG3.1_Tai lieu mo ta source code Web Application-SWIFT.docx";
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet , FileName);
-        }
+        //    if (Files.Count  != 0)
+        //    {
+        //        for (int i = 0; i < Files.Count; i++)
+        //        {
+
+        //            var file = Files[i];
+        //            var fileName = DateTime.Now.ToString("yyMMddHHmmss") + Path.GetFileName(file.FileName);
+        //            string path = Path.Combine(Server.MapPath("~/CAT_FILE"),Path.GetFileName(fileName));
+        //            file.SaveAs(path);
+        //            int indexi = i + 1;
+        //            //save DB
+        //            db.FPT_CATA_FILE_NEW.Add(new FPT_CATA_FILE_NEW {  ItemID = id, FileName= file.FileName, FilePath= path });
+        //            db.SaveChanges();
+
+        //            rs = "Upload Thành Công " + indexi + " File !";
+        //        }
+        //    }
+        //    else
+        //    {
+        //        rs = "Chưa có File được chọn !";
+        //    }
+
+        //    return Json(rs, JsonRequestBehavior.AllowGet);
+
+        //}
+        //[HttpGet]
+        //public FileResult Download(string FileName , string FilePath )
+        //{
+        //    byte[] fileBytes = System.IO.File.ReadAllBytes(FilePath);
+        //    //string fileName = "190814100030SBV_SG3.1_Tai lieu mo ta source code Web Application-SWIFT.docx";
+        //    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet , FileName);
+        //}
+
 
         //**************************************************************CHECK TITLE**************************************************************
         [HttpPost]
@@ -100,10 +102,10 @@ namespace Libol.Controllers
         [HttpPost]
         public JsonResult CheckItemNumber(string strFieldValue, string strFieldCode)
         {
-            //ObjectParameter Output = new ObjectParameter("lngItemID", typeof(Int32));
-            //db.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(strFieldValue, strFieldCode, Output);
-            //return Json(Output.Value, JsonRequestBehavior.AllowGet);
-            return Json("", JsonRequestBehavior.AllowGet);
+            ObjectParameter Output = new ObjectParameter("lngItemID", typeof(Int32));
+            db.FPT_SP_CATA_CHECK_EXIST_ITEMNUMBER(strFieldValue, strFieldCode, Output);
+            return Json(Output.Value, JsonRequestBehavior.AllowGet);
+            //return Json("", JsonRequestBehavior.AllowGet);
         }
 
 
@@ -137,8 +139,8 @@ namespace Libol.Controllers
 
 
 
-        //----------------Add Item For Detail -----------
-        //---------------------------------------------
+        //----------------Add Item For Detail <Biên Mục Chi Tiết> ---------------------
+        //-----------------------------------------------------------------------------
 
         [HttpPost]
         public JsonResult InsertOrUpdateCatalogue(List<string> listFieldsName, List<string> listFieldsValue, List<string> listFieldsOrg, List<string> listValuesOrg)
@@ -152,8 +154,8 @@ namespace Libol.Controllers
         }
 
 
-        //----------------Search Field Cata -----------
-        //---------------------------------------------
+        //----------------Search Field Cata ----------------------------------------
+        //--------------------------------------------------------------------------
         [AuthAttribute(ModuleID = 1, RightID = "15")]
         public ActionResult SearchCodeNumber()
         {
@@ -185,7 +187,7 @@ namespace Libol.Controllers
                 //Lay Content cua LEADERty
                 ViewData["Leader"] = listContent[0];
                 listContent.RemoveAt(0);
-             
+
 
                 //****************************************************Done List Content****************************************************
                 //*************************************************************************************************************************
@@ -204,9 +206,9 @@ namespace Libol.Controllers
                 ViewData["ListField"] = listField;
 
                 //Load File
-                int IdIn = Int32.Parse(Id);
-                List<FPT_CATA_FILE_NEW> listFile = db.FPT_CATA_FILE_NEW.Where(i => i.ItemID== IdIn).ToList();
-                ViewData["ListFile"] = listFile;
+                //int IdIn = Int32.Parse(Id);
+                //List<FPT_CATA_FILE_NEW> listFile = db.FPT_CATA_FILE_NEW.Where(i => i.ItemID== IdIn).ToList();
+                //ViewData["ListFile"] = listFile;
             }
             else
             {
@@ -230,6 +232,72 @@ namespace Libol.Controllers
             }
 
         }
+
+
+        //**************************************************************************
+        [AuthAttribute(ModuleID = 1, RightID = "15")]
+        public ActionResult ViewCatalogue()
+        {
+            ViewBag.TotalCount = db.ITEMs.Count();
+            //List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = catalogueBusiness.GetContentByID(Id).ToList();
+
+            return View();
+        }
+
+
+        public JsonResult ViewCataContentByIndex(int? index)
+        {
+
+            if (index <= 0)
+            {
+                return Json("Số thứ tự nhập phải lớn hơn 0 !", JsonRequestBehavior.AllowGet);
+            }
+            else if (index > db.ITEMs.Count())
+            {
+                return Json("Số thứ tự vượt quá số bản ghi !", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                int actualIndex = (int)index;
+                string ItemID = db.ITEMs.ToList().ElementAt(actualIndex - 1).ID.ToString();
+                List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = db.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS(ItemID, 0).ToList();
+                return Json(listContent, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public JsonResult GetItemIDByCode(string ItemCode)
+        {
+            var ItemID = db.SP_GET_ITEMID_BYCODE(ItemCode).ToList().FirstOrDefault();
+            return Json(ItemID, JsonRequestBehavior.AllowGet);
+        }
+
+
+        //////////////////// **** DELETE ITEM **** ////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////
+
+
+        [AuthAttribute(ModuleID = 1, RightID = "15")]
+        public ActionResult DeleteCatalogue()
+        {
+            //get all Item ready to delete
+            ViewData["Deleteable"] = catalogueBusiness.SearchAllDeleteable();
+            return View();
+        }
+
+        public JsonResult DelCatalogue(string ItemCode)
+        {
+            //Get ItemID by ItemCode
+            string rs = catalogueBusiness.DeleteCatalogue(ItemCode);
+            return Json(rs, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult SearchDeleteable(string strCode , string strTT , string strISBN)
+        {
+            List<SP_GET_TITLES_Result> listContent = catalogueBusiness.SearchCodeDeleteable(strCode, strTT, strISBN);
+            return Json( listContent , JsonRequestBehavior.AllowGet);
+        }
+
     }
 
 
