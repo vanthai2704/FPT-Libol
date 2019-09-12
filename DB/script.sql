@@ -6966,3 +6966,34 @@ BEGIN
 	END
 END
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_SELECTALLDELETEABLE]    Script Date: 09/05/2019 04:21:02 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[FPT_SELECTALLDELETEABLE]
+-- Purpose: Get all deleteable Item
+-- MODIFICATION HISTORY
+-- Person      Date    Comments
+-- DOANHDQ             Create
+-- ---------   ------  -------------------------------------------
+
+AS
+	select ID from ITEM where ID not in (select distinct ItemID from HOLDING);

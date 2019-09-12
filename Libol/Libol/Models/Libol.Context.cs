@@ -23226,5 +23226,10 @@ namespace Libol.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result>("FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest", libIDParameter, locIDParameter, reidParameter, startDateParameter, endDateParameter);
         }
+    
+        public virtual ObjectResult<Nullable<int>> FPT_SELECTALLDELETEABLE()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_SELECTALLDELETEABLE");
+        }
     }
 }
