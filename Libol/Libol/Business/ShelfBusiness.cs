@@ -2,6 +2,7 @@
 using Libol.EntityResult;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
@@ -71,7 +72,7 @@ namespace Libol.Models
             holding.Note = "";
             holding.POID = 0;
 
-          
+
             // check start holding tồn tại chưa
 
             if (!IsExistHolding(holding.CopyNumber, holding.LocationID, -1))
@@ -81,57 +82,74 @@ namespace Libol.Models
                 string strNumber = holding.CopyNumber.Substring(symbol.Length, 6);
                 int number = Convert.ToInt32(strNumber);
 
-                for (int i = 0; i < numberOfCN; i++)
+                using (DbContextTransaction transaction = db.Database.BeginTransaction())
                 {
-                    // tạo list ĐKCB
-                    int length = 6 - number.ToString().Length;
-                    string stringZero = "";
-                    for (int j = 0; j < length; j++)
+                    for (int i = 0; i < numberOfCN; i++)
                     {
-                        stringZero = stringZero + "0";
+                        // tạo list ĐKCB
+                        int length = 6 - number.ToString().Length;
+                        string stringZero = "";
+                        for (int j = 0; j < length; j++)
+                        {
+                            stringZero = stringZero + "0";
+                        }
+                        string copyNumber = symbol + stringZero + number;
+
+                        if (IsExistHolding(copyNumber, holding.LocationID, -1))
+                        {
+                            transaction.Rollback();
+                            return "Hãy sinh lại giá trị";
+                        };
+
+                        number++;
+                        // procedure đã + 1 giá trị MaxNumber trong HOLDING_LOCATION
+                        db.SP_HOLDING_INS(
+                            holding.ItemID,
+                            holding.LocationID,
+                            holding.LibID,
+                            holding.UseCount,
+                            holding.Volume,
+                            // ngày bổ sung
+                            holding.AcquiredDate.ToString(),
+                            copyNumber,
+                            holding.InUsed == true ? 1 : 0,
+                            holding.InCirculation == true ? 1 : 0,
+                            holding.ILLID,
+                            holding.Price,
+                            // giá sách
+                            holding.Shelf,
+                            holding.POID,
+                            //ngày sử dụng cuối
+                            holding.DateLastUsed.ToString(),
+                            holding.CallNumber,
+                            holding.Acquired == true ? 1 : 0,
+                            holding.Note,
+                            holding.LoanTypeID,
+                            holding.AcquiredSourceID,
+                            holding.Currency,
+                            holding.Rate,
+                            // số chứng từ
+                            holding.RecordNumber,
+                            // ngày chứng từ
+                            holding.ReceiptedDate.ToString()
+
+                            );
+                        holding.CopyNumber = copyNumber;
+                        holdings.Add(holding);
+
                     }
-                    string copyNumber = symbol + stringZero + number;
-                    number++;
-                    // procedure đã + 1 giá trị MaxNumber trong HOLDING_LOCATION
-                    db.SP_HOLDING_INS(
-                        holding.ItemID,
-                        holding.LocationID,
-                        holding.LibID,
-                        holding.UseCount,
-                        holding.Volume,
-                        // ngày bổ sung
-                        holding.AcquiredDate.ToString(),
-                        copyNumber,
-                        holding.InUsed == true ? 1 : 0,
-                        holding.InCirculation == true ? 1 : 0,
-                        holding.ILLID,
-                        holding.Price,
-                        // giá sách
-                        holding.Shelf,
-                        holding.POID,
-                       //ngày sử dụng cuối
-                        holding.DateLastUsed.ToString(),
-                        holding.CallNumber,
-                        holding.Acquired == true ? 1 : 0,
-                        holding.Note,
-                        holding.LoanTypeID,
-                        holding.AcquiredSourceID,
-                        holding.Currency,
-                        holding.Rate,
-                        // số chứng từ
-                        holding.RecordNumber,
-                      // ngày chứng từ
-                        holding.ReceiptedDate.ToString()
-                      
-                        );
-                    holding.CopyNumber = copyNumber;
-                    holdings.Add(holding);
+                    transaction.Commit();
+                    if (!string.IsNullOrEmpty(recommendID))
+                    {
+                        InsertRecommend(recommendID, holding.ItemID);
+                    }
+                    composite = GenerateCompositeHoldings(holding.ItemID);
+
+
+
                 }
-                if (!string.IsNullOrEmpty(recommendID))
-                {
-                    InsertRecommend(recommendID, holding.ItemID);
-                }
-                composite = GenerateCompositeHoldings(holding.ItemID);
+
+
             }
             else
             {
