@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css">
     <script>
         $(document).ready(function () {
-            var table = $('#MainTable1').DataTable({
+            var table1 = $('#MainTable1').DataTable({
                 // pageLength: 50,
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 //lengthChange: false,
@@ -34,17 +34,6 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
             var table2 = $('#MainTable2').DataTable({
                 //le
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -64,18 +53,7 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table2.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table2.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var table = $('#MainTable3').DataTable({
+            var table3 = $('#MainTable3').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 buttons: [
                     {
@@ -92,18 +70,8 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
 
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var table = $('#MainTable4').DataTable({
+            var table4 = $('#MainTable4').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 buttons: [
                     {
@@ -120,18 +88,8 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
 
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var table = $('#MainTable5').DataTable({
+            var table5 = $('#MainTable5').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 buttons: [
                     {
@@ -148,18 +106,8 @@
                 searching: false,
             });
 
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
 
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var table = $('#MainTable6').DataTable({
+            var table6 = $('#MainTable6').DataTable({
                 lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 buttons: [
                     {
@@ -175,15 +123,57 @@
                 paging: false,
                 searching: false,
             });
-
-            $("#ExcelTo").on("click", function () {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $("#Print").on("click", function () {
-                table.button('.buttons-print').trigger();
-            });
         });
+
+        function exportTableToExcel(tbl1, tbl2, tbl3, tbl4, tbl5, tbl6, filename = '') {
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect1, tableSelect2, tableSelect3, tableSelect4, tableSelect5, tableSelect6;
+            var tableHTML = "";
+            if (document.getElementById(tbl1) != null) {
+                tableSelect1 = document.getElementById(tbl1);
+                tableHTML = tableSelect1.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl2) != null) {
+                tableSelect2 = document.getElementById(tbl2);
+                tableHTML += tableSelect2.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl3) != null) {
+                tableSelect3 = document.getElementById(tbl3);
+                tableHTML += tableSelect3.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl4) != null) {
+                tableSelect4 = document.getElementById(tbl4);
+                tableHTML += tableSelect4.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl5) != null) {
+                tableSelect5 = document.getElementById(tbl5);
+                tableHTML += tableSelect5.outerHTML.replace(/ /g, '%20') + " <br/> ";
+            }
+            if (document.getElementById(tbl6) != null) {
+                tableSelect6 = document.getElementById(tbl6);
+                tableHTML += tableSelect6.outerHTML.replace(/ /g, '%20');
+            }
+            // Specify file name
+            filename = filename ? filename + '.xls' : 'excel_data.xls';
+            // Create download link element
+            downloadLink = document.createElement("a");
+            document.body.appendChild(downloadLink);
+            if (navigator.msSaveOrOpenBlob) {
+                var blob = new Blob(['\ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+                // Setting the file name
+                downloadLink.download = filename;
+                //triggering the function
+                downloadLink.click();
+            }
+        }
+
     </script>
 </head>
 
@@ -295,7 +285,6 @@
                     <script>
                     document.getElementById('Total1').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM1)) + ' (VND)</span>';
                     </script>
-                    <div id="pageNavPosition1"></div>
                 }
 
 
@@ -372,7 +361,6 @@
                     <script>
                     document.getElementById('Total2').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM2)) + ' (YEN)</span>';
                     </script>
-                    <div id="pageNavPosition2"></div>
                 }
                 else if (ViewBag.DisYEN == null)
                 {
@@ -452,7 +440,6 @@
                     <script>
                     document.getElementById('Total3').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM3)) + ' (USD)</span>';
                     </script>
-                    <div id="pageNavPosition3"></div>
                 }
 
                 if (ViewBag.DisBAnh != null)
@@ -528,7 +515,6 @@
                     <script>
                     document.getElementById('Total4').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM4)) + ' (Bảng Anh)</span>';
                     </script>
-                    <div id="pageNavPosition4"></div>
                 }
             }
             else
@@ -609,7 +595,6 @@
                     <script>
                     document.getElementById('Total1').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM1)) + '</span>';
                     </script>
-                    <div id="pageNavPosition1"></div>
                 }
 
 
@@ -680,7 +665,6 @@
                     <script>
                     document.getElementById('Total2').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM2)) + '</span>';
                     </script>
-                    <div id="pageNavPosition2"></div>
                 }
                 else if (ViewBag.DisYEN == null)
                 {
@@ -755,7 +739,6 @@
                     <script>
                     document.getElementById('Total3').innerHTML = '<span> Bằng chữ: ' + jsUcfirst(DOCSO.doc(@SUM3)) + '</span>';
                     </script>
-                    <div id="pageNavPosition3"></div>
                 }
             }
         }
@@ -774,7 +757,7 @@
         <div class="col-md-12 text-center">
             <div class="btn-group btn-group">
                 <button id="print" type="button" class="btn btn-primary mr-1">In</button>
-                <button id="ExcelTo" type="button" class="btn btn-primary mr-1">Lưu vào file Excel</button>
+                <button id="ExcelTo" type="button" class="btn btn-primary mr-1" onclick="exportTableToExcel('MainTable1','MainTable2','MainTable3','MainTable4','MainTable5','MainTable6','Báo cáo Bổ sung')">Lưu vào file Excel</button>
                 <button id="export" type="button" class="btn btn-primary">Lưu vào file Word</button>
             </div>
         </div>
@@ -785,73 +768,11 @@
         //Nhấn btn in
         $(document).ready(function () {
             $("#print").click(function () {
-                $('#pageNavPosition1').hide();
                 var divToPrint = document.getElementById("Main");
                 newWin = window.open("");
                 newWin.document.write(divToPrint.outerHTML);
                 newWin.print();
                 newWin.close();
-                $('#pageNavPosition1').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition2').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition2').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition3').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition3').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition4').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition4').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition5').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition5').show();
-            });
-        });
-        //Nhấn btn in
-        $(document).ready(function () {
-            $("#print").click(function () {
-                $('#pageNavPosition6').hide();
-                var divToPrint = document.getElementById("Main");
-                newWin = window.open("");
-                newWin.document.write(divToPrint.outerHTML);
-                newWin.print();
-                newWin.close();
-                $('#pageNavPosition6').show();
             });
         });
 

@@ -1190,10 +1190,10 @@ namespace Libol.Controllers
         {
             strDKCBID = strDKCBID.Trim();
             string[] myList = strDKCBID.Split('\n');
-            foreach (var cnumber in myList)
-            {
-                string dddd = cnumber;
-            }
+            //foreach (var cnumber in myList)
+            //{
+            //    string dddd = cnumber;
+            //}
                 List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result> listResult = new List<FPT_GET_LIQUIDBOOKS_BY_COPYNUMBER_Result>();
             if (myList.Length != 0)
             {

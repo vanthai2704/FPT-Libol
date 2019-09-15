@@ -1799,116 +1799,65 @@ namespace Libol.Controllers
             string recomCode = "";
             sdd = Request.Form["StartDate"].ToString();
             edd = Request.Form["EndDate"].ToString();
-            String orderby = "";
-            orderby = Request.Form["OrderBy"].ToString();
             recomCode = Request.Form["recomCode"].ToString();
+            recomCode = recomCode.Trim();
+            recomCode = recomCode.Replace(" ", "");
             if (String.IsNullOrEmpty(recomCode))
             {
                 recomCode = null;
             }
 
-            List<Temper> listPO = new List<Temper>();
-            if (sdd == "" && edd == "")
+            if (sdd == "")
             {
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, null, null, orderby).ToList())
-                {
-                    String tpDKCB = item.DKCB;
-                    foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
-                    {
-                        // tpDKCB.Add(ites.DKCB, ites.ItemID);
+                sdd = null;
+            }
 
-                        tpDKCB = ites.DKCB;
-                    }
-                    int uCount = 0;
-                    foreach (var itemss in le.FPT_SELECT_USECOUNT2(LibID, item.ItemID, item.NgayBoSung))
-                    {
-                        uCount += itemss.Value;
-                    }
-                    string isb = "";
-                    foreach (var ite in le.FPT_JOIN_ISBN(item.ItemID))
-                    {
-                        isb = ite.ISBN;
-                    }
-                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
-                }
-                ViewBag.POList = listPO;
-            }
-            else if (sdd != "" && edd == "")
+            if (edd == "")
             {
-                DateTime sdt = Convert.ToDateTime(sdd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, sdt, null, orderby).ToList())
-                {
-                    String tpDKCB = item.DKCB;
-                    foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
-                    {
-                        // tpDKCB.Add(ites.DKCB, ites.ItemID);
-                        tpDKCB = ites.DKCB;
-                    }
-                    int uCount = 0;
-                    foreach (var itemss in le.FPT_SELECT_USECOUNT2(LibID, item.ItemID, item.NgayBoSung))
-                    {
-                        uCount += itemss.Value;
-                    }
-                    string isb = "";
-                    foreach (var ite in le.FPT_JOIN_ISBN(item.ItemID))
-                    {
-                        isb = ite.ISBN;
-                    }
-                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
-                }
-                ViewBag.POList = listPO;
+                edd = null;
             }
-            else if (sdd == "" && edd != "")
+
+            List<Temper> listPO = new List<Temper>();
+
+            List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result> listRecommend = new List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result>();
+            foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest(LibID, LocID, recomCode, sdd, edd).ToList())
             {
-                DateTime edt = Convert.ToDateTime(edd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, null, edt, orderby).ToList())
+
+                int uCount = 0;
+                foreach (var itemss in le.FPT_SELECT_USECOUNT2(LibID, item.ItemID, item.ACQUIREDDATE))
                 {
-                    String tpDKCB = item.DKCB;
-                    foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
-                    {
-                        // tpDKCB.Add(ites.DKCB, ites.ItemID);
-                        tpDKCB = ites.DKCB;
-                    }
-                    int uCount = 0;
-                    foreach (var itemss in le.FPT_SELECT_USECOUNT2(LibID, item.ItemID, item.NgayBoSung))
-                    {
-                        uCount += itemss.Value;
-                    }
-                    string isb = "";
-                    foreach (var ite in le.FPT_JOIN_ISBN(item.ItemID))
-                    {
-                        isb = ite.ISBN;
-                    }
-                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    uCount += itemss.Value;
                 }
-                ViewBag.POList = listPO;
-            }
-            else if (sdd != "" && edd != "")
-            {
-                DateTime sdt = Convert.ToDateTime(sdd);
-                DateTime edt = Convert.ToDateTime(edd);
-                foreach (var item in le.FPT_SP_GET_HOLDING_BY_RECOMMENDID(LibID, LocID, recomCode, sdt, edt, orderby).ToList())
+                string isb = "";
+                foreach (var ite in le.FPT_JOIN_ISBN(item.ItemID))
                 {
-                    String tpDKCB = item.DKCB;
-                    foreach (var ites in le.FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE(item.ItemID, item.NgayBoSung.Value).ToList())
-                    {
-                        // tpDKCB.Add(ites.DKCB, ites.ItemID);
-                        tpDKCB = ites.DKCB;
-                    }
-                    int uCount = 0;
-                    foreach (var itemss in le.FPT_SELECT_USECOUNT2(LibID, item.ItemID, item.NgayBoSung))
-                    {
-                        uCount += itemss.Value;
-                    }
-                    string isb = "";
-                    foreach (var ite in le.FPT_JOIN_ISBN(item.ItemID))
-                    {
-                        isb = ite.ISBN;
-                    }
-                    listPO.Add(new Temper(uCount, item.RECOMMENDID, item.SoChungTu, item.NhanDe, isb, item.NgayChungTu.ToString(), tpDKCB, item.NgayBoSung.ToString(), item.IdNhaXuatBan, item.NamXuatBan, item.DonGia.Value, item.DonViTienTe, item.ItemID, 0, 0));
+                    isb = ite.ISBN;
                 }
-                ViewBag.POList = listPO;
+                FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result obj = new FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result()
+                {
+                    RECORDNUMBER = item.RECORDNUMBER,
+                    Title = item.Title,
+                    ReceiptedDate = item.ReceiptedDate,
+                    useCount = uCount,
+                    ISBN = isb,
+                    InBookNum = 0,
+                    DKCB = "",
+                    ACQUIREDDATE = item.ACQUIREDDATE,
+                    LocationID = item.LocationID,
+                    RECOMMENDID = item.RECOMMENDID,
+                    Year = item.Year,
+                    Price = item.Price,
+                    Currency = item.Currency,
+                    NXB = item.NXB,
+                    FullPrice = 0,
+                    ItemID = item.ItemID
+                };
+                listRecommend.Add(obj);
             }
+            ViewBag.POList = listRecommend;
+
+
+
 
 
             int slDauphay = 0;
@@ -1925,15 +1874,15 @@ namespace Libol.Controllers
                 //taoj mangr rooif check 2 phan tu lien tiep
                 //lấy số lương sách nhập
                 string nbs = "";
-                nbs = Convert.ToString(item.NgayBoSung);
+                nbs = Convert.ToString(item.ACQUIREDDATE);
                 if (nbs != "")
                 {
-                    nbs = item.NgayBoSung;
+                    // nbs = item.ACQUIREDDATE;
                     nbs = nbs.Substring(0, nbs.IndexOf(" "));
                 }
 
                 int itid = item.ItemID;
-                Single dogia = Convert.ToSingle(item.DonGia);
+                Single dogia = Convert.ToSingle(item.Price);
 
                 foreach (var itm in le.FPT_BORROWNUMBER(itid, dogia, nbs))
                 {
@@ -1944,11 +1893,11 @@ namespace Libol.Controllers
                         slnhap = Convert.ToInt32(check);
                     }
                 }
-                item.SLN = slnhap;
+                item.InBookNum = slnhap;
 
-                decimal gia = (decimal)item.DonGia;
-                decimal a = item.SLN * gia;
-                item.ThanhTien = (double)a;
+                decimal gia = (decimal)item.Price;
+                item.FullPrice = item.InBookNum * item.Price;
+                //item.FullPrice = (double)a;
 
 
 
@@ -1959,15 +1908,15 @@ namespace Libol.Controllers
             {
                 string nbs = "";
 
-                nbs = Convert.ToString(item.NgayBoSung);
+                nbs = Convert.ToString(item.ACQUIREDDATE);
                 if (nbs != "")
                 {
-                    nbs = item.NgayBoSung;
+                    //nbs = item.ACQUIREDDATEg;
                     nbs = nbs.Substring(0, nbs.IndexOf(" "));
                 }
 
                 int itid = item.ItemID;
-                Single dogia = Convert.ToSingle(item.DonGia);
+                Single dogia = Convert.ToSingle(item.Price);
 
 
                 foreach (var itm in le.FPT_SP_GET_COPYNUMBER_STRING(LibID, nbs, dogia, itid))
@@ -1996,7 +1945,7 @@ namespace Libol.Controllers
                     }
 
                 }
-                slnhap = item.SLN;
+                slnhap = item.InBookNum;
                 String[] arrDK = new string[slDauphay + 1];
                 String[] arrDKfull = new string[slDauphay + 1];
                 string h = item.DKCB;
@@ -2241,174 +2190,20 @@ namespace Libol.Controllers
 
             // }
 
-            List<Temper> display1 = new List<Temper>();
-            List<Temper> display2 = new List<Temper>();
-            List<Temper> display3 = new List<Temper>();
-            List<Temper> display4 = new List<Temper>();
-            List<Temper> display5 = new List<Temper>();
-            List<Temper> display6 = new List<Temper>();
-            Temper temp1 = null;
-            Temper temp2 = null;
-            Temper temp3 = null;
-            Temper temp4 = null;
-            Temper temp5 = null;
-            Temper temp6 = null;
+            List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result> display1 = new List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result>();
+            List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result> display2 = new List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result>();
+            List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result> display3 = new List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result>();
+            List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result> display4 = new List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result>();
+            List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result> display5 = new List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result>();
+            List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result> display6 = new List<FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result>();
 
-            if (ViewBag.AcqItems != null)
-            {
-
-                foreach (var item in ViewBag.AcqItems)
-                {
-                    string st = "";
-                    try
-                    {
-                        st = item.DonViTienTe;
-                        if (st != null)
-                        {
-                            st = st.Replace(" ", "");
-                        }
-
-                        if (st == "VND")
-                        {
-                            string ngayct = "";
-                            string ngaybosug = "";
-                            ngayct = item.NgayChungTu.ToString();
-                            ngayct = ngayct.Substring(0, ngayct.IndexOf(" "));
-                            ngaybosug = item.NgayBoSung.ToString();
-                            ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                            if (ngayct != "")
-                            {
-                                temp1 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, ngayct, item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-
-                            }
-                            else
-                            {
-                                temp1 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-
-                            }
-
-                            display1.Add(temp1);
-                        }
-                        if (st == "YEN")
-                        {
-                            string ngayct = "";
-                            string ngaybosug = "";
-                            ngayct = item.NgayChungTu.ToString();
-                            ngaybosug = item.NgayBoSung.ToString();
-                            if (ngayct != null)
-                            {
-                                ngayct = ngayct.Substring(0, ngayct.IndexOf(" "));
-                                ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                                temp2 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, ngayct, item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-                            }
-                            else
-                            {
-                                temp2 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-
-                            }
-                            display2.Add(temp2);
-                            // display2.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
-                        }
-                        if (st == "USD")
-                        {
-                            string ngayct = "";
-                            string ngaybosug = "";
-                            ngayct = item.NgayChungTu.ToString();
-                            ngaybosug = item.NgayBoSung.ToString();
-                            if (ngayct != null)
-                            {
-                                ngayct = ngayct.Substring(0, ngayct.IndexOf(" "));
-                                ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                                temp3 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, ngayct, item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-                            }
-                            else
-                            {
-                                temp3 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-
-                            }
-                            display3.Add(temp3);
-                            // display3.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
-                        }
-                        if (st == "B?NGANH")
-                        {
-                            string ngayct = "";
-                            string ngaybosug = "";
-                            ngayct = item.NgayChungTu.ToString();
-                            ngaybosug = item.NgayBoSung.ToString();
-                            if (ngayct != null)
-                            {
-                                ngayct = ngayct.Substring(0, ngayct.IndexOf(" "));
-                                ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                                temp4 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, ngayct, item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-                            }
-                            else
-                            {
-                                temp4 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-
-                            }
-                            display4.Add(temp4);
-                            //  display4.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
-                        }
-                        if (st == "CENT")
-                        {
-                            string ngayct = "";
-                            string ngaybosug = "";
-                            ngayct = item.NgayChungTu.ToString();
-                            ngaybosug = item.NgayBoSung.ToString();
-                            if (ngayct != null)
-                            {
-                                ngayct = ngayct.Substring(0, ngayct.IndexOf(" "));
-                                ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                                temp5 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, ngayct, item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-                            }
-                            else
-                            {
-                                temp5 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-
-                            }
-                            display5.Add(temp5);
-                            // display5.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
-                        }
-                        if (st == "EUR")
-                        {
-                            string ngayct = "";
-                            string ngaybosug = "";
-                            ngayct = item.NgayChungTu.ToString();
-                            ngaybosug = item.NgayBoSung.ToString();
-                            if (ngayct != null)
-                            {
-                                ngayct = ngayct.Substring(0, ngayct.IndexOf(" "));
-                                ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                                temp6 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, ngayct, item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-                            }
-                            else
-                            {
-                                temp6 = new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien);
-
-                            }
-                            display6.Add(temp6);
-                            //display6.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.ToString();
-                    }
-
-                }
-
-            }
-            else if (ViewBag.POList != null)
+            if (ViewBag.POList != null)
             {
                 foreach (var item in ViewBag.POList)
                 {
-                    listTempt.Add(new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien));
                     string st = "";
 
-                    st = item.DonViTienTe;
+                    st = item.Currency;
                     if (st != null)
                     {
                         st = st.Replace(" ", "");
@@ -2416,166 +2211,143 @@ namespace Libol.Controllers
 
                     if (st == "VND")
                     {
-                        string ngayct = "";
-                        string ngaybosug = "";
-                        ngayct = item.NgayChungTu.ToString();
-                        ngaybosug = item.NgayBoSung.ToString();
-                        if (ngayct != null)
-                        {
-                            int ngaycct = ngayct.IndexOf(" ");
-                            if (ngaycct > 0)
-                            {
-                                ngayct = ngayct.Substring(0, ngaycct);
-                            }
-                            ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                            temp1 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, ngayct,
-                                item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        else
-                        {
-                            temp1 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
 
-                        display1.Add(temp1);
+                        FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result obj = new FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result()
+                        {
+                            RECORDNUMBER = item.RECORDNUMBER,
+                            Title = item.Title,
+                            ReceiptedDate = item.ReceiptedDate,
+                            useCount = item.useCount,
+                            ISBN = item.ISBN,
+                            InBookNum = item.InBookNum,
+                            DKCB = item.DKCB,
+                            ACQUIREDDATE = item.ACQUIREDDATE,
+                            LocationID = item.LocationID,
+                            RECOMMENDID = item.RECOMMENDID,
+                            Year = item.Year,
+                            Price = item.Price,
+                            Currency = item.Currency,
+                            NXB = item.NXB,
+                            FullPrice = item.FullPrice,
+                            ItemID = item.ItemID
+                        };
+                        display1.Add(obj);
                     }
                     if (st == "YEN")
                     {
-                        string ngayct = "";
-                        string ngaybosug = "";
-                        ngayct = item.NgayChungTu.ToString();
-                        ngaybosug = item.NgayBoSung.ToString();
-                        if (ngayct != null)
+                        FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result obj = new FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result()
                         {
-                            int ngaycct = ngayct.IndexOf(" ");
-                            if (ngaycct > 0)
-                            {
-                                ngayct = ngayct.Substring(0, ngaycct);
-                            }
-                            ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                            temp2 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, ngayct,
-                                item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        else
-                        {
-                            temp2 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        display2.Add(temp2);
-                        // display2.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
+                            RECORDNUMBER = item.RECORDNUMBER,
+                            Title = item.Title,
+                            ReceiptedDate = item.ReceiptedDate,
+                            useCount = item.useCount,
+                            ISBN = item.ISBN,
+                            InBookNum = item.InBookNum,
+                            DKCB = item.DKCB,
+                            ACQUIREDDATE = item.ACQUIREDDATE,
+                            LocationID = item.LocationID,
+                            RECOMMENDID = item.RECOMMENDID,
+                            Year = item.Year,
+                            Price = item.Price,
+                            Currency = item.Currency,
+                            NXB = item.NXB,
+                            FullPrice = item.FullPrice,
+                            ItemID = item.ItemID
+                        };
+                        display2.Add(obj);
+
                     }
                     if (st == "USD")
                     {
-                        string ngayct = "";
-                        string ngaybosug = "";
-                        ngayct = item.NgayChungTu.ToString();
-                        ngaybosug = item.NgayBoSung.ToString();
-                        if (ngayct != null)
+                        FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result obj = new FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result()
                         {
-                            int ngaycct = ngayct.IndexOf(" ");
-                            if (ngaycct > 0)
-                            {
-                                ngayct = ngayct.Substring(0, ngaycct);
-                            }
-
-                            ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                            temp3 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, ngayct,
-                                item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        else
-                        {
-                            temp3 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        display3.Add(temp3);
-                        // display3.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
+                            RECORDNUMBER = item.RECORDNUMBER,
+                            Title = item.Title,
+                            ReceiptedDate = item.ReceiptedDate,
+                            useCount = item.useCount,
+                            ISBN = item.ISBN,
+                            InBookNum = item.InBookNum,
+                            DKCB = item.DKCB,
+                            ACQUIREDDATE = item.ACQUIREDDATE,
+                            LocationID = item.LocationID,
+                            RECOMMENDID = item.RECOMMENDID,
+                            Year = item.Year,
+                            Price = item.Price,
+                            Currency = item.Currency,
+                            NXB = item.NXB,
+                            FullPrice = item.FullPrice,
+                            ItemID = item.ItemID
+                        };
+                        display3.Add(obj);
                     }
                     if (st == "B?NGANH")
                     {
-                        string ngayct = "";
-                        string ngaybosug = "";
-                        ngayct = item.NgayChungTu.ToString();
-                        ngaybosug = item.NgayBoSung.ToString();
-                        if (ngayct != null)
+                        FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result obj = new FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result()
                         {
-                            int ngaycct = ngayct.IndexOf(" ");
-                            if (ngaycct > 0)
-                            {
-                                ngayct = ngayct.Substring(0, ngaycct);
-                            }
-                            ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                            temp4 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, ngayct,
-                                item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        else
-                        {
-                            temp4 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        display4.Add(temp4);
-                        //  display4.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
+                            RECORDNUMBER = item.RECORDNUMBER,
+                            Title = item.Title,
+                            ReceiptedDate = item.ReceiptedDate,
+                            useCount = item.useCount,
+                            ISBN = item.ISBN,
+                            InBookNum = item.InBookNum,
+                            DKCB = item.DKCB,
+                            ACQUIREDDATE = item.ACQUIREDDATE,
+                            LocationID = item.LocationID,
+                            RECOMMENDID = item.RECOMMENDID,
+                            Year = item.Year,
+                            Price = item.Price,
+                            Currency = item.Currency,
+                            NXB = item.NXB,
+                            FullPrice = item.FullPrice,
+                            ItemID = item.ItemID
+                        };
+                        display4.Add(obj);
                     }
                     if (st == "CENT")
                     {
-                        string ngayct = "";
-                        string ngaybosug = "";
-                        ngayct = item.NgayChungTu.ToString();
-                        ngaybosug = item.NgayBoSung.ToString();
-                        if (ngayct != null)
+                        FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result obj = new FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result()
                         {
-                            int ngaycct = ngayct.IndexOf(" ");
-                            if (ngaycct > 0)
-                            {
-                                ngayct = ngayct.Substring(0, ngaycct);
-                            }
-                            ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                            temp5 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, ngayct,
-                                item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        else
-                        {
-                            temp5 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        display5.Add(temp5);
-                        // display5.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
+                            RECORDNUMBER = item.RECORDNUMBER,
+                            Title = item.Title,
+                            ReceiptedDate = item.ReceiptedDate,
+                            useCount = item.useCount,
+                            ISBN = item.ISBN,
+                            InBookNum = item.InBookNum,
+                            DKCB = item.DKCB,
+                            ACQUIREDDATE = item.ACQUIREDDATE,
+                            LocationID = item.LocationID,
+                            RECOMMENDID = item.RECOMMENDID,
+                            Year = item.Year,
+                            Price = item.Price,
+                            Currency = item.Currency,
+                            NXB = item.NXB,
+                            FullPrice = item.FullPrice,
+                            ItemID = item.ItemID
+                        };
+                        display5.Add(obj);
                     }
                     if (st == "EUR")
                     {
-                        string ngayct = "";
-                        string ngaybosug = "";
-                        ngayct = item.NgayChungTu.ToString();
-                        ngaybosug = item.NgayBoSung.ToString();
-                        if (ngayct != null)
+                        FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result obj = new FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result()
                         {
-                            int ngaycct = ngayct.IndexOf(" ");
-                            if (ngaycct > 0)
-                            {
-                                ngayct = ngayct.Substring(0, ngaycct);
-                            }
-                            ngaybosug = ngaybosug.Substring(0, ngaybosug.IndexOf(" "));
-                            temp6 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, ngayct,
-                                item.DKCB, ngaybosug, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        else
-                        {
-                            temp6 = new Temper(item.UseCount, item.ReId, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu,
-                                item.DKCB, item.NgayBoSung, item.NhaXuatBan, item.NamXuatBan, item.DonGia,
-                                item.DonViTienTe, item.ItemID, item.SLN, item.ThanhTien);
-                        }
-                        display6.Add(temp6);
-                        //display6.Add(new Temper(item.POID, item.SoChungTu, item.NhanDe, item.ISBN, item.NgayChungTu.ToString(), item.DKCB, item.NgayBoSung.ToString(), item.NhaXuatBan, item.NamXuatBan, item.DonGia, item.DonViTienTe, item.TinhTrangSach, item.ItemID, item.SLN, item.ThanhTien));
+                            RECORDNUMBER = item.RECORDNUMBER,
+                            Title = item.Title,
+                            ReceiptedDate = item.ReceiptedDate,
+                            useCount = item.useCount,
+                            ISBN = item.ISBN,
+                            InBookNum = item.InBookNum,
+                            DKCB = item.DKCB,
+                            ACQUIREDDATE = item.ACQUIREDDATE,
+                            LocationID = item.LocationID,
+                            RECOMMENDID = item.RECOMMENDID,
+                            Year = item.Year,
+                            Price = item.Price,
+                            Currency = item.Currency,
+                            NXB = item.NXB,
+                            FullPrice = item.FullPrice,
+                            ItemID = item.ItemID
+                        };
+                        display6.Add(obj);
                     }
                 }
             }
@@ -3099,6 +2871,92 @@ namespace Libol.Controllers
             
             return PartialView("GetStatTaskbar");
         }
+
+
+        //kiem ke
+        public ActionResult InventoryReport()
+        {
+            List<SelectListItem> lib = new List<SelectListItem>();
+             lib.Add(new SelectListItem { Text = "Hãy chọn thư viện", Value = "" });
+            foreach (var l in le.SP_HOLDING_LIB_SEL((int)Session["UserID"]).ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
+            return View();
+        }
+
+        public PartialViewResult GetInventoryReport(string strLibID, string strDKCBID)
+        {
+            strDKCBID = strDKCBID.Trim();
+            string[] myList = strDKCBID.Split('\n');
+            int countCN = myList.Length;
+            int libid = 0;
+            if(strLibID != "")
+            {
+                libid = Convert.ToInt32(strLibID);
+            }
+            int cirCount = 0;
+            int totalInLoc = 0, totalReLoc = 0;
+            List<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result> listCountResult = ab.FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_LIST(libid, 0, null, 1);
+            foreach (var item in listCountResult)
+            {
+                if (item.Type == "CountCir")
+                {
+                    cirCount = Convert.ToInt32(item.VALUE);
+                }
+
+                if (item.Type == "SUMCOPY")
+                {
+                    totalInLoc = Convert.ToInt32(item.VALUE);
+                }
+            }
+            totalReLoc = countCN + cirCount;
+            List<FPT_SP_INVENTORY_Result> listData = le.FPT_SP_INVENTORY(libid).ToList();
+           // List<FPT_SP_INVENTORY_Result> listLackData = new List<FPT_SP_INVENTORY_Result>();
+            //List<FPT_SP_INVENTORY_Result> listExcessData = new List<FPT_SP_INVENTORY_Result>();
+
+            List<string> listStr = myList.ToList();
+
+            if (myList.Length != 0)
+            {
+                
+                for (int j = 0; j < listData.Count; j++)
+                {
+                    for (int i = 0; i < listStr.Count; i++)
+                    {
+                        if (listData[j].CopyNumber == listStr[i])
+                        {
+                            listStr.RemoveAt(i);
+                            listData.RemoveAt(j);
+                        }
+                    }
+
+                }
+
+
+            }
+            if (listData.Count > 0)
+            {
+                ViewBag.LackDataResult = listData;
+            }
+            else
+            {
+                ViewBag.LackDataResult = null;
+            }
+
+            if (listStr.Count > 0)
+            {
+                ViewBag.ExcessDataResult = listStr;
+            }
+            else
+            {
+                ViewBag.ExcessDataResult = null;
+            }
+           
+            return PartialView("GetInventoryReport");
+        }
+
 
     }
     public class FPT_GET_LIQUIDBOOKS_Result_2

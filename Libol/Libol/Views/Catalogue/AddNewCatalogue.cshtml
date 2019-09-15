@@ -19,14 +19,12 @@
     }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<h4 style="margin:1rem">Danh sách biên mục</h4>
+<h4 style="margin:1rem">Biên Mục Sơ Lược</h4>
 
 
 @{
     List<FPT_SP_CATA_GET_MARC_FORM_Result> list = ViewData["ListMarcForm"] as List<FPT_SP_CATA_GET_MARC_FORM_Result>; // FormID ++
-
     List<CAT_DIC_DIRLEVEL> listLevelDir = ViewData["listLevelDir"] as List<CAT_DIC_DIRLEVEL>; //cap thuw muc :  DirLevel : ++
-
     List<CAT_DIC_RECORDTYPE> ListRecordType = ViewData["ListRecordType"] as List<CAT_DIC_RECORDTYPE>; //Kieu ban ghi : RecordType ++
     List<CAT_DIC_ITEM_TYPE> listItemType = ViewData["listItemType"] as List<CAT_DIC_ITEM_TYPE>; //dang tai lieu  : TypeID : 927$a
     List<CAT_DIC_MEDIUM> listMedium = ViewData["listMedium"] as List<CAT_DIC_MEDIUM>; // vat mang tin : MediumID : 925$a

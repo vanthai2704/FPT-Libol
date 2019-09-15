@@ -63,5 +63,14 @@ namespace Libol.Models
                 new object[] { ItemID, LocID, LibID }).ToList();
             return list;
         }
+
+        // Inventory
+        public List<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result> FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_LIST(int LibID, int LocID, string strShelf, int intMode)
+        {
+            List<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result> list = db.Database.SqlQuery<FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV_Result>("FPT_SP_GET_GENERAL_LOC_INFOR_DUCNV {0}, {1}, {2}, {3}",
+                new object[] { LibID, LocID, strShelf, intMode }).ToList();
+            return list;
+        }
+
     }
 }

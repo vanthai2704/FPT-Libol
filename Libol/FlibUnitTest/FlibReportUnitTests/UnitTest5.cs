@@ -438,94 +438,94 @@ namespace FlibUnitTest.FlibReportUnitTests
             Assert.AreEqual(0, actual.Count);
         }
 
-        [TestMethod]
-        public void TOP_COPY_Successfully1()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1","","","0","0","0");
-            Assert.AreEqual(0, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Successfully1()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1","","","0","0","0");
+        //    Assert.AreEqual(0, actual.Count);
+        //}
         
-        [TestMethod]
-        public void TOP_COPY_Successfully2()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1", "01/01/2018", "", "10", "0", "81");
-            Assert.AreEqual(10, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Successfully2()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1", "01/01/2018", "", "10", "0", "81");
+        //    Assert.AreEqual(10, actual.Count);
+        //}
 
-        [TestMethod]
-        public void TOP_COPY_Successfully3()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1", "01/01/2018", "", "10", "10", "81");
-            Assert.AreEqual(10, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Successfully3()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1", "01/01/2018", "", "10", "10", "81");
+        //    Assert.AreEqual(10, actual.Count);
+        //}
 
-        [TestMethod]
-        public void TOP_COPY_Successfully4()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1", "", "01/01/2018", "10", "10", "81");
-            Assert.AreEqual(10, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Successfully4()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1", "", "01/01/2018", "10", "10", "81");
+        //    Assert.AreEqual(10, actual.Count);
+        //}
 
-        [TestMethod]
-        public void TOP_COPY_Successfully5()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1", "01/01/2018", "01/01/2019", "10", "10", "81");
-            Assert.AreEqual(10, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Successfully5()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1", "01/01/2018", "01/01/2019", "10", "10", "81");
+        //    Assert.AreEqual(10, actual.Count);
+        //}
 
-        [TestMethod]
-        public void TOP_COPY_Fail1()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1", "", "", "0", "0", "0");
-            Assert.AreEqual(0, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Fail1()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1", "", "", "0", "0", "0");
+        //    Assert.AreEqual(0, actual.Count);
+        //}
 
-        [TestMethod]
-        public void TOP_COPY_Fail2()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1", "", "", "0", "0", "-81");
-            Assert.AreEqual(0, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Fail2()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1", "", "", "0", "0", "-81");
+        //    Assert.AreEqual(0, actual.Count);
+        //}
 
-        [TestMethod]
-        public void TOP_COPY_Fail3()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1", "", "", "0", "-10", "81");
-            Assert.AreEqual(0, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Fail3()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1", "", "", "0", "-10", "81");
+        //    Assert.AreEqual(0, actual.Count);
+        //}
 
-        [TestMethod]
-        public void TOP_COPY_Fail4()
-        {
-            // Arrange
-            PatronBusiness ab = new PatronBusiness();
-            // Act
-            List<ITEMMAX> actual = ab.TOP_COPY("1", "01/01/2019", "01/01/2018", "10", "10", "81");
-            Assert.AreEqual(0, actual.Count);
-        }
+        //[TestMethod]
+        //public void TOP_COPY_Fail4()
+        //{
+        //    // Arrange
+        //    PatronBusiness ab = new PatronBusiness();
+        //    // Act
+        //    List<ITEMMAX> actual = ab.TOP_COPY("1", "01/01/2019", "01/01/2018", "10", "10", "81");
+        //    Assert.AreEqual(0, actual.Count);
+        //}
     }
 }

@@ -43,46 +43,67 @@ namespace Libol.Models
             return list;
         }
 
-        public List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> SearchCode(string strCode, string strCN, string strTT)
+        public List<int> SearchIDByCondition(string strCode, string strCN, string strTT , string ISBN )
         {
-            List<int> ItemId = new List<int>();
+            List<int> ItemIds = new List<int>();
 
             if (strCode != "")
             {
                 int id = db.ITEMs.Where(a => a.Code == strCode).Select(a => a.ID).FirstOrDefault();
-                ItemId.Add(id);
+                ItemIds.Add(id);
             }
             if (strCN != "")
             {
                 int id = db.HOLDINGs.Where(a => a.CopyNumber == strCN).Select(a => a.ItemID).FirstOrDefault();
-                ItemId.Add(id);
+                ItemIds.Add(id);
             }
             if (strTT != "")
             {
                 strTT = strTT.ToUpper();
                 List<int> id = db.ITEM_TITLE.Where(a => a.Title.Contains(strTT)).Select(a => a.ItemID).ToList();
-                ItemId = ItemId.Concat(id).ToList();
+                ItemIds = ItemIds.Concat(id).ToList();
             }
+            if (ISBN != "")
+            {
+                int id = db.CAT_DIC_NUMBER.Where(a => a.Number == ISBN).Select(a => a.ItemID).Distinct().FirstOrDefault();
+                ItemIds.Add(id);
+            }
+
+
+
+            return ItemIds;
+        }
+
+
+        //Seach Code for Update Catalogue
+        public List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> SearchCode(string strCode, string strCN, string strTT)
+        {
+            List<int> ItemId = SearchIDByCondition(strCode, strCN, strTT , "");
 
             //get List Infor detail
             List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> inforList = new List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result>();
             foreach (int item in ItemId)
             {
-                inforList = inforList.Concat(db.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(item.ToString(), 0).ToList()).ToList();
-            }
-
-            //Loc $a $b trong title
-            foreach (FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result item in inforList)
-            {
-                if (item.FieldCode == "245")
+                //inforList = inforList.Concat(db.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(item.ToString(), 0).ToList()).ToList();
+                List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> inforListTemp = db.FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM(item.ToString(), 0).ToList();
+                for(int i = 0; i < inforListTemp.Count; i++)
                 {
-                    item.Content = new FormatHoldingTitle().OnFormatHoldingTitle(item.Content);
+                    if(inforListTemp[i].FieldCode == "001")
+                    {
+                        inforList.Add(inforListTemp[i]);
+                    }
+                    if(inforListTemp[i].FieldCode == "245")
+                    {
+                        inforListTemp[i].Content = new FormatHoldingTitle().OnFormatHoldingTitle(inforListTemp[i].Content);
+                        inforList.Add(inforListTemp[i]);
+                    }
                 }
             }
 
-
             return inforList;
         }
+
+        
 
         public List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> GetContentByID(string Id)
         {
@@ -113,6 +134,9 @@ namespace Libol.Models
             }
             return list;
         }
+
+
+
         //Check TITTLE
         public List<FPT_SP_CATA_GET_DETAILINFOR_OF_ITEM_Result> CheckTitle(string TT)
         {
@@ -181,12 +205,13 @@ namespace Libol.Models
 
             string cataloguer = Convert.ToString(HttpContext.Current.Session["FullName"]);
             // Mã tự tăng
-            string sysParam = db.SYS_PARAMETER.Where(s => s.Name.Equals("LIBRARY_ABBREVIATION")).Select(s => s.Val).FirstOrDefault();
-            string year = DateTime.Now.Year.ToString();
-            year = year.Substring(year.Length - 2);
-            db.Database.ExecuteSqlCommand("insert into book_code values(1)");
-            string maxIdBookCode = db.Book_code.Select(b => b.ID).Max().ToString().PadLeft(7, '0');
-            string code = sysParam + year + maxIdBookCode;
+            //string sysParam = db.SYS_PARAMETER.Where(s => s.Name.Equals("LIBRARY_ABBREVIATION")).Select(s => s.Val).FirstOrDefault();
+            //string year = DateTime.Now.Year.ToString();
+            //year = year.Substring(year.Length - 2);
+            //db.Database.ExecuteSqlCommand("insert into book_code values(1)");
+            //string maxIdBookCode = db.Book_code.Select(b => b.ID).Max().ToString().PadLeft(7, '0');
+            //string code = sysParam + year + maxIdBookCode;
+            string code = CreateItemCode();
             ITEM newItem = new ITEM()
             {
                 AccessLevel = item.AccessLevel,
@@ -213,6 +238,18 @@ namespace Libol.Models
             db.ITEMs.Add(newItem);
             db.SaveChanges();
             item = newItem;
+            return code;
+        }
+
+        public string CreateItemCode()
+        {
+            string sysParam = db.SYS_PARAMETER.Where(s => s.Name.Equals("LIBRARY_ABBREVIATION")).Select(s => s.Val).FirstOrDefault();
+            string year = DateTime.Now.Year.ToString();
+            year = year.Substring(year.Length - 2);
+            db.Database.ExecuteSqlCommand("insert into book_code values(1)");
+            string maxIdBookCode = db.Book_code.Select(b => b.ID).Max().ToString().PadLeft(7, '0');
+            string code = sysParam + year + maxIdBookCode;
+
             return code;
         }
 
@@ -657,7 +694,7 @@ namespace Libol.Models
                             listFieldOrg.RemoveAt(listFieldOrg.IndexOf(value));
                         }
                     }
-                    for(int i = 0; i < listValueOrg.Count; i++)
+                    for (int i = 0; i < listValueOrg.Count; i++)
                     {
                         if (listValueOrg[i].Contains("'"))
                         {
@@ -998,6 +1035,62 @@ namespace Libol.Models
             }
 
             return ID.ToString();
+        }
+
+
+        /// <summary>
+        /// DELETE Catalogue///////////////////////////////////////////////////********************
+        /// </summary>
+
+        public List<SP_GET_TITLES_Result> SearchAllDeleteable()
+        {
+            List<Nullable<int>> listCode = db.FPT_SELECTALLDELETEABLE().ToList();
+            string arrayID = String.Join(",", listCode.ToArray());
+            List<SP_GET_TITLES_Result> FinalList = new ShelfBusiness().FPT_SP_GET_TITLES(arrayID);
+            foreach(SP_GET_TITLES_Result item in FinalList)
+            {
+                item.Title = new SupportClass.FormatHoldingTitle().OnFormatHoldingTitle(item.Title);
+            }
+            return FinalList;
+        }
+
+        public List<SP_GET_TITLES_Result> SearchCodeDeleteable(string strCode, string strTT, string strISBN)
+        {
+            if (strCode == "" && strTT == "" && strISBN == "")
+            {
+                return SearchAllDeleteable();
+            }
+            else
+            {
+                //get List search by Condition
+                List<int> ItemId = SearchIDByCondition(strCode, "", strTT, strISBN);
+                //Get list all item ready to delete
+                List<int> listID = db.Database.SqlQuery<int>("select ID from ITEM where ID not in (select distinct ItemID from HOLDING)").ToList();
+                //string finalStrID = String.Join(",", listID.ToArray());
+
+                List<int> listTemp = ItemId.Except(listID).ToList();
+                List<int> FinalList = ItemId.Except(listTemp).ToList();
+                string finalStrID = String.Join(",", FinalList.ToArray());
+
+                List<SP_GET_TITLES_Result> finalList = new ShelfBusiness().FPT_SP_GET_TITLES(finalStrID); ;
+                return finalList;
+            }
+
+        }
+
+        public string DeleteCatalogue(string ItemCode)
+        {
+            //Get ItemID by ItemCode
+            int ItemID = db.ITEMs.Where(code => code.Code == ItemCode).Select(i => i.ID).FirstOrDefault();
+            int rs = db.SP_CATA_DELETE_ITEMS(0, ItemID.ToString());
+            if (rs > 0)
+            {
+                return "Xóa thành công mã tài liệu : " + ItemCode;
+            }
+            else
+            {
+                return "Xảy ra lỗi !Xóa mã tài liệu không thành công : " + ItemCode;
+            }
         }
 
     }
