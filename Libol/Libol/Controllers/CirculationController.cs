@@ -1281,7 +1281,7 @@ namespace Libol.Controllers
             ViewBag.TKItem = le.FPT_SPECIALIZED_REPORT_TOTAL_ITEM(LibID, ItemIDs, 0, (int)Session["UserID"]).First();
             ViewBag.TT = ViewBag.GT + ViewBag.TK;
             ViewBag.TTItem = ViewBag.GTItem + ViewBag.TKItem;
-
+            ViewBag.Spec = strSpec;
             return PartialView("GetSpecializedReport");
         }
     }
