@@ -2957,7 +2957,61 @@ namespace Libol.Controllers
             return PartialView("GetInventoryReport");
         }
 
+        public ActionResult SpecializedReport()
+        {
+            List<SelectListItem> lib = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hãy chọn thư viện", Value = "" }
+            };
+            foreach (var l in le.FPT_SP_CIR_LIB_SEL((int)Session["UserID"]).ToList())
+            {
+                lib.Add(new SelectListItem { Text = l.Code, Value = l.ID.ToString() });
+            }
+            ViewData["lib"] = lib;
+            return View();
+        }
 
+        public PartialViewResult GetSpecializedReport(string strLibID, string strSubjects, string strSpec)
+        {
+            int LibID = 0;
+            if (!String.IsNullOrEmpty(strLibID)) LibID = Int32.Parse(strLibID);
+            //;$aPRJ101;$aPRJ201;
+            strSubjects = strSubjects.Trim().ToUpper().Replace(" ", ";$a");
+            strSubjects = ";$a" + strSubjects + ';';
+            string ItemIDs = "";
+            ViewBag.Result = le.FPT_SPECIALIZED_REPORT(LibID, strSubjects, (int)Session["UserID"]).ToList();
+            //int count = le.FPT_SPECIALIZED_REPORT(LibID, strSubjects).Select(a => a.ITEMCODE).Distinct().Count();
+            foreach (var i in ViewBag.Result)
+            {
+                ItemIDs += " " + i.ItemID;
+                i.SUBJECTCODE = format.OnFormatHoldingTitle(i.SUBJECTCODE);
+                i.ITEMNAME = format.OnFormatHoldingTitle(i.ITEMNAME);
+                i.AUTHOR = format.OnFormatHoldingTitle(i.AUTHOR);
+                string isbn = "";
+                foreach (var item in le.FPT_JOIN_ISBN(i.ItemID))
+                {
+                    isbn = item.ISBN;
+                }
+                i.ISBN = isbn;
+                string publisher = "";
+                foreach (var item in le.FPT_SPECIALIZED_REPORT_GET_PUBLISHER(i.ItemID))
+                {
+                    publisher = item.PUBLISHER;
+                }
+                //int a = le.FPT_SPECIALIZED_REPORT_COUNT_COPYNUMBER(i.ItemID, LibID, (int)Session["UserID"]);
+                i.PUBLISHER = publisher;
+            }
+            ItemIDs = ItemIDs.Trim().Replace(" ", ";");
+            ItemIDs = ";" + ItemIDs + ';';
+            ViewBag.GT = le.FPT_SPECIALIZED_REPORT_TOTAL(LibID, ItemIDs, 1, (int)Session["UserID"]).First();
+            ViewBag.TK = le.FPT_SPECIALIZED_REPORT_TOTAL(LibID, ItemIDs, 0, (int)Session["UserID"]).First();
+            ViewBag.GTItem = le.FPT_SPECIALIZED_REPORT_TOTAL_ITEM(LibID, ItemIDs, 1, (int)Session["UserID"]).First();
+            ViewBag.TKItem = le.FPT_SPECIALIZED_REPORT_TOTAL_ITEM(LibID, ItemIDs, 0, (int)Session["UserID"]).First();
+            ViewBag.TT = ViewBag.GT + ViewBag.TK;
+            ViewBag.TTItem = ViewBag.GTItem + ViewBag.TKItem;
+            ViewBag.Spec = strSpec;
+            return PartialView("GetSpecializedReport");
+        }
     }
     public class FPT_GET_LIQUIDBOOKS_Result_2
     {
