@@ -2590,9 +2590,7 @@
     <Content Include="Views\AcquireReport\InventoryReport.cshtml" />
     <Content Include="Views\AcquireReport\GetInventoryReport.cshtml" />
     <Content Include="Views\Catalogue\DeleteCatalogue.cshtml" />
-    <Content Include="Views\Circulation\GetSpecializedReport.cshtml" />
     <Content Include="Views\Circulation\GetTop20Stats.cshtml" />
-    <Content Include="Views\Circulation\SpecializedReport.cshtml" />
     <Content Include="Views\Circulation\StatisticTop20.cshtml" />
     <Content Include="Views\AcquireReport\SpecializedReport.cshtml" />
     <Content Include="Views\AcquireReport\GetSpecializedReport.cshtml" />
