@@ -6519,7 +6519,7 @@ CREATE  PROCEDURE [dbo].[FPT_SP_GETINFOR_EMAIL]
 	@intTime INT
 AS
 	DECLARE @strSQL VARCHAR(4000)
-	SET @strSQL='(SELECT L.ID AS LOANID, L.LocationID, CONVERT(VARCHAR,L.CheckOutDate,103) AS CheckOutDate,CONVERT(VARCHAR,L.DueDate,103) AS CheckInDate, F.Content AS MainTitle, L.CopyNumber, P.ID AS PatronID, P.FirstName + ''' + '  ' + ''' + P.MiddleName + ''' + '  ' + ''' + P.LastName AS Name,P.Email,'
+	SET @strSQL='(SELECT L.ID AS LOANID, L.LocationID, CONVERT(VARCHAR,L.CheckOutDate,103) AS CheckOutDate,CONVERT(VARCHAR,L.DueDate,103) AS CheckInDate, F.Content AS MainTitle, L.CopyNumber, P.ID AS PatronID, (IsNull(P.FirstName,'''') + '' '' + IsNull(P.MiddleName +'' '' ,'''')  + IsNull(P.LastName,'''')) AS Name,P.Email,'
     +'OverdueDate=floor(DATEDIFF(DAY,L.DueDate,GETDATE())) - (datepart(week,getdate())+53*(datepart(year,getdate())-datepart(year,L.DueDate))-datepart(week,L.DueDate))*2,DATEDIFF(DAY,L.DueDate,GETDATE()) AS OverdueDateIncludeWeek,'
     +'T.Fee*floor(DATEDIFF(DAY,L.DueDate,GETDATE())) AS Penati, P.Code As PatronCode, P.Code,I.code as ItemCode,I.ID,HLC.LibId FROM CIR_LOAN L,CIR_PATRON P,ITEM I,Field200s F , CIR_LOAN_TYPE T,HOLDING_LOCATION  HLC WHERE L.PatronID= P.ID AND L.ItemID=I.ID AND I.ID=F.ItemID AND L.LocationID=HLC.ID AND F.FieldCode=245 AND L.LoanTypeID=T.ID'
 	IF @libIDs='' 
