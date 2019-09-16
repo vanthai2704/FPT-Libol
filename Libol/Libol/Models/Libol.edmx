@@ -2928,7 +2928,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FPT_CATA___ItemI__539E0636">
+        <Association Name="FK__FPT_CATA___ItemI__7BABF790">
           <End Role="ITEM" Type="Self.ITEM" Multiplicity="1" />
           <End Role="FPT_CATA_FILE_NEW" Type="Self.FPT_CATA_FILE_NEW" Multiplicity="*" />
           <ReferentialConstraint>
@@ -5879,13 +5879,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="EndDate" Type="date" Mode="In" />
           <Parameter Name="OrderBy" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="LibID" Type="int" Mode="In" />
-          <Parameter Name="LocID" Type="int" Mode="In" />
-          <Parameter Name="reid" Type="varchar" Mode="In" />
-          <Parameter Name="StartDate" Type="varchar" Mode="In" />
-          <Parameter Name="EndDate" Type="varchar" Mode="In" />
-        </Function>
         <Function Name="FPT_SP_GET_HOLDING_IDs_v1" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intLibID" Type="nvarchar" Mode="In" />
           <Parameter Name="intLocID" Type="nvarchar" Mode="In" />
@@ -5983,10 +5976,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strIDs" Type="nvarchar" Mode="In" />
           <Parameter Name="strLocationID" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="FPT_SP_GETINFOR_EMAIL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="libIDs" Type="varchar" Mode="In" />
-          <Parameter Name="intTime" Type="int" Mode="In" />
-        </Function>
         <Function Name="FPT_SP_HOLDING_DEL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="strID" Type="nvarchar" Mode="In" />
         </Function>
@@ -6027,9 +6016,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strPatronName" Type="nvarchar" Mode="In" />
           <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="FPT_SP_INVENTORY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="intLibraryID" Type="int" Mode="In" />
-        </Function>
         <Function Name="FPT_SP_JOIN_COPYNUMBER_BY_ITEMID_AND_ACQUIREDDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ItemID" Type="int" Mode="In" />
           <Parameter Name="AcqDate" Type="date" Mode="In" />
@@ -6041,7 +6027,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="intTopNum" Type="varchar" Mode="In" />
           <Parameter Name="intMinLoan" Type="varchar" Mode="In" />
           <Parameter Name="libid" Type="varchar" Mode="In" />
-          <Parameter Name="locid" Type="varchar" Mode="In" />
         </Function>
         <Function Name="FPT_SP_STAT_PATRONGROUP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="intUserID" Type="varchar" Mode="In" />
@@ -6065,6 +6050,26 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Parameter Name="strPatronCode" Type="varchar" Mode="In" />
           <Parameter Name="lockedDay" Type="int" Mode="In" />
           <Parameter Name="Note" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="FPT_SPECIALIZED_REPORT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibID" Type="int" Mode="In" />
+          <Parameter Name="strSubCode" Type="varchar" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SPECIALIZED_REPORT_GET_PUBLISHER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intItemID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SPECIALIZED_REPORT_TOTAL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibID" Type="int" Mode="In" />
+          <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
+          <Parameter Name="intType" Type="int" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="FPT_SPECIALIZED_REPORT_TOTAL_ITEM" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="intLibID" Type="int" Mode="In" />
+          <Parameter Name="strItemIDs" Type="varchar" Mode="In" />
+          <Parameter Name="intType" Type="int" Mode="In" />
+          <Parameter Name="intUserID" Type="int" Mode="In" />
         </Function>
         <Function Name="GET_BLACK_PATRON_INFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GET_PATRON_LOANINFOR" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -12456,7 +12461,7 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <End Role="CAT_DIC_MEDIUM" EntitySet="CAT_DIC_MEDIUM" />
             <End Role="ITEM" EntitySet="ITEM" />
           </AssociationSet>
-          <AssociationSet Name="FK__FPT_CATA___ItemI__539E0636" Association="Self.FK__FPT_CATA___ItemI__539E0636">
+          <AssociationSet Name="FK__FPT_CATA___ItemI__7BABF790" Association="Self.FK__FPT_CATA___ItemI__7BABF790">
             <End Role="ITEM" EntitySet="ITEM" />
             <End Role="FPT_CATA_FILE_NEW" EntitySet="FPT_CATA_FILE_NEW" />
           </AssociationSet>
@@ -26090,7 +26095,6 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="intTopNum" Mode="In" Type="String" />
             <Parameter Name="intMinLoan" Mode="In" Type="String" />
             <Parameter Name="libid" Mode="In" Type="String" />
-            <Parameter Name="locid" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_SP_STAT_PATRONGROUP">
             <Parameter Name="intUserID" Mode="In" Type="String" />
@@ -26140,6 +26144,26 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
             <Parameter Name="EndDate" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="FPT_SELECTALLDELETEABLE" ReturnType="Collection(Int32)" />
+          <FunctionImport Name="FPT_SPECIALIZED_REPORT" ReturnType="Collection(LibolModel.FPT_SPECIALIZED_REPORT_Result)">
+            <Parameter Name="intLibID" Mode="In" Type="Int32" />
+            <Parameter Name="strSubCode" Mode="In" Type="String" />
+            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SPECIALIZED_REPORT_GET_PUBLISHER" ReturnType="Collection(LibolModel.FPT_SPECIALIZED_REPORT_GET_PUBLISHER_Result)">
+            <Parameter Name="intItemID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SPECIALIZED_REPORT_TOTAL" ReturnType="Collection(Int32)">
+            <Parameter Name="intLibID" Mode="In" Type="Int32" />
+            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+            <Parameter Name="intType" Mode="In" Type="Int32" />
+            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="FPT_SPECIALIZED_REPORT_TOTAL_ITEM" ReturnType="Collection(Int32)">
+            <Parameter Name="intLibID" Mode="In" Type="Int32" />
+            <Parameter Name="strItemIDs" Mode="In" Type="String" />
+            <Parameter Name="intType" Mode="In" Type="Int32" />
+            <Parameter Name="intUserID" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="CAT_DIC_LIST_SEL_Result">
           <Property Type="String" Name="BrowseFile" Nullable="true" MaxLength="50" />
@@ -31218,6 +31242,20 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
           <Property Type="String" Name="NXB" Nullable="false" MaxLength="256" />
           <Property Type="Double" Name="FullPrice" Nullable="true" />
           <Property Type="Int32" Name="ItemID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="FPT_SPECIALIZED_REPORT_Result">
+          <Property Type="Int32" Name="ItemID" Nullable="false" />
+          <Property Type="String" Name="SUBJECTCODE" Nullable="false" MaxLength="800" />
+          <Property Type="String" Name="ITEMNAME" Nullable="false" MaxLength="800" />
+          <Property Type="String" Name="ITEMCODE" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="ISBN" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="AUTHOR" Nullable="false" MaxLength="800" />
+          <Property Type="String" Name="PUBLISHER" Nullable="false" MaxLength="1" />
+          <Property Type="Int32" Name="TOTAL" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="FPT_SPECIALIZED_REPORT_GET_PUBLISHER_Result">
+          <Property Type="Int32" Name="ItemID" Nullable="false" />
+          <Property Type="String" Name="PUBLISHER" Nullable="false" MaxLength="256" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -41717,42 +41755,31 @@ warning 6002: The table/view 'Libol.dbo.MARC_BIB_WS_DETAIL' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="FPT_SP_GETINFOR_EMAIL" FunctionName="LibolModel.Store.FPT_SP_GETINFOR_EMAIL" />
-          <FunctionImportMapping FunctionImportName="FPT_SP_INVENTORY" FunctionName="LibolModel.Store.FPT_SP_INVENTORY">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_INVENTORY_Result">
-                <ScalarProperty Name="Content" ColumnName="Content" />
-                <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="CopyNumber" ColumnName="CopyNumber" />
-                <ScalarProperty Name="CallNumber" ColumnName="CallNumber" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest" FunctionName="LibolModel.Store.FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="LibolModel.FPT_SP_GET_HOLDING_BY_RECOMMENDID_Newest_Result">
-                <ScalarProperty Name="RECORDNUMBER" ColumnName="RECORDNUMBER" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="ReceiptedDate" ColumnName="ReceiptedDate" />
-                <ScalarProperty Name="useCount" ColumnName="useCount" />
-                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
-                <ScalarProperty Name="InBookNum" ColumnName="InBookNum" />
-                <ScalarProperty Name="DKCB" ColumnName="DKCB" />
-                <ScalarProperty Name="ACQUIREDDATE" ColumnName="ACQUIREDDATE" />
-                <ScalarProperty Name="LocationID" ColumnName="LocationID" />
-                <ScalarProperty Name="RECOMMENDID" ColumnName="RECOMMENDID" />
-                <ScalarProperty Name="Year" ColumnName="Year" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="NXB" ColumnName="NXB" />
-                <ScalarProperty Name="FullPrice" ColumnName="FullPrice" />
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="FPT_SELECTALLDELETEABLE" FunctionName="LibolModel.Store.FPT_SELECTALLDELETEABLE" />
+          <FunctionImportMapping FunctionImportName="FPT_SPECIALIZED_REPORT" FunctionName="LibolModel.Store.FPT_SPECIALIZED_REPORT">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SPECIALIZED_REPORT_Result">
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="SUBJECTCODE" ColumnName="SUBJECTCODE" />
+                <ScalarProperty Name="ITEMNAME" ColumnName="ITEMNAME" />
+                <ScalarProperty Name="ITEMCODE" ColumnName="ITEMCODE" />
+                <ScalarProperty Name="ISBN" ColumnName="ISBN" />
+                <ScalarProperty Name="AUTHOR" ColumnName="AUTHOR" />
+                <ScalarProperty Name="PUBLISHER" ColumnName="PUBLISHER" />
+                <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SPECIALIZED_REPORT_GET_PUBLISHER" FunctionName="LibolModel.Store.FPT_SPECIALIZED_REPORT_GET_PUBLISHER">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LibolModel.FPT_SPECIALIZED_REPORT_GET_PUBLISHER_Result">
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="PUBLISHER" ColumnName="PUBLISHER" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FPT_SPECIALIZED_REPORT_TOTAL" FunctionName="LibolModel.Store.FPT_SPECIALIZED_REPORT_TOTAL" />
+          <FunctionImportMapping FunctionImportName="FPT_SPECIALIZED_REPORT_TOTAL_ITEM" FunctionName="LibolModel.Store.FPT_SPECIALIZED_REPORT_TOTAL_ITEM" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
