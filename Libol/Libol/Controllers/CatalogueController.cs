@@ -248,21 +248,12 @@ namespace Libol.Controllers
         public JsonResult ViewCataContentByIndex(int? index)
         {
 
-            if (index <= 0)
-            {
-                return Json("Số thứ tự nhập phải lớn hơn 0 !", JsonRequestBehavior.AllowGet);
-            }
-            else if (index > db.ITEMs.Count())
-            {
-                return Json("Số thứ tự vượt quá số bản ghi !", JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                int actualIndex = (int)index;
-                string ItemID = db.ITEMs.ToList().ElementAt(actualIndex - 1).ID.ToString();
-                List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = db.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS(ItemID, 0).ToList();
-                return Json(listContent, JsonRequestBehavior.AllowGet);
-            }
+
+            int actualIndex = (int)index;
+            string ItemID = db.ITEMs.ToList().ElementAt(actualIndex - 1).ID.ToString();
+            List<FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result> listContent = db.FPT_SP_CATA_GET_CONTENTS_OF_ITEMS(ItemID, 0).ToList();
+            return Json(listContent, JsonRequestBehavior.AllowGet);
+
 
         }
 
@@ -292,10 +283,10 @@ namespace Libol.Controllers
             return Json(rs, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult SearchDeleteable(string strCode , string strTT , string strISBN)
+        public JsonResult SearchDeleteable(string strCode, string strTT, string strISBN)
         {
             List<SP_GET_TITLES_Result> listContent = catalogueBusiness.SearchCodeDeleteable(strCode, strTT, strISBN);
-            return Json( listContent , JsonRequestBehavior.AllowGet);
+            return Json(listContent, JsonRequestBehavior.AllowGet);
         }
 
     }
