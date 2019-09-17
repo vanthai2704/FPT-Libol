@@ -183,8 +183,10 @@ namespace Libol.Controllers
                 //step1 set setting public to email account
                 
                 //step2 send mail
-                var _email = "trinhlv26031997@gmail.com";
-                var _pass = "Iphone1997";
+                //var _email = "trinhlv26031997@gmail.com";
+                //var _pass = "Iphone1997";
+                var _email = "thainhatdatdoanhtrinh@gmail.com";
+                var _pass = "Project123";
                 var _name = "FPT University Library";
                 MailMessage myMessage = new MailMessage();
                 myMessage.To.Add(email);

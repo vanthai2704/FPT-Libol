@@ -250,6 +250,12 @@
     <Compile Include="Models\FPT_RECOMMEND.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FPT_SPECIALIZED_REPORT_GET_PUBLISHER_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FPT_SPECIALIZED_REPORT_Result.cs">
+      <DependentUpon>Libol.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\FPT_SP_CATA_GET_CONTENTS_OF_ITEMS_Result.cs">
       <DependentUpon>Libol.tt</DependentUpon>
     </Compile>
@@ -2584,6 +2590,10 @@
     <Content Include="Views\AcquireReport\InventoryReport.cshtml" />
     <Content Include="Views\AcquireReport\GetInventoryReport.cshtml" />
     <Content Include="Views\Catalogue\DeleteCatalogue.cshtml" />
+    <Content Include="Views\Circulation\GetTop20Stats.cshtml" />
+    <Content Include="Views\Circulation\StatisticTop20.cshtml" />
+    <Content Include="Views\AcquireReport\SpecializedReport.cshtml" />
+    <Content Include="Views\AcquireReport\GetSpecializedReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Patron\SearchPatronFilter.cshtml" />

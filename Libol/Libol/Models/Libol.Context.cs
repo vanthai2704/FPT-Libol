@@ -23047,7 +23047,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_ADMIN_UPDATE_USER", intUIDParameter, intISLDAPParameter, strNameParameter, strUserNameParameter, strPasswordParameter, intCatModuleParameter, intPatModuleParameter, intCirModuleParameter, intAcqModuleParameter, intSerModuleParameter, intILLModuleParameter, intDelModuleParameter, intAdmModuleParameter, intParentIDParameter, intOutVal);
         }
     
-        public virtual int FPT_SP_STAT_ITEMMAX(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string intTopNum, string intMinLoan, string libid, string locid)
+        public virtual int FPT_SP_STAT_ITEMMAX(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string intTopNum, string intMinLoan, string libid)
         {
             var intUserIDParameter = intUserID != null ?
                 new ObjectParameter("intUserID", intUserID) :
@@ -23073,11 +23073,7 @@ namespace Libol.Models
                 new ObjectParameter("libid", libid) :
                 new ObjectParameter("libid", typeof(string));
     
-            var locidParameter = locid != null ?
-                new ObjectParameter("locid", locid) :
-                new ObjectParameter("locid", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_STAT_ITEMMAX", intUserIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, intTopNumParameter, intMinLoanParameter, libidParameter, locidParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_STAT_ITEMMAX", intUserIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, intTopNumParameter, intMinLoanParameter, libidParameter);
         }
     
         public virtual int FPT_SP_STAT_PATRONGROUP(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string optItemID, string intHistory, string libID)
@@ -23230,6 +23226,74 @@ namespace Libol.Models
         public virtual ObjectResult<Nullable<int>> FPT_SELECTALLDELETEABLE()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_SELECTALLDELETEABLE");
+        }
+    
+        public virtual ObjectResult<FPT_SPECIALIZED_REPORT_Result> FPT_SPECIALIZED_REPORT(Nullable<int> intLibID, string strSubCode, Nullable<int> intUserID)
+        {
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            var strSubCodeParameter = strSubCode != null ?
+                new ObjectParameter("strSubCode", strSubCode) :
+                new ObjectParameter("strSubCode", typeof(string));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SPECIALIZED_REPORT_Result>("FPT_SPECIALIZED_REPORT", intLibIDParameter, strSubCodeParameter, intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<FPT_SPECIALIZED_REPORT_GET_PUBLISHER_Result> FPT_SPECIALIZED_REPORT_GET_PUBLISHER(Nullable<int> intItemID)
+        {
+            var intItemIDParameter = intItemID.HasValue ?
+                new ObjectParameter("intItemID", intItemID) :
+                new ObjectParameter("intItemID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FPT_SPECIALIZED_REPORT_GET_PUBLISHER_Result>("FPT_SPECIALIZED_REPORT_GET_PUBLISHER", intItemIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> FPT_SPECIALIZED_REPORT_TOTAL(Nullable<int> intLibID, string strItemIDs, Nullable<int> intType, Nullable<int> intUserID)
+        {
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            var strItemIDsParameter = strItemIDs != null ?
+                new ObjectParameter("strItemIDs", strItemIDs) :
+                new ObjectParameter("strItemIDs", typeof(string));
+    
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_SPECIALIZED_REPORT_TOTAL", intLibIDParameter, strItemIDsParameter, intTypeParameter, intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> FPT_SPECIALIZED_REPORT_TOTAL_ITEM(Nullable<int> intLibID, string strItemIDs, Nullable<int> intType, Nullable<int> intUserID)
+        {
+            var intLibIDParameter = intLibID.HasValue ?
+                new ObjectParameter("intLibID", intLibID) :
+                new ObjectParameter("intLibID", typeof(int));
+    
+            var strItemIDsParameter = strItemIDs != null ?
+                new ObjectParameter("strItemIDs", strItemIDs) :
+                new ObjectParameter("strItemIDs", typeof(string));
+    
+            var intTypeParameter = intType.HasValue ?
+                new ObjectParameter("intType", intType) :
+                new ObjectParameter("intType", typeof(int));
+    
+            var intUserIDParameter = intUserID.HasValue ?
+                new ObjectParameter("intUserID", intUserID) :
+                new ObjectParameter("intUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_SPECIALIZED_REPORT_TOTAL_ITEM", intLibIDParameter, strItemIDsParameter, intTypeParameter, intUserIDParameter);
         }
     }
 }
