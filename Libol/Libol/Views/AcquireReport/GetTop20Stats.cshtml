@@ -19,17 +19,21 @@
     </style>
     <script>
         $(document).ready(function () {
+            var len = @ViewBag.DAPResult.Count + 3;
             var table1 = $("#table1").DataTable({
                 paging: false,
                 searching: false,
                 info: false,
                 order: false,
-                buttons: [
-                    {
-                        extend: 'excel',
-                        title: function () { var printTitle = 'Bổ sung - Thống kê Top 20'; return printTitle; }
-                    },
-                ],
+                buttons: [{
+                    extend: 'excelHtml5',
+                    title: function () { var printTitle = 'Bổ sung - Thống kê Top 20'; return printTitle; },
+                    customize: function (xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        // make bold-text in row which has index is len
+                        $('row:eq(' + len + ') c', sheet).attr('s', '2');
+                    }
+                }],
             });
             var table2 = $("#table2").DataTable({
                 paging: false,

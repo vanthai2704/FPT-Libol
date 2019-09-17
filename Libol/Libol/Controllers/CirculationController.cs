@@ -10,6 +10,7 @@ using System.Reflection;
 
 using Libol.SupportClass;
 using Libol.EntityResult;
+using System.Data.Entity;
 
 namespace Libol.Controllers
 {
@@ -1226,8 +1227,7 @@ namespace Libol.Controllers
             }
              
             return PartialView("GetCopyNumberLiquidationStats");
-        }
-
+        }        
     }
 
     public class GET_PATRON_LOANINFOR_Result_2
