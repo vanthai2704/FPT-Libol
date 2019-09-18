@@ -23047,7 +23047,7 @@ namespace Libol.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_ADMIN_UPDATE_USER", intUIDParameter, intISLDAPParameter, strNameParameter, strUserNameParameter, strPasswordParameter, intCatModuleParameter, intPatModuleParameter, intCirModuleParameter, intAcqModuleParameter, intSerModuleParameter, intILLModuleParameter, intDelModuleParameter, intAdmModuleParameter, intParentIDParameter, intOutVal);
         }
     
-        public virtual int FPT_SP_STAT_ITEMMAX(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string intTopNum, string intMinLoan, string libid)
+        public virtual int FPT_SP_STAT_ITEMMAX(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string intTopNum, string intMinLoan, string libid, string locid)
         {
             var intUserIDParameter = intUserID != null ?
                 new ObjectParameter("intUserID", intUserID) :
@@ -23073,7 +23073,11 @@ namespace Libol.Models
                 new ObjectParameter("libid", libid) :
                 new ObjectParameter("libid", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_STAT_ITEMMAX", intUserIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, intTopNumParameter, intMinLoanParameter, libidParameter);
+            var locidParameter = locid != null ?
+                new ObjectParameter("locid", locid) :
+                new ObjectParameter("locid", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("FPT_SP_STAT_ITEMMAX", intUserIDParameter, strCheckOutDateFromParameter, strCheckOutDateToParameter, intTopNumParameter, intMinLoanParameter, libidParameter, locidParameter);
         }
     
         public virtual int FPT_SP_STAT_PATRONGROUP(string intUserID, string strCheckOutDateFrom, string strCheckOutDateTo, string optItemID, string intHistory, string libID)
@@ -23294,6 +23298,15 @@ namespace Libol.Models
                 new ObjectParameter("intUserID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_SPECIALIZED_REPORT_TOTAL_ITEM", intLibIDParameter, strItemIDsParameter, intTypeParameter, intUserIDParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> FPT_CATA_GETCONTENT_BY_INDEX(Nullable<int> index)
+        {
+            var indexParameter = index.HasValue ?
+                new ObjectParameter("Index", index) :
+                new ObjectParameter("Index", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("FPT_CATA_GETCONTENT_BY_INDEX", indexParameter);
         }
     }
 }

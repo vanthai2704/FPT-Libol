@@ -8,30 +8,36 @@
     <h4 style="margin:1rem"><mark>Xem Bản Ghi Dữ Liệu Biên Mục</mark></h4><br />
     <div class="position-absolute" style="right:15px;">
         <label><strong>Biểu Ghi Số</strong></label>
-        <input id="txtIndex" class="form-control" type="number" min="0" max="@ViewBag.TotalCount" value="@ViewBag.TotalCount" onchange="Search($('#txtIndex').val())" />
+        <div class="form-group col-md-12 form-inline">
+            <button type="button" id="btnLastPre" class="btn btn-primary form-control">*<</button>&nbsp
+            <button type="button" id="btnPre" class="btn btn-primary form-control"><</button>&nbsp
+            <input id="txtIndex" class="form-control" type="number" min="0" max="@ViewBag.TotalCount" value="@ViewBag.TotalCount" onchange="Search($('#txtIndex').val())" />&nbsp
+            <button type="button" id="btnNext" class="btn btn-primary form-control">></button>&nbsp
+            <button type="button" id="btnMoveLast" class="btn btn-primary form-control">>*</button>
+        </div>
     </div>
 </div>
 
 
-    <div class="">
+<div class="">
 
-        <table class="table-bordered col-md-12" id="table">
+    <table class="table-bordered col-md-12" id="table">
 
-            @*<tr class='table-success'><th scope='col'> Nhãn </th><th scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>*@
+        @*<tr class='table-success'><th scope='col'> Nhãn </th><th scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>*@
 
-        </table>
-    </div>
+    </table>
+</div>
 
-    <br>
-    <div class="form-group col-md-12 form-inline">
-        <div class="form-row col-md-12 text-center">
-            <div style="margin : auto">
-                <button type="button" id="btnUpdate" class="btn btn-primary form-control">Sửa</button>
-                <button type="button" class="btn btn-secondary form-control" id="btnShelf">Xếp Giá</button>
-                <button type="button" id="btnReUse" class="btn btn-primary form-control">Dùng Lại</button>
-            </div>
+<br>
+<div class="form-group col-md-12 form-inline">
+    <div class="form-row col-md-12 text-center">
+        <div style="margin : auto">
+            <button type="button" id="btnUpdate" class="btn btn-primary form-control">Sửa</button>
+            <button type="button" class="btn btn-secondary form-control" id="btnShelf">Xếp Giá</button>
+            <button type="button" id="btnReUse" class="btn btn-primary form-control">Dùng Lại</button>
         </div>
     </div>
+</div>
 
 
 
@@ -110,5 +116,36 @@
 
     }
 
+
+    $('#btnLastPre').click(function () {
+        $('#txtIndex').val('1');
+        $('#txtIndex').change();
+    });
+
+    $('#btnPre').click(function () {
+        if ($('#txtIndex').val() == 1) {
+            alert('Bạn đang ở bản ghi đầu tiên !');
+        } else {
+            $('#txtIndex').val($('#txtIndex').val() - 1);
+            $('#txtIndex').change();
+        }
+
+
+        
+    });
+
+    $('#btnNext').click(function () {
+        if ($('#txtIndex').val() == @ViewBag.TotalCount) {
+            alert('Bạn đang ở bản ghi cuối cùng !');
+        } else {
+            $('#txtIndex').val(parseInt($('#txtIndex').val(), 10) + 1);
+            $('#txtIndex').change();
+        }
+    });
+
+    $('#btnMoveLast').click(function () {
+        $('#txtIndex').val(@ViewBag.TotalCount);
+        $('#txtIndex').change();
+    });
 
 </script>

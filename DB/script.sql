@@ -7253,4 +7253,26 @@ BEGIN
 END
 
 
+--***********************************DOANHDQ 18/09/19****************************************
+
+
+GO
+/****** Object:  StoredProcedure [dbo].[FPT_CATA_GETCONTENT_BY_INDEX]    Script Date: 9/18/2019 3:29:06 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,DOANHDQ>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[FPT_CATA_GETCONTENT_BY_INDEX]
+@Index  int
+AS
+BEGIN
+
+	SELECT TOP(@Index) ID FROM ITEM EXCEPT SELECT TOP(@Index -1) ID FROM ITEM
+
+END
 
