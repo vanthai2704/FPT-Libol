@@ -1056,6 +1056,7 @@ namespace Libol.Models
 
         public List<SP_GET_TITLES_Result> SearchCodeDeleteable(string strCode, string strTT, string strISBN)
         {
+            List<SP_GET_TITLES_Result> finalList = null;
             if (strCode == "" && strTT == "" && strISBN == "")
             {
                 return SearchAllDeleteable();
@@ -1070,26 +1071,48 @@ namespace Libol.Models
 
                 List<int> listTemp = ItemId.Except(listID).ToList();
                 List<int> FinalList = ItemId.Except(listTemp).ToList();
-                string finalStrID = String.Join(",", FinalList.ToArray());
-
-                List<SP_GET_TITLES_Result> finalList = new ShelfBusiness().FPT_SP_GET_TITLES(finalStrID); ;
-                return finalList;
+                if(FinalList.Count != 0)
+                {
+                    string finalStrID = String.Join(",", FinalList.ToArray());
+                    finalList = new ShelfBusiness().FPT_SP_GET_TITLES(finalStrID);
+                    foreach (SP_GET_TITLES_Result item in finalList)
+                    {
+                        item.Title = new SupportClass.FormatHoldingTitle().OnFormatHoldingTitle(item.Title);
+                    }
+                    return finalList;
+                }
+                else
+                {
+                    return finalList;
+                }
+                
             }
 
         }
 
-        public string DeleteCatalogue(string ItemCode)
+        public string DeleteCatalogue(List<string> ItemCodes)
         {
+            List<int> ItemIDs = new List<int>();
+            int rs = 0;
             //Get ItemID by ItemCode
-            int ItemID = db.ITEMs.Where(code => code.Code == ItemCode).Select(i => i.ID).FirstOrDefault();
-            int rs = db.SP_CATA_DELETE_ITEMS(0, ItemID.ToString());
+            foreach (string itemCode in ItemCodes)
+            {
+                int ItemID = db.ITEMs.Where(code => code.Code == itemCode).Select(i => i.ID).FirstOrDefault();
+                ItemIDs.Add(ItemID);
+            }
+            //string x = "'" + String.Join("','", ItemIDs) + "'";
+            foreach(int i in ItemIDs)
+            {
+                 rs = db.SP_CATA_DELETE_ITEMS(0, i.ToString());
+            }
+            
             if (rs > 0)
             {
-                return "Xóa thành công mã tài liệu : " + ItemCode;
+                return "Xóa thành công " + ItemCodes.Count+ " mã tài liệu";
             }
             else
             {
-                return "Xảy ra lỗi !Xóa mã tài liệu không thành công : " + ItemCode;
+                return "Xảy ra lỗi !Xóa mã tài liệu không thành công ";
             }
         }
 

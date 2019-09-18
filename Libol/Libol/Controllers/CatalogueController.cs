@@ -276,10 +276,10 @@ namespace Libol.Controllers
             return View();
         }
 
-        public JsonResult DelCatalogue(string ItemCode)
+        public JsonResult DelCatalogue(List<string> ItemCodes)
         {
             //Get ItemID by ItemCode
-            string rs = catalogueBusiness.DeleteCatalogue(ItemCode);
+            string rs = catalogueBusiness.DeleteCatalogue(ItemCodes);
             return Json(rs, JsonRequestBehavior.AllowGet);
         }
 

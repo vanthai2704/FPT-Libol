@@ -35,60 +35,35 @@
     </div>
 
     <div class="table-responsive col-sm-10 offset-sm-1">
-        <label id="txtCount"></label>
+        @*<label id="txtCount"></label>*@
         @Html.Label("Tổng : " + @listDeleteable.Count().ToString(), new { id = "txtCount" })
         <table class="table table-hover table-bordered" id="table">
-            <tr class='table-success'>
-                <th scope='col'>Mã Tài Liệu</th>
-                <th scope='col'>Nhan Đề</th>
-                <th scope='col'></th>
-            </tr>
+            <tr class='table-success'><th scope='col'>Mã Tài Liệu</th><th scope='col'>Nhan Đề</th><th scope='col'><input type='checkbox' id='checkAll'></th></tr>
             @{
                 foreach (SP_GET_TITLES_Result Deleteable in listDeleteable)
                 {
                     <tr>
                         <th scope='col' class="clItemCode">@Deleteable.Code </th>
                         <td scope='col'>@Deleteable.Title</td>
-                        <td scope='col'><button type="button" class="btn-success use-address">Xóa</button></td>
+                        @*<td scope='col'><button type="button" class="btn-success use-address">Xóa</button></td>*@
+                        <td scope='col'><input type='checkbox' class='case' name="case" value="@Deleteable.Code"> </td>
                     </tr>
 
                 }
             }
 
         </table>
+
+        <button type="button" class="btn btn-success" onclick="Delete()">Xóa</button>
     </div>
 </div>
 <script>
 
-    //Event to Delete Item /////////////////////
-
-    $("#table").on('click', '.use-address', function () {
-
-        var $FieldCode = $(this).closest("tr")   // Finds the closest row <tr>
-            .find(".clItemCode")     // Gets a descendent with class="nr"
-            .text();         // Retrieves the text within <td>
-
-        var result = confirm("Xác nhận xóa mã tài liệu : " + $FieldCode);
-        if (result) {
-            $.ajax({
-                url: "/Catalogue/DelCatalogue",
-                type: "POST",
-                data: JSON.stringify({ ItemCode: $FieldCode }),
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (message) {
-                    alert(message);
-
-                },
-                error: function (errorThrown) {
-                    alert("Xảy ra lỗi trong khi xóa mã tài liệu : " + ItemCode);
-                }
-            });
-            $(this).closest("tr").empty();
-        }
-
-
+    //CheckAll 
+    $("#table").on('click', '#checkAll',function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
     });
+
 
 </script>
 
@@ -101,6 +76,7 @@
             Search();
         }
     });
+
 
     function Search() {
         //debugger;
@@ -116,14 +92,17 @@
             dataType: "json",
             success: function (inforList) {
                 $('#table').empty();
+                $('#table').append("<tr class='table-success'><th scope='col'>Mã Tài Liệu</th><th scope='col'>Nhan Đề</th><th scope='col'><input type='checkbox' id='checkAll'></th></tr>");
                 //$('#txtCount').val = 'Tổng : ' + inforList.length() +1;
                 for (var i = 0; i < inforList.length; ++i) {
-                    $('#table').append("<tr><th scope='col' class='clItemCode'>" + inforList[i].Code + " </th><td scope='col'>" + inforList[i].Title + "</td><td scope='col'><button type='button' class='btn-success use-address'>Xóa</button></td></tr>");
+                    $('#table').append("<tr><th scope='col' class='clItemCode'>" + inforList[i].Code + " </th><td scope='col'>" + inforList[i].Title + "</td><td scope='col'><input type='checkbox' class='case' name='case' value='" + inforList[i].Code + "'></td></tr>");
                 }
-                return 0;
+                //$('#txtCount').empty();
+                $('#txtCount').text("Tổng : " + inforList.length);
+
             },
             error: function (errorThrown) {
-                alert(errorThrown);
+                alert('Không có giá trị thỏa mãn !');
             }
         });
 
@@ -131,5 +110,38 @@
     }
 
 
+
+    function Delete() {
+
+        //Get all values selected
+        var values = new Array();
+        $('[name=case]:checked').each(function () {
+            values.push( $(this).val());
+        });
+        //alert(values.join(","));
+
+
+        //Deleting
+        var result = confirm("Xác nhận xóa : " + values.length + " mã tài liệu");
+        if (result) {
+            $.ajax({
+                url: "/Catalogue/DelCatalogue",
+                type: "POST",
+                data: JSON.stringify({ ItemCodes: values }),
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (message) {
+                    alert(message);
+                    $('#txtCode').val('');
+                    $('#txtTT').val('');
+                    $('#txtISBN').val('');
+                    Search();
+                },
+                error: function (errorThrown) {
+                    alert("Xảy ra lỗi trong khi xóa mã tài liệu : " + ItemCode);
+                }
+            });
+        }
+    }
 </script>
 

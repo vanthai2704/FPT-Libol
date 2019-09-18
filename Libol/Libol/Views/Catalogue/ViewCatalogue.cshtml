@@ -6,20 +6,22 @@
 
 <div class="form-inline position-relative">
     <h4 style="margin:1rem"><mark>Xem Bản Ghi Dữ Liệu Biên Mục</mark></h4><br />
-    <div class=" position-absolute" style="right:15px;">
+    <div class="position-absolute" style="right:15px;">
         <label><strong>Biểu Ghi Số</strong></label>
         <input id="txtIndex" class="form-control" type="number" min="0" max="@ViewBag.TotalCount" value="@ViewBag.TotalCount" onchange="Search($('#txtIndex').val())" />
     </div>
 </div>
 
 
-<div id="container" class="container">
+    <div class="">
 
-    <table class="table-bordered col-sm-12" id="table">
+        <table class="table-bordered col-md-12" id="table">
 
-        @*<tr class='table-success'><th scope='col'> Nhãn </th><th scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>*@
+            @*<tr class='table-success'><th scope='col'> Nhãn </th><th scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>*@
 
-    </table>
+        </table>
+    </div>
+
     <br>
     <div class="form-group col-md-12 form-inline">
         <div class="form-row col-md-12 text-center">
@@ -31,8 +33,6 @@
         </div>
     </div>
 
-
-</div>
 
 
 <script>
@@ -55,20 +55,21 @@
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (inforList) {
-                    var ItemCode;
-                    $('#table').empty();
-                    var x = "<tr class='table-success text-center'><th div class='px-md-2' scope='col'> Nhãn </th><th class='px-md-2' scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>";
-                    //$('#table').append("<tr class='table-success text-center'><th div class='px-md-2' scope='col'> Nhãn </th><th class='px-md-2' scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>")
-                    for (var i = 0; i < inforList.length; ++i) {
-                        x = x + "<tr><td class='text-center'><strong> " + inforList[i].FieldCode + "</strong></td><td class='text-center'>" + inforList[i].Ind + "</td><td>" + inforList[i].Content + "</td></tr>";
-                        //$('#table').append("<tr><td class='text-center'><strong> " + inforList[i].FieldCode + "</strong></td><td class='text-center'>" + inforList[i].Ind + "</td><td>" +  inforList[i].Content+ "</td></tr>");
-                        if (inforList[i].FieldCode === "001") {
-                            ItemCode = inforList[i].Content;
+                        var ItemCode;
+                        $('#table').empty();
+                    var x = "<tr class='table-success text-center'><th class='px-md-2' scope='col'> Nhãn </th><th class='px-md-2' scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>";
+                        //$('#table').append("<tr class='table-success text-center'><th div class='px-md-2' scope='col'> Nhãn </th><th class='px-md-2' scope='col'> Chỉ Thị</th><th scope='col'> Nội Dung Trường</th></tr>")
+                        for (var i = 0; i < inforList.length; ++i) {
+                            x = x + "<tr><td class='text-center'><strong> " + inforList[i].FieldCode + "</strong></td><td class='text-center'>" + inforList[i].Ind + "</td><td>" + inforList[i].Content + "</td></tr>";
+                            //$('#table').append("<tr><td class='text-center'><strong> " + inforList[i].FieldCode + "</strong></td><td class='text-center'>" + inforList[i].Ind + "</td><td>" +  inforList[i].Content+ "</td></tr>");
+                            if (inforList[i].FieldCode === "001") {
+                                ItemCode = inforList[i].Content;
+                            }
                         }
-                    }
-                    $('#table').html(x);
-                    //Add onClick for Button with Item infor
-                    addEvent(ItemCode);
+                        $('#table').html(x);
+                        //Add onClick for Button with Item infor
+                        addEvent(ItemCode);
+
                 },
                 error: function (errorThrown) {
                     alert('Loading COntent Failed');
